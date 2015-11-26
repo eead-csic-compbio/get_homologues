@@ -1,0 +1,77 @@
+15112013: added option core_both to plot_pancore_matrix.pl
+03022014: corrected versions of get_homologues.pl and parse_pangenome_matrix.pl to match features in manual
+07032014: manual updated, user's utils added to download area
+11032014: added use lib/bioperl to compare_clusters.pl and plot_pancore_matrix.pl
+11032014: edited plot_pancore_matrix.pl (copes with \r in .tab) 
+11032014: added -s to check_BDBHs.pl
+11032014: updated get_homologues.pl with marfil_homology::add_unmatched_singletons
+11032014: manual updated
+18062014: manual updated, added check when reading taxa in -I include file
+18062014: put new lines to separate alternatives trees in .ph file produced by compare_clusters.pl -T
+29072014: fixed parsing of GenBank files with CONTIG features just before ORIGIN
+29072014: fixed parsing of spliced DNA sequence features in GenBank files
+28082014: sped up id lookup in check_BDBHs.pl 
+01092014: manual updated
+30092014: install.pl fixed so that progress of Pfam download is correctly printed
+24102014: manual updated (-f explanation. FAQS)
+12112014: fixed bug while adding singleton clusters when using -I option, which was uncorrectly adding sequences from excluded taxa
+12112014: section 'Comparing clusters with external sequence sets' added to manual
+03122014: fixed bug in download_genomes_ncbi.pl which prevented download of last genome in list in some cases
+05122014: check input dir/file contains not valid chars ('+')
+30122014: updated construct_indexes and construct_taxa_indexes
+09122015: updated format_BLASTN_command to allow blast+ task selection (default is megablast)
+12012015: updated matchlen to use hash references instead of copies; added simspan_hsps_overlap
+12012015: updated simspan_hsps to allow calculation with respect to shortest sequence, instead of default (longest)
+13012015: updated makeIn,makeOr,makeHom to allow coverage calculation with respect to shortest sequence
+13012015: updated _cluster_makeHomolog.pl, _cluster_makeInparalog.pl, _cluster_makeOrtholog.pl as well
+13012015: updated find_OMCL_clusters,findAllOrthologiesORTHMCL to allow coverage calculation with respect to shortest sequence
+13012015: updated format_BLASTN_command,BLASTP,HMMPFAM to use 1CPU, as format_SPLITBLAST_comm,SPLITHMMPFAM control this
+19012015: fixed bug in add_unmatched_singletons which omitted sequence 1 if it had no hits
+22012015: added -e to check_BDBHs.pl to get coverage of short sequences if not labelled as full-length ETSs
+22012015: updated simspan_hsps to allow for subject aligned coords to be in reverse strand
+26012015: manual updated (FAQS)
+05022015: shortened gene names derived from 'product' tags in extract_CDSs_from_genbank,_features_from_,_intergenic_from_
+05022015: fixed sequence parsing of spliced features in extract_features_from_genbank
+20022015: fixed bug on -s flag of check_BDBHs.pl
+20022015: fixed bug affecting -G -I which resulted on singletons from excluded taxa being added to cluster set
+20022015: fixed bug which incorrectly handled clusters with diverse Pfam compositions as singletons with -D -t 0
+20022015: added option -A to get_homologues.pl which computes average identity matrices from blastp/blastn results of clustered sequences
+25022015: added check to compare_clusters.pl to warn users of forbidden chars on file paths, which caused trouble with embedded R script 
+27022015: fixed weird bug in extract_CDSs_from_genbank that appeared when reading a prokka-delivered gbk files
+27022015: manual updated and accompanying scripts hcluster_matrix.sh & plot_matrix_heatmap.sh included
+04032015: added a third arg to marfil_homology::sort_blast_results, a boolean flag stating whether secondary hsps are to be conserved
+04032015: added global variable $KEEPSCNDHSPS to get_homologues.pl to explicitely state wether secondary hsp are kept (default = 1) 
+11032015: added option -t to check_BDBHs.pl to show only hits from a selected taxon
+17032015: edited marfil_homology::matrix to save RAM 
+24032015: added %identity to check_BDBHs.pl output
+24032015: added support in get_homologues for input in the form of a folder of pre-clustered sequences in FASTA format
+06042015: get_homologues.pl -c now prints the random generator seed
+09042015: added new accompanying script make_nr_pangenome_matrix.pl
+13042015: added $MIN_PERSEQID_HOM_EST & $MIN_COVERAGE_HOM_EST to marfil_homology
+13042015: fixed bug that affected get_homologues -c pangenome re-calculations when $MIN_PERSEQID_HOM & $MIN_COVERAGE_HOM changed
+30042015: added one-liner for transposing pangenome matrices to compare_clusters.pl and make_nr_pangenome_matrix.pl
+13052015: added -a to parse_pangenome_matrix.pl to allow finding genes absent in taxa in -B list
+13052015: added -S to parse_pangenome_matrix.pl to allow filtering out singletons while calling -g or -a
+29052015: fixed bug while calculating -A average identity matrices
+07072015: manual updated
+13082015: added $SOFTCOREFRACTION to marfil_homology.pm and updated parse_pangenome_matrix.pl
+13082015: added -z to get_homologues to calculate soft-core composition analyses with -c
+13082015: fixed bug in compare_clusters.pl when file.cluster_list is not in place that produced a pangenome matrix with refs instead of gene occurrences
+14082015: manual updated
+03092015: fixed bug in hcluster_matrix.sh when using full path with -i 
+17112015:
+17112015: ###############################################################
+17112015: Preparing the move to EST version and git
+17112015: ###############################################################
+17112015:
+17112015: changed BLAST parsing to capture -outfmt 6 'qseqid sseqid pident length qlen slen qstart qend sstart send evalue bitscore'
+17112015: this implies that old BLAST results from old get_homs releases won't work anymore
+17112015: %seq_length is only produced with -f; removed this option in -est.pl                                                 
+17112015: removed line id from all_blast.bpo 
+17112015: converted old blastquery to %blastquery[address,total] and eliminated %address_ref
+17112015: optimized getblock_from_bpofile
+17112015: changed %gindex to $gindex{tax1}[123,234,tot]
+17112015: switched %gindex2 by @gindex2 and updated calls in all scripts, including check_BDBHs.pl
+17112015: handle Evalues as strings when comparing them (eq instead of ==)  
+17112015: added flag_small_clusters, and get_homologues.pl suport -t combined with -c [OMCL|COG]
+17112015: updated MCL to mcl-14-137
