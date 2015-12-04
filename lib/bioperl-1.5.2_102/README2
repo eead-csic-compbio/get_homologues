@@ -1,0 +1,2 @@
+This is a subset of the bioperl set of modules including only those required by get_homologues.pl .
+The motivation of including these was to ease installation procedure, as bioperl is now to cause installation problems often.

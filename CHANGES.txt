@@ -60,12 +60,11 @@
 14082015: manual updated
 03092015: fixed bug in hcluster_matrix.sh when using full path with -i 
 17112015:
-17112015: ###############################################################
 17112015: Preparing the move to EST version and git
-17112015: ###############################################################
 17112015:
 17112015: changed BLAST parsing to capture -outfmt 6 'qseqid sseqid pident length qlen slen qstart qend sstart send evalue bitscore'
 17112015: this implies that old BLAST results from old get_homs releases won't work anymore
+17112015: fixed bug when computing coverage of redundant multi-hsp BLASTP matches
 17112015: %seq_length is only produced with -f; removed this option in -est.pl                                                 
 17112015: removed line id from all_blast.bpo 
 17112015: converted old blastquery to %blastquery[address,total] and eliminated %address_ref
@@ -75,3 +74,7 @@
 17112015: handle Evalues as strings when comparing them (eq instead of ==)  
 17112015: added flag_small_clusters, and get_homologues.pl suport -t combined with -c [OMCL|COG]
 17112015: updated MCL to mcl-14-137
+01122015: updated hmmer to version 3.1b2 as 3.0 is not compatible with Pfam 28
+04112015: updated make_nr_pangenome_matrix.pl and download_genomes_ncbi.pl
+04122015: manual_get_homologues.pdf manual updated
+04122015: manual_get_homologues-est.pdf manual released
