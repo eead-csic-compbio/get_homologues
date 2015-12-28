@@ -67,7 +67,7 @@ sub set_phyTools_env
   if( ! defined($ENV{'MARFIL_MISSING_BINARIES'}) ) { $ENV{'MARFIL_MISSING_BINARIES'} =  ''; }
   if( ! defined($ENV{'MARFIL'}) ) { $ENV{'MARFIL'} =  $MARFILPATH .'/'; }
   if( ! defined($ENV{"PFAMDB"}) ) { $ENV{"PFAMDB"} = $ENV{'MARFIL'}."db/Pfam-A.hmm"; } # HMMER3.0 is not compatible with Pfam > 27
-  if( ! defined($ENV{'BLAST_PATH'}) ){ $ENV{'BLAST_PATH'} = $ENV{'MARFIL'}.'bin/ncbi-blast-2.2.27+/bin/'; }
+  if( ! defined($ENV{'BLAST_PATH'}) ){ $ENV{'BLAST_PATH'} = $ENV{'MARFIL'}.'bin/ncbi-blast-2.2.27+/bin/bin/'; }
   if( ! defined($ENV{'EXE_BLASTP'}) ){ $ENV{'EXE_BLASTP'} = $ENV{'BLAST_PATH'}.'blastp'; }
   if( ! defined($ENV{'EXE_BLASTN'}) ){ $ENV{'EXE_BLASTN'} = $ENV{'BLAST_PATH'}.'blastn'; }
   if( ! defined($ENV{'EXE_FORMATDB'}) ){ $ENV{'EXE_FORMATDB'} = $ENV{'BLAST_PATH'}.'makeblastdb'; }
