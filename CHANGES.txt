@@ -78,3 +78,4 @@
 04112015: updated make_nr_pangenome_matrix.pl and download_genomes_ncbi.pl
 04122015: manual_get_homologues.pdf manual updated
 04122015: manual_get_homologues-est.pdf manual released
+29122015: fixed wrong bin path of macosx binary release (thanks Jon Badalamenti!)
