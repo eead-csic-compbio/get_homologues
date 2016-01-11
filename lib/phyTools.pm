@@ -236,7 +236,7 @@ sub run_PARS
   if($ref_hash_labels)
   {
 
-# parse $tmp_outtree get rid of \n and \s, and write the single treeline to file
+    # parse $tmp_outtree get rid of \n and \s, and write the single treeline to file
     open(TMP,$tmp_outtree) || die "run_PARS cannot open outfile $tmp_outtree: $!\n";
     while(<TMP>)
     {

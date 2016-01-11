@@ -1,6 +1,6 @@
 #!/usr/bin/env perl 
 
-# 2015 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2015-6 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -45,7 +45,8 @@ my $MAXPFAMSEQS          = 250;   # default for -m cluster jobs, it is updated t
 my $PRINTCLUSTERSSCREEN  = 0;     # whether cluster names should be printed to screen
 my $FULLENGTHFLAG = 'flcdna';     # input sequences in files with names containing this flag are considered full length, instead of fragments
 my $MINREDOVERLAP = 40;           # as in tgicl, min overlap to handle possibly redundant isoforms
-my $TRIMULTIHSP = 1;              # correct overlaps when calculating cover of multi-hsp hits  
+my $TRIMULTIHSP   = 1;            # correct overlaps when calculating cover of multi-hsp hits  
+my $MINSEQLENGTH  = 20;           # min length for input sequences to be considered (~ primer or miRNA) 
 
 ## list of features/binaries required by this program (do not edit)
 my @FEATURES2CHECK = ('EXE_BLASTN','EXE_FORMATDB','EXE_MCL','EXE_HMMPFAM',
@@ -431,7 +432,7 @@ unlink($sequence_data_filename,$sequence_prot_filename,$sequence_dna_filename,$p
 my $input_order_file = $newDIR."/input_order.txt";
 
 print "# results_directory=$newDIR\n";
-print "# parameters: MAXEVALUEBLASTSEARCH=$MAXEVALUEBLASTSEARCH MAXPFAMSEQS=$MAXPFAMSEQS BATCHSIZE=$BATCHSIZE\n";
+print "# parameters: MAXEVALUEBLASTSEARCH=$MAXEVALUEBLASTSEARCH MAXPFAMSEQS=$MAXPFAMSEQS BATCHSIZE=$BATCHSIZE MINSEQLENGTH=$MINSEQLENGTH\n";
 
 ################################################################
 
@@ -468,8 +469,12 @@ if($inputDIR)
 {
   # 1.1.1) open and read directory, only master .fasta/.fna files are considered
   opendir(DIR,$inputDIR) || die "# EXIT : cannot list $inputDIR\n";
-  my @inputfiles = sort grep {/\.fna$/i || /\.fna\.gz$/i || /\.fna.bz2$/i ||/_$/ || /\.clusters$/} readdir(DIR);
-  closedir(DIR);
+  my @inputfiles = sort grep {
+    /\.fna$/i || /\.fna\.gz$/i || /\.fna.bz2$/i || 
+    /\.fa$/i || /\.fa\.gz$/i || /\.fa.bz2$/i || 
+    /_$/ || /\.clusters$/ # pre-clustered sequences
+    } readdir(DIR);
+  closedir(DIR); 
 
   # 1.1.2) sort input files and put new files towards the end of @inputfiles: LILO
   if(-s $input_order_file)
@@ -664,7 +669,7 @@ if($inputDIR)
 
     open(INPUT,">$newDIR/$new_infile") || die "# EXIT : cannot create $newDIR/$new_infile\n";
 
-    # sort sequences by nucleotide lenth (largest to smallest) to support isoform clustering
+    # sort sequences by nucleotide lenth (longest to shortest) to support isoform clustering
     my @length_sorted_seqs =
       map { $_->[0],$_->[1] }
       sort { $b->[1]<=>$a->[1] }
@@ -676,6 +681,12 @@ if($inputDIR)
       {
         chomp $fasta_ref->[$seq][NAME];
         print "# skipped void sequence ($fasta_ref->[$seq][NAME])\n" if($fasta_ref->[$seq][NAME]);
+        next;
+      }
+      
+      if($seqL < $MINSEQLENGTH)
+      {
+        print "# skipped short sequence ($fasta_ref->[$seq][NAME] , $seqL)\n";
         next;
       }
 
