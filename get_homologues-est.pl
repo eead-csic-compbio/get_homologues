@@ -944,8 +944,9 @@ if($do_PFAM)
 
   # concatenate partial/group Pfam results
   my (@pfamfiles);
-  foreach $prot_new_infile (@newfiles)
+  foreach my $file (@newfiles)
   {
+    $prot_new_infile = $file;
     $prot_new_infile =~ s/nucl/amino/;
 
     my @group_pfamfiles;

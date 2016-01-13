@@ -80,5 +80,7 @@
 04122015: manual_get_homologues-est.pdf manual released
 29122015: fixed wrong bin path of macosx binary release (thanks Jon Badalamenti!)
 30122015: added .fa as valid extension for input files in get_homologues-est.pl
-11012016: EST manual updated
 11012016: added global $MINSEQLENGTH to filter out short oligomers
+13012016: fixed bug in get_homologues-est.pl -D
+13012016: EST manual updated
+
