@@ -4,7 +4,7 @@ This software is written and maintained by Bruno Contreras-Moreira (bcontreras _
 
 [Contreras-Moreira B, Vinuesa P (2013) Appl. Environ. Microbiol. 79:7696-7701](http://aem.asm.org/content/79/24/7696.long)
 
-That code has been and is regularly patched (see [CHANGES](./CHANGES.txt) in each release), and has recently been adapted to the study of **intra-specific eukaryotic pangenomes**, which we have tested with whole-genome data and transcripts of plants.
+That code has been and is regularly patched (see [CHANGES.txt](./CHANGES.txt) in each release), and has recently been adapted to the study of **intra-specific eukaryotic pangenomes**, which we have tested with whole-genome data and transcripts of plants.
 
 We kindly ask you to report errors or bugs in the program to the authors and to acknowledge the use of the program in scientific publications.
 
@@ -12,5 +12,9 @@ We kindly ask you to report errors or bugs in the program to the authors and to 
 
 ![logo CSIC](pics/logoCSIC.png) ![logo ARAID](pics/logoARAID.gif) ![logo UNAM](pics/logoUNAM.png)
 
-Installation instructions are summarized on [README](./README.txt) and full documentation is available in two PDF files:
-[manual_get_homologues.pdf](./manual_get_homologues.pdf) and [manual_get_homologues-est.pdf](./manual_get_homologues-est.pdf).
+Installation instructions are summarized on [README.txt](./README.txt) and full documentation is available in two files:
+
+|version|file|
+|-------|----|
+|original, for the analysis of bacterial pangenomes|[manual_get_homologues.pdf](./manual_get_homologues.pdf)|
+|EST, for the analysis of intra-species eukaryotic pangenomes, tested on plants|[manual_get_homologues-est.pdf](./manual_get_homologues-est.pdf)|
