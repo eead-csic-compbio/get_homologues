@@ -173,7 +173,8 @@ foreach my $d (0 .. $#cluster_dirs)
       # cluster 3491_1182 size=20 taxa=20 dnafile: 3491_1182.fna
       # cluster 76767_thrA size=20 taxa=20 Pfam=PF00696, file: 76767_thrA.faa dnafile: 76767_thrA.fna
       # cluster 1_Brdisv1ABR21035063m size=58 taxa=55 file: 1_Brdisv1ABR21035063m.fna aminofile: 1_Brdisv1ABR21035063m.faa
-      
+      # cluster 1_TR20326-c1_g1_i1 size=12 taxa=12 Pfam=PF13920, file: 1_TR20326-c1_g1_i1.fna aminofile: 1_TR20326-c1_g1_i1.faa
+            
       if(/^cluster \S+ size=\d+ taxa=\d+ .*?file: (\S+) dnafile: (\S+)/)
       {
         if($INP_prot){ $file = $1 }
@@ -186,7 +187,8 @@ foreach my $d (0 .. $#cluster_dirs)
         $file = $1;
         push(@files,$file);
       }
-      elsif(/^cluster \S+ size=\d+ taxa=\d+ file: (\S+) aminofile: (\S+)/)
+      elsif(/^cluster \S+ size=\d+ taxa=\d+ file: (\S+) aminofile: (\S+)/ || 
+        /^cluster \S+ size=\d+ taxa=\d+ .*?file: (\S+) aminofile: (\S+)/)
       {
         if($INP_prot){ $file = $2 }
         else{ $file = $1 }

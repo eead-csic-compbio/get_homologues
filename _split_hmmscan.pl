@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# May2013 Bruno Contreras, pablito
+# May2013 Bruno Contreras, Pablo Vinuesa, updated Jan2016
 # Script to take advantage of multicore machines when running hmmer3,
 # which seems to scale up to the number of physical cores in our tests.
 
@@ -53,7 +53,7 @@ else ## parse command-line arguments
   else{ die "# ERROR: hmmscan command must include database & input files \n" }
 
   if(!-s $input_seqfile){ die "# ERROR: cannot find input file $input_seqfile\n" }
-  elsif(!-s $db_file)
+  elsif(!-s $db_file.'.h3m')
   {
     die "# ERROR: cannot find database file $db_file\n"
   }

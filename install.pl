@@ -1,8 +1,8 @@
 #!/usr/bin/env perl
 
-# script that checks/compiles software required by get_homologues.pl and checks dependencies
+# script that checks/compiles software required by get_homologues[-est] and checks dependencies
 # for first-time users
-# last edited Dic2015
+# last checked Jan2016
 
 use strict;
 use Cwd;
@@ -78,7 +78,7 @@ foreach my $exe (keys(%cogs))
   else{ print ">> OK\n"; }
 }
 
-# NCBI blast
+# NCBI blast+
 print "## Checking blast (lib/phyTools: \$ENV{'EXE_BLASTP'})\n";
 $output = `$ENV{'EXE_BLASTP'} 2>&1`;
 if(!$output || $output !~ /BLAST/)
@@ -101,7 +101,7 @@ $output = `$ENV{'EXE_HMMPFAM'} 2>&1`;
 if($output =~ /Usage:/){ print ">> OK\n"; }
 else
 {
-  die "<< Cannot run shipped hmmscan, please download hmmer 3.1 from http://hmmer.janelia.org ,\n".
+  die "<< Cannot run shipped hmmscan, please download hmmer 3.1b2 from http://hmmer.janelia.org ,\n".
     "<< install it and edit variable EXE_HMMPFAM as explained in the manual\n".
     "<<(inside set_phyTools_env in file lib/phyTools.pm) .\n".
     "<< Then re-run\n";
@@ -255,7 +255,8 @@ else
 my (@missing_packages,@missing_perl_modules);
 
 print "## checking optional software R (lib/phyTools: \$ENV{'EXE_R'})\n";
-print "# required by compare_clusters.pl, parse_pangenome_matrix.pl -s, plot_pancore_matrix.pl\n";
+print "# required by compare_clusters.pl, parse_pangenome_matrix.pl -s, plot_pancore_matrix.pl and\n";
+print "# plot_matrix_heatmap.sh, hcluster_matrix.sh\n";
 $output = `$ENV{'EXE_R'} --version 2>&1`;
 if($output =~ /R version/){ print ">> OK\n"; }
 else

@@ -83,4 +83,7 @@
 11012016: added global $MINSEQLENGTH to filter out short oligomers
 13012016: fixed bug in get_homologues-est.pl -D
 13012016: EST manual updated
-
+13012016: fixed bug in compare_clusters.pl while parsing cluster list generated with -D
+19012016: fixed Pfam db check in _split_hmmscan.pl (thanks Jon Badalamenti)
+20012016: fixed src/Makefile error in mcl
+20012016: manuals updated
