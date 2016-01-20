@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# 2013 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2013-6 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -9,10 +9,6 @@
 # Takes 2 lists (A & B) with taxon names (as those used by get_homologues and compare_clusters)
 # in order to analyze clusters present/absent in one with respect to the other.
 # Can also be used to plot shell genome distribution (PDF and PNG, requires R http://www.r-project.org)
-
-# preguntas:
-# 1) dame los clusters de genes presentes/ausentes de un clado, por ejemplo para adaptarse a un nicho
-# 2) dame los clusters que han tenido expansiones/contracciones clado especificas
 
 $|=1;
 
@@ -23,6 +19,7 @@ use FindBin '$Bin';
 use lib "$Bin/lib";
 use lib "$Bin/lib/bioperl-1.5.2_102/";
 use phyTools;
+use marfil_homology;
 use Bio::Graphics;
 use Bio::SeqFeature::Generic;
 
@@ -37,8 +34,9 @@ check_installed_features(@FEATURES2CHECK);
 
 my ($INP_matrix,$INP_absent,$INP_expansions,$INP_includeA,$INP_includeB,%opts) = ('',0,0,'','');
 my ($INP_refgenome,$INP_list_taxa,$INP_plotshell,$INP_cutoff,$needAB,$Rparams) = ('',0,0,$CUTOFF,0,'');
+my ($INP_absentB,$INP_skip_singletons,$needB) = (0,0);
 
-getopts('hgiselp:m:A:B:P:', \%opts);
+getopts('hagSselp:m:A:B:P:', \%opts);
 
 if(($opts{'h'})||(scalar(keys(%opts))==0))
 {
@@ -49,8 +47,10 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   print   "-l \t list taxa names present in clusters reported in -m matrix (optional, recommended before using -p option)\n";
   print   "-A \t file with taxon names (.faa,.gbk files) of group A        (optional, example -A clade_list_pathogenic.txt)\n";
   print   "-B \t file with taxon names (.faa,.gbk files) of group B        (optional, example -B clade_list_symbiotic.txt)\n";
+  print   "-a \t find genes/clusters which are absent in B                 (optional, requires -B)\n";
   print   "-g \t find genes/clusters present in A which are absent in B    (optional, requires -A & -B)\n";
   print   "-e \t find gene family expansions in A with respect to B        (optional, requires -A & -B)\n";
+  print   "-S \t skip singletons when comparing A and B                    (optional, requires -a/-g, skips sequences found in <2 taxa)\n";
   print   "-P \t percentage of genomes that must comply presence/absence   (optional, default=$CUTOFF, requires -g)\n";
   if(eval{ require GD } ) # show only if GD is available
   {
@@ -67,7 +67,12 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
 if(defined($opts{'m'})){ $INP_matrix = $opts{'m'} }
 else{ die "\n# $0 : need -m parameter, exit\n"; }
 
-if(defined($opts{'g'}))
+if(defined($opts{'a'}))
+{
+  $INP_absentB = 1;
+  $needB = 1;
+}
+elsif(defined($opts{'g'}))
 {
   $INP_absent = 1;
   $needAB = 1;
@@ -77,8 +82,7 @@ if(defined($opts{'g'}))
     $CUTOFF = $opts{'P'};
   }
 }
-
-if(defined($opts{'e'}))
+elsif(defined($opts{'e'}))
 {
   $INP_expansions = 1;
   $needAB = 1;
@@ -104,13 +108,18 @@ if(defined($opts{'B'}))
 {
   $INP_includeB = $opts{'B'};
 }
-elsif($needAB){ die "\n# $0 : need -B parameter, exit\n"; }
+elsif($needAB || $needB){ die "\n# $0 : need -B parameter, exit\n"; }
 
-printf("\n# %s -m %s -A %s -B %s -g %d -e %d -p %s -s %d -l %d -P %d\n\n",
-  $0,$INP_matrix,$INP_includeA,$INP_includeB,$INP_absent,
-  $INP_expansions,$INP_refgenome,$INP_plotshell,$INP_list_taxa,$CUTOFF);
+if(($INP_absentB ||$INP_absent) && $opts{'S'})
+{
+  $INP_skip_singletons = 1;
+}
 
-if(!$needAB && !$INP_plotshell && !$INP_list_taxa)
+printf("\n# %s -m %s -A %s -B %s -a %d -g %d -e %d -p %s -s %d -l %d -P %d -S %d\n\n",
+  $0,$INP_matrix,$INP_includeA,$INP_includeB,$INP_absentB,$INP_absent,
+  $INP_expansions,$INP_refgenome,$INP_plotshell,$INP_list_taxa,$CUTOFF,$INP_skip_singletons);
+
+if(!$needB && !$needAB && !$INP_plotshell && !$INP_list_taxa)
 {
   die "# $0: error, need either -s or -l option\n";
 }
@@ -139,8 +148,13 @@ $cloudlistfile    = $outfile_root . '_cloud_list.txt';
 $shelllistfile    = $outfile_root . '_shell_list.txt';
 $softcorelistfile = $outfile_root . '_softcore_list.txt';
 $corelistfile     = $outfile_root . '_core_list.txt';
-$outpanfileA = $outfile_root . '_pangenes_list.txt';
-$outexpanfileA = $outfile_root . '_expansions_list.txt';
+$outpanfileA      = $outfile_root . '_pangenes_list.txt';
+$outexpanfileA    = $outfile_root . '_expansions_list.txt';
+
+if($INP_skip_singletons)
+{
+  $outpanfileA = $outfile_root . '_pangenes_no-singletons_list.txt';
+}
 
 ## 1) parse pangenome matrix
 open(MAT,$INP_matrix) || die "# EXIT : cannot read $INP_matrix\n";
@@ -187,7 +201,20 @@ while(<MAT>)
 close(MAT);
 print "# matrix contains $n_of_clusters clusters and ".scalar(keys(%pangemat))." taxa\n\n";
 
-if($needAB)
+if($needB)
+{
+  ## 2.0) parse include_file B
+  open(INCL,$INP_includeB) || die "# EXIT : cannot read $INP_includeB\n";
+  while(<INCL>)
+  {
+    next if(/^#/ || /^$/);
+    $included_input_filesB{(split)[0]} = 1;
+  }
+  close(INCL);
+  $n_of_includedB = scalar(keys(%included_input_filesB));
+  print "# taxa included in group B = $n_of_includedB\n\n";
+}
+elsif($needAB)
 {
   ## 2.1) parse include_file A
   open(INCL,$INP_includeA) || die "# EXIT : cannot read $INP_includeA\n";
@@ -213,7 +240,48 @@ if($needAB)
 }
 
 ## 3) perform requested operations
-if($INP_absent)
+if($INP_absentB)
+{
+  print "\n# finding genes which are absent in B ...\n";
+  foreach $col (1 .. $n_of_clusters)
+  {
+    my ($presentA,$absentA,$absentB,$presentB) = (0,0,0,0);
+    foreach my $taxon (keys(%pangemat))
+    {
+      if($pangemat{$taxon}[$col])
+      {
+        if($included_input_filesB{$taxon}){ $presentB++ }
+        else{ $presentA++ }
+      }
+      else
+      {
+        if($included_input_filesB{$taxon}){ $absentB++ }
+        else{ $absentA++ }
+      }
+    }
+
+    if($presentA > 0 && $absentB == $n_of_includedB)
+    {
+      # pan gene in set A
+      next if($INP_skip_singletons && $presentA == 1);
+      push(@pansetA,$cluster_names{$col});
+    }
+  }
+
+  print "# file with genes absent in B (".scalar(@pansetA)."): $outpanfileA\n";
+  open(OUTLIST,">$outpanfileA") || die "# $0 : cannot create $outpanfileA\n";
+  printf OUTLIST ("# %s -m %s -A %s -B %s -g %d -e %d -p %s\n",
+    $0,$INP_matrix,$INP_includeA,$INP_includeB,$INP_absent,$INP_expansions,$INP_refgenome);
+  
+  if($INP_skip_singletons)
+  {
+    print OUTLIST "# genes absent in B, excluding singletons (".scalar(@pansetA)."):\n";
+  }
+  else{ print OUTLIST "# genes absent in B (".scalar(@pansetA)."):\n"; }
+  foreach $col (@pansetA){ print OUTLIST "$col\n" }
+  close(OUTLIST);
+}
+elsif($INP_absent)
 {
   print "\n# finding genes present in A which are absent in B ...\n";
   foreach $col (1 .. $n_of_clusters)
@@ -235,17 +303,16 @@ if($INP_absent)
 
     if($presentA >= ($n_of_includedA*$CUTOFF) && $absentB >= ($n_of_includedB*$CUTOFF))
     {
-
-# pan gene in set A
-#print "$cluster_names{$col} present only in ($n_of_includedA) taxa in set A\n";
+      # pan gene in set A
+      #print "$cluster_names{$col} present only in ($n_of_includedA) taxa in set A\n";
+      next if($INP_skip_singletons && $presentA == 1);
       push(@pansetA,$cluster_names{$col});
     }
     elsif($presentB >= ($n_of_includedB*$CUTOFF) && $absentA >= ($n_of_includedA*$CUTOFF))
     {
-
-# pan gene in set B
-#print "$cluster_names{$col} present only in ($n_of_includedB) taxa in set B\n";
-      push(@pansetB,$cluster_names{$col});
+      # pan gene in set B
+      #print "$cluster_names{$col} present only in ($n_of_includedB) taxa in set B\n";
+      #push(@pansetB,$cluster_names{$col});
     }
   }
 
@@ -253,7 +320,12 @@ if($INP_absent)
   open(OUTLIST,">$outpanfileA") || die "# $0 : cannot create $outpanfileA\n";
   printf OUTLIST ("# %s -m %s -A %s -B %s -g %d -e %d -p %s\n",
     $0,$INP_matrix,$INP_includeA,$INP_includeB,$INP_absent,$INP_expansions,$INP_refgenome);
-  print OUTLIST "# genes present in set A and absent in B (".scalar(@pansetA)."):\n";
+  
+  if($INP_skip_singletons)
+  {
+    print OUTLIST "# genes present in set A and absent in B, excluding singletons (".scalar(@pansetA)."):\n";
+  }
+  else{ print OUTLIST "# genes present in set A and absent in B (".scalar(@pansetA)."):\n"; }
   foreach $col (@pansetA){ print OUTLIST "$col\n" }
   close(OUTLIST);
 
@@ -261,8 +333,7 @@ if($INP_absent)
   # print "# genes present in set B and absent in A (".scalar(@pansetB)."):\n";
   # foreach $col (@pansetB){ print "$col\n" }
 }
-
-if($INP_expansions)
+elsif($INP_expansions)
 {
   print "\n# finding gene family expansions in group A ...\n";
   foreach $col (1 .. $n_of_clusters)
@@ -299,15 +370,13 @@ if($INP_expansions)
       # exapansions in set A: all A taxa must have sizeA > sizeB in all B taxa
       if($minA > $maxB)
       {
-
         #print "$cluster_names{$col} expanded in set A\n";
         push(@expA,$cluster_names{$col});
       }
       elsif($minB > $maxA)
       {
-
         #print "$cluster_names{$col} expanded in set B\n";
-        push(@expB,$cluster_names{$col});
+        #push(@expB,$cluster_names{$col});
       }
     }
   }
@@ -333,8 +402,8 @@ if($INP_refgenome)
 
   print "\n# plotting pangenes in genomic context...\n";
 
-# read $INP_refgenome GenBank file if format is ok | OLD VERSION
-# my $ref_sources_features = extract_features_from_genbank($INP_refgenome,0,$DEFAULTGBKFEATURES);
+  # read $INP_refgenome GenBank file if format is ok | OLD VERSION
+  # my $ref_sources_features = extract_features_from_genbank($INP_refgenome,0,$DEFAULTGBKFEATURES);
 
   # find reference genes contained in @pansetA clusters
   my $taxonOK = 0;
@@ -439,7 +508,7 @@ if($INP_plotshell)
   unlink($shell_output_png,$shell_output_pdf);
   my $n_of_taxa = scalar(keys(%pangemat));
   my ($cloudpos,$cloudmax,$cluster,$s,%stats,%total) = (-1,-1);
-  my $softcorepos = int(0.95*$n_of_taxa); #http://www.biomedcentral.com/1471-2164/13/577/abstract
+  my $softcorepos = int($SOFTCOREFRACTION*$n_of_taxa); 
 
   # calculate shell sums and fill gaps
   foreach $cluster (1 .. $#shell){ $stats{$shell[$cluster]}++; }
