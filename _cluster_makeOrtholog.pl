@@ -12,10 +12,10 @@ use lib "$Bin/lib/bioperl-1.5.2_102/";
 use marfil_homology;
 
 my (%opts,$INP_dir,$INP_bpofile,$INP_i,$INP_j,$INP_evalue,$INP_noref);
-my ($INP_pmatch,$INP_pi,$INP_nn_corr,$INP_forceredo,$INP_LSE,$INP_Pfam,$INP_use_short_sequence);
-my ($INP_onlybesthit);
+my ($INP_pmatch,$INP_pi,$INP_nn_corr,$INP_forceredo,$INP_LSE,$INP_Pfam);
+my ($INP_use_short_sequence,$INP_onlybesthit) = (0);
 
-getopts('hs:d:b:i:j:E:S:C:N:f:l:D:n:B:', \%opts);
+getopts('hsd:b:i:j:E:S:C:N:f:l:D:n:B:', \%opts);
 
 if(($opts{'h'})||(scalar(keys(%opts))==0))
 {
@@ -77,8 +77,8 @@ else{ die "# EXIT : need parameter -n\n"; }
 if(defined($opts{'B'})){ $INP_onlybesthit = $opts{'B'}; }
 else{ die "# EXIT : need parameter -B\n"; }
 
-if(defined($opts{'s'})){ $INP_use_short_sequence = $opts{'s'}; }
-else{ die "# EXIT : need parameter -s\n"; }
+if(defined($opts{'s'})){ $INP_use_short_sequence = 1; }
+#else{ die "# EXIT : need parameter -s\n"; }
 
 ##########################################################################
 

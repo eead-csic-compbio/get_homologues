@@ -87,3 +87,4 @@
 19012016: fixed Pfam db check in _split_hmmscan.pl (thanks Jon Badalamenti)
 20012016: fixed src/Makefile error in mcl
 20012016: manuals updated
+25012016: fixed bug in _cluster_makeHomolog.pl,_cluster_makeInparalog.pl,_cluster_makeOrtholog.pl reported by Maliha Aziz, which did not affect results, but produce them slower

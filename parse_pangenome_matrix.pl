@@ -45,8 +45,8 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   print   "-m \t input pangenome matrix .tab                               (required, made by compare_clusters.pl)\n"; #, ideally with -t 0)\n";
   print   "-s \t report cloud,shell,soft core and core clusters            (optional, creates plot if R is installed)\n";
   print   "-l \t list taxa names present in clusters reported in -m matrix (optional, recommended before using -p option)\n";
-  print   "-A \t file with taxon names (.faa,.gbk files) of group A        (optional, example -A clade_list_pathogenic.txt)\n";
-  print   "-B \t file with taxon names (.faa,.gbk files) of group B        (optional, example -B clade_list_symbiotic.txt)\n";
+  print   "-A \t file with taxon names (.faa,.gbk,.nucl files) of group A  (optional, example -A clade_list_pathogenic.txt)\n";
+  print   "-B \t file with taxon names (.faa,.gbk,.nucl files) of group B  (optional, example -B clade_list_symbiotic.txt)\n";
   print   "-a \t find genes/clusters which are absent in B                 (optional, requires -B)\n";
   print   "-g \t find genes/clusters present in A which are absent in B    (optional, requires -A & -B)\n";
   print   "-e \t find gene family expansions in A with respect to B        (optional, requires -A & -B)\n";
