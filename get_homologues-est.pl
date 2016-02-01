@@ -2556,36 +2556,6 @@ sub cluster_is_available
   return 1;
 }
 
-sub estimate_RAM
-{
-  my ($n_of_sequences) = @_;
-
-  my ($use,$physicalRAM) = (0,0);
-  if(-s "/proc/meminfo") # will work only in linux systems
-  {
-    open(MEMINFO,"/proc/meminfo") || warn "# estimate_RAM : cannot read /proc/meminfo\n";
-    while(<MEMINFO>){ if(/MemTotal:\s+(\d+)/){ $physicalRAM = sprintf("%1.0f",$1/1024) } }
-    close(MEMINFO);
-  }
-
-  # bencFeb2012
-  #$use = sprintf("%1.0f",(0.030 * $n_of_sequences) + 130);
-  # bench Jun2013
-  $use = sprintf("%1.0f",(0.060 * $n_of_sequences) - 1700);
-
-  #if($isMCL){ $use = sprintf("%1.0f",(0.030 * $n_of_sequences) + 192) }
-  #else{ $use = sprintf("%1.0f",(0.027 * $n_of_sequences) + 122) }
-
-  if($physicalRAM && $use > $physicalRAM)
-  {
-    $use = "$use Mb (larger than physical RAM, consider using -s option)";
-  }
-  elsif($use > 0){ $use = "$use Mb" }
-  else{ $use = 0 }
-
-  return $use;
-}
-
 # submits jobs to a SGE queue, this subroutine should be edited for other cluster systems
 sub submit_cluster_job
 {
@@ -2629,8 +2599,8 @@ sub check_cluster_jobs
                                         $ref_PIDs->{$qPID}{'executable'}
 EOF`;
 
-#Your job 108381 ("n_Bartonella_quintana_Toulouse.gbk.fasta") has been submitted
-#edit this regular expression if needed to suit your SGE cluster
+          #Your job 108381 ("n_Bartonella_quintana_Toulouse.gbk.fasta") has been submitted
+          #edit this regular expression if needed to suit your SGE cluster
           if($newqPID =~ /^(\d+)\./ || $newqPID =~ /^Your job (\d+)/){ $newqPID = $1 }
           $ref_PIDs->{$newqPID}{'command'} = $ref_PIDs->{$qPID}{'command'};
           $ref_PIDs->{$newqPID}{'executable'} = $ref_PIDs->{$qPID}{'executable'};

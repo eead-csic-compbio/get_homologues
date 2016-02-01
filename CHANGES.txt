@@ -88,3 +88,5 @@
 20012016: fixed src/Makefile error in mcl
 20012016: manuals updated
 25012016: fixed bug in _cluster_makeHomolog.pl,_cluster_makeInparalog.pl,_cluster_makeOrtholog.pl reported by Maliha Aziz, which did not affect results, but produce them slower
+01022016: updated download_genomes_ncbi.pl and sample_genome_list.txt to fit current NCBI repositories, and manual
+01022016: removed estimate_RAM from get_homologues.pl, as RAM consumption has been reduced

@@ -1,6 +1,6 @@
 #!/usr/bin/env perl 
 
-# 2015 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2016 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -1010,8 +1010,8 @@ printf("# taxa considered = %d sequences = %d residues = %d MIN_BITSCORE_SIM = %
 if($n_of_taxa<2){ die "# EXIT: need at least two taxa to make clusters\n" }
 elsif($doCOG && $n_of_taxa<3){ die "# EXIT: need at least three taxa to run COGtriangles algorithm\n" }
 
-my $RAM = estimate_RAM($n_of_sequences);
-printf("# estimated memory requirements: %s\n\n",$RAM) if(!$onlyblast && $RAM);
+#my $RAM = estimate_RAM($n_of_sequences);
+#printf("# estimated memory requirements: %s\n\n",$RAM) if(!$onlyblast && $RAM);
 
 # 1.5) set reference proteome index and mask (by default, select proteome with smallest number of sequences)
 # it is necessary for BDBH in particular and for all algorithms when handling intergenic regions
@@ -2968,35 +2968,35 @@ sub cluster_is_available
   return 1;
 }
 
-sub estimate_RAM
-{
-  my ($n_of_sequences) = @_;
-
-  my ($use,$physicalRAM) = (0,0);
-  if(-s "/proc/meminfo") # will work only in linux systems
-  {
-    open(MEMINFO,"/proc/meminfo") || warn "# estimate_RAM : cannot read /proc/meminfo\n";
-    while(<MEMINFO>){ if(/MemTotal:\s+(\d+)/){ $physicalRAM = sprintf("%1.0f",$1/1024) } }
-    close(MEMINFO);
-  }
-
-  # bencFeb2012
-  #$use = sprintf("%1.0f",(0.030 * $n_of_sequences) + 130);
-  # bench Jun2013
-  $use = sprintf("%1.0f",(0.060 * $n_of_sequences) - 1700);
-
-  #if($isMCL){ $use = sprintf("%1.0f",(0.030 * $n_of_sequences) + 192) }
-  #else{ $use = sprintf("%1.0f",(0.027 * $n_of_sequences) + 122) }
-
-  if($physicalRAM && $use > $physicalRAM)
-  {
-    $use = "$use Mb (larger than physical RAM, consider using -s option)";
-  }
-  elsif($use > 0){ $use = "$use Mb" }
-  else{ $use = 0 }
-
-  return $use;
-}
+#sub estimate_RAM
+#{
+#  my ($n_of_sequences) = @_;
+#
+#  my ($use,$physicalRAM) = (0,0);
+#  if(-s "/proc/meminfo") # will work only in linux systems
+#  {
+#    open(MEMINFO,"/proc/meminfo") || warn "# estimate_RAM : cannot read /proc/meminfo\n";
+#    while(<MEMINFO>){ if(/MemTotal:\s+(\d+)/){ $physicalRAM = sprintf("%1.0f",$1/1024) } }
+#    close(MEMINFO);
+#  }
+#
+#  # bencFeb2012
+#  #$use = sprintf("%1.0f",(0.030 * $n_of_sequences) + 130);
+#  # bench Jun2013
+#  $use = sprintf("%1.0f",(0.060 * $n_of_sequences) - 1700);
+#
+#  #if($isMCL){ $use = sprintf("%1.0f",(0.030 * $n_of_sequences) + 192) }
+#  #else{ $use = sprintf("%1.0f",(0.027 * $n_of_sequences) + 122) }
+#
+#  if($physicalRAM && $use > $physicalRAM)
+#  {
+#    $use = "$use Mb (larger than physical RAM, consider using -s option)";
+#  }
+#  elsif($use > 0){ $use = "$use Mb" }
+#  else{ $use = 0 }
+#
+#  return $use;
+#}
 
 # submits jobs to a SGE queue, this subroutine should be edited for other cluster systems
 sub submit_cluster_job
