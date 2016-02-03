@@ -1719,7 +1719,6 @@ if($do_genome_composition)
       $LSE_reference = cluster_lineage_expansions($ref_inparalogues);
     }
 
-
     for($t=1;$t<$n_of_taxa;$t++)
     {
       $coregenome[$s][$t] = 0;
@@ -1835,7 +1834,7 @@ if($do_genome_composition)
         my $ref_homol = makeHomolog($saveRAM,$tmptaxa[$t],$tmptaxa[$t2],$evalue_cutoff,
           $MIN_PERSEQID_HOM,$MIN_COVERAGE_HOM,$redo_orth);
 
-        foreach $gene ($gindex{$tmptaxa[$t]}[0] .. $gindex{$tmptaxa[0]}[1])
+        foreach $gene ($gindex{$tmptaxa[$t]}[0] .. $gindex{$tmptaxa[$t]}[1])
         {
           if($ref_homol->{$gene}){ $n_of_homs_in_genomes{$gene}++; }
         }
@@ -1858,13 +1857,13 @@ if($do_genome_composition)
       }
 
       # update pan total
-      foreach $gene ($gindex{$tmptaxa[$t]}[0] .. $gindex{$tmptaxa[0]}[1])
+      foreach $gene ($gindex{$tmptaxa[$t]}[0] .. $gindex{$tmptaxa[$t]}[1])
       {
         next if($n_of_homs_in_genomes{$gene} || $inparalogues{$gene});
         $pangenome[$s][$t]++;
       }
 
-      print "# adding $tmptaxa[$t]: core=$coregenome[$s][$t] pan=$pangenome[$s][$t]\n";
+      print "# adding $tmptaxa[$t]: core=$coregenome[$s][$t] pan=$pangenome[$s][$t]\n"; 
     }
   }
 
