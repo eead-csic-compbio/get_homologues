@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# 2015 Bruno Contreras-Moreira (1) a
+# 2015-6 Bruno Contreras-Moreira (1) a
 # 1: http://www.eead.csic.es/compbio (Laboratory of Computational Biology, EEAD/CSIC, Spain)
 
 # This script can be used to extract coding sequences encoded in input transcripts
@@ -18,6 +18,7 @@ use Cwd;
 use FindBin '$Bin';
 use lib "$Bin/lib";
 use lib "$Bin/lib/est";
+use lib "$Bin/lib/est/TransDecoder_r20140704/PerlLib";
 use lib "$Bin/lib/bioperl-1.5.2_102";
 use phyTools;
 use transcripts;
