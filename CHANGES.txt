@@ -91,3 +91,6 @@
 01022016: updated download_genomes_ncbi.pl and sample_genome_list.txt to fit current NCBI repositories, and manual
 01022016: removed estimate_RAM from get_homologues.pl, as RAM consumption has been reduced
 03022016: fixed bug in get_homologues.pl which meant pan genome was overestimated with -c; EST not affected, thanks Joaquim Martins Jr!
+15022016: Updated manual, added redundant isoform fig to est
+15022016: install.pl added Passive=>1 to Net::FTP connections so that they work behind NAT
+15022016: Added TransDecoder to lib/est
