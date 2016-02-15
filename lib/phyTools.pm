@@ -1,5 +1,5 @@
 # Bruno Contreras-Moreira, Pablo Vinuesa
-# 2005-15 CCG/UNAM, Mexico, EEAD/CSIC, Zaragoza, Spain
+# 2005-16 CCG/UNAM, Mexico, EEAD/CSIC, Zaragoza, Spain
 # This is a collection of subroutines used in our projects,
 # including primers4clades and get_homologues.pl
 
@@ -88,7 +88,7 @@ sub set_phyTools_env
   if( ! defined($ENV{"EXE_COGTRI"}) ){ $ENV{"EXE_COGTRI"} = $ENV{'MARFIL'}."/bin/COGsoft/COGtriangles/COGtriangles "; }
 
   # transcripts/ETSs
-  if( ! defined($ENV{"EXE_TRANSDECOD_EST"}) ){ $ENV{"EXE_TRANSDECOD_EST"} = $ENV{'MARFIL'}."/bin/TransDecoder_r20140704/TransDecoder "; }
+  if( ! defined($ENV{"EXE_TRANSDECOD_EST"}) ){ $ENV{"EXE_TRANSDECOD_EST"} = $ENV{'MARFIL'}."/lib/est/TransDecoder_r20140704/TransDecoder "; }
   if( ! defined($ENV{'BLAST_PATH_EST'}) ){ $ENV{'BLAST_PATH_EST'} = $ENV{'BLAST_PATH'}; }
   if( ! defined($ENV{'EXE_BLASTX_EST'}) ){ $ENV{'EXE_BLASTX_EST'} = $ENV{'BLAST_PATH_EST'}.'blastx'; }
   if( ! defined($ENV{'EXE_FORMATDB_EST'}) ){ $ENV{'EXE_FORMATDB_EST'} = $ENV{'BLAST_PATH_EST'}.'makeblastdb'; }
