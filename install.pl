@@ -2,7 +2,7 @@
 
 # script that checks/compiles software required by get_homologues[-est] and checks dependencies
 # for first-time users
-# last checked Jan2016
+# last checked Feb2016
 
 use strict;
 use Cwd;
@@ -124,7 +124,7 @@ if(! -s $ENV{'PFAMDB'}.'.h3m')
       print "# connecting to $PFAMSERVERURL ...\n";
       eval{ require Net::FTP; };
 
-      if($ftp = Net::FTP->new($PFAMSERVERURL,Debug =>0,Timeout=>60))
+      if($ftp = Net::FTP->new($PFAMSERVERURL,Passive=>1,Debug =>0,Timeout=>60))
       {
         $ftp->login("anonymous",'-anonymous@') || die "# cannot login ". $ftp->message();
         $ftp->cwd($PFAMFOLDER) || warn "# cannot change working directory to $PFAMFOLDER ". $ftp->message();
@@ -205,7 +205,7 @@ else
     print "# connecting to $BLASTSERVERPATH ...\n";
     eval{ require Net::FTP; };
 
-    if(my $ftp = Net::FTP->new($BLASTSERVERPATH,Debug =>0,Timeout=>60))
+    if(my $ftp = Net::FTP->new($BLASTSERVERPATH,Passive=>1,Debug =>0,Timeout=>60))
     {
       $ftp->login("anonymous",'-anonymous@') || die "# cannot login ". $ftp->message();
       $ftp->cwd($SWISSPROTFOLDER) || warn "# cannot change working directory to $SWISSPROTFOLDER ". $ftp->message();
