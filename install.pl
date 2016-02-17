@@ -40,6 +40,15 @@ $output = `$ENV{'EXE_MCL'} 2>&1`;
 if($output !~ /usage/)
 {
   print "\n# compiling mcl-14-137 ...\n"; # requires gcc
+  
+  if(!-s $ENV{'MARFIL'}.'/bin/mcl-14-137')
+  {
+    warn "# mcl binaries are missing\n".
+      "# If you just git cloned you should also get the latest release,\n".
+      "# unpack it and copy the contents of the bin/ folder to your local repo bin/\n";
+    exit(-1);   
+  }
+
   chdir($ENV{'MARFIL'}.'/bin/mcl-14-137');
   system("./configure 2>&1");
   system("make 2>&1");
