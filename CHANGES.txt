@@ -96,3 +96,4 @@
 15022016: Added TransDecoder to lib/est
 23022016: fixed compare_clusters.pl so that it sorts correctly intergenic clusters
 23022106: added MiMB chapter to references
+23022016: default -S value for get_homologues-est.pl set to 95%

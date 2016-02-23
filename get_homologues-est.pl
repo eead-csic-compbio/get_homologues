@@ -59,7 +59,7 @@ my ($exclude_inparalogues,$doMCL,$do_PFAM,$reference_proteome_string) = (0,0,0,0
 my ($isoform_overlap,$onlyblast,$inputDIR,$cluster_list_file) = ($MINREDOVERLAP,0);
 my ($isoform_best_hit,$n_of_cpus,$do_minimal_BDBHs,$add_rd_isoforms,$do_ANIb_matrix,$do_soft) = (0,$BLAST_NOCPU,0,0,0,0);
 my ($min_cluster_size,$runmode,$do_genome_composition,$saveRAM,$ANIb_matrix_file);
-my ($evalue_cutoff,$pi_cutoff,$pmatch_cutoff) = ($BLAST_PVALUE_CUTOFF_DEFAULT,$PERCENT_IDENTITY_CUTOFF_DEFAULT,$PERCENT_MATCH_CUTOFF_DEFAULT);
+my ($evalue_cutoff,$pi_cutoff,$pmatch_cutoff) = ($BLAST_PVALUE_CUTOFF_DEFAULT,$PERCENT_IDENTITY_CUTOFF_EST_DEFAULT,$PERCENT_MATCH_CUTOFF_DEFAULT);
 my $MCLinflation = $MCL_INFLATION_DEFAULT;
 my $random_number_generator_seed = 0;
 my $pwd = getcwd(); $pwd .= '/';
@@ -117,7 +117,7 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
     "(best with -m cluster or -n threads)\n";
   print   "   when defining similarity-based orthology\n";
   print   "-S min \%sequence identity in BLAST query/subj pairs            ".
-    "(range [1-100],default: -S $PERCENT_IDENTITY_CUTOFF_DEFAULT [BDBH|OMCL])\n";
+    "(range [1-100],default: -S $PERCENT_IDENTITY_CUTOFF_EST_DEFAULT [BDBH|OMCL])\n";
   print   "-b compile core-transcriptome with minimum BLAST searches      ".
     "(ignores -c [BDBH])\n";
   print   "\nOptions that control clustering:\n";

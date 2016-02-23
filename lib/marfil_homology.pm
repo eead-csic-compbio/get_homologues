@@ -39,6 +39,7 @@ our @EXPORT = qw(
 
   $BLAST_PVALUE_CUTOFF_DEFAULT
   $PERCENT_IDENTITY_CUTOFF_DEFAULT
+  $PERCENT_IDENTITY_CUTOFF_EST_DEFAULT
   $PERCENT_MATCH_CUTOFF_DEFAULT
   $MIN_PERCENT_LENGTH_DIFFERENCE
   $MIN_PERSEQID_HOM
@@ -120,6 +121,7 @@ our $BLAST_DB_SIZE                       = 100000000; # as in COGs, to ensure co
 our $FASTAEXTENSION                      = 'fasta';
 our $PERCENT_IDENTITY_CUTOFF_DEFAULT     = 1;         # Both PercentIdentity and PercentMatch cutoff are
 our $PERCENT_MATCH_CUTOFF_DEFAULT        = 75.0;      # as in COGS, 70.0 for prok set to 0 by default in OrthoMCL, 0-100%, 50 used in INPARANOID
+our $PERCENT_IDENTITY_CUTOFF_EST_DEFAULT = 95;        # adequate for clustering transcripts of same species, same as used in trinity  
 our $MIN_PERSEQID_HOM                    = 0;         # 50=>Tettelin et al (2005): minimum %sequence identity required for homology
 our $MIN_COVERAGE_HOM                    = 20.0;      # Tettelin et al (2005): minimum %sequence coverage required for homology
 our $MIN_PERSEQID_HOM_EST                = 95.0;      # as in Trinity http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3571712
