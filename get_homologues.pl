@@ -188,9 +188,12 @@ if(defined($opts{'v'}))
   print "\nProgram written by Bruno Contreras-Moreira (1) and Pablo Vinuesa (2).\n";
   print "\n 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)\n";
   print " 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)\n";
-  print "\nPrimary citation (PubMed:24096415):\n\n";
-  print " Contreras-Moreira B, Vinuesa P. (2013) GET_HOMOLOGUES, a versatile software package for scalable and\n".
-        " robust microbial pangenome analysis. Appl Environ Microbiol 79(24):7696-701. doi: 10.1128/AEM.02411-13\n"; 
+  print "\nPrimary citations:\n\n";
+  print " Contreras-Moreira B, Vinuesa P (2013) GET_HOMOLOGUES, a versatile software package for scalable and\n".
+        " robust microbial pangenome analysis. Appl Environ Microbiol 79(24):7696-701. (PubMed:24096415)\n\n";
+  print " Vinuesa P and Contreras-Moreira B (2015) Robust Identification of Orthologues and Paralogues for \n".
+        " Microbial Pan-Genomics Using GET_HOMOLOGUES: A Case Study of pIncA/C Plasmids. In Bacterial Pangenomics,\n".
+        " Methods in Molecular Biology Volume 1231, 203-232, edited by A Mengoni, M Galardini and M Fondi.\n";
   print "\nThis software employs code, binaries and data from different authors, please cite them accordingly:\n";
   print " OrthoMCL v1.4 (www.orthomcl.org , PubMed:12952885)\n";
   print " INPARANOID v3.0 (inparanoid.sbc.su.se , PubMed:16873526)\n" if(!$DISSABLEPRND);

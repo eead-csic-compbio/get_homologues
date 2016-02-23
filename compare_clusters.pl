@@ -609,7 +609,7 @@ if($INP_pange && %pangemat)
       $cluster_names{$cluster_name} = 1;
     }
   }
-  my @cluster_names = sort {(split('_',$a,2))[0]<=>(split('_',$b,2))[0]} (keys(%cluster_names));
+  my @cluster_names = sort {(split(/\D/,$a,2))[0]<=>(split(/\D/,$b,2))[0]} (keys(%cluster_names));
 
   # tab-separated matrix
   open(PANGEMATRIX,">$pangenome_matrix_file")

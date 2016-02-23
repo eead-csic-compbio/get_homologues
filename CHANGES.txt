@@ -94,3 +94,5 @@
 15022016: Updated manual, added redundant isoform fig to est
 15022016: install.pl added Passive=>1 to Net::FTP connections so that they work behind NAT
 15022016: Added TransDecoder to lib/est
+23022016: fixed compare_clusters.pl so that it sorts correctly intergenic clusters
+23022106: added MiMB chapter to references
