@@ -4,6 +4,10 @@ This software is written and maintained by Bruno Contreras-Moreira (bcontreras _
 
 [Contreras-Moreira B, Vinuesa P (2013) Appl. Environ. Microbiol. 79:7696-7701](http://aem.asm.org/content/79/24/7696.long)
 
+and
+
+[Vinuesa P and Contreras-Moreira B (2015) Methods in Molecular Biology Volume 1231, 203-232](http://link.springer.com/protocol/10.1007%2F978-1-4939-1720-4_14)
+
 That code has been and is regularly patched (see [CHANGES.txt](./CHANGES.txt) in each release), and has recently been adapted to the study of **intra-specific eukaryotic pangenomes**, which we have tested with whole-genome data and transcripts of plants.
 
 We kindly ask you to report errors or bugs in the program to the authors and to acknowledge the use of the program in scientific publications.
