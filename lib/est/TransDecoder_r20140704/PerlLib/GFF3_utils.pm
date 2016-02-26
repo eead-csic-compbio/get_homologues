@@ -35,7 +35,7 @@ sub index_GFF3_gene_objs {
     my %cds_phases;
     
     my %gene_names;
-	my %loci;
+	  my %loci;
 
     open (my $fh, $gff_filename) or die $!;
 

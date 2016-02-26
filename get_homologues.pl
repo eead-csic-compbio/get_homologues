@@ -2355,7 +2355,7 @@ GENE: foreach $gene (sort {$a<=>$b} (keys(%orthologues)))
   else{ $names{$cluster_name}++ }
 
   if(!$saveRAM){ %aligned_coords = find_local_alignment_coords( $gene,@{$orthologues{$gene}} ); }
-  if($do_PFAM){ $pfam_annot = $pfam_hash{$gene} || '' }
+  if($do_PFAM){ $pfam_annot = $pfam_hash{$gene} || ''; }
 
   # 4.3.1) print reference gene/protein
   push(@taxon_names,$gindex2[$gene]); # global set in phyTools:constructAllFasta

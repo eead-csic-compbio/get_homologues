@@ -272,23 +272,22 @@ foreach my $d (0 .. $#cluster_dirs)
 
     foreach $seq (0 .. $#{$cluster_ref})
     {
-
       # in case of missing nucleotide sequences, not retrieved from gbk files
       $cluster_ref->[$seq][SEQ] ||= '--unknown sequence--';
 
       # check for internal STOP codons if required
       next if($SKIPINTERNALSTOPS && $cluster_ref->[$seq][SEQ] =~ /\*[A-Z]/i);
 
-# fix header and remove possibly added bits: |intergenic199|,| aligned:1-296 (296)
+      # fix header and remove possibly added bits: |intergenic199|,| aligned:1-296 (296)
       $seqname = $cluster_ref->[$seq][NAME];
 
       next if($INP_include && !$included_input_files{$taxa{$file}{'sorted_taxa'}->[$seq]});
       push(@sorted_taxa,$taxa{$file}{'sorted_taxa'}->[$seq]);
 
-# store gi and/or neighbor (synteny) data if required
-# NOTE: assumes GI is first space-separated label in header
-# GI:15616631 |[B aphidicola (Acyrthosiphon pisum)]|APS|gidA|1887|NC_002528(640681):197-2083:1
-#^..^ ...|neighbours:start(),GI:15616(1)
+      # store gi and/or neighbor (synteny) data if required
+      # NOTE: assumes GI is first space-separated label in header
+      # GI:15616631 |[B aphidicola (Acyrthosiphon pisum)]|APS|gidA|1887|NC_002528(640681):197-2083:1
+      #^..^ ...|neighbours:start(),GI:15616(1)
       if($INP_synt || $INP_orthoxml)
       {
         $gi = (split(/\s/,$seqname))[0]; $gi =~ s/ //g;

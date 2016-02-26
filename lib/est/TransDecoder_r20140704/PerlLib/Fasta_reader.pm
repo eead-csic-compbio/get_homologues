@@ -91,8 +91,6 @@ sub retrieve_all_seqs_hash {
 	return(%acc_to_seq);
 }
 
-
-
 ##############################################
 package Sequence;
 use strict;

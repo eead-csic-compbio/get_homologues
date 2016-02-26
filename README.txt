@@ -17,6 +17,7 @@ but includes code and binaries from other authors:
  Pfam (http://pfam.sanger.ac.uk , PubMed=19920124)
  PHYLIP 3.695 (http://evolution.genetics.washington.edu/phylip) 
  Transdecoder r20140704 (http://transdecoder.sf.net , PubMed=23845962)
+ MVIEW 1.60.1 (https://github.com/desmid/mview, PubMed=9632837)
  
 License
 ===============================================================================
@@ -63,6 +64,9 @@ by the author. Department of Genome Sciences, University of Washington, Seattle.
 10) Haas BJ, Papanicolaou A, Yassour M et al. (2013) De novo transcript sequence 
 reconstruction from RNA-seq using the Trinity platform for reference generation 
 and analysis. Nat Protoc. 8(8):1494-512.
+
+11) Brown NP, Leroy C, Sander C (1998) MView: A Web compatible database search or 
+multiple alignment viewer. Bioinformatics. 14 (4):380-381. 
 
 System requirements and installation:
 ================================================================================
