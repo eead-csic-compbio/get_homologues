@@ -1,0 +1,272 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>BLAST HSP processing rules &mdash; MView</title>
+    
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="MView" href="../../index.html" />
+    <link rel="up" title="Contents" href="../../contents.html" />
+    <link rel="next" title="NCBI BLAST series 1 and WU-BLAST series 2" href="blast1.html" />
+    <link rel="prev" title="Output formats" href="../formats_out.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="blast1.html" title="NCBI BLAST series 1 and WU-BLAST series 2"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../formats_out.html" title="Output formats"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">MView</a> &raquo;</li>
+          <li><a href="../../contents.html" accesskey="U">Contents</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">BLAST HSP processing rules</a><ul>
+<li><a class="reference internal" href="#output-modes">Output modes</a></li>
+<li><a class="reference internal" href="#algorithm-for-tiling-hsps">Algorithm for tiling HSPs</a></li>
+<li><a class="reference internal" href="#more-details-about-each-blast-program">More details about each BLAST program</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../formats_out.html"
+                        title="previous chapter">Output formats</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="blast1.html"
+                        title="next chapter">NCBI BLAST series 1 and WU-BLAST series 2</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/manual/blast/rules.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="blast-hsp-processing-rules">
+<span id="ref-blast-rules"></span><h1>BLAST HSP processing rules<a class="headerlink" href="#blast-hsp-processing-rules" title="Permalink to this headline">¶</a></h1>
+<p>A BLAST run comprises, among other sections, a &#8216;ranking&#8217; of hits with one-line
+summaries including scoring information, followed by the search database
+&#8216;hits&#8217; themselves. Each hit may contain one or more HSPs (ungapped BLAST) or
+gapped alignments (gapped BLAST), not all of which may be reported in the
+ranking.</p>
+<div class="section" id="output-modes">
+<h2>Output modes<a class="headerlink" href="#output-modes" title="Permalink to this headline">¶</a></h2>
+<p>Some control over which HSPs are to be processed by MView is provided by the
+command line option <tt class="docutils literal"><span class="pre">-hsp</span></tt>. There are three choices:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">MView option</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-hsp</span> <span class="pre">ranked</span></tt></td>
+<td>Only those HSPs or alignments that contributed to the
+ranked hit are selected. These are tiled into a single
+alignment row per hit. This is the default behaviour.</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-hsp</span> <span class="pre">discrete</span></tt></td>
+<td>All HSPs or alignments are selected, but each is assigned
+its own row in the resulting stacked alignment. This is way
+to view or extract every distinct HSP.</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-hsp</span> <span class="pre">all</span></tt></td>
+<td>All HSPs or alignments are selected and tiled into a single
+alignment row per hit. This is probably not what you want
+and the option may be removed in future.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Precise application of these processing modes varies slightly with each BLAST
+program because properties such as query and/or hit nucleotide strand
+orientation or reading frame must be taken into consideration.</p>
+</div>
+<div class="section" id="algorithm-for-tiling-hsps">
+<h2>Algorithm for tiling HSPs<a class="headerlink" href="#algorithm-for-tiling-hsps" title="Permalink to this headline">¶</a></h2>
+<p>The ranking contains scoring information for the best alignment fragment
+comprising a score (score or bits, depending on BLAST version), an estimate of
+significance (E-value or p-value, depending on version) and an optional
+fragment count, N.</p>
+<p>Each database search hit comprises 1 or more fragments or HSPs, each of which
+has a corresponding score, significance level and the fragment count, N. These
+are grouped by significance and fragment count and are generally ordered by
+decreasing score (best first).</p>
+<p>Very often there may be just one alignment per hit and this is extracted and
+output by MView. Otherwise, in ranked mode (the default), MView applies
+the following algorithm to choose HSPs to tile.</p>
+<p><strong>Select the ranked HSPs</strong></p>
+<ul class="simple">
+<li>Read off the blast score and N from the ranking, guessing N=1 if absent.</li>
+<li>Find the corresponding HSP, which should be the first one in the list of
+aligned fragments and should match the query orientation (BLASTN,
+etc). Differences in numeric rounding of the score as well as missing N
+values must be allowed for.</li>
+<li>Read off the corresponding significance score for that HSP; usually it
+matches the one stated in the ranking.</li>
+<li>Search the remainder of the HSPs looking for the rest of the group with the
+same N, significance and query and hit orientations.</li>
+<li>Return the group of correlated HSPs.</li>
+</ul>
+<p><strong>Select a sequentially coherent subset</strong></p>
+<ul class="simple">
+<li>Take the initially found HSP with the highest score as a seed of of the
+&#8216;current set&#8217; and record its query and hit coordinate midpoints.</li>
+<li>Compute the midpoints of each remaining HSP in both query sequence and
+hit sequence coordinates.</li>
+<li>Sort the HSP set by midpoint in query order.</li>
+<li>Search the list linearly for successive HSPs that lie upstream of the
+current set in both query and hit sequence ordering, appending these to the
+growing current set; discard HSPs that violate either query or hit sequence
+ordering. Update the current set query and hit midpoints.</li>
+<li>Reverse the HSP list.</li>
+<li>Search the list linearly for successive HSPs that lie downstream in both
+query and hit sequence ordering, appending these to the growing set; discard
+HSPs that violate either query or hit sequence ordering. Update the current
+set query and hit midpoints.</li>
+</ul>
+<p><strong>Strip query gaps</strong></p>
+<ul class="simple">
+<li>Excise columns in each sequence of a fragment pair to remove query gaps.
+These are generally marked for display by lowercasing the bounding symbols.</li>
+</ul>
+<p><strong>Tile</strong></p>
+<ul class="simple">
+<li>Sort the new HSP set best first by decreasing alignment score and increasing
+length.</li>
+<li>Paint successive HSPs onto a pair of growing sequence scaffolds (one for the
+query, common to all alignment rows; one for the hit), using the query
+sequence coordinates as guides. All rows therefore potentially contribute to
+filling in the query sequence.</li>
+<li>Resolve clashes of symbols at any position by applying a write-once policy,
+i.e., assume the best HSPs are those that are painted earlier.</li>
+</ul>
+<p>Clashes lead to small discrepancies in the affected sequences and occur when
+overlapping fragments have:</p>
+<ul class="simple">
+<li>slightly different alignments and/or gap positions (may affect all BLAST
+programs if the fragment count N &gt; 1);</li>
+<li>different reading frames (affects BLASTX, TBLASTN, TBLASTX).</li>
+</ul>
+<p>The <tt class="docutils literal"><span class="pre">-hsp</span> <span class="pre">discrete</span></tt> mode can be used to output each HSP in its own alignment
+row, and will report all HSPs, including the alternative ones with other
+significance scores.</p>
+<p>Lastly, if you need a real sequence alignment, use the information provided by
+MView to choose sequence identifiers then use a proper multiple alignment tool
+such as CLUSTAL on the original sequences.</p>
+</div>
+<div class="section" id="more-details-about-each-blast-program">
+<h2>More details about each BLAST program<a class="headerlink" href="#more-details-about-each-blast-program" title="Permalink to this headline">¶</a></h2>
+<p>A more detailed description of the selection rules is given for each BLAST
+family and program, as follows:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="blast1.html">NCBI BLAST series 1 and WU-BLAST series 2</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="blast1.html#blastp">BLASTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blast1.html#blastn">BLASTN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blast1.html#blastx">BLASTX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blast1.html#tblastn">TBLASTN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blast1.html#tblastx">TBLASTX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blast1.html#column-headings">Column headings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blast1.html#key">Key</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blast1.html#differences-between-ncbi-blast-1-and-ncbi-blast-2">Differences between NCBI BLAST 1 and NCBI BLAST 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="blast2.html">NCBI BLAST series 2 and NCBI BLAST+</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="blast2.html#blastp">BLASTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blast2.html#blastn">BLASTN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blast2.html#blastx">BLASTX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blast2.html#tblastn">TBLASTN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blast2.html#tblastx">TBLASTX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blast2.html#psi-blast">PSI-BLAST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blast2.html#column-headings">Column headings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blast2.html#key">Key</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="blast1.html" title="NCBI BLAST series 1 and WU-BLAST series 2"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../formats_out.html" title="Output formats"
+             >previous</a> |</li>
+        <li><a href="../../index.html">MView</a> &raquo;</li>
+          <li><a href="../../contents.html" >Contents</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Nigel P. Brown.
+      Last updated on 09 Oct 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

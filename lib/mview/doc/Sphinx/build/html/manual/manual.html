@@ -1,0 +1,1157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Manual &mdash; MView</title>
+    
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="MView" href="../index.html" />
+    <link rel="up" title="Contents" href="../contents.html" />
+    <link rel="next" title="Input formats" href="formats_in.html" />
+    <link rel="prev" title="Introduction" href="intro.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="formats_in.html" title="Input formats"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">MView</a> &raquo;</li>
+          <li><a href="../contents.html" accesskey="U">Contents</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Manual</a><ul>
+<li><a class="reference internal" href="#basic-usage">Basic usage</a><ul>
+<li><a class="reference internal" href="#getting-started">Getting started</a></li>
+<li><a class="reference internal" href="#attaching-a-ruler">Attaching a ruler</a></li>
+<li><a class="reference internal" href="#changing-the-reference-sequence">Changing the reference sequence</a></li>
+<li><a class="reference internal" href="#command-line-options">Command line options</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adding-html">Adding HTML</a><ul>
+<li><a class="reference internal" href="#basic-html">Basic HTML</a></li>
+<li><a class="reference internal" href="#controlling-the-amount-of-html">Controlling the amount of HTML</a></li>
+<li><a class="reference internal" href="#using-an-external-css-style-sheet">Using an external CSS style sheet</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#consensus-sequences">Consensus sequences</a><ul>
+<li><a class="reference internal" href="#clustal-conservation-line">Clustal conservation line</a></li>
+<li><a class="reference internal" href="#consensus-lines">Consensus lines</a></li>
+<li><a class="reference internal" href="#changing-consensus-thresholds">Changing consensus thresholds</a></li>
+<li><a class="reference internal" href="#consensus-pattern-definitions">Consensus pattern definitions</a></li>
+<li><a class="reference internal" href="#changing-consensus-patterns">Changing consensus patterns</a></li>
+<li><a class="reference internal" href="#showing-conserved-symbols-or-conserved-classes">Showing conserved symbols or conserved classes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#colouring-modes">Colouring modes</a><ul>
+<li><a class="reference internal" href="#alignment-colouring">Alignment colouring</a></li>
+<li><a class="reference internal" href="#colouring-only-conserved-residues">Colouring only conserved residues</a></li>
+<li><a class="reference internal" href="#consensus-colouring">Consensus colouring</a></li>
+<li><a class="reference internal" href="#finding-and-colouring-patterns-and-motifs">Finding and colouring patterns and motifs</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#colours">Colours</a><ul>
+<li><a class="reference internal" href="#colour-palettes">Colour palettes</a></li>
+<li><a class="reference internal" href="#creating-new-palettes">Creating new palettes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#layout-and-filtering">Layout and filtering</a><ul>
+<li><a class="reference internal" href="#pagination">Pagination</a></li>
+<li><a class="reference internal" href="#column-ranges">Column ranges</a></li>
+<li><a class="reference internal" href="#filtering-rows">Filtering rows</a></li>
+<li><a class="reference internal" href="#labels-and-annotations">Labels and annotations</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#data-formats">Data formats</a><ul>
+<li><a class="reference internal" href="#input-formats">Input formats</a></li>
+<li><a class="reference internal" href="#output-formats">Output formats</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#linking-identifiers-to-external-resources">Linking identifiers to external resources</a></li>
+<li><a class="reference internal" href="#memory-usage">Memory usage</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="intro.html"
+                        title="previous chapter">Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="formats_in.html"
+                        title="next chapter">Input formats</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/manual/manual.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <LINK rel="stylesheet" type="text/css" href="../_static/MView.css"><div class="section" id="manual">
+<h1>Manual<a class="headerlink" href="#manual" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="basic-usage">
+<h2>Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="getting-started">
+<h3>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h3>
+<p>Given an existing sequence alignment in a file <tt class="docutils literal"><span class="pre">data.dat</span></tt> in FASTA format,
+the simplest usage might be:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview -in fasta data.dat
+</pre></div>
+</div>
+<p>Similarly, if the input file contained a CLUSTAL alignment:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview -in clustal data.dat
+</pre></div>
+</div>
+<p>In either case, the output would be a stacked alignment with extra columns
+added to show row numbers and percent identities (with respect to the first
+sequence), looking something like this, regardless of the input format:</p>
+<PRE>
+Reference sequence (1): EGFR_HUMAN
+Identities normalised by aligned length.
+
+1 EGFR_HUMAN  100.0%  FKKIKVLGSGAFGTVYKGLWIPEGEK---------VKIPVAIKELREATSPK-ANKEILDEAYVMASVDNPHVCRLLGIC
+2 PR2_DROME    35.7%  ISVNKQLGTGEFGIVQQGVWSNGNE-----------RIQVAIKCLCRERMQS-NPMEFLKEAAIMHSIEHENIVRLYGVV
+3 ITK_HUMAN    32.9%  LTFVQEIGSGQFGLVHLGYWLN--------------KDKVAIKTIREGAMS---EEDFIEEAEVMMKLSHPKLVQLYGVC
+4 PTK7_HUMAN   21.2%  IREVKQIGVGQFGAVVLAEMTGLS-XLPKGSMNADGVALVAVKKLKPDVSD-EVLQSFDKEIKFMSQLQHDSIVQLLAIC
+5 KIN31_CAEEL  31.5%  VELTKKLGEGAFGEVWKGKLLKILDA-------NHQPVLVAVKTAKLESMTKEQIKEIMREARLMRNLDHINVVKFFGVA
+</PRE><p>To process the output of a BLAST run use something like:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview -in blast blastresults.dat
+</pre></div>
+</div>
+<p>while to process the output of a FASTA run (the database search program, not
+the simple FASTA/Pearson data format) use something like:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview -in uvfasta fastaresults.dat
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">-in</span></tt> option isn&#8217;t always necessary. If the filename extension, or the
+filename itself minus any directory path begins with or contains the first few
+letters of the valid <tt class="docutils literal"><span class="pre">-in</span></tt> options (e.g., <tt class="docutils literal"><span class="pre">mydata.msf</span></tt> or <tt class="docutils literal"><span class="pre">mydata.fasta</span></tt>
+or <tt class="docutils literal"><span class="pre">tfastx_run.dat</span></tt>), MView tries to choose a sensible input format,
+allowing multiple files in mixed formats to be supplied on the command
+line. The <tt class="docutils literal"><span class="pre">-in</span></tt> option will always override this mechanism but requires that
+all input files be of the same format.</p>
+</div>
+<div class="section" id="attaching-a-ruler">
+<span id="ref-rulers"></span><h3>Attaching a ruler<a class="headerlink" href="#attaching-a-ruler" title="Permalink to this headline">¶</a></h3>
+<p>Add a ruler along the top, with <tt class="docutils literal"><span class="pre">-ruler</span> <span class="pre">on</span></tt>, for example:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview -in fasta -ruler on data.dat
+</pre></div>
+</div>
+<p>gives:</p>
+<PRE>
+Reference sequence (1): EGFR_HUMAN
+Identities normalised by aligned length.
+
+                    1 [        .         .         .         .         :         .         .         ] 80
+1 EGFR_HUMAN  100.0%    FKKIKVLGSGAFGTVYKGLWIPEGEK---------VKIPVAIKELREATSPK-ANKEILDEAYVMASVDNPHVCRLLGIC
+2 PR2_DROME    35.7%    ISVNKQLGTGEFGIVQQGVWSNGNE-----------RIQVAIKCLCRERMQS-NPMEFLKEAAIMHSIEHENIVRLYGVV
+3 ITK_HUMAN    32.9%    LTFVQEIGSGQFGLVHLGYWLN--------------KDKVAIKTIREGAMS---EEDFIEEAEVMMKLSHPKLVQLYGVC
+4 PTK7_HUMAN   21.2%    IREVKQIGVGQFGAVVLAEMTGLS-XLPKGSMNADGVALVAVKKLKPDVSD-EVLQSFDKEIKFMSQLQHDSIVQLLAIC
+5 KIN31_CAEEL  31.5%    VELTKKLGEGAFGEVWKGKLLKILDA-------NHQPVLVAVKTAKLESMTKEQIKEIMREARLMRNLDHINVVKFFGVA
+</PRE><p>Only one kind of ruler is currently provided, numbering the columns of the
+final alignment from M to N (incrementing) or N to M (decrementing) based on
+the input sequence numbering, if any. For multiple alignments like the one
+above with no numbering the ruler runs from 1 to the length of the alignment.</p>
+<p>For database searches that translate nucleotide sequences to protein, such as
+TBLASTX, the rulers differ slightly in that the native query numbering is
+given in nucleotide units, but MView reports amino acid units instead (using
+modulo 3 arithmetic).</p>
+</div>
+<div class="section" id="changing-the-reference-sequence">
+<span id="ref-reference-row"></span><h3>Changing the reference sequence<a class="headerlink" href="#changing-the-reference-sequence" title="Permalink to this headline">¶</a></h3>
+<p>One can colour and compute identities with respect to a sequence other than
+the first/query sequence using the <tt class="docutils literal"><span class="pre">-reference</span></tt> option. This takes either
+the sequence identifier or an integer argument corresponding to the ranking or
+ordering of a sequence usually shown in the first labelling column of MView
+output. For multiple alignment input formats, sequences are numbered from 1,
+while for searches the hits are numbered from 1, but the query itself is 0, so
+beware.</p>
+</div>
+<div class="section" id="command-line-options">
+<h3>Command line options<a class="headerlink" href="#command-line-options" title="Permalink to this headline">¶</a></h3>
+<p>ALl available options can be listed using:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">mview</span> <span class="o">-</span><span class="n">help</span>
+</pre></div>
+</div>
+<p>There are a lot of options, but the main ones are described in this manual.</p>
+</div>
+</div>
+<div class="section" id="adding-html">
+<h2>Adding HTML<a class="headerlink" href="#adding-html" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="basic-html">
+<h3>Basic HTML<a class="headerlink" href="#basic-html" title="Permalink to this headline">¶</a></h3>
+<p>To add some HTML markup a few extra options are needed, for example:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview -in fasta -html head data.dat &gt; data.html
+</pre></div>
+</div>
+<p>produces a complete page of HTML and you can load this into your Web browser
+with a URL like <tt class="docutils literal"><span class="pre">file:///full/path/to/the/folder/data.html</span></tt>.</p>
+<p>To colour all the residues using the default built-in palette for proteins:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview -in fasta -ruler on -html head -coloring any data.dat &gt; data.html
+</pre></div>
+</div>
+<p>produces:</p>
+<PRE>
+Colored by: property
+
+                    1 [        .         .         .         .         :         .         .         ] 80
+1 EGFR_HUMAN  100.0%    <FONT COLOR="#009900">F</FONT><FONT COLOR="#cc0000">KK</FONT><FONT COLOR="#33cc00">I</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#33cc00">VLG</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#33cc00">GA</FONT><FONT COLOR="#009900">F</FONT><FONT COLOR="#33cc00">G</FONT><FONT COLOR="#0099ff">T</FONT><FONT COLOR="#33cc00">V</FONT><FONT COLOR="#009900">Y</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#33cc00">GL</FONT><FONT COLOR="#009900">W</FONT><FONT COLOR="#33cc00">IP</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">G</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#666666">---------</FONT><FONT COLOR="#33cc00">V</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#33cc00">IPVAI</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">L</FONT><FONT COLOR="#cc0000">R</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">A</FONT><FONT COLOR="#0099ff">TS</FONT><FONT COLOR="#33cc00">P</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#666666">-</FONT><FONT COLOR="#33cc00">A</FONT><FONT COLOR="#6600cc">N</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">IL</FONT><FONT COLOR="#0033ff">DE</FONT><FONT COLOR="#33cc00">A</FONT><FONT COLOR="#009900">Y</FONT><FONT COLOR="#33cc00">VMA</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#33cc00">V</FONT><FONT COLOR="#0033ff">D</FONT><FONT COLOR="#6600cc">N</FONT><FONT COLOR="#33cc00">P</FONT><FONT COLOR="#009900">H</FONT><FONT COLOR="#33cc00">V</FONT><FONT COLOR="#ffff00">C</FONT><FONT COLOR="#cc0000">R</FONT><FONT COLOR="#33cc00">LLGI</FONT><FONT COLOR="#ffff00">C</FONT>
+2 PR2_DROME    35.7%    <FONT COLOR="#33cc00">I</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#33cc00">V</FONT><FONT COLOR="#6600cc">N</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#33cc00">LG</FONT><FONT COLOR="#0099ff">T</FONT><FONT COLOR="#33cc00">G</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#009900">F</FONT><FONT COLOR="#33cc00">GIV</FONT><FONT COLOR="#6600cc">QQ</FONT><FONT COLOR="#33cc00">GV</FONT><FONT COLOR="#009900">W</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#6600cc">N</FONT><FONT COLOR="#33cc00">G</FONT><FONT COLOR="#6600cc">N</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#666666">-----------</FONT><FONT COLOR="#cc0000">R</FONT><FONT COLOR="#33cc00">I</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#33cc00">VAI</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#ffff00">C</FONT><FONT COLOR="#33cc00">L</FONT><FONT COLOR="#ffff00">C</FONT><FONT COLOR="#cc0000">R</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#cc0000">R</FONT><FONT COLOR="#33cc00">M</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#666666">-</FONT><FONT COLOR="#6600cc">N</FONT><FONT COLOR="#33cc00">PM</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#009900">F</FONT><FONT COLOR="#33cc00">L</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">AAIM</FONT><FONT COLOR="#009900">H</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#33cc00">I</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#009900">H</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#6600cc">N</FONT><FONT COLOR="#33cc00">IV</FONT><FONT COLOR="#cc0000">R</FONT><FONT COLOR="#33cc00">L</FONT><FONT COLOR="#009900">Y</FONT><FONT COLOR="#33cc00">GVV</FONT>
+3 ITK_HUMAN    32.9%    <FONT COLOR="#33cc00">L</FONT><FONT COLOR="#0099ff">T</FONT><FONT COLOR="#009900">F</FONT><FONT COLOR="#33cc00">V</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">IG</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#33cc00">G</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#009900">F</FONT><FONT COLOR="#33cc00">GLV</FONT><FONT COLOR="#009900">H</FONT><FONT COLOR="#33cc00">LG</FONT><FONT COLOR="#009900">YW</FONT><FONT COLOR="#33cc00">L</FONT><FONT COLOR="#6600cc">N</FONT><FONT COLOR="#666666">--------------</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#0033ff">D</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#33cc00">VAI</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#0099ff">T</FONT><FONT COLOR="#33cc00">I</FONT><FONT COLOR="#cc0000">R</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">GAM</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#666666">---</FONT><FONT COLOR="#0033ff">EED</FONT><FONT COLOR="#009900">F</FONT><FONT COLOR="#33cc00">I</FONT><FONT COLOR="#0033ff">EE</FONT><FONT COLOR="#33cc00">A</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">VMM</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#33cc00">L</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#009900">H</FONT><FONT COLOR="#33cc00">P</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#33cc00">LV</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#33cc00">L</FONT><FONT COLOR="#009900">Y</FONT><FONT COLOR="#33cc00">GV</FONT><FONT COLOR="#ffff00">C</FONT>
+4 PTK7_HUMAN   21.2%    <FONT COLOR="#33cc00">I</FONT><FONT COLOR="#cc0000">R</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">V</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#33cc00">IGVG</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#009900">F</FONT><FONT COLOR="#33cc00">GAVVLA</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">M</FONT><FONT COLOR="#0099ff">T</FONT><FONT COLOR="#33cc00">GL</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#666666">-X</FONT><FONT COLOR="#33cc00">LP</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#33cc00">G</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#33cc00">M</FONT><FONT COLOR="#6600cc">N</FONT><FONT COLOR="#33cc00">A</FONT><FONT COLOR="#0033ff">D</FONT><FONT COLOR="#33cc00">GVALVAV</FONT><FONT COLOR="#cc0000">KK</FONT><FONT COLOR="#33cc00">L</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#33cc00">P</FONT><FONT COLOR="#0033ff">D</FONT><FONT COLOR="#33cc00">V</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#0033ff">D</FONT><FONT COLOR="#666666">-</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">VL</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#009900">F</FONT><FONT COLOR="#0033ff">D</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">I</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#009900">F</FONT><FONT COLOR="#33cc00">M</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#33cc00">L</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#009900">H</FONT><FONT COLOR="#0033ff">D</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#33cc00">IV</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#33cc00">LLAI</FONT><FONT COLOR="#ffff00">C</FONT>
+5 KIN31_CAEEL  31.5%    <FONT COLOR="#33cc00">V</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">L</FONT><FONT COLOR="#0099ff">T</FONT><FONT COLOR="#cc0000">KK</FONT><FONT COLOR="#33cc00">LG</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">GA</FONT><FONT COLOR="#009900">F</FONT><FONT COLOR="#33cc00">G</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">V</FONT><FONT COLOR="#009900">W</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#33cc00">G</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#33cc00">LL</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#33cc00">IL</FONT><FONT COLOR="#0033ff">D</FONT><FONT COLOR="#33cc00">A</FONT><FONT COLOR="#666666">-------</FONT><FONT COLOR="#6600cc">N</FONT><FONT COLOR="#009900">H</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#33cc00">PVLVAV</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#0099ff">T</FONT><FONT COLOR="#33cc00">A</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#33cc00">L</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#33cc00">M</FONT><FONT COLOR="#0099ff">T</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#33cc00">I</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">IM</FONT><FONT COLOR="#cc0000">R</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">A</FONT><FONT COLOR="#cc0000">R</FONT><FONT COLOR="#33cc00">LM</FONT><FONT COLOR="#cc0000">R</FONT><FONT COLOR="#6600cc">N</FONT><FONT COLOR="#33cc00">L</FONT><FONT COLOR="#0033ff">D</FONT><FONT COLOR="#009900">H</FONT><FONT COLOR="#33cc00">I</FONT><FONT COLOR="#6600cc">N</FONT><FONT COLOR="#33cc00">VV</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#009900">FF</FONT><FONT COLOR="#33cc00">GVA</FONT>
+</PRE><p>To make the letters stand out use the <tt class="docutils literal"><span class="pre">-bold</span></tt> option:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview -in fasta -ruler on -html head -bold -coloring any data.dat &gt; data.html
+</pre></div>
+</div>
+<p>giving:</p>
+<PRE>
+Colored by: property
+
+                   <STRONG> 1</STRONG> <STRONG>[        .         .         .         .         :         .         .         ]</STRONG> <STRONG>80</STRONG>
+1 EGFR_HUMAN  100.0% <STRONG>  </STRONG> <STRONG><FONT COLOR="#009900">F</FONT><FONT COLOR="#cc0000">KK</FONT><FONT COLOR="#33cc00">I</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#33cc00">VLG</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#33cc00">GA</FONT><FONT COLOR="#009900">F</FONT><FONT COLOR="#33cc00">G</FONT><FONT COLOR="#0099ff">T</FONT><FONT COLOR="#33cc00">V</FONT><FONT COLOR="#009900">Y</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#33cc00">GL</FONT><FONT COLOR="#009900">W</FONT><FONT COLOR="#33cc00">IP</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">G</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#666666">---------</FONT><FONT COLOR="#33cc00">V</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#33cc00">IPVAI</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">L</FONT><FONT COLOR="#cc0000">R</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">A</FONT><FONT COLOR="#0099ff">TS</FONT><FONT COLOR="#33cc00">P</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#666666">-</FONT><FONT COLOR="#33cc00">A</FONT><FONT COLOR="#6600cc">N</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">IL</FONT><FONT COLOR="#0033ff">DE</FONT><FONT COLOR="#33cc00">A</FONT><FONT COLOR="#009900">Y</FONT><FONT COLOR="#33cc00">VMA</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#33cc00">V</FONT><FONT COLOR="#0033ff">D</FONT><FONT COLOR="#6600cc">N</FONT><FONT COLOR="#33cc00">P</FONT><FONT COLOR="#009900">H</FONT><FONT COLOR="#33cc00">V</FONT><FONT COLOR="#ffff00">C</FONT><FONT COLOR="#cc0000">R</FONT><FONT COLOR="#33cc00">LLGI</FONT><FONT COLOR="#ffff00">C</FONT></STRONG> <STRONG>  </STRONG>
+2 PR2_DROME    35.7% <STRONG>  </STRONG> <STRONG><FONT COLOR="#33cc00">I</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#33cc00">V</FONT><FONT COLOR="#6600cc">N</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#33cc00">LG</FONT><FONT COLOR="#0099ff">T</FONT><FONT COLOR="#33cc00">G</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#009900">F</FONT><FONT COLOR="#33cc00">GIV</FONT><FONT COLOR="#6600cc">QQ</FONT><FONT COLOR="#33cc00">GV</FONT><FONT COLOR="#009900">W</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#6600cc">N</FONT><FONT COLOR="#33cc00">G</FONT><FONT COLOR="#6600cc">N</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#666666">-----------</FONT><FONT COLOR="#cc0000">R</FONT><FONT COLOR="#33cc00">I</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#33cc00">VAI</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#ffff00">C</FONT><FONT COLOR="#33cc00">L</FONT><FONT COLOR="#ffff00">C</FONT><FONT COLOR="#cc0000">R</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#cc0000">R</FONT><FONT COLOR="#33cc00">M</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#666666">-</FONT><FONT COLOR="#6600cc">N</FONT><FONT COLOR="#33cc00">PM</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#009900">F</FONT><FONT COLOR="#33cc00">L</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">AAIM</FONT><FONT COLOR="#009900">H</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#33cc00">I</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#009900">H</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#6600cc">N</FONT><FONT COLOR="#33cc00">IV</FONT><FONT COLOR="#cc0000">R</FONT><FONT COLOR="#33cc00">L</FONT><FONT COLOR="#009900">Y</FONT><FONT COLOR="#33cc00">GVV</FONT></STRONG> <STRONG>  </STRONG>
+3 ITK_HUMAN    32.9% <STRONG>  </STRONG> <STRONG><FONT COLOR="#33cc00">L</FONT><FONT COLOR="#0099ff">T</FONT><FONT COLOR="#009900">F</FONT><FONT COLOR="#33cc00">V</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">IG</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#33cc00">G</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#009900">F</FONT><FONT COLOR="#33cc00">GLV</FONT><FONT COLOR="#009900">H</FONT><FONT COLOR="#33cc00">LG</FONT><FONT COLOR="#009900">YW</FONT><FONT COLOR="#33cc00">L</FONT><FONT COLOR="#6600cc">N</FONT><FONT COLOR="#666666">--------------</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#0033ff">D</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#33cc00">VAI</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#0099ff">T</FONT><FONT COLOR="#33cc00">I</FONT><FONT COLOR="#cc0000">R</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">GAM</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#666666">---</FONT><FONT COLOR="#0033ff">EED</FONT><FONT COLOR="#009900">F</FONT><FONT COLOR="#33cc00">I</FONT><FONT COLOR="#0033ff">EE</FONT><FONT COLOR="#33cc00">A</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">VMM</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#33cc00">L</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#009900">H</FONT><FONT COLOR="#33cc00">P</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#33cc00">LV</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#33cc00">L</FONT><FONT COLOR="#009900">Y</FONT><FONT COLOR="#33cc00">GV</FONT><FONT COLOR="#ffff00">C</FONT></STRONG> <STRONG>  </STRONG>
+4 PTK7_HUMAN   21.2% <STRONG>  </STRONG> <STRONG><FONT COLOR="#33cc00">I</FONT><FONT COLOR="#cc0000">R</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">V</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#33cc00">IGVG</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#009900">F</FONT><FONT COLOR="#33cc00">GAVVLA</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">M</FONT><FONT COLOR="#0099ff">T</FONT><FONT COLOR="#33cc00">GL</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#666666">-X</FONT><FONT COLOR="#33cc00">LP</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#33cc00">G</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#33cc00">M</FONT><FONT COLOR="#6600cc">N</FONT><FONT COLOR="#33cc00">A</FONT><FONT COLOR="#0033ff">D</FONT><FONT COLOR="#33cc00">GVALVAV</FONT><FONT COLOR="#cc0000">KK</FONT><FONT COLOR="#33cc00">L</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#33cc00">P</FONT><FONT COLOR="#0033ff">D</FONT><FONT COLOR="#33cc00">V</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#0033ff">D</FONT><FONT COLOR="#666666">-</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">VL</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#009900">F</FONT><FONT COLOR="#0033ff">D</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">I</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#009900">F</FONT><FONT COLOR="#33cc00">M</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#33cc00">L</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#009900">H</FONT><FONT COLOR="#0033ff">D</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#33cc00">IV</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#33cc00">LLAI</FONT><FONT COLOR="#ffff00">C</FONT></STRONG> <STRONG>  </STRONG>
+5 KIN31_CAEEL  31.5% <STRONG>  </STRONG> <STRONG><FONT COLOR="#33cc00">V</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">L</FONT><FONT COLOR="#0099ff">T</FONT><FONT COLOR="#cc0000">KK</FONT><FONT COLOR="#33cc00">LG</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">GA</FONT><FONT COLOR="#009900">F</FONT><FONT COLOR="#33cc00">G</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">V</FONT><FONT COLOR="#009900">W</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#33cc00">G</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#33cc00">LL</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#33cc00">IL</FONT><FONT COLOR="#0033ff">D</FONT><FONT COLOR="#33cc00">A</FONT><FONT COLOR="#666666">-------</FONT><FONT COLOR="#6600cc">N</FONT><FONT COLOR="#009900">H</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#33cc00">PVLVAV</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#0099ff">T</FONT><FONT COLOR="#33cc00">A</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#33cc00">L</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#0099ff">S</FONT><FONT COLOR="#33cc00">M</FONT><FONT COLOR="#0099ff">T</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#6600cc">Q</FONT><FONT COLOR="#33cc00">I</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">IM</FONT><FONT COLOR="#cc0000">R</FONT><FONT COLOR="#0033ff">E</FONT><FONT COLOR="#33cc00">A</FONT><FONT COLOR="#cc0000">R</FONT><FONT COLOR="#33cc00">LM</FONT><FONT COLOR="#cc0000">R</FONT><FONT COLOR="#6600cc">N</FONT><FONT COLOR="#33cc00">L</FONT><FONT COLOR="#0033ff">D</FONT><FONT COLOR="#009900">H</FONT><FONT COLOR="#33cc00">I</FONT><FONT COLOR="#6600cc">N</FONT><FONT COLOR="#33cc00">VV</FONT><FONT COLOR="#cc0000">K</FONT><FONT COLOR="#009900">FF</FONT><FONT COLOR="#33cc00">GVA</FONT></STRONG> <STRONG>  </STRONG>
+</PRE><p>Or change the colouring to use blocked letters with <tt class="docutils literal"><span class="pre">-css</span> <span class="pre">on</span></tt> instead:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview -in fasta -ruler on -html head -css on -coloring any data.dat &gt; data.html
+</pre></div>
+</div>
+<p>giving:</p>
+<PRE>
+Colored by: property
+
+                    1 [        .         .         .         .         :         .         .         ] 80
+1 EGFR_HUMAN  100.0%    <FONT CLASS=S13>F</FONT><FONT CLASS=S17>KK</FONT><FONT CLASS=S14>I</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>VLG</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S14>GA</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=S13>Y</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>GL</FONT><FONT CLASS=S13>W</FONT><FONT CLASS=S14>IP</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#666666">---------</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>IPVAI</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>A</FONT><FONT CLASS=S9>TS</FONT><FONT CLASS=S14>P</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#666666">-</FONT><FONT CLASS=S14>A</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>IL</FONT><FONT CLASS=S12>DE</FONT><FONT CLASS=S14>A</FONT><FONT CLASS=S13>Y</FONT><FONT CLASS=S14>VMA</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=S12>D</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S14>P</FONT><FONT CLASS=S13>H</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=S7>C</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S14>LLGI</FONT><FONT CLASS=S7>C</FONT>
+2 PR2_DROME    35.7%    <FONT CLASS=S14>I</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S14>LG</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>GIV</FONT><FONT CLASS=S8>QQ</FONT><FONT CLASS=S14>GV</FONT><FONT CLASS=S13>W</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S12>E</FONT><FONT COLOR="#666666">-----------</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S14>I</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S14>VAI</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S7>C</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S7>C</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S14>M</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S9>S</FONT><FONT COLOR="#666666">-</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S14>PM</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>AAIM</FONT><FONT CLASS=S13>H</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S14>I</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S13>H</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S14>IV</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S13>Y</FONT><FONT CLASS=S14>GVV</FONT>
+3 ITK_HUMAN    32.9%    <FONT CLASS=S14>L</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>IG</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>GLV</FONT><FONT CLASS=S13>H</FONT><FONT CLASS=S14>LG</FONT><FONT CLASS=S13>YW</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S8>N</FONT><FONT COLOR="#666666">--------------</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S12>D</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>VAI</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S14>I</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>GAM</FONT><FONT CLASS=S9>S</FONT><FONT COLOR="#666666">---</FONT><FONT CLASS=S12>EED</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>I</FONT><FONT CLASS=S12>EE</FONT><FONT CLASS=S14>A</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>VMM</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S13>H</FONT><FONT CLASS=S14>P</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>LV</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S13>Y</FONT><FONT CLASS=S14>GV</FONT><FONT CLASS=S7>C</FONT>
+4 PTK7_HUMAN   21.2%    <FONT CLASS=S14>I</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S14>IGVG</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>GAVVLA</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>M</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S14>GL</FONT><FONT CLASS=S9>S</FONT><FONT COLOR="#666666">-</FONT><FONT CLASS=T19>X</FONT><FONT CLASS=S14>LP</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S14>M</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S14>A</FONT><FONT CLASS=S12>D</FONT><FONT CLASS=S14>GVALVAV</FONT><FONT CLASS=S17>KK</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>P</FONT><FONT CLASS=S12>D</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S12>D</FONT><FONT COLOR="#666666">-</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>VL</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S12>D</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>I</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>M</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S13>H</FONT><FONT CLASS=S12>D</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S14>IV</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S14>LLAI</FONT><FONT CLASS=S7>C</FONT>
+5 KIN31_CAEEL  31.5%    <FONT CLASS=S14>V</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S17>KK</FONT><FONT CLASS=S14>LG</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>GA</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=S13>W</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>LL</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>IL</FONT><FONT CLASS=S12>D</FONT><FONT CLASS=S14>A</FONT><FONT COLOR="#666666">-------</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S13>H</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S14>PVLVAV</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S14>A</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S14>M</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S14>I</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>IM</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>A</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S14>LM</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S12>D</FONT><FONT CLASS=S13>H</FONT><FONT CLASS=S14>I</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S14>VV</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S13>FF</FONT><FONT CLASS=S14>GVA</FONT>
+</PRE><p>You can combine <tt class="docutils literal"><span class="pre">-css</span> <span class="pre">on</span></tt> with <tt class="docutils literal"><span class="pre">-bold</span></tt> to make the blocks and letters even
+more prominent.</p>
+<p>If your data are DNA or RNA, add the option <tt class="docutils literal"><span class="pre">-moltype</span> <span class="pre">dna</span></tt> (or <tt class="docutils literal"><span class="pre">rna</span></tt> or
+<tt class="docutils literal"><span class="pre">na</span></tt> for &#8220;nucleic acid&#8221;) to change to the default nucleotide colour
+palette. Here&#8217;s an MView run on some BLASTN data demonstrating some other
+options as well:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview -in blast -ruler on -html head -css on -coloring identity -moltype dna -top 5 -range 250:310 blastn.dat
+</pre></div>
+</div>
+<p>which (slightly edited to reduce space) produced:</p>
+<PRE>
+HSP processing: ranked
+Query orientation: +
+                                                                           250 [         .         .         .         .         3         ] 310
+  EMBOSS_001                   bits E-value N qy ht 100.0%   1:521             <FONT CLASS=S9>T</FONT><FONT CLASS=S12>GAAG</FONT><FONT CLASS=S9>CCT</FONT><FONT CLASS=S12>G</FONT><FONT CLASS=S9>C</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>CTT</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>CTC</FONT><FONT CLASS=S12>AGGA</FONT><FONT CLASS=S9>CTC</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>TC</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S12>GA</FONT><FONT CLASS=S9>CT</FONT><FONT CLASS=S12>G</FONT><FONT CLASS=S9>C</FONT><FONT CLASS=S12>G</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>CC</FONT><FONT CLASS=S12>AA</FONT><FONT CLASS=S9>TTC</FONT><FONT CLASS=S12>G</FONT><FONT CLASS=S9>TCTT</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>CTC</FONT><FONT CLASS=S12>AGGA</FONT><FONT CLASS=S9>CT</FONT>
+1 EM_EST:GT222018.2 gh1574...  1033     0.0 1  +  + 100.0%   1:521   4:524     <FONT CLASS=S9>T</FONT><FONT CLASS=S12>GAAG</FONT><FONT CLASS=S9>CCT</FONT><FONT CLASS=S12>G</FONT><FONT CLASS=S9>C</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>CTT</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>CTC</FONT><FONT CLASS=S12>AGGA</FONT><FONT CLASS=S9>CTC</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>TC</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S12>GA</FONT><FONT CLASS=S9>CT</FONT><FONT CLASS=S12>G</FONT><FONT CLASS=S9>C</FONT><FONT CLASS=S12>G</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>CC</FONT><FONT CLASS=S12>AA</FONT><FONT CLASS=S9>TTC</FONT><FONT CLASS=S12>G</FONT><FONT CLASS=S9>TCTT</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>CTC</FONT><FONT CLASS=S12>AGGA</FONT><FONT CLASS=S9>CT</FONT>
+2 EM_EST:GT222017.1 gh1572...   186   4e-43 1  +  +  98.2% 256:372 205:318     <FONT COLOR="#666666">------</FONT><FONT CLASS=S9>CT</FONT><FONT CLASS=S12>G</FONT><FONT CLASS=S9>C</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>CTT</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>CTC</FONT><FONT CLASS=S12>AGGA</FONT><FONT CLASS=S9>CTC</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>TC</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S12>GA</FONT><FONT CLASS=S9>CT</FONT><FONT CLASS=S12>G</FONT><FONT CLASS=S9>C</FONT><FONT CLASS=S12>G</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>CC</FONT><FONT CLASS=S12>AA</FONT><FONT CLASS=S9>TTC</FONT><FONT CLASS=S12>G</FONT><FONT CLASS=S9>T</FONT><FONT COLOR="#666666">-</FONT><FONT CLASS=S9>TT</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>CTC</FONT><FONT CLASS=S12>AGGA</FONT><FONT CLASS=S9>CT</FONT>
+3 EM_EST:GT222024.2 gh1633...   182   7e-42 1  +  +  95.9% 262:372  96:209     <FONT COLOR="#666666">------------</FONT><FONT CLASS=S9>TT</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>CTC</FONT><FONT CLASS=S12>AGGA</FONT><FONT CLASS=S9>CTC</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>TC</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S12>GA</FONT><FONT CLASS=S9>CT</FONT><FONT CLASS=S12>G</FONT><FONT CLASS=S9>C</FONT><FONT CLASS=S12>G</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>CC</FONT><FONT CLASS=S12>AA</FONT><FONT CLASS=S9>TTC</FONT><FONT CLASS=S12>G</FONT><FONT CLASS=S9>TCtt</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>CTC</FONT><FONT CLASS=S12>AGGA</FONT><FONT CLASS=S9>CT</FONT>
+4 EM_EST:GT222023.2 gh1631...   182   7e-42 1  +  +  95.9% 262:372  96:209     <FONT COLOR="#666666">------------</FONT><FONT CLASS=S9>TT</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>CTC</FONT><FONT CLASS=S12>AGGA</FONT><FONT CLASS=S9>CTC</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>TC</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S12>GA</FONT><FONT CLASS=S9>CT</FONT><FONT CLASS=S12>G</FONT><FONT CLASS=S9>C</FONT><FONT CLASS=S12>G</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>CC</FONT><FONT CLASS=S12>AA</FONT><FONT CLASS=S9>TTC</FONT><FONT CLASS=S12>G</FONT><FONT CLASS=S9>TCtt</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>CTC</FONT><FONT CLASS=S12>AGGA</FONT><FONT CLASS=S9>CT</FONT>
+5 EM_EST:GT222054.2 gh721 ...   178   1e-40 1  +  + 100.0% 279:372    4:97     <FONT COLOR="#666666">-----------------------------</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S12>GA</FONT><FONT CLASS=S9>CT</FONT><FONT CLASS=S12>G</FONT><FONT CLASS=S9>C</FONT><FONT CLASS=S12>G</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>CC</FONT><FONT CLASS=S12>AA</FONT><FONT CLASS=S9>TTC</FONT><FONT CLASS=S12>G</FONT><FONT CLASS=S9>TCTT</FONT><FONT CLASS=S12>A</FONT><FONT CLASS=S9>CTC</FONT><FONT CLASS=S12>AGGA</FONT><FONT CLASS=S9>CT</FONT>
+</PRE><p>showing scoring and sequence range information parsed from the BLASTN run, and
+using the default nucleotide colouring scheme (purines, dark blue;
+pyrimidines, light blue). Notice the lower-cased pairs of thymines near the
+end of sequences 3 and 4, columns 299&#8211;300 indicating where a segment of hit
+sequence has been excised to close a gap in the query (see
+<a class="reference internal" href="faq.html#ref-funny-sequences"><em>Why are some symbols lowercased?</em></a>).</p>
+</div>
+<div class="section" id="controlling-the-amount-of-html">
+<h3>Controlling the amount of HTML<a class="headerlink" href="#controlling-the-amount-of-html" title="Permalink to this headline">¶</a></h3>
+<p>There are several values that can be passed to the <tt class="docutils literal"><span class="pre">-html</span></tt> option: <tt class="docutils literal"><span class="pre">head</span></tt>,
+<tt class="docutils literal"><span class="pre">body</span></tt>, <tt class="docutils literal"><span class="pre">data</span></tt>, <tt class="docutils literal"><span class="pre">full</span></tt>, <tt class="docutils literal"><span class="pre">off</span></tt>.</p>
+<p><strong>Mode</strong> <tt class="docutils literal"><span class="pre">head</span></tt></p>
+<p>Produces a complete web page. Output includes the style sheet if <tt class="docutils literal"><span class="pre">-css</span> <span class="pre">on</span></tt>
+was given. The most common situation.</p>
+<p><strong>Mode</strong> <tt class="docutils literal"><span class="pre">body</span></tt></p>
+<p>Produces just the <tt class="docutils literal"><span class="pre">&lt;BODY&gt;&lt;/BODY&gt;</span></tt> part of the web page.  Note: the style
+sheet produced by <tt class="docutils literal"><span class="pre">-css</span> <span class="pre">on</span></tt> will be missing.</p>
+<p><strong>Mode</strong> <tt class="docutils literal"><span class="pre">data</span></tt></p>
+<p>Produces just the alignment part of the web page. Note: any style sheet
+produced by <tt class="docutils literal"><span class="pre">-css</span> <span class="pre">on</span></tt> will be missing.</p>
+<p><strong>Mode</strong> <tt class="docutils literal"><span class="pre">full</span></tt></p>
+<p>Produces a complete web page with the <tt class="docutils literal"><span class="pre">MIME-type</span> <span class="pre">&quot;text/html&quot;</span></tt>, suitable for
+serving directly from a web server. Output includes the style sheet if <tt class="docutils literal"><span class="pre">-css</span>
+<span class="pre">on</span></tt> was given.</p>
+<p><strong>Mode</strong> <tt class="docutils literal"><span class="pre">off</span></tt></p>
+<p>Switches off HTML (default).</p>
+</div>
+<div class="section" id="using-an-external-css-style-sheet">
+<h3>Using an external CSS style sheet<a class="headerlink" href="#using-an-external-css-style-sheet" title="Permalink to this headline">¶</a></h3>
+<p>The option <tt class="docutils literal"><span class="pre">-listcss</span></tt> dumps the style sheet to stdout, so you can share that
+across MView invocations from a web server. Each would be of the form:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview -css URL ...
+</pre></div>
+</div>
+<p>where the URL specifies the location of the style sheet as seen by the web
+server (i.e., <tt class="docutils literal"><span class="pre">file:///some/path</span></tt> or <tt class="docutils literal"><span class="pre">http://server/path</span></tt>).</p>
+<p>If you build a new colour palette you can load it into MView and save the new
+CSS file. Suppose you have a new palette in <tt class="docutils literal"><span class="pre">palette.dat</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview -colorfile palette.dat -listcss
+</pre></div>
+</div>
+<p>will dump the new style sheet for use as before.</p>
+</div>
+</div>
+<div class="section" id="consensus-sequences">
+<span id="ref-consensus-sequences"></span><h2>Consensus sequences<a class="headerlink" href="#consensus-sequences" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="clustal-conservation-line">
+<h3>Clustal conservation line<a class="headerlink" href="#clustal-conservation-line" title="Permalink to this headline">¶</a></h3>
+<p>A Clustal-style conservation line of <tt class="docutils literal"><span class="pre">*:.</span></tt> symbols can be added to any
+alignment (not just one from CLUSTAL itself) using <tt class="docutils literal"><span class="pre">-conservation</span> <span class="pre">on</span></tt>, like
+this:</p>
+<PRE>
+                         1 [        .         .         .         .         :         .         .         ] 80
+1 DMD401_1-640   100.0%    LQLDTVLGEGEFGQVLKGFATEIAG---------LPGITTVAVKMLKKGSNSV------------EYMALLSEFQLLQEV
+2 CER09D1_11-435  22.2%    DTFNRKLGKGKFGIINKGLLTLRICKTNE------VVQVNVAVKKMVDPTDEK------------QDKLIYDEIKLMEYN
+3 EGFR_HUMAN      26.7%    FKKIKVLGSGAFGTVYKGLWIPEGEK----------VKIPVAIKELREATSPK------------ANKEILDEAYVMASV
+4 DMDPR2_1-384    25.4%    ISVNKQLGTGEFGIVQQGVWSNGNE------------RIQVAIKCLCRERMQS------------NPMEFLKEAAIMHSI
+5 ITK_HUMAN-620   22.0%    LTFVQEIGSGQFGLVHLGYWLN---------------KDKVAIKTIREGAMS--------------EEDFIEEAEVMMKL
+  clustal                        :* * ** :  *                      **:* :                       :  *  ::
+</PRE><p>The symbols are <tt class="docutils literal"><span class="pre">*</span></tt> for full column identity, and <tt class="docutils literal"><span class="pre">:</span></tt> or <tt class="docutils literal"><span class="pre">.</span></tt> for strong
+and weak amino acid grouping, respectively, as defined in CLUSTAL.</p>
+<p>For DNA or RNA sequences, if the molecule type was set to nucleic acid with
+<tt class="docutils literal"><span class="pre">-moltype</span> <span class="pre">na</span></tt> or <tt class="docutils literal"><span class="pre">dna</span></tt> or <tt class="docutils literal"><span class="pre">rna</span></tt>, then the clustal conservation line will
+show only the column identities.</p>
+<p>Note: these conservation lines can be generated for any subset of rows
+extracted using the various row filtering options (see
+<a class="reference internal" href="#ref-filtering-rows"><em>Filtering rows</em></a>).</p>
+</div>
+<div class="section" id="consensus-lines">
+<h3>Consensus lines<a class="headerlink" href="#consensus-lines" title="Permalink to this headline">¶</a></h3>
+<p>Consensus lines can be added beneath the alignment using <tt class="docutils literal"><span class="pre">-consensus</span> <span class="pre">on</span></tt>. By
+default, this adds four extra lines of consensus sequences computed at various
+thresholds of percentage composition of the columns.</p>
+<p>There are default consensus patterns for protein and nucleotide (either DNA or
+RNA) sequences. MView starts up with the default protein consensus pattern,
+for example:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview ... -consensus on ...
+</pre></div>
+</div>
+<p>gives:</p>
+<PRE>
+                         1 [        .         .         .         .         :         .         .         ] 80
+1 EGFR_HUMAN     100.0%    FKKIKVLGSGAFGTVYKGLWIPEGEK---------VKIPVAIKELREATSPK-ANKEILDEAYVMASVDNPHVCRLLGIC
+2 PR2_DROME       35.7%    ISVNKQLGTGEFGIVQQGVWSNGNE-----------RIQVAIKCLCRERMQS-NPMEFLKEAAIMHSIEHENIVRLYGVV
+3 ITK_HUMAN       32.9%    LTFVQEIGSGQFGLVHLGYWLN--------------KDKVAIKTIREGAMS---EEDFIEEAEVMMKLSHPKLVQLYGVC
+4 PTK7_HUMAN      21.2%    IREVKQIGVGQFGAVVLAEMTGLS-XLPKGSMNADGVALVAVKKLKPDVSD-EVLQSFDKEIKFMSQLQHDSIVQLLAIC
+5 KIN31_CAEEL     31.5%    VELTKKLGEGAFGEVWKGKLLKILDA-------NHQPVLVAVKTAKLESMTKEQIKEIMREARLMRNLDHINVVKFFGVA
+  consensus/100%           hp..p.lG.GtFG.V..u.h...................VAlKphp.t........ph.cEh.hM.plpp.plsphhuls
+  consensus/90%            hp..p.lG.GtFG.V..u.h...................VAlKphp.t........ph.cEh.hM.plpp.plsphhuls
+  consensus/80%            lphsKplGsGtFGhVhhGhhhs..............hh.VAlKpl+.ts.s....p-hhcEAtlMtplpH.plVpLhGls
+  consensus/70%            lphsKplGsGtFGhVhhGhhhs..............hh.VAlKpl+.ts.s....p-hhcEAtlMtplpH.plVpLhGls
+</PRE></div>
+<div class="section" id="changing-consensus-thresholds">
+<h3>Changing consensus thresholds<a class="headerlink" href="#changing-consensus-thresholds" title="Permalink to this headline">¶</a></h3>
+<p>The default consensus mechanism displays consensus lines calculated at four
+levels of identity (100%, 90%, 80%, 70%). This can be changed to show as many
+or as few consensus lines at any level of percent identity between 50 and 100%
+using the <tt class="docutils literal"><span class="pre">-con_threshold</span></tt> option and a comma-separated list of identities:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview ... -consensus on -con_threshold 80 ...
+</pre></div>
+</div>
+<p>would give a single consensus line calculated at 80% identity, while:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview ... -consensus on -con_threshold 80,65 ...
+</pre></div>
+</div>
+<p>would produce two lines at 80% and 65% identity.</p>
+</div>
+<div class="section" id="consensus-pattern-definitions">
+<h3>Consensus pattern definitions<a class="headerlink" href="#consensus-pattern-definitions" title="Permalink to this headline">¶</a></h3>
+<p>Consensus patterns are based on equivalence classes, that is, sets of residues
+that share some predefined property. These classes are not mutually exclusive
+and the consensus mechanism will choose the most specific class that
+summarizes a given column at the desired percent identity.</p>
+<p>The default for protein alignments is called <tt class="docutils literal"><span class="pre">P1</span></tt> and is defined by
+physicochemical property as follows:</p>
+<PRE>
+<FONT COLOR="#000000">[P1]</FONT>
+<FONT COLOR="#aa6666">#Protein consensus: conserved physicochemical classes, derived from
+#the Venn diagrams of: Taylor W. R. (1986). The classification of amino acid
+#conservation. J. Theor. Biol. 119:205-218.
+#description =>  symbol  members</FONT>
+*            =>  .
+A            =>  A       { A }
+C            =>  C       { C }
+D            =>  D       { D }
+E            =>  E       { E }
+F            =>  F       { F }
+G            =>  G       { G }
+H            =>  H       { H }
+I            =>  I       { I }
+K            =>  K       { K }
+L            =>  L       { L }
+M            =>  M       { M }
+N            =>  N       { N }
+P            =>  P       { P }
+Q            =>  Q       { Q }
+R            =>  R       { R }
+S            =>  S       { S }
+T            =>  T       { T }
+V            =>  V       { V }
+W            =>  W       { W }
+Y            =>  Y       { Y }
+alcohol      =>  o       { S, T }
+aliphatic    =>  l       { I, L, V }
+aromatic     =>  a       { F, H, W, Y }
+charged      =>  c       { D, E, H, K, R }
+hydrophobic  =>  h       { A, C, F, G, H, I, K, L, M, R, T, V, W, Y }
+negative     =>  -       { D, E }
+polar        =>  p       { C, D, E, H, K, N, Q, R, S, T }
+positive     =>  +       { H, K, R }
+small        =>  s       { A, C, D, G, N, P, S, T, V }
+tiny         =>  u       { A, G, S }
+turnlike     =>  t       { A, C, D, E, G, H, K, N, Q, R, S, T }
+</PRE><p>The default nucleotide consensus pattern is <tt class="docutils literal"><span class="pre">D1</span></tt> grouping bases by ring type
+(purine, pyrimidine). It is selected when any of the nucleotide molecule types
+is set <tt class="docutils literal"><span class="pre">-moltype</span> <span class="pre">na</span></tt> (for &#8220;nucleic acid&#8221;; also <tt class="docutils literal"><span class="pre">dna</span></tt> or <tt class="docutils literal"><span class="pre">rna</span></tt>), for
+example:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview ... -consensus on -moltype dna ...
+</pre></div>
+</div>
+<p>and has the following definition:</p>
+<PRE>
+<FONT COLOR="#000000">[D1]</FONT>
+<FONT COLOR="#aa6666">#DNA consensus: conserved ring types
+#Ambiguous base R is A or G
+#Ambiguous base Y is C or T or U
+#description =>  symbol  members</FONT>
+*            =>  .
+A            =>  A       { A }
+C            =>  C       { C }
+G            =>  G       { G }
+T            =>  T       { T }
+U            =>  U       { U }
+purine       =>  r       { A, G, R }
+pyrimidine   =>  y       { C, T, U, Y }
+</PRE></div>
+<div class="section" id="changing-consensus-patterns">
+<span id="ref-changeing-consensus-patterns"></span><h3>Changing consensus patterns<a class="headerlink" href="#changing-consensus-patterns" title="Permalink to this headline">¶</a></h3>
+<p>The available list of built-in patterns can be seen with <tt class="docutils literal"><span class="pre">-listgroups</span></tt>.</p>
+<p>Alternative equivalence classes can be selected using <tt class="docutils literal"><span class="pre">-con_groupmap</span></tt>. For
+example, to select the <tt class="docutils literal"><span class="pre">CYS</span></tt> built-in consensus pattern to show only
+conserved cysteines you would use an invocation like:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview ... -consensus on -con_groupmap CYS ...
+</pre></div>
+</div>
+<p>New groups can be defined in the same format and read in from a file using
+the <tt class="docutils literal"><span class="pre">-groupfile</span></tt> option.</p>
+</div>
+<div class="section" id="showing-conserved-symbols-or-conserved-classes">
+<span id="ref-conserved-symbols-or-conserved-classes"></span><h3>Showing conserved symbols or conserved classes<a class="headerlink" href="#showing-conserved-symbols-or-conserved-classes" title="Permalink to this headline">¶</a></h3>
+<p>Two options <tt class="docutils literal"><span class="pre">-con_ignore</span></tt> and <tt class="docutils literal"><span class="pre">-con_gaps</span></tt> can be used to tune the
+consensus lines. Consider the following alignment:</p>
+<PRE>
+                        1 [        .         .         .         .         :         .         .         ] 80
+1 EGFR_HUMAN    100.0%    FKKIKVLGSGAFGTVYKGLWIPEGEK---------VKIPVAIKELREATSPK-ANKEILDEAYVMASVDNPHVCRLLGIC
+2 PR2_DROME      35.7%    ISVNKQLGTGEFGIVQQGVWSNGNE-----------RIQVAIKCLCRERMQS-NPMEFLKEAAIMHSIEHENIVRLYGVV
+3 ITK_HUMAN      32.9%    LTFVQEIGSGQFGLVHLGYWLN--------------KDKVAIKTIREGAMS---EEDFIEEAEVMMKLSHPKLVQLYGVC
+4 PTK7_HUMAN     21.2%    IREVKQIGVGQFGAVVLAEMTGLS-XLPKGSMNADGVALVAVKKLKPDVSD-EVLQSFDKEIKFMSQLQHDSIVQLLAIC
+5 KIN31_CAEEL    31.5%    VELTKKLGEGAFGEVWKGKLLKILDA-------NHQPVLVAVKTAKLESMTKEQIKEIMREARLMRNLDHINVVKFFGVA
+</PRE><p>The default consensus pattern for proteins, with these options:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview ... -consensus on -con_threshold 80 ...
+</pre></div>
+</div>
+<p>would add this consensus line:</p>
+<PRE>
+  consensus/80%           lphsKplGsGtFGhVhhGhhhs..............hh.VAlKpl+.ts.s....p-hhcEAtlMtplpH.plVpLhGls
+</PRE><p>comprising a mixture of conserved residue classes and residues, whichever is
+more specific.</p>
+<p>If you just want to see the conserved physicochemical classes, use <tt class="docutils literal"><span class="pre">-con_ignore</span> <span class="pre">singleton</span></tt>:</p>
+<PRE>
+  consensus/80%           lphs+plusutauhlhhuhhhs..............hh.lul+pl+.ts.s....p-hhc-utlhtplp+.pllplhuls
+</PRE><p>Alternatively, to see just the conserved residues, use <tt class="docutils literal"><span class="pre">-con_ignore</span> <span class="pre">class</span></tt>:</p>
+<PRE>
+  consensus/80%           ....K..G.G.FG.V..G.....................VA.K.................EA..M....H...V.L.G..
+</PRE><p>Lastly, the default consensus computation counts gap characters in each
+column, so that gapped regions are diluted and may not show up in the
+consensus. Building on the last example, setting <tt class="docutils literal"><span class="pre">-con_gaps</span> <span class="pre">off</span></tt> prevents
+this:</p>
+<PRE>
+  consensus/80%           ....K..G.G.FG.V..G........LPKGSMN......VA.K.........E.......EA..M....H...V.L.G..
+</PRE><p>The consensus sequence now runs the full length of the alignment because the
+insert in sequence 4 spanning the gap has been added to the consensus. This is
+a little contrived in this case, but is sometimes useful when you want to
+preserve as much of the alignment as possible.</p>
+<p>These options work similarly with nucleotide alignments and with any other
+consensus pattern you choose.</p>
+<p>Note: it is possible to colour the consensus sequences independently of the
+alignment (see <a class="reference internal" href="#ref-consensus-colouring"><em>Consensus colouring</em></a>).</p>
+</div>
+</div>
+<div class="section" id="colouring-modes">
+<h2>Colouring modes<a class="headerlink" href="#colouring-modes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="alignment-colouring">
+<span id="ref-alignment-colouring"></span><h3>Alignment colouring<a class="headerlink" href="#alignment-colouring" title="Permalink to this headline">¶</a></h3>
+<p>There are several basic ways to colour the alignment using the <tt class="docutils literal"><span class="pre">-coloring</span></tt>
+option which takes four modes: <tt class="docutils literal"><span class="pre">any</span></tt>, <tt class="docutils literal"><span class="pre">identity</span></tt>, <tt class="docutils literal"><span class="pre">consensus</span></tt>,
+<tt class="docutils literal"><span class="pre">group</span></tt>.</p>
+<p><strong>Mode</strong> <tt class="docutils literal"><span class="pre">any</span></tt></p>
+<p>The simplest is to colour every residue according to the currently selected
+palette:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview ... -coloring any ...
+</pre></div>
+</div>
+<p>gives:</p>
+<PRE>
+1 EGFR_HUMAN  100.0%  <FONT CLASS=S13>F</FONT><FONT CLASS=S17>KK</FONT><FONT CLASS=S14>I</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>VLG</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S14>GA</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=S13>Y</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>GL</FONT><FONT CLASS=S13>W</FONT><FONT CLASS=S14>IP</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#666666">---------</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>IPVAI</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>A</FONT><FONT CLASS=S9>TS</FONT><FONT CLASS=S14>P</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#666666">-</FONT><FONT CLASS=S14>A</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>IL</FONT><FONT CLASS=S12>DE</FONT><FONT CLASS=S14>A</FONT><FONT CLASS=S13>Y</FONT><FONT CLASS=S14>VMA</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=S12>D</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S14>P</FONT><FONT CLASS=S13>H</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=S7>C</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S14>LLGI</FONT><FONT CLASS=S7>C</FONT>
+2 PR2_DROME    35.7%  <FONT CLASS=S14>I</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S14>LG</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>GIV</FONT><FONT CLASS=S8>QQ</FONT><FONT CLASS=S14>GV</FONT><FONT CLASS=S13>W</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S12>E</FONT><FONT COLOR="#666666">-----------</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S14>I</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S14>VAI</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S7>C</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S7>C</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S14>M</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S9>S</FONT><FONT COLOR="#666666">-</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S14>PM</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>AAIM</FONT><FONT CLASS=S13>H</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S14>I</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S13>H</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S14>IV</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S13>Y</FONT><FONT CLASS=S14>GVV</FONT>
+3 ITK_HUMAN    32.9%  <FONT CLASS=S14>L</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>IG</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>GLV</FONT><FONT CLASS=S13>H</FONT><FONT CLASS=S14>LG</FONT><FONT CLASS=S13>YW</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S8>N</FONT><FONT COLOR="#666666">--------------</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S12>D</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>VAI</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S14>I</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>GAM</FONT><FONT CLASS=S9>S</FONT><FONT COLOR="#666666">---</FONT><FONT CLASS=S12>EED</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>I</FONT><FONT CLASS=S12>EE</FONT><FONT CLASS=S14>A</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>VMM</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S13>H</FONT><FONT CLASS=S14>P</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>LV</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S13>Y</FONT><FONT CLASS=S14>GV</FONT><FONT CLASS=S7>C</FONT>
+4 PTK7_HUMAN   21.2%  <FONT CLASS=S14>I</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S14>IGVG</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>GAVVLA</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>M</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S14>GL</FONT><FONT CLASS=S9>S</FONT><FONT COLOR="#666666">-</FONT><FONT CLASS=T19>X</FONT><FONT CLASS=S14>LP</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S14>M</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S14>A</FONT><FONT CLASS=S12>D</FONT><FONT CLASS=S14>GVALVAV</FONT><FONT CLASS=S17>KK</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>P</FONT><FONT CLASS=S12>D</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S12>D</FONT><FONT COLOR="#666666">-</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>VL</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S12>D</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>I</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>M</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S13>H</FONT><FONT CLASS=S12>D</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S14>IV</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S14>LLAI</FONT><FONT CLASS=S7>C</FONT>
+5 KIN31_CAEEL  31.5%  <FONT CLASS=S14>V</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S17>KK</FONT><FONT CLASS=S14>LG</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>GA</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=S13>W</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>LL</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>IL</FONT><FONT CLASS=S12>D</FONT><FONT CLASS=S14>A</FONT><FONT COLOR="#666666">-------</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S13>H</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S14>PVLVAV</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S14>A</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S14>M</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S14>I</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>IM</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>A</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S14>LM</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S12>D</FONT><FONT CLASS=S13>H</FONT><FONT CLASS=S14>I</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S14>VV</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S13>FF</FONT><FONT CLASS=S14>GVA</FONT>
+</PRE><p><strong>Mode</strong> <tt class="docutils literal"><span class="pre">identity</span></tt></p>
+<p>You can colour only those residues that are identical to some reference
+sequence (usually the query or first row) with:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview ... -coloring identity ...
+</pre></div>
+</div>
+<p>to produce:</p>
+<PRE>
+1 EGFR_HUMAN  100.0%  <FONT CLASS=S13>F</FONT><FONT CLASS=S17>KK</FONT><FONT CLASS=S14>I</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>VLG</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S14>GA</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=S13>Y</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>GL</FONT><FONT CLASS=S13>W</FONT><FONT CLASS=S14>IP</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#666666">---------</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>IPVAI</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>A</FONT><FONT CLASS=S9>TS</FONT><FONT CLASS=S14>P</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#666666">-</FONT><FONT CLASS=S14>A</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>IL</FONT><FONT CLASS=S12>DE</FONT><FONT CLASS=S14>A</FONT><FONT CLASS=S13>Y</FONT><FONT CLASS=S14>VMA</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=S12>D</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S14>P</FONT><FONT CLASS=S13>H</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=S7>C</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S14>LLGI</FONT><FONT CLASS=S7>C</FONT>
+2 PR2_DROME    35.7%  <FONT CLASS=T19>ISVN</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=T19>Q</FONT><FONT CLASS=S14>LG</FONT><FONT CLASS=T19>T</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T19>E</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T19>I</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=T19>QQ</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T19>V</FONT><FONT CLASS=S13>W</FONT><FONT CLASS=T19>SNGN</FONT><FONT CLASS=S12>E</FONT><FONT COLOR="#666666">-----------</FONT><FONT CLASS=T19>R</FONT><FONT CLASS=S14>I</FONT><FONT CLASS=T19>Q</FONT><FONT CLASS=S14>VAI</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=T19>C</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=T19>CRERMQS</FONT><FONT COLOR="#666666">-</FONT><FONT CLASS=T19>NPM</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=T19>F</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=T19>K</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>A</FONT><FONT CLASS=T19>AI</FONT><FONT CLASS=S14>M</FONT><FONT CLASS=T19>H</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=T19>IEHENIV</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=T19>Y</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T19>VV</FONT>
+3 ITK_HUMAN    32.9%  <FONT CLASS=T19>LTFVQEI</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T19>Q</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T19>L</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=T19>HL</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T19>Y</FONT><FONT CLASS=S13>W</FONT><FONT CLASS=T19>LN</FONT><FONT COLOR="#666666">--------------</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=T19>DK</FONT><FONT CLASS=S14>VAI</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=T19>TI</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=T19>GAMS</FONT><FONT COLOR="#666666">---</FONT><FONT CLASS=T19>EEDFIE</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>A</FONT><FONT CLASS=T19>E</FONT><FONT CLASS=S14>VM</FONT><FONT CLASS=T19>MKLSH</FONT><FONT CLASS=S14>P</FONT><FONT CLASS=T19>KLVQ</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=T19>Y</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T19>V</FONT><FONT CLASS=S7>C</FONT>
+4 PTK7_HUMAN   21.2%  <FONT CLASS=T19>IREV</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=T19>QI</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T19>V</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T19>Q</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T19>A</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=T19>VLAEMTGLS</FONT><FONT COLOR="#666666">-</FONT><FONT CLASS=T19>XLPKGSMNADGVAL</FONT><FONT CLASS=S14>VA</FONT><FONT CLASS=T19>V</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=T19>K</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=T19>KPDV</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=T19>D</FONT><FONT COLOR="#666666">-</FONT><FONT CLASS=T19>EVLQSFDK</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=T19>IKF</FONT><FONT CLASS=S14>M</FONT><FONT CLASS=T19>SQLQHDSIVQ</FONT><FONT CLASS=S14>LL</FONT><FONT CLASS=T19>A</FONT><FONT CLASS=S14>I</FONT><FONT CLASS=S7>C</FONT>
+5 KIN31_CAEEL  31.5%  <FONT CLASS=T19>VELT</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=T19>K</FONT><FONT CLASS=S14>LG</FONT><FONT CLASS=T19>E</FONT><FONT CLASS=S14>GA</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T19>E</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=T19>W</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T19>KLLKILDA</FONT><FONT COLOR="#666666">-------</FONT><FONT CLASS=T19>NHQPVL</FONT><FONT CLASS=S14>VA</FONT><FONT CLASS=T19>V</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=T19>TAKLESMT</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=T19>EQI</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>I</FONT><FONT CLASS=T19>MR</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>A</FONT><FONT CLASS=T19>RL</FONT><FONT CLASS=S14>M</FONT><FONT CLASS=T19>RNL</FONT><FONT CLASS=S12>D</FONT><FONT CLASS=T19>HIN</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=T19>VKFF</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T19>VA</FONT>
+</PRE><p>or with respect to another row (let&#8217;s use row 4):</p>
+<div class="highlight-python"><div class="highlight"><pre>mview ... -coloring identity -ref 4 ...
+</pre></div>
+</div>
+<p>giving:</p>
+<PRE>
+1 EGFR_HUMAN   21.2%  <FONT CLASS=T19>FKKI</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=T19>VL</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T19>S</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T19>A</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T19>T</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=T19>YKGLWIPEGEK</FONT><FONT COLOR="#666666">---------</FONT><FONT CLASS=T19>VKIP</FONT><FONT CLASS=S14>VA</FONT><FONT CLASS=T19>I</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=T19>E</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=T19>REAT</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=T19>PK</FONT><FONT COLOR="#666666">-</FONT><FONT CLASS=T19>ANKEILD</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=T19>AYV</FONT><FONT CLASS=S14>M</FONT><FONT CLASS=T19>ASVDNPHVCR</FONT><FONT CLASS=S14>LL</FONT><FONT CLASS=T19>G</FONT><FONT CLASS=S14>I</FONT><FONT CLASS=S7>C</FONT>
+2 PR2_DROME    25.0%  <FONT CLASS=S14>I</FONT><FONT CLASS=T19>SVN</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=T19>L</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T19>T</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T19>E</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T19>I</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=T19>QQGVWSNGNE</FONT><FONT COLOR="#666666">-----------</FONT><FONT CLASS=T19>RIQ</FONT><FONT CLASS=S14>VA</FONT><FONT CLASS=T19>I</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=T19>C</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=T19>CRERMQS</FONT><FONT COLOR="#666666">-</FONT><FONT CLASS=T19>NPME</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=T19>L</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=T19>AAI</FONT><FONT CLASS=S14>M</FONT><FONT CLASS=T19>HSIE</FONT><FONT CLASS=S13>H</FONT><FONT CLASS=T19>EN</FONT><FONT CLASS=S14>IV</FONT><FONT CLASS=T19>R</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=T19>YGVV</FONT>
+3 ITK_HUMAN    26.9%  <FONT CLASS=T19>LTF</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=T19>QE</FONT><FONT CLASS=S14>IG</FONT><FONT CLASS=T19>S</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T19>L</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=T19>H</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=T19>GYWLN</FONT><FONT COLOR="#666666">--------------</FONT><FONT CLASS=T19>KDK</FONT><FONT CLASS=S14>VA</FONT><FONT CLASS=T19>I</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=T19>TIREGAMS</FONT><FONT COLOR="#666666">---</FONT><FONT CLASS=T19>EED</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=T19>IE</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=T19>AEV</FONT><FONT CLASS=S14>M</FONT><FONT CLASS=T19>MK</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=T19>S</FONT><FONT CLASS=S13>H</FONT><FONT CLASS=T19>PKL</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=T19>YGV</FONT><FONT CLASS=S7>C</FONT>
+4 PTK7_HUMAN1  00.0%  <FONT CLASS=S14>I</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S14>IGVG</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>GAVVLA</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>M</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S14>GL</FONT><FONT CLASS=S9>S</FONT><FONT COLOR="#666666">-</FONT><FONT CLASS=T19>X</FONT><FONT CLASS=S14>LP</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S14>M</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S14>A</FONT><FONT CLASS=S12>D</FONT><FONT CLASS=S14>GVALVAV</FONT><FONT CLASS=S17>KK</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>P</FONT><FONT CLASS=S12>D</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S12>D</FONT><FONT COLOR="#666666">-</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>VL</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S12>D</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>I</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>M</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S13>H</FONT><FONT CLASS=S12>D</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S14>IV</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S14>LLAI</FONT><FONT CLASS=S7>C</FONT>
+5 KIN31_CAEEL  22.5%  <FONT CLASS=T19>VELT</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=T19>KL</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T19>E</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T19>A</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T19>E</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=T19>WKGKLLKILDA</FONT><FONT COLOR="#666666">-------</FONT><FONT CLASS=T19>NHQPV</FONT><FONT CLASS=S14>LVAV</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=T19>TA</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=T19>LESMTK</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=T19>QIKEIMR</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=T19>ARL</FONT><FONT CLASS=S14>M</FONT><FONT CLASS=T19>RN</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=T19>D</FONT><FONT CLASS=S13>H</FONT><FONT CLASS=T19>INV</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=T19>KFFGVA</FONT>
+</PRE><p>in which also you see that the percent identity calculations have been
+recomputed with respect to the new row of interest.</p>
+<p><strong>Mode</strong> <tt class="docutils literal"><span class="pre">consensus</span></tt></p>
+<p>This mode uses the currently selected alignment palette to colour only those
+residues assigned to a consensus class for each column (see
+<a class="reference internal" href="#ref-consensus-sequences"><em>Consensus sequences</em></a>). The consensus threshold defaults to 70% and
+and may be set to another value with the <tt class="docutils literal"><span class="pre">-threshold</span></tt> option. In the
+following example we add a single consensus line and set the same threshold
+for both consensus calculations (they are independent) to 90%:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview ... -coloring consensus -threshold 90 ... -consensus on -con_threshold 90 ...
+</pre></div>
+</div>
+<p>gives:</p>
+<PRE>
+1 EGFR_HUMAN    100.0%  <FONT CLASS=S13>F</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#666666">KI</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#666666">V</FONT><FONT CLASS=S14>LG</FONT><FONT COLOR="#666666">S</FONT><FONT CLASS=S14>GA</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">T</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#666666">YK</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">L</FONT><FONT CLASS=S13>W</FONT><FONT COLOR="#666666">IPEGEK---------VKIP</FONT><FONT CLASS=S14>VAI</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S17>R</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S14>A</FONT><FONT COLOR="#666666">TSPK-ANK</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>I</FONT><FONT COLOR="#666666">L</FONT><FONT CLASS=S12>DE</FONT><FONT CLASS=S14>A</FONT><FONT COLOR="#666666">Y</FONT><FONT CLASS=S14>VM</FONT><FONT COLOR="#666666">A</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=S12>D</FONT><FONT CLASS=S8>N</FONT><FONT COLOR="#666666">P</FONT><FONT CLASS=S13>H</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=S7>C</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S14>LLGI</FONT><FONT CLASS=S7>C</FONT>
+2 PR2_DROME      35.7%  <FONT CLASS=S14>I</FONT><FONT CLASS=S9>S</FONT><FONT COLOR="#666666">VN</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#666666">Q</FONT><FONT CLASS=S14>LG</FONT><FONT COLOR="#666666">T</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">I</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#666666">QQ</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">V</FONT><FONT CLASS=S13>W</FONT><FONT COLOR="#666666">SNGNE-----------RIQ</FONT><FONT CLASS=S14>VAI</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S7>C</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S7>C</FONT><FONT COLOR="#666666">R</FONT><FONT CLASS=S12>E</FONT><FONT COLOR="#666666">RMQS-NPM</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S13>F</FONT><FONT COLOR="#666666">L</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>A</FONT><FONT COLOR="#666666">A</FONT><FONT CLASS=S14>IM</FONT><FONT COLOR="#666666">H</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S14>I</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S13>H</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S14>IV</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S13>Y</FONT><FONT CLASS=S14>GVV</FONT>
+3 ITK_HUMAN      32.9%  <FONT CLASS=S14>L</FONT><FONT CLASS=S9>T</FONT><FONT COLOR="#666666">FV</FONT><FONT CLASS=S8>Q</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S14>IG</FONT><FONT COLOR="#666666">S</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">L</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#666666">HL</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">Y</FONT><FONT CLASS=S13>W</FONT><FONT COLOR="#666666">LN--------------KDK</FONT><FONT CLASS=S14>VAI</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S14>I</FONT><FONT CLASS=S17>R</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">AMS---EE</FONT><FONT CLASS=S12>D</FONT><FONT CLASS=S13>F</FONT><FONT COLOR="#666666">I</FONT><FONT CLASS=S12>EE</FONT><FONT CLASS=S14>A</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S14>VM</FONT><FONT COLOR="#666666">M</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S13>H</FONT><FONT COLOR="#666666">P</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S14>LV</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S13>Y</FONT><FONT CLASS=S14>GV</FONT><FONT CLASS=S7>C</FONT>
+4 PTK7_HUMAN     21.2%  <FONT CLASS=S14>I</FONT><FONT CLASS=S17>R</FONT><FONT COLOR="#666666">EV</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#666666">Q</FONT><FONT CLASS=S14>IG</FONT><FONT COLOR="#666666">V</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">A</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#666666">VL</FONT><FONT CLASS=S14>A</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S14>M</FONT><FONT COLOR="#666666">TGLS-XLPKGSMNADGVAL</FONT><FONT CLASS=S14>VAV</FONT><FONT CLASS=S17>KK</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#666666">P</FONT><FONT CLASS=S12>D</FONT><FONT COLOR="#666666">VSD-EVLQ</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S13>F</FONT><FONT COLOR="#666666">D</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>I</FONT><FONT COLOR="#666666">K</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>M</FONT><FONT COLOR="#666666">S</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S13>H</FONT><FONT COLOR="#666666">D</FONT><FONT CLASS=S9>S</FONT><FONT CLASS=S14>IV</FONT><FONT CLASS=S8>Q</FONT><FONT CLASS=S14>LLAI</FONT><FONT CLASS=S7>C</FONT>
+5 KIN31_CAEEL    31.5%  <FONT CLASS=S14>V</FONT><FONT CLASS=S12>E</FONT><FONT COLOR="#666666">LT</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#666666">K</FONT><FONT CLASS=S14>LG</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S14>GA</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#666666">WK</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">K</FONT><FONT CLASS=S14>L</FONT><FONT COLOR="#666666">LKILDA-------NHQPVL</FONT><FONT CLASS=S14>VAV</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S9>T</FONT><FONT CLASS=S14>A</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#666666">L</FONT><FONT CLASS=S12>E</FONT><FONT COLOR="#666666">SMTKEQIK</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>I</FONT><FONT COLOR="#666666">M</FONT><FONT CLASS=S17>R</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>A</FONT><FONT COLOR="#666666">R</FONT><FONT CLASS=S14>LM</FONT><FONT COLOR="#666666">R</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=S12>D</FONT><FONT CLASS=S13>H</FONT><FONT COLOR="#666666">I</FONT><FONT CLASS=S8>N</FONT><FONT CLASS=S14>VV</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=S13>FF</FONT><FONT CLASS=S14>GVA</FONT>
+  consensus/90%         hp..p.lG.GtFG.V..u.h...................VAlKphp.t........ph.cEh.hM.plpp.plsphhuls
+</PRE><p>Notice that the coloured columns correspond to the consensus features (i.e.,
+not wildcards or gaps). In each column, the residues that contribute to that
+consensus class have been coloured using the prevailing alignment colouring
+palette (see <a class="reference internal" href="#ref-alignment-colouring"><em>Alignment colouring</em></a>), which is the default one used in
+the other examples in this section.</p>
+<p><strong>Mode</strong> <tt class="docutils literal"><span class="pre">group</span></tt></p>
+<p>The last mode works like the consensus colouring mode, but gives the residues
+in a column a uniform colour defined for that consensus class (see
+<a class="reference internal" href="#ref-consensus-colouring"><em>Consensus colouring</em></a>):</p>
+<div class="highlight-python"><div class="highlight"><pre>mview ... -coloring group -threshold 90 ... -consensus on -con_threshold 90 ...
+</pre></div>
+</div>
+<p>yields:</p>
+<PRE>
+1 EGFR_HUMAN    100.0%  <FONT CLASS=T14>F</FONT><FONT CLASS=T9>K</FONT><FONT COLOR="#666666">KI</FONT><FONT CLASS=T9>K</FONT><FONT COLOR="#666666">V</FONT><FONT CLASS=T14>L</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">S</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T14>A</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">T</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#666666">YK</FONT><FONT CLASS=T14>G</FONT><FONT COLOR="#666666">L</FONT><FONT CLASS=T14>W</FONT><FONT COLOR="#666666">IPEGEK---------VKIP</FONT><FONT CLASS=S14>VA</FONT><FONT CLASS=T14>I</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=T9>E</FONT><FONT CLASS=T14>L</FONT><FONT CLASS=T9>R</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=T14>A</FONT><FONT COLOR="#666666">TSPK-ANK</FONT><FONT CLASS=T9>E</FONT><FONT CLASS=T14>I</FONT><FONT COLOR="#666666">L</FONT><FONT CLASS=T8>D</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=T14>A</FONT><FONT COLOR="#666666">Y</FONT><FONT CLASS=T14>V</FONT><FONT CLASS=S14>M</FONT><FONT COLOR="#666666">A</FONT><FONT CLASS=T9>S</FONT><FONT CLASS=T14>V</FONT><FONT CLASS=T9>DN</FONT><FONT COLOR="#666666">P</FONT><FONT CLASS=T9>H</FONT><FONT CLASS=T14>VC</FONT><FONT CLASS=T9>R</FONT><FONT CLASS=T14>LLGIC</FONT>
+2 PR2_DROME      35.7%  <FONT CLASS=T14>I</FONT><FONT CLASS=T9>S</FONT><FONT COLOR="#666666">VN</FONT><FONT CLASS=T9>K</FONT><FONT COLOR="#666666">Q</FONT><FONT CLASS=T14>L</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">T</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T14>E</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">I</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#666666">QQ</FONT><FONT CLASS=T14>G</FONT><FONT COLOR="#666666">V</FONT><FONT CLASS=T14>W</FONT><FONT COLOR="#666666">SNGNE-----------RIQ</FONT><FONT CLASS=S14>VA</FONT><FONT CLASS=T14>I</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=T9>C</FONT><FONT CLASS=T14>L</FONT><FONT CLASS=T9>C</FONT><FONT COLOR="#666666">R</FONT><FONT CLASS=T14>E</FONT><FONT COLOR="#666666">RMQS-NPM</FONT><FONT CLASS=T9>E</FONT><FONT CLASS=T14>F</FONT><FONT COLOR="#666666">L</FONT><FONT CLASS=T8>K</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=T14>A</FONT><FONT COLOR="#666666">A</FONT><FONT CLASS=T14>I</FONT><FONT CLASS=S14>M</FONT><FONT COLOR="#666666">H</FONT><FONT CLASS=T9>S</FONT><FONT CLASS=T14>I</FONT><FONT CLASS=T9>EH</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=T9>N</FONT><FONT CLASS=T14>IV</FONT><FONT CLASS=T9>R</FONT><FONT CLASS=T14>LYGVV</FONT>
+3 ITK_HUMAN      32.9%  <FONT CLASS=T14>L</FONT><FONT CLASS=T9>T</FONT><FONT COLOR="#666666">FV</FONT><FONT CLASS=T9>Q</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=T14>I</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">S</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T14>Q</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">L</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#666666">HL</FONT><FONT CLASS=T14>G</FONT><FONT COLOR="#666666">Y</FONT><FONT CLASS=T14>W</FONT><FONT COLOR="#666666">LN--------------KDK</FONT><FONT CLASS=S14>VA</FONT><FONT CLASS=T14>I</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=T9>T</FONT><FONT CLASS=T14>I</FONT><FONT CLASS=T9>R</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=T14>G</FONT><FONT COLOR="#666666">AMS---EE</FONT><FONT CLASS=T9>D</FONT><FONT CLASS=T14>F</FONT><FONT COLOR="#666666">I</FONT><FONT CLASS=T8>E</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=T14>A</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=T14>V</FONT><FONT CLASS=S14>M</FONT><FONT COLOR="#666666">M</FONT><FONT CLASS=T9>K</FONT><FONT CLASS=T14>L</FONT><FONT CLASS=T9>SH</FONT><FONT COLOR="#666666">P</FONT><FONT CLASS=T9>K</FONT><FONT CLASS=T14>LV</FONT><FONT CLASS=T9>Q</FONT><FONT CLASS=T14>LYGVC</FONT>
+4 PTK7_HUMAN     21.2%  <FONT CLASS=T14>I</FONT><FONT CLASS=T9>R</FONT><FONT COLOR="#666666">EV</FONT><FONT CLASS=T9>K</FONT><FONT COLOR="#666666">Q</FONT><FONT CLASS=T14>I</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">V</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T14>Q</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">A</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#666666">VL</FONT><FONT CLASS=T14>A</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=T14>M</FONT><FONT COLOR="#666666">TGLS-XLPKGSMNADGVAL</FONT><FONT CLASS=S14>VA</FONT><FONT CLASS=T14>V</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=T9>K</FONT><FONT CLASS=T14>L</FONT><FONT CLASS=T9>K</FONT><FONT COLOR="#666666">P</FONT><FONT CLASS=T14>D</FONT><FONT COLOR="#666666">VSD-EVLQ</FONT><FONT CLASS=T9>S</FONT><FONT CLASS=T14>F</FONT><FONT COLOR="#666666">D</FONT><FONT CLASS=T8>K</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=T14>I</FONT><FONT COLOR="#666666">K</FONT><FONT CLASS=T14>F</FONT><FONT CLASS=S14>M</FONT><FONT COLOR="#666666">S</FONT><FONT CLASS=T9>Q</FONT><FONT CLASS=T14>L</FONT><FONT CLASS=T9>QH</FONT><FONT COLOR="#666666">D</FONT><FONT CLASS=T9>S</FONT><FONT CLASS=T14>IV</FONT><FONT CLASS=T9>Q</FONT><FONT CLASS=T14>LLAIC</FONT>
+5 KIN31_CAEEL    31.5%  <FONT CLASS=T14>V</FONT><FONT CLASS=T9>E</FONT><FONT COLOR="#666666">LT</FONT><FONT CLASS=T9>K</FONT><FONT COLOR="#666666">K</FONT><FONT CLASS=T14>L</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T14>A</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#666666">WK</FONT><FONT CLASS=T14>G</FONT><FONT COLOR="#666666">K</FONT><FONT CLASS=T14>L</FONT><FONT COLOR="#666666">LKILDA-------NHQPVL</FONT><FONT CLASS=S14>VA</FONT><FONT CLASS=T14>V</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=T9>T</FONT><FONT CLASS=T14>A</FONT><FONT CLASS=T9>K</FONT><FONT COLOR="#666666">L</FONT><FONT CLASS=T14>E</FONT><FONT COLOR="#666666">SMTKEQIK</FONT><FONT CLASS=T9>E</FONT><FONT CLASS=T14>I</FONT><FONT COLOR="#666666">M</FONT><FONT CLASS=T8>R</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=T14>A</FONT><FONT COLOR="#666666">R</FONT><FONT CLASS=T14>L</FONT><FONT CLASS=S14>M</FONT><FONT COLOR="#666666">R</FONT><FONT CLASS=T9>N</FONT><FONT CLASS=T14>L</FONT><FONT CLASS=T9>DH</FONT><FONT COLOR="#666666">I</FONT><FONT CLASS=T9>N</FONT><FONT CLASS=T14>VV</FONT><FONT CLASS=T9>K</FONT><FONT CLASS=T14>FFGVA</FONT>
+  consensus/90%         hp..p.lG.GtFG.V..u.h...................VAlKphp.t........ph.cEh.hM.plpp.plsphhuls
+</PRE><p>As in the last example, the coloured columns correspond to the consensus
+features (i.e., not wildcards or gaps). In each column, the residues that
+contribute to that consensus class have been coloured using a single colour
+defined for that consensus class (see <a class="reference internal" href="#ref-consensus-colouring"><em>Consensus colouring</em></a>), and
+conserved residues (at least 90% of a column) are given a solid coloured
+background for emphasis.</p>
+<p>The choice of consensus classes may be changed using the <tt class="docutils literal"><span class="pre">-groupmap</span> <span class="pre">name</span></tt>
+option, where <tt class="docutils literal"><span class="pre">name</span></tt> is the name of a consensus pattern. These can be listed
+using the <tt class="docutils literal"><span class="pre">-listgroups</span></tt> option (see <a class="reference internal" href="#ref-changeing-consensus-patterns"><em>Changing consensus patterns</em></a>).</p>
+<p>Note: it is also possible to colour the consensus sequences themselves
+independently of the alignment (see <a class="reference internal" href="#ref-consensus-colouring"><em>Consensus colouring</em></a>).</p>
+</div>
+<div class="section" id="colouring-only-conserved-residues">
+<h3>Colouring only conserved residues<a class="headerlink" href="#colouring-only-conserved-residues" title="Permalink to this headline">¶</a></h3>
+<p>The colouring of an alignment under the <tt class="docutils literal"><span class="pre">consensus</span></tt> or <tt class="docutils literal"><span class="pre">group</span></tt> colouring
+modes (see <a class="reference internal" href="#ref-alignment-colouring"><em>Alignment colouring</em></a>) can be tuned to ignore the
+consensus classes with <tt class="docutils literal"><span class="pre">-ignore</span> <span class="pre">class</span></tt> for the purposes of colouring:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview ... -coloring group -threshold 90 ... -consensus on -con_threshold 90 ... -ignore class
+</pre></div>
+</div>
+<p>gives:</p>
+<PRE>
+1 EGFR_HUMAN    100.0%  <FONT COLOR="#666666">FKKIKVL</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">S</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">A</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">T</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#666666">YKGLWIPEGEK---------VKIP</FONT><FONT CLASS=S14>VA</FONT><FONT COLOR="#666666">I</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#666666">ELREATSPK-ANKEILD</FONT><FONT CLASS=S12>E</FONT><FONT COLOR="#666666">AYV</FONT><FONT CLASS=S14>M</FONT><FONT COLOR="#666666">ASVDNPHVCRLLGIC</FONT>
+2 PR2_DROME      35.7%  <FONT COLOR="#666666">ISVNKQL</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">T</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">I</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#666666">QQGVWSNGNE-----------RIQ</FONT><FONT CLASS=S14>VA</FONT><FONT COLOR="#666666">I</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#666666">CLCRERMQS-NPMEFLK</FONT><FONT CLASS=S12>E</FONT><FONT COLOR="#666666">AAI</FONT><FONT CLASS=S14>M</FONT><FONT COLOR="#666666">HSIEHENIVRLYGVV</FONT>
+3 ITK_HUMAN      32.9%  <FONT COLOR="#666666">LTFVQEI</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">S</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">Q</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">L</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#666666">HLGYWLN--------------KDK</FONT><FONT CLASS=S14>VA</FONT><FONT COLOR="#666666">I</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#666666">TIREGAMS---EEDFIE</FONT><FONT CLASS=S12>E</FONT><FONT COLOR="#666666">AEV</FONT><FONT CLASS=S14>M</FONT><FONT COLOR="#666666">MKLSHPKLVQLYGVC</FONT>
+4 PTK7_HUMAN     21.2%  <FONT COLOR="#666666">IREVKQI</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">V</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">Q</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">A</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#666666">VLAEMTGLS-XLPKGSMNADGVAL</FONT><FONT CLASS=S14>VA</FONT><FONT COLOR="#666666">V</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#666666">KLKPDVSD-EVLQSFDK</FONT><FONT CLASS=S12>E</FONT><FONT COLOR="#666666">IKF</FONT><FONT CLASS=S14>M</FONT><FONT COLOR="#666666">SQLQHDSIVQLLAIC</FONT>
+5 KIN31_CAEEL    31.5%  <FONT COLOR="#666666">VELTKKL</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">A</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#666666">WKGKLLKILDA-------NHQPVL</FONT><FONT CLASS=S14>VA</FONT><FONT COLOR="#666666">V</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#666666">TAKLESMTKEQIKEIMR</FONT><FONT CLASS=S12>E</FONT><FONT COLOR="#666666">ARL</FONT><FONT CLASS=S14>M</FONT><FONT COLOR="#666666">RNLDHINVVKFFGVA</FONT>
+  consensus/90%         hp..p.lG.GtFG.V..u.h...................VAlKphp.t........ph.cEh.hM.plpp.plsphhuls
+</PRE><p>which highlights the conserved residues (at least 90% of a column) in the
+alignment by applying the default consensus group colouring scheme to them.</p>
+</div>
+<div class="section" id="consensus-colouring">
+<span id="ref-consensus-colouring"></span><h3>Consensus colouring<a class="headerlink" href="#consensus-colouring" title="Permalink to this headline">¶</a></h3>
+<p>The consensus lines may be coloured independently of the alignment using the
+<tt class="docutils literal"><span class="pre">-con_coloring</span></tt> option which takes two modes: <tt class="docutils literal"><span class="pre">any</span></tt>, <tt class="docutils literal"><span class="pre">identity</span></tt>.</p>
+<p>Consider the following alignment:</p>
+<PRE>
+                        1 [        .         .         .         .         :         .         .         ] 80
+1 EGFR_HUMAN    100.0%    FKKIKVLGSGAFGTVYKGLWIPEGEK---------VKIPVAIKELREATSPK-ANKEILDEAYVMASVDNPHVCRLLGIC
+2 PR2_DROME      35.7%    ISVNKQLGTGEFGIVQQGVWSNGNE-----------RIQVAIKCLCRERMQS-NPMEFLKEAAIMHSIEHENIVRLYGVV
+3 ITK_HUMAN      32.9%    LTFVQEIGSGQFGLVHLGYWLN--------------KDKVAIKTIREGAMS---EEDFIEEAEVMMKLSHPKLVQLYGVC
+4 PTK7_HUMAN     21.2%    IREVKQIGVGQFGAVVLAEMTGLS-XLPKGSMNADGVALVAVKKLKPDVSD-EVLQSFDKEIKFMSQLQHDSIVQLLAIC
+5 KIN31_CAEEL    31.5%    VELTKKLGEGAFGEVWKGKLLKILDA-------NHQPVLVAVKTAKLESMTKEQIKEIMREARLMRNLDHINVVKFFGVA
+</PRE><p><strong>Mode</strong> <tt class="docutils literal"><span class="pre">any</span></tt></p>
+<p>The simplest is to colour every consensus symbol according to the currently
+selected consensus colouring palette:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview ... -consensus on -con_coloring any ...
+</pre></div>
+</div>
+<p>gives:</p>
+<PRE>
+  consensus/100%         <FONT CLASS=T14>h</FONT><FONT CLASS=T9>p</FONT><FONT COLOR="#666666">..</FONT><FONT CLASS=T9>p</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=T14>l</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T14>t</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#666666">..</FONT><FONT CLASS=T14>u</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=T14>h</FONT><FONT COLOR="#666666">...................</FONT><FONT CLASS=S14>VA</FONT><FONT CLASS=T14>l</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=T9>p</FONT><FONT CLASS=T14>h</FONT><FONT CLASS=T9>p</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=T14>t</FONT><FONT COLOR="#666666">........</FONT><FONT CLASS=T9>p</FONT><FONT CLASS=T14>h</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=T8>c</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=T14>h</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=T14>h</FONT><FONT CLASS=S14>M</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=T9>p</FONT><FONT CLASS=T14>l</FONT><FONT CLASS=T9>pp</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=T9>p</FONT><FONT CLASS=T14>ls</FONT><FONT CLASS=T9>p</FONT><FONT CLASS=T14>hhuls</FONT>
+  consensus/90%          <FONT CLASS=T14>h</FONT><FONT CLASS=T9>p</FONT><FONT COLOR="#666666">..</FONT><FONT CLASS=T9>p</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=T14>l</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T14>t</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#666666">..</FONT><FONT CLASS=T14>u</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=T14>h</FONT><FONT COLOR="#666666">...................</FONT><FONT CLASS=S14>VA</FONT><FONT CLASS=T14>l</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=T9>p</FONT><FONT CLASS=T14>h</FONT><FONT CLASS=T9>p</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=T14>t</FONT><FONT COLOR="#666666">........</FONT><FONT CLASS=T9>p</FONT><FONT CLASS=T14>h</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=T8>c</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=T14>h</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=T14>h</FONT><FONT CLASS=S14>M</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=T9>p</FONT><FONT CLASS=T14>l</FONT><FONT CLASS=T9>pp</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=T9>p</FONT><FONT CLASS=T14>ls</FONT><FONT CLASS=T9>p</FONT><FONT CLASS=T14>hhuls</FONT>
+  consensus/80%          <FONT CLASS=T14>l</FONT><FONT CLASS=T9>p</FONT><FONT CLASS=T14>hs</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=T9>p</FONT><FONT CLASS=T14>l</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T14>s</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T14>t</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T14>h</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=T14>hh</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T14>hhhs</FONT><FONT COLOR="#666666">..............</FONT><FONT CLASS=T14>hh</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S14>VA</FONT><FONT CLASS=T14>l</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=T9>p</FONT><FONT CLASS=T14>l</FONT><FONT CLASS=T17>+</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=T14>ts</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=T14>s</FONT><FONT COLOR="#666666">....</FONT><FONT CLASS=T9>p</FONT><FONT CLASS=T12>-</FONT><FONT CLASS=T14>hh</FONT><FONT CLASS=T8>c</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>A</FONT><FONT CLASS=T14>tl</FONT><FONT CLASS=S14>M</FONT><FONT CLASS=T14>t</FONT><FONT CLASS=T9>p</FONT><FONT CLASS=T14>l</FONT><FONT CLASS=T9>p</FONT><FONT CLASS=S13>H</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=T9>p</FONT><FONT CLASS=T14>l</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=T9>p</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=T14>h</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T14>ls</FONT>
+  consensus/70%          <FONT CLASS=T14>l</FONT><FONT CLASS=T9>p</FONT><FONT CLASS=T14>hs</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=T9>p</FONT><FONT CLASS=T14>l</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T14>s</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T14>t</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T14>h</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=T14>hh</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T14>hhhs</FONT><FONT COLOR="#666666">..............</FONT><FONT CLASS=T14>hh</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S14>VA</FONT><FONT CLASS=T14>l</FONT><FONT CLASS=S17>K</FONT><FONT CLASS=T9>p</FONT><FONT CLASS=T14>l</FONT><FONT CLASS=T17>+</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=T14>ts</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=T14>s</FONT><FONT COLOR="#666666">....</FONT><FONT CLASS=T9>p</FONT><FONT CLASS=T12>-</FONT><FONT CLASS=T14>hh</FONT><FONT CLASS=T8>c</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>A</FONT><FONT CLASS=T14>tl</FONT><FONT CLASS=S14>M</FONT><FONT CLASS=T14>t</FONT><FONT CLASS=T9>p</FONT><FONT CLASS=T14>l</FONT><FONT CLASS=T9>p</FONT><FONT CLASS=S13>H</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=T9>p</FONT><FONT CLASS=T14>l</FONT><FONT CLASS=S14>V</FONT><FONT CLASS=T9>p</FONT><FONT CLASS=S14>L</FONT><FONT CLASS=T14>h</FONT><FONT CLASS=S14>G</FONT><FONT CLASS=T14>ls</FONT>
+</PRE><p><strong>Mode</strong> <tt class="docutils literal"><span class="pre">identity</span></tt></p>
+<p>You can colour only those consensus symbols that are identical to some
+reference sequence (usually the query or first row) with:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview ... -consensus on -con_coloring identity ...
+</pre></div>
+</div>
+<p>to produce:</p>
+<PRE>
+  consensus/100%         <FONT COLOR="#000000">hp</FONT><FONT COLOR="#666666">..</FONT><FONT COLOR="#000000">p</FONT><FONT COLOR="#666666">.</FONT><FONT COLOR="#000000">l</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#000000">t</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#666666">..</FONT><FONT COLOR="#000000">u</FONT><FONT COLOR="#666666">.</FONT><FONT COLOR="#000000">h</FONT><FONT COLOR="#666666">...................</FONT><FONT CLASS=S14>VA</FONT><FONT COLOR="#000000">l</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#000000">php</FONT><FONT COLOR="#666666">.</FONT><FONT COLOR="#000000">t</FONT><FONT COLOR="#666666">........</FONT><FONT COLOR="#000000">ph</FONT><FONT COLOR="#666666">.</FONT><FONT COLOR="#000000">c</FONT><FONT CLASS=S12>E</FONT><FONT COLOR="#000000">h</FONT><FONT COLOR="#666666">.</FONT><FONT COLOR="#000000">h</FONT><FONT CLASS=S14>M</FONT><FONT COLOR="#666666">.</FONT><FONT COLOR="#000000">plpp</FONT><FONT COLOR="#666666">.</FONT><FONT COLOR="#000000">plsphhuls</FONT>
+  consensus/90%          <FONT COLOR="#000000">hp</FONT><FONT COLOR="#666666">..</FONT><FONT COLOR="#000000">p</FONT><FONT COLOR="#666666">.</FONT><FONT COLOR="#000000">l</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#000000">t</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#666666">..</FONT><FONT COLOR="#000000">u</FONT><FONT COLOR="#666666">.</FONT><FONT COLOR="#000000">h</FONT><FONT COLOR="#666666">...................</FONT><FONT CLASS=S14>VA</FONT><FONT COLOR="#000000">l</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#000000">php</FONT><FONT COLOR="#666666">.</FONT><FONT COLOR="#000000">t</FONT><FONT COLOR="#666666">........</FONT><FONT COLOR="#000000">ph</FONT><FONT COLOR="#666666">.</FONT><FONT COLOR="#000000">c</FONT><FONT CLASS=S12>E</FONT><FONT COLOR="#000000">h</FONT><FONT COLOR="#666666">.</FONT><FONT COLOR="#000000">h</FONT><FONT CLASS=S14>M</FONT><FONT COLOR="#666666">.</FONT><FONT COLOR="#000000">plpp</FONT><FONT COLOR="#666666">.</FONT><FONT COLOR="#000000">plsphhuls</FONT>
+  consensus/80%          <FONT COLOR="#000000">lphs</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#000000">pl</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#000000">s</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#000000">t</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#000000">h</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#000000">hh</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#000000">hhhs</FONT><FONT COLOR="#666666">..............</FONT><FONT COLOR="#000000">hh</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S14>VA</FONT><FONT COLOR="#000000">l</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#000000">pl+</FONT><FONT COLOR="#666666">.</FONT><FONT COLOR="#000000">ts</FONT><FONT COLOR="#666666">.</FONT><FONT COLOR="#000000">s</FONT><FONT COLOR="#666666">....</FONT><FONT COLOR="#000000">p-hhc</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>A</FONT><FONT COLOR="#000000">tl</FONT><FONT CLASS=S14>M</FONT><FONT COLOR="#000000">tplp</FONT><FONT CLASS=S13>H</FONT><FONT COLOR="#666666">.</FONT><FONT COLOR="#000000">pl</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#000000">p</FONT><FONT CLASS=S14>L</FONT><FONT COLOR="#000000">h</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#000000">ls</FONT>
+  consensus/70%          <FONT COLOR="#000000">lphs</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#000000">pl</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#000000">s</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#000000">t</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#000000">h</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#000000">hh</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#000000">hhhs</FONT><FONT COLOR="#666666">..............</FONT><FONT COLOR="#000000">hh</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S14>VA</FONT><FONT COLOR="#000000">l</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#000000">pl+</FONT><FONT COLOR="#666666">.</FONT><FONT COLOR="#000000">ts</FONT><FONT COLOR="#666666">.</FONT><FONT COLOR="#000000">s</FONT><FONT COLOR="#666666">....</FONT><FONT COLOR="#000000">p-hhc</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>A</FONT><FONT COLOR="#000000">tl</FONT><FONT CLASS=S14>M</FONT><FONT COLOR="#000000">tplp</FONT><FONT CLASS=S13>H</FONT><FONT COLOR="#666666">.</FONT><FONT COLOR="#000000">pl</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#000000">p</FONT><FONT CLASS=S14>L</FONT><FONT COLOR="#000000">h</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#000000">ls</FONT>
+</PRE><p><strong>Tuning</strong></p>
+<p>These modes work with the <tt class="docutils literal"><span class="pre">-con_ignore</span></tt> and <tt class="docutils literal"><span class="pre">-con_gaps</span></tt> options to tune
+the consensus symbols displayed (see <a class="reference internal" href="#ref-conserved-symbols-or-conserved-classes"><em>Showing conserved symbols or conserved classes</em></a>). For example, the consensus symbols can be switched off, to leave
+only conserved residues:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview ... -consensus on -con_coloring identity -con_ignore class ...
+</pre></div>
+</div>
+<p>to produce:</p>
+<PRE>
+  consensus/100%         <FONT COLOR="#666666">.......</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#666666">........................</FONT><FONT CLASS=S14>VA</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#666666">.................</FONT><FONT CLASS=S12>E</FONT><FONT COLOR="#666666">...</FONT><FONT CLASS=S14>M</FONT><FONT COLOR="#666666">...............</FONT>
+  consensus/90%          <FONT COLOR="#666666">.......</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#666666">........................</FONT><FONT CLASS=S14>VA</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#666666">.................</FONT><FONT CLASS=S12>E</FONT><FONT COLOR="#666666">...</FONT><FONT CLASS=S14>M</FONT><FONT COLOR="#666666">...............</FONT>
+  consensus/80%          <FONT COLOR="#666666">....</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#666666">..</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#666666">..</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">.....................</FONT><FONT CLASS=S14>VA</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#666666">.................</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>A</FONT><FONT COLOR="#666666">..</FONT><FONT CLASS=S14>M</FONT><FONT COLOR="#666666">....</FONT><FONT CLASS=S13>H</FONT><FONT COLOR="#666666">...</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S14>L</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">..</FONT>
+  consensus/70%          <FONT COLOR="#666666">....</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#666666">..</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S13>F</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#666666">..</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">.....................</FONT><FONT CLASS=S14>VA</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S17>K</FONT><FONT COLOR="#666666">.................</FONT><FONT CLASS=S12>E</FONT><FONT CLASS=S14>A</FONT><FONT COLOR="#666666">..</FONT><FONT CLASS=S14>M</FONT><FONT COLOR="#666666">....</FONT><FONT CLASS=S13>H</FONT><FONT COLOR="#666666">...</FONT><FONT CLASS=S14>V</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S14>L</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S14>G</FONT><FONT COLOR="#666666">..</FONT>
+</PRE></div>
+<div class="section" id="finding-and-colouring-patterns-and-motifs">
+<h3>Finding and colouring patterns and motifs<a class="headerlink" href="#finding-and-colouring-patterns-and-motifs" title="Permalink to this headline">¶</a></h3>
+<p>Occurrences of a string or pattern defined by a regular expression can be
+coloured using the <tt class="docutils literal"><span class="pre">-find</span> <span class="pre">'pattern'</span></tt> option. This will cause all instances
+of the pattern to be highlighted using the user selected colourmap. Patterns
+are case-insensitive.</p>
+<p>1. Patterns may be exact strings:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview ... -html head -css on -find VAIK
+</pre></div>
+</div>
+<PRE>
+1 EGFR_HUMAN  100.0%  <FONT COLOR="#666666">FKKIKVLGSGAFGTVYKGLWIPEGEK---------VKIP</FONT><FONT CLASS=S93>VAIK</FONT><FONT COLOR="#666666">ELREATSPK-ANKEILDEAYVMASVDNPHVCRLLGIC</FONT>
+2 PR2_DROME    35.7%  <FONT COLOR="#666666">ISVNKQLGTGEFGIVQQGVWSNGNE-----------RIQ</FONT><FONT CLASS=S93>VAIK</FONT><FONT COLOR="#666666">CLCRERMQS-NPMEFLKEAAIMHSIEHENIVRLYGVV</FONT>
+3 ITK_HUMAN    32.9%  <FONT COLOR="#666666">LTFVQEIGSGQFGLVHLGYWLN--------------KDK</FONT><FONT CLASS=S93>VAIK</FONT><FONT COLOR="#666666">TIREGAMS---EEDFIEEAEVMMKLSHPKLVQLYGVC</FONT>
+4 PTK7_HUMAN   21.2%  <FONT COLOR="#666666">IREVKQIGVGQFGAVVLAEMTGLS-XLPKGSMNADGVALVAVKKLKPDVSD-EVLQSFDKEIKFMSQLQHDSIVQLLAIC</FONT>
+5 KIN31_CAEEL  31.5%  <FONT COLOR="#666666">VELTKKLGEGAFGEVWKGKLLKILDA-------NHQPVLVAVKTAKLESMTKEQIKEIMREARLMRNLDHINVVKFFGVA</FONT>
+</PRE><p>2. Patterns may be regular expressions enclosed in quotes:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview ... -find &#39;VA[IV]K&#39;
+</pre></div>
+</div>
+<PRE>
+1 EGFR_HUMAN  100.0%  <FONT COLOR="#666666">FKKIKVLGSGAFGTVYKGLWIPEGEK---------VKIP</FONT><FONT CLASS=S93>VAIK</FONT><FONT COLOR="#666666">ELREATSPK-ANKEILDEAYVMASVDNPHVCRLLGIC</FONT>
+2 PR2_DROME    35.7%  <FONT COLOR="#666666">ISVNKQLGTGEFGIVQQGVWSNGNE-----------RIQ</FONT><FONT CLASS=S93>VAIK</FONT><FONT COLOR="#666666">CLCRERMQS-NPMEFLKEAAIMHSIEHENIVRLYGVV</FONT>
+3 ITK_HUMAN    32.9%  <FONT COLOR="#666666">LTFVQEIGSGQFGLVHLGYWLN--------------KDK</FONT><FONT CLASS=S93>VAIK</FONT><FONT COLOR="#666666">TIREGAMS---EEDFIEEAEVMMKLSHPKLVQLYGVC</FONT>
+4 PTK7_HUMAN   21.2%  <FONT COLOR="#666666">IREVKQIGVGQFGAVVLAEMTGLS-XLPKGSMNADGVAL</FONT><FONT CLASS=S93>VAVK</FONT><FONT COLOR="#666666">KLKPDVSD-EVLQSFDKEIKFMSQLQHDSIVQLLAIC</FONT>
+5 KIN31_CAEEL  31.5%  <FONT COLOR="#666666">VELTKKLGEGAFGEVWKGKLLKILDA-------NHQPVL</FONT><FONT CLASS=S93>VAVK</FONT><FONT COLOR="#666666">TAKLESMTKEQIKEIMREARLMRNLDHINVVKFFGVA</FONT>
+</PRE><p>3. Patterns are unaffected by gaps in the sequence:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview ... -find &#39;.{4}VA[IV]K&#39;
+</pre></div>
+</div>
+<PRE>
+1 EGFR_HUMAN  100.0%  <FONT COLOR="#666666">FKKIKVLGSGAFGTVYKGLWIPEGEK---------</FONT><FONT CLASS=S93>VKIPVAIK</FONT><FONT COLOR="#666666">ELREATSPK-ANKEILDEAYVMASVDNPHVCRLLGIC</FONT>
+2 PR2_DROME    35.7%  <FONT COLOR="#666666">ISVNKQLGTGEFGIVQQGVWSNGN</FONT><FONT CLASS=S93>E</FONT><FONT COLOR="#666666">-----------</FONT><FONT CLASS=S93>RIQVAIK</FONT><FONT COLOR="#666666">CLCRERMQS-NPMEFLKEAAIMHSIEHENIVRLYGVV</FONT>
+3 ITK_HUMAN    32.9%  <FONT COLOR="#666666">LTFVQEIGSGQFGLVHLGYWL</FONT><FONT CLASS=S93>N</FONT><FONT COLOR="#666666">--------------</FONT><FONT CLASS=S93>KDKVAIK</FONT><FONT COLOR="#666666">TIREGAMS---EEDFIEEAEVMMKLSHPKLVQLYGVC</FONT>
+4 PTK7_HUMAN   21.2%  <FONT COLOR="#666666">IREVKQIGVGQFGAVVLAEMTGLS-XLPKGSMNAD</FONT><FONT CLASS=S93>GVALVAVK</FONT><FONT COLOR="#666666">KLKPDVSD-EVLQSFDKEIKFMSQLQHDSIVQLLAIC</FONT>
+5 KIN31_CAEEL  31.5%  <FONT COLOR="#666666">VELTKKLGEGAFGEVWKGKLLKILDA-------NH</FONT><FONT CLASS=S93>QPVLVAVK</FONT><FONT COLOR="#666666">TAKLESMTKEQIKEIMREARLMRNLDHINVVKFFGVA</FONT>
+</PRE><p>where you can see that the pattern (any 4 residues followed by V A [I or V] K)
+has been found even though it spans a gap in two rows.</p>
+<p>4. Patterns will find all possible matches including overlapping matches:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview ... -find &#39;.V.&#39;
+</pre></div>
+</div>
+<PRE>
+1 EGFR_HUMAN  100.0%  <FONT COLOR="#666666">FKKI</FONT><FONT CLASS=S93>KVL</FONT><FONT COLOR="#666666">GSGAFG</FONT><FONT CLASS=S93>TVY</FONT><FONT COLOR="#666666">KGLWIPEGE</FONT><FONT CLASS=S93>K</FONT><FONT COLOR="#666666">---------</FONT><FONT CLASS=S93>VK</FONT><FONT COLOR="#666666">I</FONT><FONT CLASS=S93>PVA</FONT><FONT COLOR="#666666">IKELREATSPK-ANKEILDEA</FONT><FONT CLASS=S93>YVM</FONT><FONT COLOR="#666666">A</FONT><FONT CLASS=S93>SVD</FONT><FONT COLOR="#666666">NP</FONT><FONT CLASS=S93>HVC</FONT><FONT COLOR="#666666">RLLGIC</FONT>
+2 PR2_DROME    35.7%  <FONT COLOR="#666666">I</FONT><FONT CLASS=S93>SVN</FONT><FONT COLOR="#666666">KQLGTGEFG</FONT><FONT CLASS=S93>IVQ</FONT><FONT COLOR="#666666">Q</FONT><FONT CLASS=S93>GVW</FONT><FONT COLOR="#666666">SNGNE-----------RI</FONT><FONT CLASS=S93>QVA</FONT><FONT COLOR="#666666">IKCLCRERMQS-NPMEFLKEAAIMHSIEHEN</FONT><FONT CLASS=S93>IVR</FONT><FONT COLOR="#666666">LY</FONT><FONT CLASS=S93>GVV</FONT>
+3 ITK_HUMAN    32.9%  <FONT COLOR="#666666">LT</FONT><FONT CLASS=S93>FVQ</FONT><FONT COLOR="#666666">EIGSGQFG</FONT><FONT CLASS=S93>LVH</FONT><FONT COLOR="#666666">LGYWLN--------------KD</FONT><FONT CLASS=S93>KVA</FONT><FONT COLOR="#666666">IKTIREGAMS---EEDFIEEA</FONT><FONT CLASS=S93>EVM</FONT><FONT COLOR="#666666">MKLSHPK</FONT><FONT CLASS=S93>LVQ</FONT><FONT COLOR="#666666">LY</FONT><FONT CLASS=S93>GVC</FONT>
+4 PTK7_HUMAN   21.2%  <FONT COLOR="#666666">IR</FONT><FONT CLASS=S93>EVK</FONT><FONT COLOR="#666666">QI</FONT><FONT CLASS=S93>GVG</FONT><FONT COLOR="#666666">QFG</FONT><FONT CLASS=S93>AVVL</FONT><FONT COLOR="#666666">AEMTGLS-XLPKGSMNAD</FONT><FONT CLASS=S93>GVALVAVK</FONT><FONT COLOR="#666666">KLKP</FONT><FONT CLASS=S93>DVS</FONT><FONT COLOR="#666666">D-</FONT><FONT CLASS=S93>EVL</FONT><FONT COLOR="#666666">QSFDKEIKFMSQLQHDS</FONT><FONT CLASS=S93>IVQ</FONT><FONT COLOR="#666666">LLAIC</FONT>
+5 KIN31_CAEEL  31.5%  <FONT COLOR="#666666">VELTKKLGEGAFG</FONT><FONT CLASS=S93>EVW</FONT><FONT COLOR="#666666">KGKLLKILDA-------NHQ</FONT><FONT CLASS=S93>PVLVAVK</FONT><FONT COLOR="#666666">TAKLESMTKEQIKEIMREARLMRNLDHI</FONT><FONT CLASS=S93>NVVK</FONT><FONT COLOR="#666666">FF</FONT><FONT CLASS=S93>GVA</FONT>
+</PRE><p>where overlapping instances of the pattern merge together.</p>
+<p>5. Multiple alternative patterns are allowed, separated by <tt class="docutils literal"><span class="pre">|</span></tt> characters:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview ... -find &#39;VAIK|VAVK|[LI]G.G|[DKER]E[AI]..M|[VIL]V[QR]L&#39;
+</pre></div>
+</div>
+<PRE>
+1 EGFR_HUMAN  100.0%  <FONT COLOR="#666666">FKKIKV</FONT><FONT CLASS=S93>LGSG</FONT><FONT COLOR="#666666">AFGTVYKGLWIPEGEK---------VKIP</FONT><FONT CLASS=S93>VAIK</FONT><FONT COLOR="#666666">ELREATSPK-ANKEIL</FONT><FONT CLASS=S93>DEAYVM</FONT><FONT COLOR="#666666">ASVDNPHVCRLLGIC</FONT>
+2 PR2_DROME    35.7%  <FONT COLOR="#666666">ISVNKQ</FONT><FONT CLASS=S93>LGTG</FONT><FONT COLOR="#666666">EFGIVQQGVWSNGNE-----------RIQ</FONT><FONT CLASS=S93>VAIK</FONT><FONT COLOR="#666666">CLCRERMQS-NPMEFL</FONT><FONT CLASS=S93>KEAAIM</FONT><FONT COLOR="#666666">HSIEHEN</FONT><FONT CLASS=S93>IVRL</FONT><FONT COLOR="#666666">YGVV</FONT>
+3 ITK_HUMAN    32.9%  <FONT COLOR="#666666">LTFVQE</FONT><FONT CLASS=S93>IGSG</FONT><FONT COLOR="#666666">QFGLVHLGYWLN--------------KDK</FONT><FONT CLASS=S93>VAIK</FONT><FONT COLOR="#666666">TIREGAMS---EEDFI</FONT><FONT CLASS=S93>EEAEVM</FONT><FONT COLOR="#666666">MKLSHPK</FONT><FONT CLASS=S93>LVQL</FONT><FONT COLOR="#666666">YGVC</FONT>
+4 PTK7_HUMAN   21.2%  <FONT COLOR="#666666">IREVKQ</FONT><FONT CLASS=S93>IGVG</FONT><FONT COLOR="#666666">QFGAVVLAEMTGLS-XLPKGSMNADGVAL</FONT><FONT CLASS=S93>VAVK</FONT><FONT COLOR="#666666">KLKPDVSD-EVLQSFD</FONT><FONT CLASS=S93>KEIKFM</FONT><FONT COLOR="#666666">SQLQHDS</FONT><FONT CLASS=S93>IVQL</FONT><FONT COLOR="#666666">LAIC</FONT>
+5 KIN31_CAEEL  31.5%  <FONT COLOR="#666666">VELTKK</FONT><FONT CLASS=S93>LGEG</FONT><FONT COLOR="#666666">AFGEVWKGKLLKILDA-------NHQPVL</FONT><FONT CLASS=S93>VAVK</FONT><FONT COLOR="#666666">TAKLESMTKEQIKEIM</FONT><FONT CLASS=S93>REARLM</FONT><FONT COLOR="#666666">RNLDHINVVKFFGVA</FONT>
+</PRE><p>6. Alternative patterns can be given different colours by changing the
+delimiter from a <tt class="docutils literal"><span class="pre">|</span></tt> to a <tt class="docutils literal"><span class="pre">:</span></tt> character:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview ... -find &#39;VAIK:VAVK:[LI]G.G:[DKER]E[AI]..M:[VIL]V[QR]L&#39;
+</pre></div>
+</div>
+<PRE>
+1 EGFR_HUMAN  100.0%  <FONT COLOR="#666666">FKKIKV</FONT><FONT CLASS=S95>LGSG</FONT><FONT COLOR="#666666">AFGTVYKGLWIPEGEK---------VKIP</FONT><FONT CLASS=S93>VAIK</FONT><FONT COLOR="#666666">ELREATSPK-ANKEIL</FONT><FONT CLASS=S96>DEAYVM</FONT><FONT COLOR="#666666">ASVDNPHVCRLLGIC</FONT>
+2 PR2_DROME    35.7%  <FONT COLOR="#666666">ISVNKQ</FONT><FONT CLASS=S95>LGTG</FONT><FONT COLOR="#666666">EFGIVQQGVWSNGNE-----------RIQ</FONT><FONT CLASS=S93>VAIK</FONT><FONT COLOR="#666666">CLCRERMQS-NPMEFL</FONT><FONT CLASS=S96>KEAAIM</FONT><FONT COLOR="#666666">HSIEHEN</FONT><FONT CLASS=S97>IVRL</FONT><FONT COLOR="#666666">YGVV</FONT>
+3 ITK_HUMAN    32.9%  <FONT COLOR="#666666">LTFVQE</FONT><FONT CLASS=S95>IGSG</FONT><FONT COLOR="#666666">QFGLVHLGYWLN--------------KDK</FONT><FONT CLASS=S93>VAIK</FONT><FONT COLOR="#666666">TIREGAMS---EEDFI</FONT><FONT CLASS=S96>EEAEVM</FONT><FONT COLOR="#666666">MKLSHPK</FONT><FONT CLASS=S97>LVQL</FONT><FONT COLOR="#666666">YGVC</FONT>
+4 PTK7_HUMAN   21.2%  <FONT COLOR="#666666">IREVKQ</FONT><FONT CLASS=S95>IGVG</FONT><FONT COLOR="#666666">QFGAVVLAEMTGLS-XLPKGSMNADGVAL</FONT><FONT CLASS=S94>VAVK</FONT><FONT COLOR="#666666">KLKPDVSD-EVLQSFD</FONT><FONT CLASS=S96>KEIKFM</FONT><FONT COLOR="#666666">SQLQHDS</FONT><FONT CLASS=S97>IVQL</FONT><FONT COLOR="#666666">LAIC</FONT>
+5 KIN31_CAEEL  31.5%  <FONT COLOR="#666666">VELTKK</FONT><FONT CLASS=S95>LGEG</FONT><FONT COLOR="#666666">AFGEVWKGKLLKILDA-------NHQPVL</FONT><FONT CLASS=S94>VAVK</FONT><FONT COLOR="#666666">TAKLESMTKEQIKEIM</FONT><FONT CLASS=S96>REARLM</FONT><FONT COLOR="#666666">RNLDHINVVKFFGVA</FONT>
+</PRE><p>and <tt class="docutils literal"><span class="pre">|</span></tt> and <tt class="docutils literal"><span class="pre">:</span></tt> delimiters may be combined so that patterns joined by <tt class="docutils literal"><span class="pre">|</span></tt>
+still form a single discrete pattern and will have one colour.</p>
+<p>If you specify more patterns than the number of colours available
+(currently 20) the colours are simply cycled.</p>
+</div>
+</div>
+<div class="section" id="colours">
+<span id="ref-palettes"></span><h2>Colours<a class="headerlink" href="#colours" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="colour-palettes">
+<h3>Colour palettes<a class="headerlink" href="#colour-palettes" title="Permalink to this headline">¶</a></h3>
+<p>There are default colour palettes for protein and nucleotide (either DNA or
+RNA) alignments and consensus lines. MView starts up with the default protein
+palettes selected, as if you had specified a molecule type with <tt class="docutils literal"><span class="pre">-moltype</span> <span class="pre">aa</span></tt>
+(for &#8220;amino acid&#8221;).</p>
+<p><strong>Alignments</strong></p>
+<p>Palettes have names, e.g., the default protein alignment palette is called
+<tt class="docutils literal"><span class="pre">P1</span></tt> and the default nucleotide palette is <tt class="docutils literal"><span class="pre">D1</span></tt>. Alternative alignment
+colouring palettes are explicitly selected using the <tt class="docutils literal"><span class="pre">-colormap</span></tt> option. For
+example, another built-in colouring scheme can be specified with <tt class="docutils literal"><span class="pre">-colormap</span>
+<span class="pre">CLUSTAL</span></tt>.</p>
+<p>Here is the default palette for proteins:</p>
+<PRE>
+<FONT COLOR="#000000">[P1]</FONT>
+<FONT COLOR="#aa6666">#Protein: highlight amino acid physicochemical properties
+#symbols =>  color                #comment</FONT>
+<FONT COLOR="#666666">*      </FONT>  ->  <FONT COLOR="#666666">dark-gray           </FONT> <FONT COLOR="#aa6666">#mismatch</FONT>
+<FONT COLOR="#999999">?      </FONT>  ->  <FONT COLOR="#999999">light-gray          </FONT> <FONT COLOR="#aa6666">#unknown</FONT>
+<FONT COLOR="#33cc00">Aa     </FONT>  =>  <FONT COLOR="#33cc00">bright-green        </FONT> <FONT COLOR="#aa6666">#hydrophobic</FONT>
+<FONT COLOR="#666666">Bb     </FONT>  =>  <FONT COLOR="#666666">dark-gray           </FONT> <FONT COLOR="#aa6666">#D or N</FONT>
+<FONT COLOR="#ffff00">Cc     </FONT>  =>  <FONT COLOR="#ffff00">yellow              </FONT> <FONT COLOR="#aa6666">#cysteine</FONT>
+<FONT COLOR="#0033ff">Dd     </FONT>  =>  <FONT COLOR="#0033ff">bright-blue         </FONT> <FONT COLOR="#aa6666">#negative charge</FONT>
+<FONT COLOR="#0033ff">Ee     </FONT>  =>  <FONT COLOR="#0033ff">bright-blue         </FONT> <FONT COLOR="#aa6666">#negative charge</FONT>
+<FONT COLOR="#009900">Ff     </FONT>  =>  <FONT COLOR="#009900">dark-green          </FONT> <FONT COLOR="#aa6666">#large hydrophobic</FONT>
+<FONT COLOR="#33cc00">Gg     </FONT>  =>  <FONT COLOR="#33cc00">bright-green        </FONT> <FONT COLOR="#aa6666">#hydrophobic</FONT>
+<FONT COLOR="#009900">Hh     </FONT>  =>  <FONT COLOR="#009900">dark-green          </FONT> <FONT COLOR="#aa6666">#large hydrophobic</FONT>
+<FONT COLOR="#33cc00">Ii     </FONT>  =>  <FONT COLOR="#33cc00">bright-green        </FONT> <FONT COLOR="#aa6666">#hydrophobic</FONT>
+<FONT COLOR="#cc0000">Kk     </FONT>  =>  <FONT COLOR="#cc0000">bright-red          </FONT> <FONT COLOR="#aa6666">#positive charge</FONT>
+<FONT COLOR="#33cc00">Ll     </FONT>  =>  <FONT COLOR="#33cc00">bright-green        </FONT> <FONT COLOR="#aa6666">#hydrophobic</FONT>
+<FONT COLOR="#33cc00">Mm     </FONT>  =>  <FONT COLOR="#33cc00">bright-green        </FONT> <FONT COLOR="#aa6666">#hydrophobic</FONT>
+<FONT COLOR="#6600cc">Nn     </FONT>  =>  <FONT COLOR="#6600cc">purple              </FONT> <FONT COLOR="#aa6666">#polar</FONT>
+<FONT COLOR="#33cc00">Pp     </FONT>  =>  <FONT COLOR="#33cc00">bright-green        </FONT> <FONT COLOR="#aa6666">#hydrophobic</FONT>
+<FONT COLOR="#6600cc">Qq     </FONT>  =>  <FONT COLOR="#6600cc">purple              </FONT> <FONT COLOR="#aa6666">#polar</FONT>
+<FONT COLOR="#cc0000">Rr     </FONT>  =>  <FONT COLOR="#cc0000">bright-red          </FONT> <FONT COLOR="#aa6666">#positive charge</FONT>
+<FONT COLOR="#0099ff">Ss     </FONT>  =>  <FONT COLOR="#0099ff">dull-blue           </FONT> <FONT COLOR="#aa6666">#small alcohol</FONT>
+<FONT COLOR="#0099ff">Tt     </FONT>  =>  <FONT COLOR="#0099ff">dull-blue           </FONT> <FONT COLOR="#aa6666">#small alcohol</FONT>
+<FONT COLOR="#33cc00">Vv     </FONT>  =>  <FONT COLOR="#33cc00">bright-green        </FONT> <FONT COLOR="#aa6666">#hydrophobic</FONT>
+<FONT COLOR="#009900">Ww     </FONT>  =>  <FONT COLOR="#009900">dark-green          </FONT> <FONT COLOR="#aa6666">#large hydrophobic</FONT>
+<FONT COLOR="#666666">Xx     </FONT>  ->  <FONT COLOR="#666666">dark-gray           </FONT> <FONT COLOR="#aa6666">#any</FONT>
+<FONT COLOR="#009900">Yy     </FONT>  =>  <FONT COLOR="#009900">dark-green          </FONT> <FONT COLOR="#aa6666">#large hydrophobic</FONT>
+<FONT COLOR="#666666">Zz     </FONT>  =>  <FONT COLOR="#666666">dark-gray           </FONT> <FONT COLOR="#aa6666">#E or Q</FONT>
+</PRE><p>The default alignment palette for nucleotide sequences can be selected using
+the <tt class="docutils literal"><span class="pre">-moltype</span> <span class="pre">na</span></tt> (or <tt class="docutils literal"><span class="pre">dna</span></tt> or <tt class="docutils literal"><span class="pre">rna</span></tt>) option:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview ... -moltype na ...
+</pre></div>
+</div>
+<p>or by specifying:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview ... -colormap D1 ...
+</pre></div>
+</div>
+<p>and is defined as:</p>
+<PRE>
+<FONT COLOR="#000000">[D1]</FONT>
+<FONT COLOR="#aa6666">#DNA: highlight nucleotide types
+#symbols =>  color                #comment</FONT>
+<FONT COLOR="#666666">*      </FONT>  ->  <FONT COLOR="#666666">dark-gray           </FONT> <FONT COLOR="#aa6666">#mismatch</FONT>
+<FONT COLOR="#999999">?      </FONT>  ->  <FONT COLOR="#999999">light-gray          </FONT> <FONT COLOR="#aa6666">#unknown</FONT>
+<FONT COLOR="#0033ff">Aa     </FONT>  =>  <FONT COLOR="#0033ff">bright-blue         </FONT> <FONT COLOR="#aa6666">#purine</FONT>
+<FONT COLOR="#666666">Bb     </FONT>  =>  <FONT COLOR="#666666">dark-gray           </FONT> <FONT COLOR="#aa6666">#C or G or T; not A</FONT>
+<FONT COLOR="#0099ff">Cc     </FONT>  =>  <FONT COLOR="#0099ff">dull-blue           </FONT> <FONT COLOR="#aa6666">#pyrimidine</FONT>
+<FONT COLOR="#666666">Dd     </FONT>  =>  <FONT COLOR="#666666">dark-gray           </FONT> <FONT COLOR="#aa6666">#A or G or T; not C</FONT>
+<FONT COLOR="#0033ff">Gg     </FONT>  =>  <FONT COLOR="#0033ff">bright-blue         </FONT> <FONT COLOR="#aa6666">#purine</FONT>
+<FONT COLOR="#666666">Hh     </FONT>  =>  <FONT COLOR="#666666">dark-gray           </FONT> <FONT COLOR="#aa6666">#A or C or T; not G</FONT>
+<FONT COLOR="#666666">Kk     </FONT>  =>  <FONT COLOR="#666666">dark-gray           </FONT> <FONT COLOR="#aa6666">#G or T</FONT>
+<FONT COLOR="#666666">Mm     </FONT>  =>  <FONT COLOR="#666666">dark-gray           </FONT> <FONT COLOR="#aa6666">#A or C</FONT>
+<FONT COLOR="#666666">Nn     </FONT>  =>  <FONT COLOR="#666666">dark-gray           </FONT> <FONT COLOR="#aa6666">#A or C or G or T</FONT>
+<FONT COLOR="#666666">Rr     </FONT>  =>  <FONT COLOR="#666666">dark-gray           </FONT> <FONT COLOR="#aa6666">#A or G</FONT>
+<FONT COLOR="#666666">Ss     </FONT>  =>  <FONT COLOR="#666666">dark-gray           </FONT> <FONT COLOR="#aa6666">#C or G</FONT>
+<FONT COLOR="#0099ff">Tt     </FONT>  =>  <FONT COLOR="#0099ff">dull-blue           </FONT> <FONT COLOR="#aa6666">#pyrimidine</FONT>
+<FONT COLOR="#0099ff">Uu     </FONT>  =>  <FONT COLOR="#0099ff">dull-blue           </FONT> <FONT COLOR="#aa6666">#pyrimidine</FONT>
+<FONT COLOR="#666666">Vv     </FONT>  =>  <FONT COLOR="#666666">dark-gray           </FONT> <FONT COLOR="#aa6666">#A or C or G; not T</FONT>
+<FONT COLOR="#666666">Ww     </FONT>  =>  <FONT COLOR="#666666">dark-gray           </FONT> <FONT COLOR="#aa6666">#A or T</FONT>
+<FONT COLOR="#666666">Xx     </FONT>  ->  <FONT COLOR="#666666">dark-gray           </FONT> <FONT COLOR="#aa6666">#any</FONT>
+<FONT COLOR="#666666">Yy     </FONT>  =>  <FONT COLOR="#666666">dark-gray           </FONT> <FONT COLOR="#aa6666">#C or T</FONT>
+</PRE><p><strong>Consensus lines</strong></p>
+<p>In addition, the consensus lines optionally displayed below an alignment can
+be coloured, and they have their own consensus palettes; the default for
+proteins is <tt class="docutils literal"><span class="pre">PC1</span></tt> and for nucleotides it is <tt class="docutils literal"><span class="pre">DC1</span></tt>. Alternative consensus
+colouring palettes are explicitly selected using the <tt class="docutils literal"><span class="pre">-con_colormap</span></tt> option.</p>
+<p>Here is the default consensus palette for proteins:</p>
+<PRE>
+<FONT COLOR="#000000">[PC1]</FONT>
+<FONT COLOR="#aa6666">#Protein consensus: highlight equivalence class
+#symbols =>  color                #comment</FONT>
+<FONT COLOR="#666666">*      </FONT>  ->  <FONT COLOR="#666666">dark-gray           </FONT> <FONT COLOR="#aa6666">#mismatch</FONT>
+<FONT COLOR="#cc0000">+      </FONT>  ->  <FONT COLOR="#cc0000">bright-red          </FONT> <FONT COLOR="#aa6666">#positive charge</FONT>
+<FONT COLOR="#0033ff">-      </FONT>  ->  <FONT COLOR="#0033ff">bright-blue         </FONT> <FONT COLOR="#aa6666">#negative charge</FONT>
+<FONT COLOR="#009900">a      </FONT>  ->  <FONT COLOR="#009900">dark-green          </FONT> <FONT COLOR="#aa6666">#aromatic</FONT>
+<FONT COLOR="#6600cc">c      </FONT>  ->  <FONT COLOR="#6600cc">purple              </FONT> <FONT COLOR="#aa6666">#charged</FONT>
+<FONT COLOR="#33cc00">h      </FONT>  ->  <FONT COLOR="#33cc00">bright-green        </FONT> <FONT COLOR="#aa6666">#hydrophobic</FONT>
+<FONT COLOR="#33cc00">l      </FONT>  ->  <FONT COLOR="#33cc00">bright-green        </FONT> <FONT COLOR="#aa6666">#aliphatic</FONT>
+<FONT COLOR="#0099ff">o      </FONT>  ->  <FONT COLOR="#0099ff">dull-blue           </FONT> <FONT COLOR="#aa6666">#alcohol</FONT>
+<FONT COLOR="#0099ff">p      </FONT>  ->  <FONT COLOR="#0099ff">dull-blue           </FONT> <FONT COLOR="#aa6666">#polar</FONT>
+<FONT COLOR="#33cc00">s      </FONT>  ->  <FONT COLOR="#33cc00">bright-green        </FONT> <FONT COLOR="#aa6666">#small</FONT>
+<FONT COLOR="#33cc00">t      </FONT>  ->  <FONT COLOR="#33cc00">bright-green        </FONT> <FONT COLOR="#aa6666">#turnlike</FONT>
+<FONT COLOR="#33cc00">u      </FONT>  ->  <FONT COLOR="#33cc00">bright-green        </FONT> <FONT COLOR="#aa6666">#tiny</FONT>
+</PRE><p>The default consensus palette for nucleotide sequences can be selected using
+the <tt class="docutils literal"><span class="pre">-moltype</span> <span class="pre">na</span></tt> (or <tt class="docutils literal"><span class="pre">dna</span></tt> or <tt class="docutils literal"><span class="pre">rna</span></tt>) option:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview ... -moltype na ...
+</pre></div>
+</div>
+<p>or by specifying:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview ... -con_colormap DC1 ...
+</pre></div>
+</div>
+<p>and is defined as:</p>
+<PRE>
+<FONT COLOR="#000000">[DC1]</FONT>
+<FONT COLOR="#aa6666">#DNA consensus: highlight ring type
+#symbols =>  color                #comment</FONT>
+<FONT COLOR="#666666">*      </FONT>  ->  <FONT COLOR="#666666">dark-gray           </FONT> <FONT COLOR="#aa6666">#mismatch</FONT>
+<FONT COLOR="#6600cc">r      </FONT>  ->  <FONT COLOR="#6600cc">purple              </FONT> <FONT COLOR="#aa6666">#purine</FONT>
+<FONT COLOR="#ff3333">y      </FONT>  ->  <FONT COLOR="#ff3333">orange              </FONT> <FONT COLOR="#aa6666">#pyrimidine</FONT>
+</PRE></div>
+<div class="section" id="creating-new-palettes">
+<h3>Creating new palettes<a class="headerlink" href="#creating-new-palettes" title="Permalink to this headline">¶</a></h3>
+<p>The built-in palettes can be listed from the command line with
+<tt class="docutils literal"><span class="pre">-listcolors</span></tt>, and new colour schemes can be loaded from a file using the
+<tt class="docutils literal"><span class="pre">-colorfile</span></tt> option.</p>
+<p>Predefined colours are defined as in the following short segment of the built
+in palette obtained with <tt class="docutils literal"><span class="pre">-listcolors</span> <span class="pre">-html</span> <span class="pre">head</span></tt> to wrap the output in
+HTML and display the actual colours:</p>
+<PRE>
+<FONT COLOR="#aa6666">#color                     : #RGB</FONT>
+color <FONT COLOR="#000000">black               </FONT> : #000000
+color <FONT COLOR="#ffffff">white               </FONT> : #ffffff
+color <FONT COLOR="#ff0000">red                 </FONT> : #ff0000
+color <FONT COLOR="#00ff00">green               </FONT> : #00ff00
+color <FONT COLOR="#0000ff">blue                </FONT> : #0000ff
+color <FONT COLOR="#00ffff">cyan                </FONT> : #00ffff
+color <FONT COLOR="#ff00ff">magenta             </FONT> : #ff00ff
+color <FONT COLOR="#ffff00">yellow              </FONT> : #ffff00
+...
+</PRE><p>Here&#8217;s an example of a short protein colouring scheme using the built-in
+palette, which is used to explain the syntax:</p>
+<PRE>
+<FONT COLOR="#000000">[CYS]</FONT>
+<FONT COLOR="#aa6666">#Protein: highlight cysteines
+#symbols =>  color                #comment</FONT>
+<FONT COLOR="#666666">*      </FONT>  ->  <FONT COLOR="#666666">dark-gray           </FONT> <FONT COLOR="#aa6666">#mismatch</FONT>
+<FONT COLOR="#999999">?      </FONT>  ->  <FONT COLOR="#999999">light-gray          </FONT> <FONT COLOR="#aa6666">#unknown</FONT>
+<FONT COLOR="#ffff00">Cc     </FONT>  =>  <FONT COLOR="#ffff00">yellow              </FONT> <FONT COLOR="#aa6666">#cysteine</FONT>
+<FONT COLOR="#666666">Xx     </FONT>  ->  <FONT COLOR="#666666">dark-gray           </FONT> <FONT COLOR="#aa6666">#any</FONT>
+</PRE><p>When writing a new protein/nucleotide colouring scheme, scheme names
+introduced in square brackets (<tt class="docutils literal"><span class="pre">[CYS]</span></tt>, above) are case-insensitive.</p>
+<p>Any line or part of a line beginning with a <tt class="docutils literal"><span class="pre">#</span></tt> character is a comment.</p>
+<p>Symbols to be coloured are case-sensitive and may be given as a single
+character or as a character pair in each definition. In the example, <tt class="docutils literal"><span class="pre">*</span></tt> and
+<tt class="docutils literal"><span class="pre">?</span></tt> will be displayed in some shade of grey. Either <tt class="docutils literal"><span class="pre">X</span></tt> or <tt class="docutils literal"><span class="pre">x</span></tt> will be
+painted a grey, and <tt class="docutils literal"><span class="pre">C</span></tt> or <tt class="docutils literal"><span class="pre">c</span></tt> will be painted yellow.</p>
+<p>A symbol to name mapping can use a predefined colour name (as above) or an
+explicit hexadecimal RGB code like those in the colour palette.</p>
+<p>The arrow separating the symbol(s) from the colour code can be double <tt class="docutils literal"><span class="pre">=&gt;</span></tt>
+or single <tt class="docutils literal"><span class="pre">-&gt;</span></tt> arrows selecting background or foreground colouring:</p>
+<ul class="simple">
+<li>If style sheets are not being used, the choice of arrow is unimportant: the
+supplied colour is used for the foreground, i.e., the output symbol.</li>
+<li>If style sheets are in use with <tt class="docutils literal"><span class="pre">-css</span> <span class="pre">on</span></tt>, then <tt class="docutils literal"><span class="pre">=&gt;</span></tt> means that the
+colour should be applied to the background of the symbol, while <tt class="docutils literal"><span class="pre">-&gt;</span></tt> means
+it should be aplied to the foreground, i.e., the symbol itself.</li>
+</ul>
+<p>So, in the <tt class="docutils literal"><span class="pre">CYS</span></tt> example, the symbols <tt class="docutils literal"><span class="pre">*</span></tt>, <tt class="docutils literal"><span class="pre">?</span></tt>, <tt class="docutils literal"><span class="pre">X</span></tt>, <tt class="docutils literal"><span class="pre">x</span></tt> will be
+coloured in the foreground (i.e., the symbols themselves), and <tt class="docutils literal"><span class="pre">C</span></tt> or <tt class="docutils literal"><span class="pre">c</span></tt>
+will be displayed as coloured symbols unless <tt class="docutils literal"><span class="pre">-css</span> <span class="pre">on</span></tt> is set, in which case
+they will appear as coloured bocks.</p>
+</div>
+</div>
+<div class="section" id="layout-and-filtering">
+<h2>Layout and filtering<a class="headerlink" href="#layout-and-filtering" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="pagination">
+<h3>Pagination<a class="headerlink" href="#pagination" title="Permalink to this headline">¶</a></h3>
+<p>The default layout is a single unbroken horizontal band of alignment - fine if
+scrolling inside Firefox. However, you may prefer to break the alignment into
+vertically stacked panes. For panes, for example, 80 columns wide, set
+<tt class="docutils literal"><span class="pre">-width</span> <span class="pre">80</span></tt>. Widths refer to the alignment, not to the whole displayed
+output.</p>
+</div>
+<div class="section" id="column-ranges">
+<h3>Column ranges<a class="headerlink" href="#column-ranges" title="Permalink to this headline">¶</a></h3>
+<p>It is possible to narrow (or expand) the displayed range of columns of the
+alignment, for example, <tt class="docutils literal"><span class="pre">-range</span> <span class="pre">10:78</span></tt> would select only that column range
+using the numbering scheme reported when <tt class="docutils literal"><span class="pre">-ruler</span> <span class="pre">on</span></tt> is set (see
+<a class="reference internal" href="#ref-rulers"><em>Attaching a ruler</em></a>). Note: the range setting is not related to the sequence
+position labelling for blast/fasta database search input; it&#8217;s just the
+position along the ruler.</p>
+<p>The order of the numbers is unimportant making it simpler to state interest in
+a region of the alignment that might actually be reversed in the output (e.g.,
+a BLASTN search hit matching the reverse complement of the query strand).</p>
+</div>
+<div class="section" id="filtering-rows">
+<span id="ref-filtering-rows"></span><h3>Filtering rows<a class="headerlink" href="#filtering-rows" title="Permalink to this headline">¶</a></h3>
+<p><strong>Showing only the top N rows</strong></p>
+<p>Usually, specifying a limited number of hits to view from a long search
+alignment speeds things up a lot as there&#8217;s less parsing and less formatting
+to be generated, so to get the best 10 hits, use the option <tt class="docutils literal"><span class="pre">-top</span> <span class="pre">10</span></tt>.</p>
+<p><strong>Filtering by percent identity</strong></p>
+<p>You also can squeeze more out of a deep alignment and get a less biased view
+if a threshold on the pairwise sequence identity is set using <tt class="docutils literal"><span class="pre">-maxident</span> <span class="pre">N</span></tt>,
+where N is some value between 0 and 100.</p>
+<p>Similarly, <tt class="docutils literal"><span class="pre">-minident</span> <span class="pre">N</span></tt> will report only those hits above some threshold
+percent identity; useful for looking for close matches to the query or some
+reference sequence.</p>
+<p><strong>Showing and hiding sets of rows</strong></p>
+<p>Rows can be dropped explicitly using the <tt class="docutils literal"><span class="pre">-hide</span></tt> option. This can be
+supplied a comma-separated list of row identifiers, rank numbers, rank number
+ranges (1,2,3, 1..3, 1:3 are all equivalent), regular expressions (case
+insensitive, enclosed between // characters) to match against row identifiers,
+or the <tt class="docutils literal"><span class="pre">*</span></tt> symbol meaning all rows.</p>
+<p>Likewise, the <tt class="docutils literal"><span class="pre">-show</span></tt> option specifies a list of rows to keep in the
+alignment. The <tt class="docutils literal"><span class="pre">-show</span></tt> option overrides <tt class="docutils literal"><span class="pre">-hide</span></tt> whenever a row is common
+to both.</p>
+<p>For example, the options:</p>
+<div class="highlight-python"><div class="highlight"><pre>-hide all  -show &#39;2,3,6..10,/^pdb/&#39;
+</pre></div>
+</div>
+<p>or even:</p>
+<div class="highlight-python"><div class="highlight"><pre>-hide &#39;/.*/&#39;  -show &#39;2,3,6:10,/^pdb/&#39;
+</pre></div>
+</div>
+<p>would hide everything except rows 2, 3, 6 through 10 inclusive, and any hits
+beginning with the string &#8216;pdb&#8217;.</p>
+<p>Note: the currently set reference row is still used for percent identity and
+colouring operations, even though the row may have been dropped from display
+by the <tt class="docutils literal"><span class="pre">-hide</span></tt> list (see <a class="reference internal" href="#ref-reference-row"><em>Changing the reference sequence</em></a>).</p>
+<p><strong>Data format specific filters</strong></p>
+<p>Other filters specific to BLASTP, FASTA, etc., input formats allow cutoffs on
+scores or p-values, etc. In particular, it is possible to apply some control
+over the selection of HSPs used in building the MView alignment using the
+<tt class="docutils literal"><span class="pre">-hsp</span></tt> filtering option.</p>
+<p>Some search programs produce DNA strand-directional output (e.g., BLASTN) and
+you can extract or output the results separately. For example, to see just the
+plus strand matches:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview -in blast -strand p blastn_results.dat
+</pre></div>
+</div>
+<p>The choices are <tt class="docutils literal"><span class="pre">p</span></tt>, <tt class="docutils literal"><span class="pre">m</span></tt>, <tt class="docutils literal"><span class="pre">both</span></tt>.</p>
+<p>Of interest to anyone using PSI-BLAST, you can display alignments for any/all
+iterations of a PSI-BLAST run using, say:</p>
+<div class="highlight-python"><div class="highlight"><pre>mview -in blast -cycle 1,last psiblast_results.dat
+</pre></div>
+</div>
+<p>to get just those two iterations. The default is to display only the last
+iteration. If you want all output, use <tt class="docutils literal"><span class="pre">-cycle</span> <span class="pre">all</span></tt>.</p>
+<p><strong>Keeping rows, but ignoring them in calculations</strong></p>
+<p>Another control option can be used to prevent MView from using rows for
+colouring or for calculation of percent identities although these rows will
+still be displayed. Use <tt class="docutils literal"><span class="pre">-nop</span></tt> to specify a list (comma-separated as usual)
+of identifiers or row numbers to flag for &#8220;NO Processing&#8221;. This is useful for
+displaying non-alignment data (e.g., secondary structure predictions)
+alongside the alignment.</p>
+</div>
+<div class="section" id="labels-and-annotations">
+<h3>Labels and annotations<a class="headerlink" href="#labels-and-annotations" title="Permalink to this headline">¶</a></h3>
+<p>The labelling information at the left of the alignment can be too wide, so you
+can switch some of them off. Labels are in blocks numbered from zero
+(perverse, but the original reasoning was that the input data starts with the
+sequence identifiers in column 1 and MView tacks on a rank number in front, so
+make that column 0).</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="11%" />
+<col width="89%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Column</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>0</td>
+<td>rank</td>
+</tr>
+<tr class="row-odd"><td>1</td>
+<td>identifier</td>
+</tr>
+<tr class="row-even"><td>2</td>
+<td>description</td>
+</tr>
+<tr class="row-odd"><td>3</td>
+<td>score block (may contain many score columns)</td>
+</tr>
+<tr class="row-even"><td>4</td>
+<td>percent identities</td>
+</tr>
+<tr class="row-odd"><td>5</td>
+<td>query sequence positions (blast or fasta searches)</td>
+</tr>
+<tr class="row-even"><td>6</td>
+<td>hit sequence positions (blast or fasta searches)</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Any of the of the label types can be switched off with an option like
+<tt class="docutils literal"><span class="pre">-label2</span></tt> to remove the descriptions label at column 2, and so on.</p>
+</div>
+</div>
+<div class="section" id="data-formats">
+<h2>Data formats<a class="headerlink" href="#data-formats" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="input-formats">
+<h3>Input formats<a class="headerlink" href="#input-formats" title="Permalink to this headline">¶</a></h3>
+<p>MView supports a variety of input formats covering common sequence database
+seach and multiple alignment formats. Alternatively, if you can convert some
+strange alignment to one of the simpler input formats (FASTA, PIR, MSF, plain)
+you can then read it into MView. See <a class="reference external" href="formats_in.html">input_formats</a>.</p>
+</div>
+<div class="section" id="output-formats">
+<h3>Output formats<a class="headerlink" href="#output-formats" title="Permalink to this headline">¶</a></h3>
+<p>The default output is plain text showing the alignment together with some
+header information. HTML markup will be added if any of the HTML-specific or
+colouring options are set.</p>
+<p>However, a number of alternative output formats allow format conversions
+(e.g., convert a BLAST search to FASTA sequence format) for subsequent
+processing. See <a class="reference external" href="formats_out.html">output_formats</a>.</p>
+</div>
+</div>
+<div class="section" id="linking-identifiers-to-external-resources">
+<h2>Linking identifiers to external resources<a class="headerlink" href="#linking-identifiers-to-external-resources" title="Permalink to this headline">¶</a></h2>
+<p>Using the <tt class="docutils literal"><span class="pre">-srs</span> <span class="pre">on</span></tt> option with HTML output, it is possible to convert
+sequence identifiers into links to a sequence database:</p>
+<PRE>
+1 <A HREF="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=P00533">sp|P00533.2|EGFR_HUMAN</A>  100.0%    <FONT CLASS=S37>F</FONT><FONT CLASS=S36>K</FONT><FONT COLOR="#666666">KI</FONT><FONT CLASS=S36>K</FONT><FONT COLOR="#666666">V</FONT><FONT CLASS=S37>L</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">S</FONT><FONT CLASS=S43>G</FONT><FONT CLASS=S37>AF</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">T</FONT><FONT CLASS=S37>V</FONT><FONT COLOR="#666666">YK</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">L</FONT><FONT CLASS=S37>W</FONT><FONT COLOR="#666666">IPEGEK---------VKIP</FONT><FONT CLASS=S37>VAI</FONT><FONT CLASS=S36>K</FONT><FONT CLASS=S41>E</FONT><FONT CLASS=S37>L</FONT><FONT CLASS=S36>R</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S37>A</FONT><FONT COLOR="#666666">TSPK-ANK</FONT><FONT CLASS=S41>E</FONT><FONT CLASS=S37>I</FONT><FONT COLOR="#666666">L</FONT><FONT CLASS=S41>DE</FONT><FONT CLASS=S37>A</FONT><FONT COLOR="#666666">Y</FONT><FONT CLASS=S37>VM</FONT><FONT COLOR="#666666">A</FONT><FONT CLASS=S38>S</FONT><FONT CLASS=S37>V</FONT><FONT CLASS=S41>D</FONT><FONT CLASS=S38>N</FONT><FONT COLOR="#666666">P</FONT><FONT CLASS=S39>H</FONT><FONT CLASS=S37>V</FONT><FONT CLASS=S40>C</FONT><FONT CLASS=S36>R</FONT><FONT CLASS=S37>LL</FONT><FONT CLASS=S43>G</FONT><FONT CLASS=S37>I</FONT><FONT CLASS=S40>C</FONT>
+2 <A HREF="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=Q9I7F7">sp|Q9I7F7.3|PR2_DROME</A>    35.7%    <FONT CLASS=S37>I</FONT><FONT CLASS=S38>S</FONT><FONT COLOR="#666666">VN</FONT><FONT CLASS=S36>K</FONT><FONT COLOR="#666666">Q</FONT><FONT CLASS=S37>L</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">T</FONT><FONT CLASS=S43>G</FONT><FONT CLASS=S41>E</FONT><FONT CLASS=S37>F</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">I</FONT><FONT CLASS=S37>V</FONT><FONT COLOR="#666666">QQ</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">V</FONT><FONT CLASS=S37>W</FONT><FONT COLOR="#666666">SNGNE-----------RIQ</FONT><FONT CLASS=S37>VAI</FONT><FONT CLASS=S36>K</FONT><FONT CLASS=S40>C</FONT><FONT CLASS=S37>L</FONT><FONT CLASS=S40>C</FONT><FONT COLOR="#666666">R</FONT><FONT CLASS=S41>E</FONT><FONT COLOR="#666666">RMQS-NPM</FONT><FONT CLASS=S41>E</FONT><FONT CLASS=S37>F</FONT><FONT COLOR="#666666">L</FONT><FONT CLASS=S36>K</FONT><FONT CLASS=S41>E</FONT><FONT CLASS=S37>A</FONT><FONT COLOR="#666666">A</FONT><FONT CLASS=S37>IM</FONT><FONT COLOR="#666666">H</FONT><FONT CLASS=S38>S</FONT><FONT CLASS=S37>I</FONT><FONT CLASS=S41>E</FONT><FONT CLASS=S39>H</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S38>N</FONT><FONT CLASS=S37>IV</FONT><FONT CLASS=S36>R</FONT><FONT CLASS=S37>L</FONT><FONT CLASS=S39>Y</FONT><FONT CLASS=S43>G</FONT><FONT CLASS=S37>VV</FONT>
+3 <A HREF="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=Q08881">sp|Q08881.1|ITK_HUMAN</A>    32.9%    <FONT CLASS=S37>L</FONT><FONT CLASS=S38>T</FONT><FONT COLOR="#666666">FV</FONT><FONT CLASS=S38>Q</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S37>I</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">S</FONT><FONT CLASS=S43>G</FONT><FONT CLASS=S38>Q</FONT><FONT CLASS=S37>F</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">L</FONT><FONT CLASS=S37>V</FONT><FONT COLOR="#666666">HL</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">Y</FONT><FONT CLASS=S37>W</FONT><FONT COLOR="#666666">LN--------------KDK</FONT><FONT CLASS=S37>VAI</FONT><FONT CLASS=S36>K</FONT><FONT CLASS=S38>T</FONT><FONT CLASS=S37>I</FONT><FONT CLASS=S36>R</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">AMS---EE</FONT><FONT CLASS=S41>D</FONT><FONT CLASS=S37>F</FONT><FONT COLOR="#666666">I</FONT><FONT CLASS=S41>EE</FONT><FONT CLASS=S37>A</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S37>VM</FONT><FONT COLOR="#666666">M</FONT><FONT CLASS=S36>K</FONT><FONT CLASS=S37>L</FONT><FONT CLASS=S38>S</FONT><FONT CLASS=S39>H</FONT><FONT COLOR="#666666">P</FONT><FONT CLASS=S36>K</FONT><FONT CLASS=S37>LV</FONT><FONT CLASS=S38>Q</FONT><FONT CLASS=S37>L</FONT><FONT CLASS=S39>Y</FONT><FONT CLASS=S43>G</FONT><FONT CLASS=S37>V</FONT><FONT CLASS=S40>C</FONT>
+4 <A HREF="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=Q13308">sp|Q13308.2|PTK7_HUMAN</A>   21.2%    <FONT CLASS=S37>I</FONT><FONT CLASS=S36>R</FONT><FONT COLOR="#666666">EV</FONT><FONT CLASS=S36>K</FONT><FONT COLOR="#666666">Q</FONT><FONT CLASS=S37>I</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">V</FONT><FONT CLASS=S43>G</FONT><FONT CLASS=S38>Q</FONT><FONT CLASS=S37>F</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">A</FONT><FONT CLASS=S37>V</FONT><FONT COLOR="#666666">VL</FONT><FONT CLASS=S37>A</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S37>M</FONT><FONT COLOR="#666666">TGLS-XLPKGSMNADGVAL</FONT><FONT CLASS=S37>VAV</FONT><FONT CLASS=S36>KK</FONT><FONT CLASS=S37>L</FONT><FONT CLASS=S36>K</FONT><FONT COLOR="#666666">P</FONT><FONT CLASS=S41>D</FONT><FONT COLOR="#666666">VSD-EVLQ</FONT><FONT CLASS=S38>S</FONT><FONT CLASS=S37>F</FONT><FONT COLOR="#666666">D</FONT><FONT CLASS=S36>K</FONT><FONT CLASS=S41>E</FONT><FONT CLASS=S37>I</FONT><FONT COLOR="#666666">K</FONT><FONT CLASS=S37>FM</FONT><FONT COLOR="#666666">S</FONT><FONT CLASS=S38>Q</FONT><FONT CLASS=S37>L</FONT><FONT CLASS=S38>Q</FONT><FONT CLASS=S39>H</FONT><FONT COLOR="#666666">D</FONT><FONT CLASS=S38>S</FONT><FONT CLASS=S37>IV</FONT><FONT CLASS=S38>Q</FONT><FONT CLASS=S37>LLAI</FONT><FONT CLASS=S40>C</FONT>
+5 <A HREF="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=P34265">sp|P34265.4|KIN31_CAEEL</A>  31.5%    <FONT CLASS=S37>V</FONT><FONT CLASS=S41>E</FONT><FONT COLOR="#666666">LT</FONT><FONT CLASS=S36>K</FONT><FONT COLOR="#666666">K</FONT><FONT CLASS=S37>L</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S43>G</FONT><FONT CLASS=S37>AF</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S37>V</FONT><FONT COLOR="#666666">WK</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">K</FONT><FONT CLASS=S37>L</FONT><FONT COLOR="#666666">LKILDA-------NHQPVL</FONT><FONT CLASS=S37>VAV</FONT><FONT CLASS=S36>K</FONT><FONT CLASS=S38>T</FONT><FONT CLASS=S37>A</FONT><FONT CLASS=S36>K</FONT><FONT COLOR="#666666">L</FONT><FONT CLASS=S41>E</FONT><FONT COLOR="#666666">SMTKEQIK</FONT><FONT CLASS=S41>E</FONT><FONT CLASS=S37>I</FONT><FONT COLOR="#666666">M</FONT><FONT CLASS=S36>R</FONT><FONT CLASS=S41>E</FONT><FONT CLASS=S37>A</FONT><FONT COLOR="#666666">R</FONT><FONT CLASS=S37>LM</FONT><FONT COLOR="#666666">R</FONT><FONT CLASS=S38>N</FONT><FONT CLASS=S37>L</FONT><FONT CLASS=S41>D</FONT><FONT CLASS=S39>H</FONT><FONT COLOR="#666666">I</FONT><FONT CLASS=S38>N</FONT><FONT CLASS=S37>VV</FONT><FONT CLASS=S36>K</FONT><FONT CLASS=S37>FF</FONT><FONT CLASS=S43>G</FONT><FONT CLASS=S37>VA</FONT>
+  consensus/90%                     <FONT COLOR="#666666">.......</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S37>F</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S37>V</FONT><FONT COLOR="#666666">........................</FONT><FONT CLASS=S37>VA</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S36>K</FONT><FONT COLOR="#666666">.................</FONT><FONT CLASS=S41>E</FONT><FONT COLOR="#666666">...</FONT><FONT CLASS=S37>M</FONT><FONT COLOR="#666666">...............</FONT>
+  consensus/80%                     <FONT COLOR="#666666">....</FONT><FONT CLASS=S36>K</FONT><FONT COLOR="#666666">..</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S37>F</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S37>V</FONT><FONT COLOR="#666666">..</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">.....................</FONT><FONT CLASS=S37>VA</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S36>K</FONT><FONT COLOR="#666666">.................</FONT><FONT CLASS=S41>E</FONT><FONT CLASS=S37>A</FONT><FONT COLOR="#666666">..</FONT><FONT CLASS=S37>M</FONT><FONT COLOR="#666666">....</FONT><FONT CLASS=S39>H</FONT><FONT COLOR="#666666">...</FONT><FONT CLASS=S37>V</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S37>L</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">..</FONT>
+</PRE><p>The identfiers need to conform to patterns such as:</p>
+<div class="highlight-python"><div class="highlight"><pre>database|accession|identifier
+database:identifier
+</pre></div>
+</div>
+<p>like those produced by the NCBI, EBI or other blast services.</p>
+<p>Links will be constructed if the patterns are listed in the <tt class="docutils literal"><span class="pre">SRS.pm</span></tt>
+library, which is part of this software. You can modify and extend this file
+to include more patterns if you know some Perl and the format of the URLs
+needed to access the sequence databases of interest.</p>
+<p>Of course, this linking mechanism works for any recognised input data format,
+not just blast results.</p>
+</div>
+<div class="section" id="memory-usage">
+<h2>Memory usage<a class="headerlink" href="#memory-usage" title="Permalink to this headline">¶</a></h2>
+<p>Use of memory by MView can be very great, particularly if you try to process
+complete sets of PSI-BLAST cycles each containing 1000s of hits all at
+once. Use of most filtering options should reduce memory requirements by
+cutting down the number of internal data structures created. Likewise,
+processing each alignment separately will save memory or you can use the
+option <tt class="docutils literal"><span class="pre">-register</span> <span class="pre">off</span></tt> to cause each alignment to be output when ready (by
+default all alignments are saved until the end so they can be printed with
+fields in register). Finally, the choice of malloc library compiled into your
+perl may affect memory use.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="formats_in.html" title="Input formats"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="Introduction"
+             >previous</a> |</li>
+        <li><a href="../index.html">MView</a> &raquo;</li>
+          <li><a href="../contents.html" >Contents</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Nigel P. Brown.
+      Last updated on 09 Oct 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

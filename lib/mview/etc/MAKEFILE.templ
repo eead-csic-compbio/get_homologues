@@ -1,0 +1,181 @@
+## -*- Makefile -*-
+###########################################################################
+SHELL = /bin/sh
+
+ECHO      = /bin/echo -e
+AWK   	  = /usr/bin/awk
+SED   	  = /bin/sed
+GREP  	  = /usr/bin/grep
+XARGS 	  = /usr/bin/xargs
+FIND  	  = /usr/bin/find
+WC    	  = /usr/bin/wc
+TAR   	  = /bin/tar
+CPP   	  = /usr/bin/cpp
+CC    	  = /usr/bin/cc
+CAT   	  = /bin/cat
+M4    	  = /usr/bin/m4
+RM    	  = /bin/rm
+CP    	  = /bin/cp
+MV    	  = /bin/mv
+LS        = /bin/ls
+TR        = /usr/bin/tr
+PWD       = /bin/pwd
+SORT      = /bin/sort
+BASENAME  = /usr/bin/basename
+TOUCH     = /bin/touch
+RSYNC     = /usr/bin/rsync
+
+MAKEFLAGS = --no-print-directory
+
+PROJECT   = MView
+OLD_ROOT  = $(HOME)
+NEW_ROOT  = $(HOME)/dist
+
+OLD_LIBS  = $(OLD_ROOT)/$(PROJECT)/lib
+NEW_LIBS  = $(NEW_ROOT)/$(PROJECT)/lib
+
+OLD_PERL  = /usr/bin/perl
+NEW_PERL  = /usr/bin/perl
+
+COPYRIGHT = $(HOME)/etc/COPYRIGHT.templ
+
+SPHINX_BUILD_HTML = doc/Sphinx/build/html
+GH_PAGES_DIR = gh-pages
+
+#for installation of subtrees, set up in each Makefile
+#TREE    = this subdirectory path relative to $NEW_ROOT
+#DIRS    = list of subdirectories
+#FILE    = list of generic files at this level
+#EXES    = list of executables at this level
+#SRCS    = list of source files at this level
+#HTML    = list of html files at this level
+
+DEST     = $(NEW_ROOT)/$(PROJECT)/$(TREE)
+
+#permissions for the source material
+SRCS_DIR_PERM = 0755
+SRCS_FIL_PERM = 0644
+SRCS_EXE_PERM = 0755
+
+#permissions for the destination material
+DEST_DIR_PERM = 0755
+DEST_FIL_PERM = 0444
+DEST_EXE_PERM = 0755
+
+#fix library path, perl path, copyright notice
+FIX_STRINGS = $(SED) \
+	-e "s;$(OLD_LIBS);$(NEW_LIBS);g" \
+	-e "s;^\#!$(OLD_PERL).*;\#!$(NEW_PERL);" \
+	-e "/^\# *Copyright/r $(COPYRIGHT)" \
+	-e "/^\# *Copyright/d"
+
+###########################################################################
+#build destination tree, show current directory first
+all: $(NEW_ROOT) force
+	@echo "[`$(PWD)`]"
+	@$(MAKE) _all
+
+#really build destination tree
+_all: $(EXES) $(FILE) $(SRCS) $(HTML)
+	@for i in . $(DIRS); do if [ $$i = . ]; then continue; fi; \
+	    (cd $$i && $(MAKE) all); \
+	done
+
+$(NEW_ROOT): force
+	@if [ ! -d $@ ]; then mkdir -p $@; fi
+
+#fix permissions of source tree
+perms: force
+	@echo "[`$(PWD)`]"
+	@for i in . $(FILE); do if [ $$i = . ]; then continue; fi; \
+	    if [ -f $$i ]; then chmod $(SRCS_FIL_PERM) $$i; fi; \
+	done
+	@for i in . $(SRCS); do if [ $$i = . ]; then continue; fi; \
+	    if [ -f $$i ]; then chmod $(SRCS_FIL_PERM) $$i; fi; \
+	done
+	@for i in . $(EXES); do if [ $$i = . ]; then continue; fi; \
+	    if [ -f $$i ]; then chmod $(SRCS_EXE_PERM) $$i; fi; \
+	done
+	@for i in . $(HTML); do if [ $$i = . ]; then continue; fi; \
+	    if [ -f $$i ]; then chmod $(SRCS_FIL_PERM) $$i; fi; \
+	done
+	@for i in . $(DIRS); do if [ $$i = . ]; then continue; fi; \
+	    if [ -d $$i ]; then chmod $(SRCS_DIR_PERM) $$i; fi;\
+	    (cd $$i ; make $@); \
+	done
+
+#install executables
+$(EXES): force
+	@echo "installing exe: $@"
+	@if [ ! -d $(DEST) ]; then mkdir -p $(DEST); fi
+	@$(RM) -f $(DEST)/$@
+	@$(FIX_STRINGS) < $@ > $(DEST)/$@
+	@chmod $(DEST_EXE_PERM) $(DEST)/$@
+
+#install ordinary files
+$(FILE): force
+	@echo "installing file: $@"
+	@if [ ! -d $(DEST) ]; then mkdir -p $(DEST); fi
+	@$(RM) -f $(DEST)/$@
+	@$(FIX_STRINGS) < $@ > $(DEST)/$@
+	@chmod $(DEST_FIL_PERM) $(DEST)/$@
+
+#install sources
+$(SRCS): force
+	@echo "installing source: $@"
+	@if [ ! -d $(DEST) ]; then mkdir -p $(DEST); fi
+	@$(RM) -f $(DEST)/$@
+	@$(FIX_STRINGS) < $@ > $(DEST)/$@
+	@chmod $(DEST_FIL_PERM) $(DEST)/$@
+
+#install html
+$(HTML): force
+	@echo "installing HTML: $@"
+	@if [ ! -d $(DEST)/$@ ]; then mkdir -p $(DEST)/$@; fi
+	@$(RSYNC) -avH --delete $(SPHINX_BUILD_HTML)/ $(DEST)/$@
+	@if [ ! -d $(GH_PAGES_DIR) ]; then mkdir -p $(GH_PAGES_DIR); fi
+	@$(RSYNC) -avH --delete $(SPHINX_BUILD_HTML)/ $(GH_PAGES_DIR)/
+
+#tidy source tree
+clean: force
+	@echo "[`$(PWD)`]"
+	@$(RM) -f *.swp \#* *~
+	@for i in . $(DIRS); do if [ $$i = . ]; then continue; fi; \
+	    (cd $$i && $(MAKE) $@); \
+	done
+
+#count lines summary
+lines:	force
+	@$(MAKE) _lines | $(AWK) '/^[/  / *[0-9]/ {c+=$$1;t+=$$2;print} END {printf "Totals: %5d %5d\n", c, t}'
+
+#really count lines (without blank lines and perl comments, all lines)
+_lines:	force
+	@echo "[`$(PWD)`]"
+	    @for i in . $(SRCS) $(EXES); do if [ $$i = . ]; then continue; fi;\
+	    $(AWK) '{t++} !/^ *(#.*)?$$/ {c++} END {printf "%5d %5d  %s\n", c, t, FILENAME}' $$i; \
+	done
+	@for i in . $(DIRS); do if [ $$i = . ]; then continue; fi; \
+	    (cd $$i && $(MAKE) $@); \
+	done
+
+#make a datestamped tarball
+tar: force
+	@cd $(OLD_ROOT); d=`/bin/date +%Y_%m_%d_%H%M`; $(TAR) cvzf - \
+	CVS \
+	MView/CVS \
+	MView/CHANGES \
+	MView/COPYING \
+	MView/INSTALL \
+	MView/Makefile \
+	MView/plain.dat \
+	MView/bin/CVS \
+	MView/bin/Makefile \
+	MView/bin/mview \
+	MView/etc \
+	MView/html \
+	MView/lib \
+	> mview-$$d.tgz
+
+force:
+
+###########################################################################

@@ -1,0 +1,846 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Input formats &mdash; MView</title>
+    
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="MView" href="../index.html" />
+    <link rel="up" title="Contents" href="../contents.html" />
+    <link rel="next" title="Output formats" href="formats_out.html" />
+    <link rel="prev" title="Manual" href="manual.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="formats_out.html" title="Output formats"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="manual.html" title="Manual"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">MView</a> &raquo;</li>
+          <li><a href="../contents.html" accesskey="U">Contents</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Input formats</a><ul>
+<li><a class="reference internal" href="#ncbi-blast-family">NCBI BLAST family</a><ul>
+<li><a class="reference internal" href="#blast">BLAST+</a></li>
+<li><a class="reference internal" href="#blast-series-2-2">BLAST series 2.2</a></li>
+<li><a class="reference internal" href="#blast-series-2-0">BLAST series 2.0</a></li>
+<li><a class="reference internal" href="#blast-series-1-4">BLAST series 1.4</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#washu-blast-family">WashU-BLAST family</a><ul>
+<li><a class="reference internal" href="#wu-blast-series-2-0">WU-BLAST series 2.0</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#uni-virginia-fasta-family">Uni. Virginia FASTA family</a><ul>
+<li><a class="reference internal" href="#fasta-series-36">FASTA series 36</a></li>
+<li><a class="reference internal" href="#fasta-series-35">FASTA series 35</a></li>
+<li><a class="reference internal" href="#fasta-series-34">FASTA series 34</a></li>
+<li><a class="reference internal" href="#fasta-series-3-0-3-4">FASTA series 3.0 - 3.4</a></li>
+<li><a class="reference internal" href="#fasta-series-2">FASTA series 2</a></li>
+<li><a class="reference internal" href="#fasta-series-1">FASTA series 1</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#clustal-aln">CLUSTAL/aln</a></li>
+<li><a class="reference internal" href="#hssp">HSSP</a></li>
+<li><a class="reference internal" href="#maf">MAF</a></li>
+<li><a class="reference internal" href="#fasta">FASTA</a></li>
+<li><a class="reference internal" href="#msf">MSF</a></li>
+<li><a class="reference internal" href="#pir">PIR</a></li>
+<li><a class="reference internal" href="#plain">plain</a></li>
+<li><a class="reference internal" href="#unsupported">Unsupported</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="manual.html"
+                        title="previous chapter">Manual</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="formats_out.html"
+                        title="next chapter">Output formats</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/manual/formats_in.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="input-formats">
+<span id="ref-input-formats"></span><h1>Input formats<a class="headerlink" href="#input-formats" title="Permalink to this headline">¶</a></h1>
+<p>The code has been tested for the following formats and versions for protein
+and nucleotide sequences:</p>
+<div class="section" id="ncbi-blast-family">
+<h2>NCBI BLAST family<a class="headerlink" href="#ncbi-blast-family" title="Permalink to this headline">¶</a></h2>
+<p>Sequence database search programs. See <a class="reference internal" href="blast/rules.html#ref-blast-rules"><em>BLAST HSP processing rules</em></a> for details of
+<cite>BLAST</cite> processing by MView.</p>
+<div class="section" id="blast">
+<h3>BLAST+<a class="headerlink" href="#blast" title="Permalink to this headline">¶</a></h3>
+<p>Modern BLAST can generate output in a number of formats; run <cite>blastp -help</cite> to
+see what is available.</p>
+<p>MView can process two of these: the default BLAST output format (also obtained
+with the BLAST command line option <cite>-outfmt 0</cite>) and a commented tabular format
+produced with <cite>-outfmt 7</cite>. MView support and testing is as follows.</p>
+<p>MView option: <tt class="docutils literal"><span class="pre">-in</span> <span class="pre">blast</span></tt> (with the default BLAST format)</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="62%" />
+<col width="20%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Program</th>
+<th class="head">Tested</th>
+<th class="head">Status</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><cite>blastp</cite></td>
+<td>2.2.25+, 2.2.28+, 2.2.31+</td>
+<td>ok</td>
+</tr>
+<tr class="row-odd"><td><cite>blastn</cite></td>
+<td>2.2.25+, 2.2.28+, 2.2.31+</td>
+<td>ok</td>
+</tr>
+<tr class="row-even"><td><cite>blastx</cite></td>
+<td>2.2.28+, 2.2.31+</td>
+<td>ok</td>
+</tr>
+<tr class="row-odd"><td><cite>tblastn</cite></td>
+<td>2.2.28+, 2.2.31+</td>
+<td>ok</td>
+</tr>
+<tr class="row-even"><td><cite>tblastx</cite></td>
+<td>2.2.28+, 2.2.31+</td>
+<td>ok</td>
+</tr>
+<tr class="row-odd"><td><cite>psiblast</cite></td>
+<td>2.2.28+, 2.2.31+</td>
+<td>ok</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>MView option: <tt class="docutils literal"><span class="pre">-in</span> <span class="pre">blast</span></tt> (with <cite>-outfmt 7</cite> tabular BLAST format)</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="62%" />
+<col width="20%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Program</th>
+<th class="head">Tested</th>
+<th class="head">Status</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><cite>blastp</cite></td>
+<td>2.2.28+, 2.2.31+</td>
+<td>ok</td>
+</tr>
+<tr class="row-odd"><td><cite>blastn</cite></td>
+<td>2.2.28+, 2.2.31+</td>
+<td>ok</td>
+</tr>
+<tr class="row-even"><td><cite>blastx</cite></td>
+<td>2.2.28+, 2.2.31+</td>
+<td>ok</td>
+</tr>
+<tr class="row-odd"><td><cite>tblastn</cite></td>
+<td>2.2.28+, 2.2.31+</td>
+<td>ok</td>
+</tr>
+<tr class="row-even"><td><cite>tblastx</cite></td>
+<td>2.2.28+, 2.2.31+</td>
+<td>ok</td>
+</tr>
+<tr class="row-odd"><td><cite>psiblast</cite></td>
+<td>2.2.28+, 2.2.31+</td>
+<td>ok</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>The <cite>-outfmt 7</cite> fields or columns recognised by MView are:</p>
+<ul class="simple">
+<li>the <cite>std</cite> defaults (<cite>qseqid</cite>, <cite>sseqid</cite>, <cite>pident</cite>, <cite>length</cite>, <cite>mismatch</cite>,
+<cite>gapopen</cite>, <cite>qstart</cite>, <cite>qend</cite>, <cite>sstart</cite>, <cite>send</cite>, <cite>evalue</cite>, <cite>bitscore</cite>);</li>
+<li><cite>qseq</cite>, <cite>sseq</cite> to report the query and sbjct sequences;</li>
+<li><cite>stitle</cite> or <cite>salltitles</cite> to report the sbjct descriptions;</li>
+<li><cite>qframe</cite> to report the query frame;</li>
+<li><cite>sframe</cite> to report the sbjct frame.</li>
+</ul>
+<p>Suitable strings of field specifiers for input to MView are:</p>
+<blockquote>
+<div><p><cite>blastp   -outfmt &#8216;7 std qseq sseq stitle&#8217;</cite></p>
+<p><cite>blastn   -outfmt &#8216;7 std qseq sseq stitle&#8217;</cite></p>
+<p><cite>blastx   -outfmt &#8216;7 std qseq sseq stitle qframe&#8217;</cite></p>
+<p><cite>tblastn  -outfmt &#8216;7 std qseq sseq stitle sframe&#8217;</cite></p>
+<p><cite>tblastx  -outfmt &#8216;7 std qseq sseq stitle qframe sframe&#8217;</cite></p>
+<p><cite>psiblast -outfmt &#8216;7 std qseq sseq stitle&#8217;</cite></p>
+</div></blockquote>
+<p>MView will silently ignore any fields other than those listed above. The field
+ordering given does not matter as MView identifies this automatically.</p>
+<p>Note: There are some differences in the output (seen in BLAST <cite>2.2.28+</cite>)
+produced by the default BLAST format versus <cite>-outfmt 7</cite>. The latter lacks the
+list of ranked database hits and best scores and their associated fragment
+counts, N. Unfortunately this can obscure interpretation of the results when
+there are many alternative alignments for a given database hit (see
+<a class="reference internal" href="blast/rules.html#ref-blast-rules"><em>BLAST HSP processing rules</em></a>) so that in certain cases the MView output will be
+slightly different; this is most noticeable with <cite>tblastx</cite>.</p>
+<p>Note: A strange behaviour has been seen with <cite>psiblast 2.2.28+</cite>, where the
+first database search produces many more hits than subsequent iterations
+including the final iteration when run using the default output format. Using
+<cite>-outfmt 7</cite> on the exact same search produces more consistent sets of hits.</p>
+</div>
+<div class="section" id="blast-series-2-2">
+<h3>BLAST series 2.2<a class="headerlink" href="#blast-series-2-2" title="Permalink to this headline">¶</a></h3>
+<p>MView option: <tt class="docutils literal"><span class="pre">-in</span> <span class="pre">blast</span></tt></p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="62%" />
+<col width="20%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Program</th>
+<th class="head">Tested</th>
+<th class="head">Status</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><cite>blastp</cite></td>
+<td>2.2.5, 2.2.6</td>
+<td>ok</td>
+</tr>
+<tr class="row-odd"><td><cite>blastn</cite></td>
+<td>2.2.6</td>
+<td>ok</td>
+</tr>
+<tr class="row-even"><td><cite>blastx</cite></td>
+<td>2.2.6</td>
+<td>ok</td>
+</tr>
+<tr class="row-odd"><td><cite>tblastn</cite></td>
+<td>2.2.6</td>
+<td>ok</td>
+</tr>
+<tr class="row-even"><td><cite>tblastx</cite></td>
+<td>2.2.6</td>
+<td>ok</td>
+</tr>
+<tr class="row-odd"><td><cite>psiblast</cite></td>
+<td>2.2.6</td>
+<td>ok</td>
+</tr>
+<tr class="row-even"><td><cite>phiblast</cite></td>
+<td>2.2.6</td>
+<td>ok</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+<div class="section" id="blast-series-2-0">
+<h3>BLAST series 2.0<a class="headerlink" href="#blast-series-2-0" title="Permalink to this headline">¶</a></h3>
+<p>MView option: <tt class="docutils literal"><span class="pre">-in</span> <span class="pre">blast</span></tt></p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="62%" />
+<col width="20%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Program</th>
+<th class="head">Tested</th>
+<th class="head">Status</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><cite>blastp</cite></td>
+<td>2.0.4, 2.0.5, 2.0.9, 2.0.10</td>
+<td>ok</td>
+</tr>
+<tr class="row-odd"><td><cite>blastn</cite></td>
+<td>2.0.4, 2.0.5, 2.0.9, 2.0.14</td>
+<td>ok</td>
+</tr>
+<tr class="row-even"><td><cite>blastx</cite></td>
+<td>2.0.5, 2.0.9</td>
+<td>ok</td>
+</tr>
+<tr class="row-odd"><td><cite>tblastn</cite></td>
+<td>2.0.5, 2.0.10</td>
+<td>ok</td>
+</tr>
+<tr class="row-even"><td><cite>tblastx</cite></td>
+<td>2.0.5</td>
+<td>ok</td>
+</tr>
+<tr class="row-odd"><td><cite>psiblast</cite></td>
+<td>2.0.2, 2.0.4, 2.0.5, 2.0.6, 2.0.10</td>
+<td>ok</td>
+</tr>
+<tr class="row-even"><td><cite>phiblast</cite></td>
+<td>2.0.9</td>
+<td>ok</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+<div class="section" id="blast-series-1-4">
+<h3>BLAST series 1.4<a class="headerlink" href="#blast-series-1-4" title="Permalink to this headline">¶</a></h3>
+<p>MView option: <tt class="docutils literal"><span class="pre">-in</span> <span class="pre">blast</span></tt></p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="62%" />
+<col width="20%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Program</th>
+<th class="head">Tested</th>
+<th class="head">Status</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><cite>blastp</cite></td>
+<td>1.4.7, 1.4.9</td>
+<td>ok</td>
+</tr>
+<tr class="row-odd"><td><cite>blastn</cite></td>
+<td>1.4.9</td>
+<td>ok</td>
+</tr>
+<tr class="row-even"><td><cite>blastx</cite></td>
+<td>1.4.9</td>
+<td>ok</td>
+</tr>
+<tr class="row-odd"><td><cite>tblastn</cite></td>
+<td>1.4.9</td>
+<td>ok</td>
+</tr>
+<tr class="row-even"><td><cite>tblastx</cite></td>
+<td>1.4.9</td>
+<td>ok</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="washu-blast-family">
+<h2>WashU-BLAST family<a class="headerlink" href="#washu-blast-family" title="Permalink to this headline">¶</a></h2>
+<p>Sequence database search programs.</p>
+<div class="section" id="wu-blast-series-2-0">
+<h3>WU-BLAST series 2.0<a class="headerlink" href="#wu-blast-series-2-0" title="Permalink to this headline">¶</a></h3>
+<p>MView option: <tt class="docutils literal"><span class="pre">-in</span> <span class="pre">blast</span></tt></p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="62%" />
+<col width="20%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Program</th>
+<th class="head">Tested</th>
+<th class="head">Status</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><cite>blastp</cite></td>
+<td>2.0a13, 2.0a19, 2.0</td>
+<td>ok</td>
+</tr>
+<tr class="row-odd"><td><cite>blastn</cite></td>
+<td>2.0a19, 2.0</td>
+<td>ok</td>
+</tr>
+<tr class="row-even"><td><cite>blastx</cite></td>
+<td>2.0a19, 2.0</td>
+<td>ok</td>
+</tr>
+<tr class="row-odd"><td><cite>tblastn</cite></td>
+<td>2.0a19, 2.0</td>
+<td>ok</td>
+</tr>
+<tr class="row-even"><td><cite>tblastx</cite></td>
+<td>2.0a19, 2.0</td>
+<td>ok</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="uni-virginia-fasta-family">
+<h2>Uni. Virginia FASTA family<a class="headerlink" href="#uni-virginia-fasta-family" title="Permalink to this headline">¶</a></h2>
+<p>Sequence database search programs:</p>
+<div class="section" id="fasta-series-36">
+<h3>FASTA series 36<a class="headerlink" href="#fasta-series-36" title="Permalink to this headline">¶</a></h3>
+<p>MView option: <tt class="docutils literal"><span class="pre">-in</span> <span class="pre">uvfasta</span></tt></p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="62%" />
+<col width="20%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Program</th>
+<th class="head">Tested</th>
+<th class="head">Status</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><cite>fasta</cite></td>
+<td>36.07, 36.3.3, 36.3.6, 36.3.7b</td>
+<td>ok</td>
+</tr>
+<tr class="row-odd"><td><cite>fastx</cite></td>
+<td>36.3.3, 36.3.6, 36.3.7b</td>
+<td>ok</td>
+</tr>
+<tr class="row-even"><td><cite>fasty</cite></td>
+<td>36.3.6, 36.3.7b</td>
+<td>ok</td>
+</tr>
+<tr class="row-odd"><td><cite>tfastx</cite></td>
+<td>36.3.3, 36.3.6, 36.3.7b</td>
+<td>ok</td>
+</tr>
+<tr class="row-even"><td><cite>tfasty</cite></td>
+<td>36.3.3, 36.3.6, 36.3.7b</td>
+<td>ok</td>
+</tr>
+<tr class="row-odd"><td><cite>ssearch</cite></td>
+<td>36.3.3, 36.3.6, 36.3.7b</td>
+<td>ok</td>
+</tr>
+<tr class="row-even"><td><cite>ggsearch</cite></td>
+<td>36.3.3, 36.3.6, 36.3.7b</td>
+<td>ok</td>
+</tr>
+<tr class="row-odd"><td><cite>glsearch</cite></td>
+<td>36.3.3, 36.3.6, 36.3.7b</td>
+<td>ok</td>
+</tr>
+<tr class="row-even"><td><cite>fastm</cite></td>
+<td>35.3.5a, 36.3.6, 36.3.7b</td>
+<td>experimental</td>
+</tr>
+<tr class="row-odd"><td><cite>fasts</cite></td>
+<td>36.3.6, 36.3.7b</td>
+<td>experimental</td>
+</tr>
+<tr class="row-even"><td><cite>fastf</cite></td>
+<td>36.3.6, 36.3.7b</td>
+<td>experimental</td>
+</tr>
+<tr class="row-odd"><td><cite>tfastm</cite></td>
+<td>36.3.7b</td>
+<td>experimental</td>
+</tr>
+<tr class="row-even"><td><cite>tfasts</cite></td>
+<td>36.3.7b</td>
+<td>experimental</td>
+</tr>
+<tr class="row-odd"><td><cite>tfastf</cite></td>
+<td>36.3.7b</td>
+<td>experimental</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+<div class="section" id="fasta-series-35">
+<h3>FASTA series 35<a class="headerlink" href="#fasta-series-35" title="Permalink to this headline">¶</a></h3>
+<p>MView option: <tt class="docutils literal"><span class="pre">-in</span> <span class="pre">uvfasta</span></tt></p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="62%" />
+<col width="20%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Program</th>
+<th class="head">Tested</th>
+<th class="head">Status</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><cite>fasta</cite></td>
+<td>35.04</td>
+<td>ok</td>
+</tr>
+<tr class="row-odd"><td><cite>tfastx</cite></td>
+<td>35.04</td>
+<td>ok</td>
+</tr>
+<tr class="row-even"><td><cite>ssearch</cite></td>
+<td>35.04</td>
+<td>ok</td>
+</tr>
+<tr class="row-odd"><td><cite>ggsearch</cite></td>
+<td>35.04</td>
+<td>ok</td>
+</tr>
+<tr class="row-even"><td><cite>glsearch</cite></td>
+<td>35.04</td>
+<td>ok</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+<div class="section" id="fasta-series-34">
+<h3>FASTA series 34<a class="headerlink" href="#fasta-series-34" title="Permalink to this headline">¶</a></h3>
+<p>MView option: <tt class="docutils literal"><span class="pre">-in</span> <span class="pre">uvfasta</span></tt></p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="62%" />
+<col width="20%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Program</th>
+<th class="head">Tested</th>
+<th class="head">Status</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><cite>fasta34</cite></td>
+<td>34.26.5</td>
+<td>ok</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+<div class="section" id="fasta-series-3-0-3-4">
+<h3>FASTA series 3.0 - 3.4<a class="headerlink" href="#fasta-series-3-0-3-4" title="Permalink to this headline">¶</a></h3>
+<p>MView option: <tt class="docutils literal"><span class="pre">-in</span> <span class="pre">uvfasta</span></tt></p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="62%" />
+<col width="20%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Program</th>
+<th class="head">Tested</th>
+<th class="head">Status</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><cite>fasta</cite></td>
+<td>3.0t76, 3.1t07, 3.2t01, 3.2t05, 3.2t07</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td></td>
+<td>3.2t05, 3.2t07, 3.3t01, 3.3t07, 3.4t23</td>
+<td>ok</td>
+</tr>
+<tr class="row-even"><td><cite>fastx</cite></td>
+<td>3.4t23</td>
+<td>ok</td>
+</tr>
+<tr class="row-odd"><td><cite>fasty</cite></td>
+<td>3.4t23</td>
+<td>ok</td>
+</tr>
+<tr class="row-even"><td><cite>tfasta</cite></td>
+<td>3.4t23</td>
+<td>ok</td>
+</tr>
+<tr class="row-odd"><td><cite>tfastx</cite></td>
+<td>3.0t82, 3.4t23</td>
+<td>ok</td>
+</tr>
+<tr class="row-even"><td><cite>tfasty</cite></td>
+<td>3.4t23</td>
+<td>ok</td>
+</tr>
+<tr class="row-odd"><td><cite>tfastxy</cite></td>
+<td>3.1t07</td>
+<td>ok</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+<div class="section" id="fasta-series-2">
+<h3>FASTA series 2<a class="headerlink" href="#fasta-series-2" title="Permalink to this headline">¶</a></h3>
+<p>MView option: <tt class="docutils literal"><span class="pre">-in</span> <span class="pre">uvfasta</span></tt></p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="62%" />
+<col width="20%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Program</th>
+<th class="head">Tested</th>
+<th class="head">Status</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><cite>fasta</cite></td>
+<td>2.0u</td>
+<td>ok</td>
+</tr>
+<tr class="row-odd"><td><cite>tfastx</cite></td>
+<td>2.0u63</td>
+<td>ok</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+<div class="section" id="fasta-series-1">
+<h3>FASTA series 1<a class="headerlink" href="#fasta-series-1" title="Permalink to this headline">¶</a></h3>
+<p>MView option: <tt class="docutils literal"><span class="pre">-in</span> <span class="pre">uvfasta</span></tt></p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="62%" />
+<col width="20%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Program</th>
+<th class="head">Tested</th>
+<th class="head">Status</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><cite>fasta</cite></td>
+<td>1.6c24</td>
+<td>ok</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="clustal-aln">
+<h2>CLUSTAL/aln<a class="headerlink" href="#clustal-aln" title="Permalink to this headline">¶</a></h2>
+<p>The CLUSTAL family of multiple sequence alignment programs produce &#8216;aln&#8217;
+format.</p>
+<p>MView option: <tt class="docutils literal"><span class="pre">-in</span> <span class="pre">clustal</span></tt></p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="62%" />
+<col width="20%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Program</th>
+<th class="head">Tested</th>
+<th class="head">Status</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><cite>CLUSTAL</cite></td>
+<td>1.60, 1.70, 1.83, 2.1</td>
+<td>ok</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+<div class="section" id="hssp">
+<h2>HSSP<a class="headerlink" href="#hssp" title="Permalink to this headline">¶</a></h2>
+<p>The HSSP multiple sequence alignment format is produced by the MaxHom protein
+sequence and structure homology alignment program.</p>
+<p>MView option: <tt class="docutils literal"><span class="pre">-in</span> <span class="pre">hssp</span></tt></p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="62%" />
+<col width="20%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Program</th>
+<th class="head">Tested</th>
+<th class="head">Status</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><cite>HSSP</cite></td>
+<td>1.0 1991</td>
+<td>ok</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+<div class="section" id="maf">
+<h2>MAF<a class="headerlink" href="#maf" title="Permalink to this headline">¶</a></h2>
+<p>The UCSC Multple Alignment Format.</p>
+<p>MView option: <tt class="docutils literal"><span class="pre">-in</span> <span class="pre">maf</span></tt></p>
+<p>MAF files contain distinct alignment blocks. By default, only the first one
+will be output. You can extract a particular block, say the second one, with
+<tt class="docutils literal"><span class="pre">-block</span> <span class="pre">2</span></tt>, or all blocks with <tt class="docutils literal"><span class="pre">-block</span> <span class="pre">'*'</span></tt>.</p>
+</div>
+<div class="section" id="fasta">
+<h2>FASTA<a class="headerlink" href="#fasta" title="Permalink to this headline">¶</a></h2>
+<p>The classic FASTA (or Pearson) sequence file format.</p>
+<p>MView option: <tt class="docutils literal"><span class="pre">-in</span> <span class="pre">fasta</span></tt></p>
+</div>
+<div class="section" id="msf">
+<h2>MSF<a class="headerlink" href="#msf" title="Permalink to this headline">¶</a></h2>
+<p>The Wisconsin Package GCG Multiple Sequence File format.</p>
+<p>MView option: <tt class="docutils literal"><span class="pre">-in</span> <span class="pre">msf</span></tt></p>
+</div>
+<div class="section" id="pir">
+<h2>PIR<a class="headerlink" href="#pir" title="Permalink to this headline">¶</a></h2>
+<p>The Protein Information Resource sequence file format.</p>
+<p>MView option: <tt class="docutils literal"><span class="pre">-in</span> <span class="pre">pir</span></tt></p>
+</div>
+<div class="section" id="plain">
+<h2>plain<a class="headerlink" href="#plain" title="Permalink to this headline">¶</a></h2>
+<p>A simple multiple sequence alignment format.</p>
+<p>MView option: <tt class="docutils literal"><span class="pre">-in</span> <span class="pre">plain</span></tt></p>
+<p>This is composed of rows of identifier and sequence in two columns like:</p>
+<PRE>
+identifier1   sequence1
+identifier2   sequence2
+identifier3   sequence3
+</pre><p>and can contain comment lines starting with <tt class="docutils literal"><span class="pre">#</span></tt>. Identifiers and sequences
+must not contain any whitespace as this is used to separate the columns. The
+sequences need not be aligned vertically, but they must all be the same
+length. Use <tt class="docutils literal"><span class="pre">-</span></tt> and/or <tt class="docutils literal"><span class="pre">.</span></tt> characters for gaps.</p>
+</div>
+<div class="section" id="unsupported">
+<h2>Unsupported<a class="headerlink" href="#unsupported" title="Permalink to this headline">¶</a></h2>
+<p>A few other formats were implemented for specific use-cases and are not
+maintained:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="38%" />
+<col width="30%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Format</th>
+<th class="head">MView option</th>
+<th class="head">Status</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>MIPS-ALN</td>
+<td><tt class="docutils literal"><span class="pre">-in</span> <span class="pre">mips</span></tt></td>
+<td>experimental</td>
+</tr>
+<tr class="row-odd"><td>MULTAS/MULTAL</td>
+<td><tt class="docutils literal"><span class="pre">-in</span> <span class="pre">multas</span></tt></td>
+<td>experimental</td>
+</tr>
+<tr class="row-even"><td>jnet -z</td>
+<td><tt class="docutils literal"><span class="pre">-in</span> <span class="pre">jnet</span></tt></td>
+<td>experimental</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="formats_out.html" title="Output formats"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="manual.html" title="Manual"
+             >previous</a> |</li>
+        <li><a href="../index.html">MView</a> &raquo;</li>
+          <li><a href="../contents.html" >Contents</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Nigel P. Brown.
+      Last updated on 23 Oct 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Frequently asked questions &mdash; MView</title>
+    
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="MView" href="../index.html" />
+    <link rel="up" title="Contents" href="../contents.html" />
+    <link rel="next" title="Licence" href="../etc/Licence.html" />
+    <link rel="prev" title="NCBI BLAST series 2 and NCBI BLAST+" href="blast/blast2.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../etc/Licence.html" title="Licence"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="blast/blast2.html" title="NCBI BLAST series 2 and NCBI BLAST+"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">MView</a> &raquo;</li>
+          <li><a href="../contents.html" accesskey="U">Contents</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Frequently asked questions</a><ul>
+<li><a class="reference internal" href="#can-mview-extract-blast-or-other-output-into-a-fasta-pir-msf-clustal-file">Can MView extract BLAST (or other) output into a FASTA/PIR/MSF/CLUSTAL file?</a></li>
+<li><a class="reference internal" href="#can-mview-extract-or-view-the-separate-blast-alignment-or-hsps">Can MView extract or view the separate BLAST alignment or HSPs?</a></li>
+<li><a class="reference internal" href="#does-mview-work-with-nucleotide-sequences">Does MView work with nucleotide sequences?</a></li>
+<li><a class="reference internal" href="#can-mview-use-clustal-colours">Can MView use CLUSTAL colours?</a></li>
+<li><a class="reference internal" href="#can-mview-process-data-from-a-web-page">Can MView process data from a Web page?</a></li>
+<li><a class="reference internal" href="#can-i-switch-off-html-markup">Can I switch off HTML markup?</a></li>
+<li><a class="reference internal" href="#how-can-i-print">How can I print?</a></li>
+<li><a class="reference internal" href="#can-i-edit-the-alignment">Can I edit the alignment?</a></li>
+<li><a class="reference internal" href="#what-do-the-percent-identities-mean">What do the percent identities mean?</a></li>
+<li><a class="reference internal" href="#why-are-some-symbols-lowercased">Why are some symbols lowercased?</a></li>
+<li><a class="reference internal" href="#why-is-the-query-sequence-incomplete">Why is the query sequence incomplete?</a></li>
+<li><a class="reference internal" href="#how-are-overlapping-blast-hsps-processed">How are overlapping BLAST HSPs processed?</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="blast/blast2.html"
+                        title="previous chapter">NCBI BLAST series 2 and NCBI BLAST+</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../etc/Licence.html"
+                        title="next chapter">Licence</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/manual/faq.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="frequently-asked-questions">
+<h1>Frequently asked questions<a class="headerlink" href="#frequently-asked-questions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="can-mview-extract-blast-or-other-output-into-a-fasta-pir-msf-clustal-file">
+<h2>Can MView extract BLAST (or other) output into a FASTA/PIR/MSF/CLUSTAL file?<a class="headerlink" href="#can-mview-extract-blast-or-other-output-into-a-fasta-pir-msf-clustal-file" title="Permalink to this headline">¶</a></h2>
+<p>Yes - MView extracts and converts results into FASTA, PIR, MSF and CLUSTAL/aln
+formats. See <a class="reference internal" href="formats_out.html#ref-output-formats"><em>Output formats</em></a>.</p>
+</div>
+<div class="section" id="can-mview-extract-or-view-the-separate-blast-alignment-or-hsps">
+<h2>Can MView extract or view the separate BLAST alignment or HSPs?<a class="headerlink" href="#can-mview-extract-or-view-the-separate-blast-alignment-or-hsps" title="Permalink to this headline">¶</a></h2>
+<p>Yes - MView normally displays or extracts only the top scoring alignments or
+HSPs for the query. You can get all alignments and/or HSPs using the <tt class="docutils literal"><span class="pre">-hsp</span>
+<span class="pre">discrete</span></tt> option.</p>
+</div>
+<div class="section" id="does-mview-work-with-nucleotide-sequences">
+<h2>Does MView work with nucleotide sequences?<a class="headerlink" href="#does-mview-work-with-nucleotide-sequences" title="Permalink to this headline">¶</a></h2>
+<p>Yes - use one of the <tt class="docutils literal"><span class="pre">-moltype</span> <span class="pre">dna</span></tt>, <tt class="docutils literal"><span class="pre">-moltype</span> <span class="pre">rna</span></tt> or <tt class="docutils literal"><span class="pre">-moltype</span> <span class="pre">na</span></tt>
+options to tell MView to use an appropriate colour scheme for HTML output
+(currently, these three options are equivalent).</p>
+</div>
+<div class="section" id="can-mview-use-clustal-colours">
+<h2>Can MView use CLUSTAL colours?<a class="headerlink" href="#can-mview-use-clustal-colours" title="Permalink to this headline">¶</a></h2>
+<p>Yes - use the <tt class="docutils literal"><span class="pre">-colormap</span> <span class="pre">CLUSTAL</span></tt> option to change the colourmaps for
+both protein and nucleotide alignments.</p>
+</div>
+<div class="section" id="can-mview-process-data-from-a-web-page">
+<h2>Can MView process data from a Web page?<a class="headerlink" href="#can-mview-process-data-from-a-web-page" title="Permalink to this headline">¶</a></h2>
+<p>Basically, no, unless you are lucky or prepared to edit the Web page. The
+MView parsers are all built to recognise the raw text output produced by the
+respective programs (BLAST, FASTA, etc.) or to recognise particular flat-file
+formats (MSF, PIR, etc.). When a site adds HTML markup to this to make a Web
+page, arbitrary parts are changed/deleted/added polluting the text, so that
+even dumping the page in text-only format still leaves traces.</p>
+</div>
+<div class="section" id="can-i-switch-off-html-markup">
+<h2>Can I switch off HTML markup?<a class="headerlink" href="#can-i-switch-off-html-markup" title="Permalink to this headline">¶</a></h2>
+<p>Yes - the program defaults to plain text output unless the <tt class="docutils literal"><span class="pre">-html</span></tt> option is
+set to any valid value other than <tt class="docutils literal"><span class="pre">off</span></tt>, or the output format is set to PIR,
+MSF, FASTA, or RDB.</p>
+</div>
+<div class="section" id="how-can-i-print">
+<h2>How can I print?<a class="headerlink" href="#how-can-i-print" title="Permalink to this headline">¶</a></h2>
+<p>From the web browser. To produce something that fits on typical paper sizes
+one must set <tt class="docutils literal"><span class="pre">-width</span> <span class="pre">60</span></tt> or similar and turn off some of the leading text,
+e.g., <tt class="docutils literal"><span class="pre">-label2</span> <span class="pre">-label3</span></tt>.</p>
+</div>
+<div class="section" id="can-i-edit-the-alignment">
+<h2>Can I edit the alignment?<a class="headerlink" href="#can-i-edit-the-alignment" title="Permalink to this headline">¶</a></h2>
+<p>No - MView isn&#8217;t an alignment editor. You could try to copy/paste the output
+into a spreadsheet and process it there, then reload it into MView.</p>
+</div>
+<div class="section" id="what-do-the-percent-identities-mean">
+<h2>What do the percent identities mean?<a class="headerlink" href="#what-do-the-percent-identities-mean" title="Permalink to this headline">¶</a></h2>
+<p>By default, percent identities reported in each alignment row are calculated
+with respect to the aligned portion of the reference sequence (usually the
+query or first row) thus:</p>
+<div class="math">
+\[\frac{\mathrm{number of identical residues}}
+     {\mathrm{length of ungapped reference sequence over aligned region}}
+\times 100\]</div>
+<p>Still, in the case of BLAST MView output, minor deviations from the
+percentages reported by BLAST are due to (1) different rounding, and (2) the
+way MView assembles a single pseudo-sequence (see <a class="reference internal" href="#ref-funny-sequences"><em>Why are some symbols lowercased?</em></a>)
+for a hit composed of multiple HSPs, giving an averaged percent identity. This
+default behaviour above is also obtained using the option <tt class="docutils literal"><span class="pre">-pcid</span> <span class="pre">aligned</span></tt>.</p>
+<p>Two other calculation possibilities are available: <tt class="docutils literal"><span class="pre">-pcid</span> <span class="pre">reference</span></tt>
+normalises by the ungapped length of the query or reference sequence, and
+<tt class="docutils literal"><span class="pre">-pcid</span> <span class="pre">hit</span></tt> normalises by the ungapped length of the hit sequence.</p>
+<p>You can change the reference sequence against which identities are calculated
+using the <tt class="docutils literal"><span class="pre">-reference</span></tt> option, which requires either a row number or a
+sequence identifier.</p>
+</div>
+<div class="section" id="why-are-some-symbols-lowercased">
+<span id="ref-funny-sequences"></span><h2>Why are some symbols lowercased?<a class="headerlink" href="#why-are-some-symbols-lowercased" title="Permalink to this headline">¶</a></h2>
+<p>Gapped input (e.g., FASTA, BLAST2, PSI-BLAST) is subject to a further
+processing step when producing the stacked alignment. The query sequence acts
+as a template, but any gaps introduced into the query by a database hit are
+excised to ensure a contiguous query string. The position of the excision in
+the affected hit is marked by lowercasing the pair of boundary symbols.</p>
+</div>
+<div class="section" id="why-is-the-query-sequence-incomplete">
+<h2>Why is the query sequence incomplete?<a class="headerlink" href="#why-is-the-query-sequence-incomplete" title="Permalink to this headline">¶</a></h2>
+<p>The displayed query sequence is assembled from the input data, not by
+reference to any external sequence database. MView will pad missing query
+sequence with &#8216;X&#8217; characters based on the numeric match ranges if this is
+needed to complete an assembly. Occasionally, you may see a &#8216;?&#8217; character -
+this means that a non-standard residue was seen on input.</p>
+</div>
+<div class="section" id="how-are-overlapping-blast-hsps-processed">
+<h2>How are overlapping BLAST HSPs processed?<a class="headerlink" href="#how-are-overlapping-blast-hsps-processed" title="Permalink to this headline">¶</a></h2>
+<p>Ungapped BLAST input is processed to produce a stack of hit sequence strings
+aligned against a contiguous query sequence. The query sequence acts as a
+template for each hit sequence onto which hit fragments are overlayed in the
+query positions.</p>
+<p>In outline the default method of processing of HSPs is as follows:</p>
+<p>For BLAST (series 1), as of MView version 1.37, only the HSPs contributing to
+the ranked hit contribute to this overlay process. A sorting scheme ensures
+that the best of these fragments are overlayed last and are not obscured by
+weaker ones, for example, BLAST hits are sorted by score and
+length. Differences of ordering of fragments along query and hit naturally
+result in a patchwork that may not correspond exactly to the real hit
+sequences. Nevertheless, the resulting alignment stack is very informative,
+and the user can always run and view a gapped search if that is preferred.</p>
+<p>For BLAST (series 2) and PSI-BLAST, often only a single gapped alignment is
+reported by blast for a given database hit. However, sometimes there are
+alternative alignments and the same stacking rules apply.</p>
+<p>Greater control over the choice of HSPs is available through the <tt class="docutils literal"><span class="pre">-hsp</span></tt>
+option. See <a class="reference internal" href="blast/rules.html#ref-blast-rules"><em>BLAST HSP processing rules</em></a> for more details.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../etc/Licence.html" title="Licence"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="blast/blast2.html" title="NCBI BLAST series 2 and NCBI BLAST+"
+             >previous</a> |</li>
+        <li><a href="../index.html">MView</a> &raquo;</li>
+          <li><a href="../contents.html" >Contents</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Nigel P. Brown.
+      Last updated on 09 Oct 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,54 @@
+Finally, if the first character of a "sequence" is the hash '#' character it
+will not be coloured by the prevailing colourmap. Instead, a colourmap having
+a matching name (minus the '#' character) will be used, if it exists. For
+example, if the input alignment contains a line identified by ``#sec-struct``
+then a colormap called ``sec-struct`` would apply to any rows containing
+that string in their identifier.
+
+
+ ======================= ======================================================
+ MView option            Behaviour
+ ======================= ======================================================
+ ``-coloring any``       Colour every residue according to the currently
+                         selected palette.
+
+ ``-coloring identity``  Colour only those residues that are identical to some
+                         reference sequence (usually the query or first row).
+
+ ``-coloring consensus`` Colour only those residues that belong to a specified
+                         physicochemical class that is conserved in at least a
+                         specified percentage of all rows for a given
+                         column. This defaults to 70% and and may be set to
+                         another threshold, e.g., ``-coloring
+                         consensus -threshold 80`` would specify 80%. Note
+                         that the physicochemical classes in question can be
+                         confined to individual residues.
+
+ ``-coloring group``     Like ``-coloring consensus``, but colours residues by
+                         the colour of the class to which they belong. 
+ ======================= ======================================================
+
+
+There are several values that can be passed to the ``-html`` option:
+
+ ===============  =============================================================
+ MView option     Description
+ ===============  =============================================================
+ ``-html head``   Produces a complete web page. Output includes the style
+                  sheet if ``-css on`` was given. The most common situation.
+
+ ``-html body``   Produces just the ``<BODY></BODY>`` part of the web page.
+                  Note: the style sheet produced by ``-css on`` will be
+                  missing.
+
+ ``-html data``   Produces just the alignment part of the web page. Note: any
+                  style sheet produced by ``-css on`` will be missing.
+
+ ``-html full``   Produces a complete web page with the MIME-type "text/html",
+                  suitable for serving directly from a web server. Output
+                  includes the style sheet if ``-css on`` was given.
+
+ ``-html off``    Switch off html (default).
+ ===============  =============================================================
+
+

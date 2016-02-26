@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Output formats &mdash; MView</title>
+    
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="MView" href="../index.html" />
+    <link rel="up" title="Contents" href="../contents.html" />
+    <link rel="next" title="BLAST HSP processing rules" href="blast/rules.html" />
+    <link rel="prev" title="Input formats" href="formats_in.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="blast/rules.html" title="BLAST HSP processing rules"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="formats_in.html" title="Input formats"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">MView</a> &raquo;</li>
+          <li><a href="../contents.html" accesskey="U">Contents</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Output formats</a><ul>
+<li><a class="reference internal" href="#plain">plain</a></li>
+<li><a class="reference internal" href="#fasta">FASTA</a></li>
+<li><a class="reference internal" href="#clustal-aln">CLUSTAL/aln</a></li>
+<li><a class="reference internal" href="#pir">PIR</a></li>
+<li><a class="reference internal" href="#msf">MSF</a></li>
+<li><a class="reference internal" href="#rdb">RDB</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="formats_in.html"
+                        title="previous chapter">Input formats</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="blast/rules.html"
+                        title="next chapter">BLAST HSP processing rules</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/manual/formats_out.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="output-formats">
+<span id="ref-output-formats"></span><h1>Output formats<a class="headerlink" href="#output-formats" title="Permalink to this headline">¶</a></h1>
+<p>Instead of the pretty display output, MView can write several useful multiple
+alignment formats.</p>
+<p>Any row or column filtering options will be respected, so you can also extract
+subsets of sequences (see <a class="reference internal" href="manual.html#ref-filtering-rows"><em>Filtering rows</em></a>), or particular alignment
+blocks or strand oriented data from blast or similar (see the various sequence
+database search input formats).</p>
+<div class="section" id="plain">
+<h2>plain<a class="headerlink" href="#plain" title="Permalink to this headline">¶</a></h2>
+<p>A simple multiple sequence alignment format.</p>
+<p>MView option: <tt class="docutils literal"><span class="pre">-out</span> <span class="pre">plain</span></tt></p>
+<p>This is composed of rows of identifier and sequence in two columns like:</p>
+<PRE>
+identifier1   sequence1
+identifier2   sequence2
+identifier3   sequence3
+</pre><p>and can contain comment lines starting with <tt class="docutils literal"><span class="pre">#</span></tt>. Identifiers and sequences
+must not contain any whitespace as this is used to separate the columns. The
+sequences need not be aligned vertically, but they must all be the same
+length. Use <tt class="docutils literal"><span class="pre">-</span></tt> and/or <tt class="docutils literal"><span class="pre">.</span></tt> characters for gaps.</p>
+</div>
+<div class="section" id="fasta">
+<h2>FASTA<a class="headerlink" href="#fasta" title="Permalink to this headline">¶</a></h2>
+<p>The classic FASTA (or Pearson) sequence file format.</p>
+<p>MView option: <tt class="docutils literal"><span class="pre">-out</span> <span class="pre">fasta</span></tt> or <tt class="docutils literal"><span class="pre">-out</span> <span class="pre">pearson</span></tt>.</p>
+</div>
+<div class="section" id="clustal-aln">
+<h2>CLUSTAL/aln<a class="headerlink" href="#clustal-aln" title="Permalink to this headline">¶</a></h2>
+<p>The CLUSTAL multiple sequence alignment format (version 2.1, as produced by
+clustalx-2.1).</p>
+<p>MView option: <tt class="docutils literal"><span class="pre">-out</span> <span class="pre">clustal</span></tt> or <tt class="docutils literal"><span class="pre">-out</span> <span class="pre">aln</span></tt>.</p>
+<p>Output includes end of row numbers and a Clustal-style <tt class="docutils literal"><span class="pre">*:.</span></tt> amino acid
+conservation line: <tt class="docutils literal"><span class="pre">*</span></tt> for full column identity, and <tt class="docutils literal"><span class="pre">:</span></tt> or <tt class="docutils literal"><span class="pre">.</span></tt> for
+strong and weak amino acid grouping, respectively, as defined in CLUSTAL.</p>
+<p>For DNA or RNA sequences, if the molecule type was set to nucleic acid with
+<tt class="docutils literal"><span class="pre">-moltype</span> <span class="pre">na</span></tt> or <tt class="docutils literal"><span class="pre">dna</span></tt> or <tt class="docutils literal"><span class="pre">rna</span></tt>, then the clustal conservation line will
+show only the column identities.</p>
+</div>
+<div class="section" id="pir">
+<h2>PIR<a class="headerlink" href="#pir" title="Permalink to this headline">¶</a></h2>
+<p>The Protein Information Resource sequence file format.</p>
+<p>MView option: <tt class="docutils literal"><span class="pre">-out</span> <span class="pre">pir</span></tt></p>
+<p>This format includes a molecule type annotation. If the <tt class="docutils literal"><span class="pre">-moltype</span></tt> option is
+set (one of <tt class="docutils literal"><span class="pre">aa</span></tt>, <tt class="docutils literal"><span class="pre">dna</span></tt>, <tt class="docutils literal"><span class="pre">rna</span></tt>, <tt class="docutils literal"><span class="pre">na</span></tt>), MView will try to output a
+reasonable value (P1, DL, RL, XX; for protein, linear DNA, linear RNA, or
+unknown, respectively). The default is protein.</p>
+</div>
+<div class="section" id="msf">
+<h2>MSF<a class="headerlink" href="#msf" title="Permalink to this headline">¶</a></h2>
+<p>The Wisconsin Package GCG Multiple Sequence File format.</p>
+<p>MView option: <tt class="docutils literal"><span class="pre">-out</span> <span class="pre">msf</span></tt></p>
+<p>This format includes a molecule type annotation. If the <tt class="docutils literal"><span class="pre">-moltype</span></tt> option is
+set (one of <tt class="docutils literal"><span class="pre">aa</span></tt>, <tt class="docutils literal"><span class="pre">dna</span></tt>, <tt class="docutils literal"><span class="pre">rna</span></tt>, <tt class="docutils literal"><span class="pre">na</span></tt>), MView will output the right
+value (P or N; for protein or nucleic acid). The default is protein.</p>
+</div>
+<div class="section" id="rdb">
+<h2>RDB<a class="headerlink" href="#rdb" title="Permalink to this headline">¶</a></h2>
+<p>MView option <tt class="docutils literal"><span class="pre">-out</span> <span class="pre">rdb</span></tt></p>
+<p>A tab-separated format including scoring information. RDB is a CSV-style
+format with header lines giving column name and type information (see <a class="reference external" href="http://www.drdobbs.com/rdb-a-unix-command-line-database/199101326">rdb</a>).</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="blast/rules.html" title="BLAST HSP processing rules"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="formats_in.html" title="Input formats"
+             >previous</a> |</li>
+        <li><a href="../index.html">MView</a> &raquo;</li>
+          <li><a href="../contents.html" >Contents</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Nigel P. Brown.
+      Last updated on 09 Oct 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

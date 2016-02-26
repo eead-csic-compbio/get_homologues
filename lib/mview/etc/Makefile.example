@@ -1,0 +1,10 @@
+export HOME = /home/brown/HOME/work/VERSION
+
+TREE = 
+DIRS = bin lib
+FILE = 
+EXES = 
+SRCS = 
+HTML = 
+
+include $(HOME)/etc/MAKEFILE.templ
