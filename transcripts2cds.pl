@@ -26,7 +26,7 @@ use transcripts;
 use Bio::Tools::CodonTable;
 use Nuc_translator;
 
-my $VERSION = 1.0;
+my $VERSION = 1.1;
 
 my @FEATURES2CHECK = ('EXE_BLASTX_EST','EXE_FORMATDB_EST','EXE_TRANSDECOD_EST'); #,'EXE_GMAP','EXE_GMAPBUILD');
 
@@ -58,7 +58,7 @@ if(($opts{'h'})||(!$opts{'G'} && scalar(@ARGV)==0))
 
 if(defined($opts{'v'}))
 {
-  print "\n$0 version $VERSION (2014)\n";
+  print "\n$0 version $VERSION (2016)\n";
   print "\nProgram written by Bruno Contreras-Moreira\n";
   print "\nhttp://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)\n";
   print "\nThis software employs binaries from different authors, please cite them accordingly:\n";
@@ -98,7 +98,6 @@ if(defined($opts{'g'}))
   }
   else
   {
-
     # set genetic code table for translations
     Nuc_translator::use_specified_genetic_code($INP_gencode);
     $output_mask  .= "_gencode$INP_gencode";
@@ -186,8 +185,18 @@ foreach $input_FASTA_file (@input_files)
   $root = basename($input_FASTA_file);
   $tmproot = '_'.$root;
 
-  ## 0) check  if input is compressed
-  $compressOK = is_compressed($input_FASTA_file);
+  ## 0) make sure headers of input file are suitable
+  my $short_header_file = $tmproot.'.short';
+  if(!shorten_headers_FASTA_file($input_FASTA_file,$short_header_file))
+  {
+    print "# cannot read $input_FASTA_file, skip it\n";
+    next;
+  }
+  push(@trash,$short_header_file);
+  
+  # from now on use short temp file
+  $input_FASTA_file = $short_header_file;
+  $compressOK = 0;
 
   ## 1) run transdecoder on input sequences
   my $transdecod_outfile_prot = $tmproot.$output_mask2.'.transdecoder.pep.gz';
@@ -300,7 +309,6 @@ foreach $input_FASTA_file (@input_files)
     }
     else
     {
-
       # compress and rename outfiles with mask2
       my $tmpcdsfile = basename($tmp_FASTA_file_trans).'.transdecoder.cds';
       my $tmppepfile = basename($tmp_FASTA_file_trans).'.transdecoder.pep';
@@ -318,8 +326,6 @@ foreach $input_FASTA_file (@input_files)
     print "# parsing re-used transdecoder output ($transdecod_outfile_cds) ...\n";
     $ref_transcodseqs_cds = parse_transcoder_sequences($transdecod_outfile_cds);
     $ref_transcodseqs_prot = parse_transcoder_sequences($transdecod_outfile_prot);
-
-#foreach my $kk (keys(%$ref_transcodseqs_cds)){ print "$kk\n $ref_transcodseqs_cds->{$kk}\n";}exit;
   }
 
   ## 2) now run blastx to compare transcripts to a large protein set
