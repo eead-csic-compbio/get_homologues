@@ -97,3 +97,9 @@
 23022016: fixed compare_clusters.pl so that it sorts correctly intergenic clusters
 23022106: added MiMB chapter to references
 23022016: default -S value for get_homologues-est.pl set to 95%
+24022016: updated make_nr_pangenome_matrix.pl so that it can take also a reference FASTA file
+26022016: created annotate_cluster.pl, which relies on mview and few subs:
+26022016: format_BLASTN_command_aligns, format_BLASTP_command_aligns, check_variants_FASTA_alignment, shorten_headers_FASTA_file
+26022016: updated sub pfam_parse, construct_Pfam_hash, read_FASTA_file_array, read_FASTA_sequence
+26022016: updated transcripts2cds.pl so that it can cope with long FASTA headers
+26022016: manuals updated
