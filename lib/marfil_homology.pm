@@ -2,7 +2,7 @@ package marfil_homology;
 
 # version 2.0
 
-# Code library created by Bruno Contreras-Moreira and Pablo Vinuesa (2006-2015)
+# Code library created by Bruno Contreras-Moreira and Pablo Vinuesa (2006-2016)
 # mainly for get_homologues.pl and get_homologues-est.pl
 
 # Contains code originally part of the following software:
@@ -36,6 +36,7 @@ our @EXPORT = qw(
   format_SPLITBLAST_command format_SPLITHMMPFAM_command format_HMMPFAM_command
   get_makeIsoform_outfilename makeIsoform nr_blast_report flag_small_clusters 
   construct_redundant_hash write_redundant_hash
+  format_BLASTP_command_aligns format_BLASTN_command_aligns
 
   $BLAST_PVALUE_CUTOFF_DEFAULT
   $PERCENT_IDENTITY_CUTOFF_DEFAULT
@@ -330,8 +331,8 @@ sub constructAllFasta
       $id=shift(@lines);
 
       if(!defined($gindex{$taxon})){ $gindex{$taxon}[0] = $id }
-		else{ $gindex{$taxon}[1] = $id }
-		$gindex{$taxon}[2]++;	
+		  else{ $gindex{$taxon}[1] = $id }
+		  $gindex{$taxon}[2]++;	
 
       next if(!$save_seq_length);
       $len=length(join('',@lines));
@@ -357,11 +358,11 @@ sub constructAllFasta
 # Bruno, Jan2011: works with blast and blast+ binaries
 sub executeFORMATDB
 {
-  my ($in,$is_dna) = @_;
+  my ($in,$is_dna,$silent) = @_;
 
   my ($command);
 
-  print("\n# running makeblastdb with $in\n");
+  print "\n# running makeblastdb with $in\n" if(!$silent);
   if(-s $in)
   {
     if($FORMATDB =~ /makeblastdb/) # blast+
@@ -381,7 +382,42 @@ sub executeFORMATDB
     close(EXE);
   }
   else{ die "# executeFORMATDB : cannot find input FASTA file $in\n"; }
-} ## executeFORMATDB
+} 
+
+# prepares a string with the right syntax to call BLASTP
+# Up to 5 arguments:
+# 1. String Variable: fasta file name
+# 2. String Variable: blast out file name
+# 3. String Variable: database name
+# 4. String Variable: pvalue cutoff
+# Bruno, Feb2016
+# Do not mask sequences as we want the alignment
+sub format_BLASTP_command_aligns
+{
+  my ($infile,$outfile,$db,$Evalue) = @_;
+
+  my $command = "$BLASTP -dbsize $BLAST_DB_SIZE " .
+      #"-seg yes -soft_masking true " . 
+      "-query $infile -evalue $Evalue -db $db -out $outfile ";
+
+  return $command;
+}
+
+# Bruno, Feb2016
+# Do not mask sequences as we want the alignment
+sub format_BLASTN_command_aligns
+{
+  my ($infile,$outfile,$db,$Evalue,$task) = @_;
+
+  my $command = "$BLASTN -dbsize $BLAST_DB_SIZE " . 
+      #"-soft_masking true " . #"-outfmt 4 " .
+      "-query $infile -evalue $Evalue -db $db -out $outfile ";
+
+  if($task){ $command .= "-task $task "; }
+  else{ $command .= "-task megablast "; }
+
+  return $command;
+}
 
 # prepares a string with the right syntax to call BLASTP
 # Up to 5 arguments:
@@ -532,9 +568,10 @@ sub write_redundant_hash
 #PF10417.1    1/1     150   193 ..     1    63 []    78.2  3.1e-20
 #//
 # Added by Bruno March2010, works with HMMER2.3&3
+# Updated Feb2016
 sub pfam_parse
 {
-  my ( $parseoutfile , @pfam_files ) = @_;
+  my ( $parseoutfile, @pfam_files ) = @_;
 
   my ($n_of_lines,$id,$family,$from,$to,$Evalue) = (0);
 
@@ -542,19 +579,23 @@ sub pfam_parse
 
   foreach my $pfamfile (@pfam_files)
   {
-    my (%data);
+    my (%data,%descr);
     open(PFAM,$pfamfile) || die "# pfam_parse : cannot read $pfamfile\n"; #print "# $pfamfile\n";
     while(<PFAM>)
     {
       if(/^Query sequence:\s+(\d+)/ || /^Query:\s+(\d+)/){ $id = $1; } # works with HMMER2.3&3
       elsif(/^(PF\S+)\.\d+\s+\S+\s+(\d+)\s+(\d+)\s+\S+\s+\d+\s+\d+\s+\S+\s+\S+\s+(\S+)/) # works with HMMER2.3
       {
-
         # read all PFAM domains reported and capture Evalue and coordinates
         ($family,$from,$to,$Evalue) = ($1,$2,$3,$4);
         $data{$id}{$Evalue} = "$family,$from,$to"; #print "$id $family $from $to $Evalue\n";
       }
-      elsif(/^>> (PF\S+)\.\d+\s+/){ $family = $1; } # works with HMMER3
+      elsif(/^>> (PF\S+)\.\d+\s+(.*?)\n/) # works with HMMER3
+      { 
+        #>> PF10602.5  26S proteasome subunit RPN7
+        $family = $1; 
+        $descr{$family} = $2; 
+      }  
       elsif(/^\s+\d+\s+[!|\?]\s+/)# works with HMMER3
       {
         #>> PF00132.17  Bacterial transferase hexapeptide (three repeats) <== OJO, FUSIONA REPEATS
@@ -577,7 +618,7 @@ sub pfam_parse
     # (in order to cope with cases where two PFAM domains cover roughly the same sequence)
     foreach $id (sort {$a<=>$b} keys(%data))
     {
-      my ($dom_string,%PFAMcover,$midpoint,$domain,$overlapOK) = ('');
+      my ($dom_string,$descr_string,%PFAMcover,$midpoint,$domain,$overlapOK) = ('');
 
       if($data{$id} eq 'nohits')
       {
@@ -607,10 +648,11 @@ sub pfam_parse
         $family = (split(/_/,$domain))[0];
 
         # print ">$id $family $PFAMcover{$domain}{'from'} $PFAMcover{$domain}{'to'}\n";
-        $dom_string .= "$family,";
+        $dom_string   .= "$family,";
+        $descr_string .= "$descr{$family};" || 'NA;';
       }
 
-      print PARSEDPFAM "$id\t$dom_string\n";
+      print PARSEDPFAM "$id\t$dom_string\t$descr_string\n";
     }
   }
 
@@ -1106,14 +1148,14 @@ sub construct_redundant_hash
 }
 
 # fills global %pfam_hash with Pfam assignments parsed from $infile, which usually is $pfam_file
-# Updated Bruno Oct2015
+# Updated Bruno Feb2016
 sub construct_Pfam_hash
 {
   my ($infile,$verbose) = @_;
   open(PARSEDPFAM,$infile) || die "# construct_Pfam_hash : cannot read $infile : $!\n";
   while(<PARSEDPFAM>)
   {
-    if(/^(\S+)\t(\S+?)\n/)
+    if(/^(\S+)\t(\S+?)\t/)
     {
       next if(@gindex2 && !defined($gindex2[$1])); # read only sequences that belong to valid taxa, and save memory
       $pfam_hash{$1} = $2; #print "$1\t$2\n";

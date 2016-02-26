@@ -1,17 +1,19 @@
 package transcripts;
 
-# Code library created by Bruno Contreras-Moreira (2015)
+# Code library created by Bruno Contreras-Moreira (2015-6)
 # mainly for transcripts2proteins.pl
 
 use strict;
 require Exporter;
 use File::Temp;
 use phyTools;
+use File::Basename;
 
 our @ISA = qw( Exporter );
 
 our @EXPORT = qw(
 
+  shorten_headers_FASTA_file
   executeFORMATDB_EST
   format_BLASTX_command
   parse_blastx_cds_sequences
@@ -44,9 +46,41 @@ our $GMAPEXE             = $ENV{"EXE_GMAP"};
 our $GMAPBUILDEXE        = $ENV{"EXE_GMAPBUILD"};
 
 # runtime & cutoff variables
-my  $MAXBLASTXHITS       = 5;
-my  $MAXBLASTXEVALUE     = 1e-5;
-my  $MINCONOVERLAP       = 90; # number of bases to call an overlap while calculating a consensus (30 aminos)
+my $MAXBLASTXHITS        = 5;
+my $MINCONOVERLAP        = 90; # number of bases to call an overlap while calculating a consensus (30 aminos)
+my $MAXACCESSIONLENGTH   = 30;
+
+# gets a possibly compressed FASTA file and returns the name of a new one with short FASTA headers
+# as Transdecoder does not like them
+sub shorten_headers_FASTA_file
+{
+  my ($infile,$outfile) = @_;
+
+  my $fasta_ref = read_FASTA_file_array($infile);
+  
+  open(SHORT,'>',$outfile) || 
+    die "# short_headers_FASTA_file: cannot create $outfile\n";
+  
+  my $n_of_seqs = 0;
+  foreach my $seq ( 0 .. $#{$fasta_ref} )
+  {
+    my ($acc,$rest) = split(/\s+/,$fasta_ref->[$seq][NAME],2);
+    if(length($acc) > $MAXACCESSIONLENGTH)
+    {
+      ($acc,$rest) = split(/[\|\[]/,$fasta_ref->[$seq][NAME],2);
+    }
+    
+    print SHORT ">$acc $rest\n$fasta_ref->[$seq][SEQ]\n";
+    $n_of_seqs++;
+  }
+  
+  close(SHORT);
+  
+  unlink($outfile) if(!$n_of_seqs);
+  
+  return $n_of_seqs;
+}
+
 
 sub is_compressed
 {
@@ -121,8 +155,8 @@ sub format_BLASTX_command
     "-query $infile -evalue $Evalue -db $db -out $outfile " .
     "-max_target_seqs $MAXBLASTXHITS ";
 
-  if($gencode > 1){ $command .= " -query_gencode $gencode " }
-  if($plustStrandOnly){ $command .= ' -strand plus ' }
+  if(defined($gencode) && $gencode > 1){ $command .= " -query_gencode $gencode " }
+  if(defined($plustStrandOnly)){ $command .= ' -strand plus ' }
 
   return $command;
 }
@@ -157,7 +191,7 @@ sub parse_blastx_cds_sequences
   my ($FASTAdnafile,$blastxfile) = @_;
 
   my ($qseqid,$sseqid,$qstart,$qend,$qlen,$qseq,$frame);
-  my ($magic,$offset5,$offset3,$pos,$nt,$revcomp,$lastframe);
+  my ($magic,$offset5,$offset3,$pos,$nt,$revcomp,$lastframe,$lastrevcomp);
   my (%blastxseqs,%blastxhits,%seqs,@alnseq);
 
   my $fasta_ref = read_FASTA_file_array($FASTAdnafile);
@@ -167,7 +201,6 @@ sub parse_blastx_cds_sequences
   {
     $seqname = (split(/\s+/,$fasta_ref->[$seq][NAME]))[0];
     $dnaseqs{$seqname} = uc($fasta_ref->[$seq][SEQ]);
-
     #print "$seqname $fasta_ref->[$seq][SEQ]\n";
   }
 
@@ -196,11 +229,10 @@ sub parse_blastx_cds_sequences
 
   while(<BLASTX>)
   {
-
-#($qseqid,$sseqid,$pident,$length,$mismatch,$gaps,$qstart,$qend,$sstart,$send,$evalue,$score,$qlen) = split('\t',$_);
-#comp37170_c0_seq1   gi|514813219|ref|XP_004981393.1|    41.49   188 76  6   941 384 1   156 3e-31   ' 116'    960
-#s/ //g;# bitscore is space-padded at least on ncbi-blast-2.2.27+
-#if(/^(\S+)\t(\S+)\t\S+\t\S+\t\S+\t\S+\t(\S+)\t(\S+)\t\S+\t\S+\t\S+\t\S+\t(\S+)/)
+    #($qseqid,$sseqid,$pident,$length,$mismatch,$gaps,$qstart,$qend,$sstart,$send,$evalue,$score,$qlen) = split('\t',$_);
+    #comp37170_c0_seq1   gi|514813219|ref|XP_004981393.1|    41.49   188 76  6   941 384 1   156 3e-31   ' 116'    960
+    #s/ //g;# bitscore is space-padded at least on ncbi-blast-2.2.27+
+    #if(/^(\S+)\t(\S+)\t\S+\t\S+\t\S+\t\S+\t(\S+)\t(\S+)\t\S+\t\S+\t\S+\t\S+\t(\S+)/)
     if(/^(\S+)\t(\S+)\t\S+\t\S+\t\S+\t\S+\t(\S+)\t(\S+)\t\S+\t\S+\t\S+\t\s*\S+\t(\S+)/)
     {
       ($qseqid,$sseqid,$qstart,$qend,$qlen) = ($1,$2,$3,$4,$5);
@@ -220,8 +252,7 @@ sub parse_blastx_cds_sequences
       # 1st hit for this query, initialize array with lower case nucleotides
       if(!$blastxseqs{$qseqid})
       {
-
-#foreach $pos (0 .. $qlen){ $blastxseqs{$qseqid}[$pos] = 'X' }; # initialize array
+        #foreach $pos (0 .. $qlen){ $blastxseqs{$qseqid}[$pos] = 'X' }; # initialize array
         $qseq = $dnaseqs{$qseqid};
         if($revcomp){ $qseq =~tr/ACGTacgtyrkmYRKM/TGCAtgcarymkRYMK/; $qseq = reverse($qseq) }
         @alnseq = split(//,lc($qseq));
@@ -229,9 +260,15 @@ sub parse_blastx_cds_sequences
         foreach $nt (@alnseq){ $blastxseqs{$qseqid}[$pos++] = $nt };
         $blastxhits{$qseqid} = $sseqid;
         $lastframe = $frame;
+        $lastrevcomp = $revcomp;
       }
       else
       {
+        if($revcomp != $lastrevcomp)
+        {
+          warn "# parse_blastx_cds_sequences: likely chimera: $qseqid\n";
+        }
+      
         next if($frame != $lastframe);
       } #print;
 
@@ -356,10 +393,9 @@ sub local_alignments
     {
       if ($char1[$n1] eq $char2[$n2] || $char1[$n1] eq "*" || $char2[$n2] eq "N")
       {
-
-# We have found a matching character. Is this the first matching character, or a
-# continuation of previous matching characters? If the former, then the length of
-# the previous matching portion is undefined; set to zero.
+        # We have found a matching character. Is this the first matching character, or a
+        # continuation of previous matching characters? If the former, then the length of
+        # the previous matching portion is undefined; set to zero.
         $lc_suffix[$n1-1][$n2-1] ||= 0;
 
         $lc_suffix[$n1][$n2] = $lc_suffix[$n1-1][$n2-1] + 1;
