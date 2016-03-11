@@ -35,8 +35,8 @@ our @EXPORT = qw(
   get_makeOrtholog_outfilename get_makeInparalog_outfilename get_makeHomolog_outfilename
   format_SPLITBLAST_command format_SPLITHMMPFAM_command format_HMMPFAM_command
   get_makeIsoform_outfilename makeIsoform nr_blast_report flag_small_clusters 
-  construct_redundant_hash write_redundant_hash
-  format_BLASTP_command_aligns format_BLASTN_command_aligns
+  construct_redundant_hash write_redundant_hash parse_Pfam_freqs
+  format_BLASTP_command_aligns format_BLASTN_command_aligns 
 
   $BLAST_PVALUE_CUTOFF_DEFAULT
   $PERCENT_IDENTITY_CUTOFF_DEFAULT
@@ -54,6 +54,7 @@ our @EXPORT = qw(
   $BLASTN
   $SPLITBLAST
   $HMMPFAM
+  $SORTBIN
 
   $MAX_WEIGHT_DEFAULT
   $MCL_INFLATION_DEFAULT
@@ -568,7 +569,7 @@ sub write_redundant_hash
 #PF10417.1    1/1     150   193 ..     1    63 []    78.2  3.1e-20
 #//
 # Added by Bruno March2010, works with HMMER2.3&3
-# Updated Feb2016
+# Updated Mar2016
 sub pfam_parse
 {
   my ( $parseoutfile, @pfam_files ) = @_;
@@ -622,7 +623,7 @@ sub pfam_parse
 
       if($data{$id} eq 'nohits')
       {
-        print PARSEDPFAM "$id\t\n";
+        print PARSEDPFAM "$id\t\t\n";
         next;
       }
 
@@ -1165,6 +1166,110 @@ sub construct_Pfam_hash
 
   print "# construct_Pfam_hash: records = ".scalar(keys(%pfam_hash))."\n" if($verbose);
 }
+
+# Reads $infile, which usually is $pfam_file, and counts the occurrence of Pfam domains in sequences
+# indicated in arrays $ref_ids1 and $ref_ids2. Usually 1 will be a subset of 2, but it is not required.
+# Only the fist occurrence of a domain in a sequence is counted.
+# If optional $ref_clusters is passed, domain occurrences are counted once per cluster
+# Bruno Mar2016
+sub parse_Pfam_freqs
+{
+  my ($infile,$ref_ids1,$ref_ids2,$ref_clusters) = @_;
+  
+  my ($pfam,$domains,$id,$descriptions,$cluster);
+  my (%counts1,%counts2,%full_text,%cluster_pfam);
+  my ($idx1,$idx2) = (0,0);
+  
+  #printf("# parse_Pfam_freqs: last1 = %d last2 = %d sequence ids\n\n",
+  #  $ref_ids1->[$#{$ref_ids1}],$ref_ids2->[$#{$ref_ids2}]);
+  
+  open(PARSEDPFAM,$infile) || die "# parse_Pfam_freqs : cannot read $infile : $!\n";
+  while(<PARSEDPFAM>)
+  {
+    #31   
+    #32	PF03602,	Conserved hypothetical protein 95;
+    #33	PF02881,PF00448,	SRP54-type protein, helical bundle domain;SRP54-type protein, GTPase domain;
+    chomp;
+    ($id,$domains,$descriptions) = split(/\t/,$_); 
+    
+    last if($id > $ref_ids1->[$#{$ref_ids1}] && $id > $ref_ids2->[$#{$ref_ids2}]);
+    
+    # update lagging indexes
+    while($ref_ids1->[$idx1] < $id && $idx1 < $#{$ref_ids1}){ $idx1++ }
+    while($ref_ids2->[$idx2] < $id && $idx2 < $#{$ref_ids2}){ $idx2++ }
+    #print "id:$id $ref_ids1->[$idx1] $ref_ids2->[$idx2] $descriptions\n";
+
+    # skip ids without Pfam annotations     
+    next if($domains eq '');
+    
+    # check cluster to which this sequence belongs
+    if($ref_clusters)
+    { 
+      $cluster = $ref_clusters->{$id}; #print "$id -> $cluster\n";
+    }
+    
+    # split domain and description strings
+    my %seen;
+    my @doms   = split(/,/,$domains);
+    my @descrs = split(/;/,$descriptions);
+    
+    # make non-redundant hash of Pfam domains and save Pfam text descriptions
+    foreach $pfam (0 .. $#doms)
+    {
+      next if($seen{$doms[$pfam]});
+      
+      # if required make sure that domains are counted once per cluster
+      next if($ref_clusters && defined($cluster_pfam{$ref_clusters->{$id}}{$doms[$pfam]}));
+      
+      $seen{$doms[$pfam]}++;
+      
+      if(!$full_text{$doms[$pfam]})
+      {
+        $full_text{$doms[$pfam]} = $descrs[$pfam];
+        #print ">$doms[$pfam]<>$descrs[$pfam]<\n";
+      }
+      
+      if($ref_clusters)
+      { 
+        # add this Pfam domain to cluster annotation
+        $cluster_pfam{$ref_clusters->{$id}}{$doms[$pfam]}=1; 
+      }
+    }
+    
+    # add individual domains
+    if($id == $ref_ids1->[$idx1])
+    {
+      foreach $pfam (keys(%seen)){ $counts1{$pfam}++ }
+      if($idx1 < $#{$ref_ids1}){ $idx1++ }
+    }
+    
+    # add individual domains
+    if($id == $ref_ids2->[$idx2])
+    { 
+      foreach $pfam (keys(%seen)){ $counts2{$pfam}++ }  
+      if($idx2 < $#{$ref_ids2}){ $idx2++ }
+    } #printf("# %d %d\n",scalar(keys(%counts1)),scalar(keys(%counts2)));
+  }
+  close(PARSEDPFAM);
+
+  printf("# parse_Pfam_freqs: set1 = %d Pfams set2 = %d Pfams\n\n",
+    scalar(keys(%counts1)),scalar(keys(%counts2)));
+
+  # fill blanks %counts1 to obtain equal tables
+  foreach $pfam (keys(%counts2))
+  {
+    next if(defined($counts1{$pfam}));
+    $counts1{$pfam}=0;
+  }
+  
+  # detect errors foreach 
+  #$pfam (keys(%counts1)){ print "$pfam\n"  if(!$counts2{$pfam}) }
+  
+  return (\%counts1,\%counts2,\%full_text);
+}
+
+
+
 
 # finds file coordinates for taxa as blast queries and saves them in global %taxa_bpo_index
 # Updated Bruno Oct2015
