@@ -103,3 +103,6 @@
 26022016: updated sub pfam_parse, construct_Pfam_hash, read_FASTA_file_array, read_FASTA_sequence
 26022016: updated transcripts2cds.pl so that it can cope with long FASTA headers
 26022016: manuals updated
+11032016: created pfam_enrich.pl to calculate Pfam-domain enrichment of get_homologues[-est] clusters
+11032016: created sub parse_Pfam_freqs in marfil_homology.pm
+11032016: manuals updated
