@@ -106,3 +106,4 @@
 11032016: created pfam_enrich.pl to calculate Pfam-domain enrichment of get_homologues[-est] clusters
 11032016: created sub parse_Pfam_freqs in marfil_homology.pm
 11032016: manuals updated
+23032016: parse_pangenome_matrix.pl now checks that taxon names in -A/-B lists match those in pangenome_matrix.tab

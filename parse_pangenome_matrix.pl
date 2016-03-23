@@ -131,7 +131,7 @@ $CUTOFF /= 100; # use 0-1 float from now on
 my (%cluster_names,%pangemat,$col,$cluster_dir);
 my (%included_input_filesA,%included_input_filesB);
 my ($n_of_clusters,$n_of_includedA,$n_of_includedB) = (0,0,0);
-my ($outfile_root,$outpanfileA,$outexpanfileA);
+my ($outfile_root,$outpanfileA,$outexpanfileA,$taxon);
 my ($shell_input,$shell_output_png,$shell_output_pdf,$shell_circle_png,$shell_circle_pdf,$shell_estimates);
 my ($cloudlistfile,$shelllistfile,$softcorelistfile,$corelistfile);
 my (@pansetA,@pansetB,@expA,@expB,@shell);
@@ -208,11 +208,16 @@ if($needB)
   while(<INCL>)
   {
     next if(/^#/ || /^$/);
-    $included_input_filesB{(split)[0]} = 1;
+    $taxon = (split)[0];
+    $included_input_filesB{$taxon} = 1;
+    if(!$pangemat{$taxon})
+    {
+      die "# cannot match $taxon in $INP_matrix (included in $INP_includeB)\n";
+    }
   }
   close(INCL);
   $n_of_includedB = scalar(keys(%included_input_filesB));
-  print "# taxa included in group B = $n_of_includedB\n\n";
+  print "# taxa included in group B = $n_of_includedB\n\n";  
 }
 elsif($needAB)
 {
@@ -221,7 +226,12 @@ elsif($needAB)
   while(<INCL>)
   {
     next if(/^#/ || /^$/);
-    $included_input_filesA{(split)[0]} = 1;
+    $taxon = (split)[0];
+    $included_input_filesA{$taxon} = 1;
+    if(!$pangemat{$taxon})
+    {
+      die "# cannot match $taxon in $INP_matrix (included in $INP_includeA)\n";
+    }
   }
   close(INCL);
   $n_of_includedA = scalar(keys(%included_input_filesA));
@@ -232,12 +242,19 @@ elsif($needAB)
   while(<INCL>)
   {
     next if(/^#/ || /^$/);
-    $included_input_filesB{(split)[0]} = 1;
+    $taxon = (split)[0];
+    $included_input_filesB{$taxon} = 1;
+    if(!$pangemat{$taxon})
+    {
+      die "# cannot match $taxon in $INP_matrix (included in $INP_includeB)\n";
+    } 
   }
   close(INCL);
   $n_of_includedB = scalar(keys(%included_input_filesB));
   print "# taxa included in group B = $n_of_includedB\n\n";
 }
+
+
 
 ## 3) perform requested operations
 if($INP_absentB)
@@ -246,7 +263,7 @@ if($INP_absentB)
   foreach $col (1 .. $n_of_clusters)
   {
     my ($presentA,$absentA,$absentB,$presentB) = (0,0,0,0);
-    foreach my $taxon (keys(%pangemat))
+    foreach $taxon (keys(%pangemat))
     {
       if($pangemat{$taxon}[$col])
       {
@@ -287,7 +304,7 @@ elsif($INP_absent)
   foreach $col (1 .. $n_of_clusters)
   {
     my ($presentA,$absentA,$absentB,$presentB) = (0,0,0,0);
-    foreach my $taxon (keys(%pangemat))
+    foreach $taxon (keys(%pangemat))
     {
       if($pangemat{$taxon}[$col])
       {
@@ -340,7 +357,7 @@ elsif($INP_expansions)
   {
     my ($presentA,$presentB,@sizeA,@sizeB) = (0,0);
     my ($minA,$maxA,$minB,$maxB);
-    foreach my $taxon (keys(%pangemat))
+    foreach $taxon (keys(%pangemat))
     {
       if($pangemat{$taxon}[$col])
       {
