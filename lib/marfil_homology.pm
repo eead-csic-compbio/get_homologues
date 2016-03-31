@@ -2710,6 +2710,7 @@ sub find_COGs
   while(<LSE>)
   {
     #174,175,...
+    next if not(/,/);
     push(@LSEclusters,(split)[0]);
   }
   close(LSE);
