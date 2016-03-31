@@ -23,12 +23,18 @@ use marfil_homology;
 use Bio::Graphics;
 use Bio::SeqFeature::Generic;
 
-my $PLOTWIDTH = 1024;
-my $MAKESVGGRAPH = 0; # default PNG, SVG is vectorial but requires module GD::SVG
-my $PLOT_FULL_LABELS = 0; # if 0 shows cluster numbers, otherwise adds gene names to numbers
-my $DEFAULTGBKFEATURES  = 'CDS,tRNA,rRNA'; # defines GenBank features to be parsed (-p)
-my $VERBOSE = 0;  # set to 1 to see R messages
 my $CUTOFF = 100; # percentage of genomes to be used as cutoff for presence/absence
+
+# globals used while producing R plots
+my $VERBOSE   = 0;    # set to 1 to see R messages
+my $YLIMRATIO = 1.2;  # controls the length of (rounded) Y-axis marks with respect to max value in barplots
+
+# globals used only with -p flag
+my $DEFAULTGBKFEATURES = 'CDS,tRNA,rRNA'; # defines GenBank features to be parsed 
+my $MAKESVGGRAPH       = 0; # default PNG, SVG is vectorial but requires module GD::SVG
+my $PLOT_FULL_LABELS   = 0; # if 0 shows cluster numbers, otherwise adds gene names to numbers
+my $PLOTWIDTH          = 1024; 
+
 my @FEATURES2CHECK = ('EXE_R');
 check_installed_features(@FEATURES2CHECK);
 
@@ -591,7 +597,6 @@ if($INP_plotshell)
   # create graphs and fit mix models if possible
   if(feature_is_installed('R'))
   {
-
     # calculate circle radii
     my (@radius,@color,$max);
     my %colors = ('cloud'=>'red','shell'=>'orange','soft_core'=>'yellow','core'=>'white');
@@ -603,24 +608,28 @@ if($INP_plotshell)
     } #foreach my $ii (0 .. 3){ printf("%f %f\n",$radius[$ii],3.14159*($radius[$ii]**2)) }
 
     if(!$VERBOSE){ $Rparams = '-q 2>&1 > /dev/null' }
+    
+    print "\n# globals controlling R plots: \$YLIMRATIO=$YLIMRATIO\n";
 
     open(RSHELL,"|R --no-save $Rparams ") || die "# cannot call R: $!\n";
     print RSHELL<<EOR;
 		shell = read.table("$shell_input",header=F);
 		colors = c( rep('red',each=$cloudpos), rep('orange',each=$softcorepos-$cloudpos-1), 
-			rep('yellow',each=$n_of_taxa-$softcorepos), 'white');
+		rep('yellow',each=$n_of_taxa-$softcorepos), 'white');
 	
-	        pdf(file="$shell_output_pdf");
-	        bars = barplot(shell\$V1,xlab='number of genomes in clusters',ylab='number of gene clusters',main='',names.arg=1:$n_of_taxa,col=colors);
+    pdf(file="$shell_output_pdf");
+	  bars = barplot(shell\$V1,xlab='number of genomes in clusters',ylab='number of gene clusters',
+      main='',names.arg=1:$n_of_taxa,col=colors,ylim=c(0,$YLIMRATIO*max(shell\$V1)));
+      
 		mtext(sprintf("total clusters = %d",$n_of_clusters),side=3,cex=0.8,line=0.5);
 		#text(x=bars[$n_of_taxa],y=$stats{$n_of_taxa}/2,labels=sprintf("%d",$stats{$n_of_taxa}),cex=0.8); # core size
 		legend('top', c('cloud','shell','soft core','core'), cex=0.6, fill=c('red','orange','yellow','white'));
 	
-	        png(file="$shell_output_png");
+    png(file="$shell_output_png");
 		bars = barplot(shell\$V1,xlab='number of genomes in clusters',ylab='number of gene clusters',
-			main='',names.arg=1:$n_of_taxa,col=colors);
-	        mtext(sprintf("total clusters = %d",$n_of_clusters),side=3,cex=0.8,line=0.5);
-	        #text(x=bars[$n_of_taxa],y=$stats{$n_of_taxa}/2,labels=sprintf("%d",$stats{$n_of_taxa}),cex=0.8);        
+		  main='',names.arg=1:$n_of_taxa,col=colors,ylim=c(0,$YLIMRATIO*max(shell\$V1))); 
+    mtext(sprintf("total clusters = %d",$n_of_clusters),side=3,cex=0.8,line=0.5);
+    #text(x=bars[$n_of_taxa],y=$stats{$n_of_taxa}/2,labels=sprintf("%d",$stats{$n_of_taxa}),cex=0.8);        
 		legend('top', c('cloud','shell','soft core','core'), cex=0.6, fill=c('red','orange','yellow','white'));
 
 		# now make circle plots
@@ -649,18 +658,18 @@ if($INP_plotshell)
 
 		png(file="$shell_circle_png");
 		par(mar=c(0,0,0,0));
-                plot(-3,-3,ylim=c(0,3), xlim=c(0,3),axes=F);
-                circle(x=1.5,y=1.5,r=$radius[0],col="$color[0]", border=NA);
-                circle(x=1.5,y=1.5,r=$radius[1],col="$color[1]", border=NA);
-                circle(x=1.5,y=1.5,r=$radius[2],col="$color[2]", border=NA);
-                circle(x=1.5,y=1.5,r=$radius[3],col="$color[3]", border=NA);
+    plot(-3,-3,ylim=c(0,3), xlim=c(0,3),axes=F);
+    circle(x=1.5,y=1.5,r=$radius[0],col="$color[0]", border=NA);
+    circle(x=1.5,y=1.5,r=$radius[1],col="$color[1]", border=NA);
+    circle(x=1.5,y=1.5,r=$radius[2],col="$color[2]", border=NA);
+    circle(x=1.5,y=1.5,r=$radius[3],col="$color[3]", border=NA);
 		text(1.5,0.25,sprintf("total gene clusters = %d   taxa = %d",$n_of_clusters,$n_of_taxa),cex=0.8);
-                legend('topright', c(
-                        "cloud  ($total{'cloud'} , genomes<=$cloudpos)",
-                        "shell  ($total{'shell'})",
-                        "soft core  ($total{'soft_core'} , genomes>=$softcorepos)",
-                        "core  ($total{'core'} , genomes=$n_of_taxa)"),
-                        cex=1.0, fill=c('red','orange','yellow','white'));
+    legend('topright', c(
+      "cloud  ($total{'cloud'} , genomes<=$cloudpos)",
+      "shell  ($total{'shell'})",
+      "soft core  ($total{'soft_core'} , genomes>=$softcorepos)",
+      "core  ($total{'core'} , genomes=$n_of_taxa)"),
+      cex=1.0, fill=c('red','orange','yellow','white'));
 	
 		negTruncLogLike <- function( p, y, core.p )
 		{
@@ -668,21 +677,21 @@ if($INP_plotshell)
 			#   by binomix.
 			#   Originally by Lars Snipen
 			#   Biostatistics, Norwegian University of Life Sciences.
-		    	np <- length( p )/2
-		    	p.det <- c( core.p, p[(np+1):length(p)] )
-		    	p.mix <- c( 1-sum( p[1:np] ), p[1:np] )
+      np <- length( p )/2
+		  p.det <- c( core.p, p[(np+1):length(p)] )
+		  p.mix <- c( 1-sum( p[1:np] ), p[1:np] )
 			G <- length( y )
-		   	K <- length( p.mix )
-		    	n <- sum( y )
+		  K <- length( p.mix )
+		  n <- sum( y )
     
-	    		theta_0 <- choose( G, 0 ) * sum( p.mix * (1-p.det)^G )
+	    theta_0 <- choose( G, 0 ) * sum( p.mix * (1-p.det)^G )
 			L <- -n* log( 1 - theta_0 )
 			for( g in 1:G )
 			{
-        			theta_g <- choose( G, g ) * sum( p.mix * p.det^g * (1-p.det)^(G-g) )
-        			L <- L + y[g] * log( theta_g )
-    			}
-    			return( -L )
+        theta_g <- choose( G, g ) * sum( p.mix * p.det^g * (1-p.det)^(G-g) )
+        L <- L + y[g] * log( theta_g )
+    	}
+    	return( -L )
 		}
 
 		binomix <- function( y, ncomp=(2:5), core.detect.prob=1.0 )
@@ -717,29 +726,29 @@ if($INP_plotshell)
 		    	ctr <- list( maxit=300, reltol=1e-6 )
 			for( i in 1:length( ncomp ) )
 			{
-		        	nc <- ncomp[i]
-			        np <- nc - 1
-			        pmix0 <- rep( 1, np )/nc            # flat mixture proportions
-			        pdet0 <- (1:np)/(np+1)              # "all" possible detection probabilities
-			        p.initial <- c(pmix0,pdet0)
-			        A <- rbind( c(rep(1,np),rep(0,np)), c(rep(-1,np),rep(0,np)), diag(np+np), -1*diag(np+np) )
-			        b <- c(0,-1,rep(0,np+np),rep(-1,np+np))
+        nc <- ncomp[i]
+			  np <- nc - 1
+			  pmix0 <- rep( 1, np )/nc            # flat mixture proportions
+			  pdet0 <- (1:np)/(np+1)              # "all" possible detection probabilities
+        p.initial <- c(pmix0,pdet0)
+			  A <- rbind( c(rep(1,np),rep(0,np)), c(rep(-1,np),rep(0,np)), diag(np+np), -1*diag(np+np) )
+			  b <- c(0,-1,rep(0,np+np),rep(-1,np+np))
 		        
-			        est <- constrOptim( theta=p.initial, f=negTruncLogLike, grad=NULL, 
-					method="Nelder-Mead", control=ctr, ui=A, ci=b, y=y, core.p=core.detect.prob )
-			        res.tab[i,4] <- -1*est\$value                        # the log-likelihood
-			        res.tab[i,3] <- -2*res.tab[i,4] + log(n)*(np+nc)    # the BIC-criterion
-			        p.mix <- c( 1 - sum( est\$par[1:np] ), est\$par[1:np] )
-			        p.det <- c( core.detect.prob, est\$par[(np+1):length( est\$par )] )
+			  est <- constrOptim( theta=p.initial, f=negTruncLogLike, grad=NULL, 
+				method="Nelder-Mead", control=ctr, ui=A, ci=b, y=y, core.p=core.detect.prob )
+			  res.tab[i,4] <- -1*est\$value                        # the log-likelihood
+			  res.tab[i,3] <- -2*res.tab[i,4] + log(n)*(np+nc)    # the BIC-criterion
+			  p.mix <- c( 1 - sum( est\$par[1:np] ), est\$par[1:np] )
+			  p.det <- c( core.detect.prob, est\$par[(np+1):length( est\$par )] )
 			        
-			        theta_0 <- choose( G, 0 ) * sum( p.mix * (1-p.det)^G )
-			        y_0 <- n * theta_0/(1-theta_0)
-			        res.tab[i,2] <- n + round( y_0 )
-			        ixx <- which( p.det >= core.detect.prob )
-			        res.tab[i,1] <- round( res.tab[i,2] * sum( p.mix[ixx] ) )
+			  theta_0 <- choose( G, 0 ) * sum( p.mix * (1-p.det)^G )
+			  y_0 <- n * theta_0/(1-theta_0)
+			  res.tab[i,2] <- n + round( y_0 )
+			  ixx <- which( p.det >= core.detect.prob )
+			  res.tab[i,1] <- round( res.tab[i,2] * sum( p.mix[ixx] ) )
 			        
-			        mix.list[[i]] <- list( Mixing.prop=p.mix, Detect.prob=p.det )
-		    	}
+			  mix.list[[i]] <- list( Mixing.prop=p.mix, Detect.prob=p.det )
+		  }
 			
 			res.tab[(length(ncomp)+1),2] <- n
 			res.tab[(length(ncomp)+1),1] <- y[length(y)]
