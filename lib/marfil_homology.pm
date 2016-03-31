@@ -21,6 +21,7 @@ use Storable qw(retrieve nstore);
 use File::Temp qw(tempfile);
 use Symbol qw(gensym);
 use sort 'stable';
+use List::Util 'first';
 
 our @ISA = qw( Exporter );
 
@@ -2636,12 +2637,12 @@ sub same_length
 } ## same_length
 
 # requires previous call to blast_parse_COG, which will put necessary data in $TMP_DIR
-# Updated Feb2015
+# Updated Mar2016
 sub find_COGs
 {
   my ($coverage_cutoff,$evalue_cutoff,$multicluster,$saveRAM,$pwd,$force_parsing,@taxa_used) = @_;
-  my ($rerun,$clusterid,$id,$genome,$i,$j,%COGs,%orths,%orth_taxa) = (0);
-  my ($c,$n_of_members,@LSEclusters,%LSEmembers,%LSEgenome,%singletons,%valid_taxa);
+  my ($rerun,$clusterid,$id,$genome,$i,$j,$c,$lsematch,$n_of_members,$n_of_clusters) = (0);
+  my (%COGs,%orths,%orth_taxa,@LSEclusters,%LSEmembers,%LSEgenome,%singletons,%valid_taxa);
 
   $coverage_cutoff = sprintf("%1.2f",$coverage_cutoff/100); # re-scale
 
@@ -2676,25 +2677,26 @@ sub find_COGs
 
     # produces COGtriangles.log,cog-edges.txt,all-edges.txt,all.cog.clusters.log
     print("# making COGs\n");
+    
     #print ("$COGTRIANGLESEXE -i=$TMP_DIR -q=$p2ofilename -l=$lseoutfilename -o=$coglogfilename " .
     #        "-n='cluster' -t=$coverage_cutoff -e=$evalue_cutoff\n");
+    
+    # sleep is to compensate latency/buffering; 
+    # NOTE: do not use &> or perl wont wait for system child proc
     system("$COGTRIANGLESEXE -i=$TMP_DIR -q=$p2ofilename -l=$lseoutfilename -o=$coglogfilename " .
-        "-n='cluster' -t=$coverage_cutoff -e=$evalue_cutoff 1>/dev/null 2>/dev/null"); sleep(10); # latency  (sleep); NOTE: do not use &> or perl wont wait for system child proc
-
+        "-n='cluster' -t=$coverage_cutoff -e=$evalue_cutoff 1>/dev/null 2>/dev/null"); sleep(10); 
+        
 # commented as it takes too much RAM
 #if($multicluster){
 #	system("$COGTRIANGLESEXE -r -n -i=$TMP_DIR -q=$p2ofilename -l=$lseoutfilename -o=$coglogfilename " .
-#       		"-n='cluster' -t=$coverage_cutoff -e=$evalue_cutoff &> /dev/null");
-#}
+#       		"-n='cluster' -t=$coverage_cutoff -e=$evalue_cutoff &> /dev/null") }
 #else{
 #	system("$COGTRIANGLESEXE -r -s -i=$TMP_DIR -q=$p2ofilename -l=$lseoutfilename -o=$coglogfilename " .
-#                "-n='cluster' -t=$coverage_cutoff -e=$evalue_cutoff &> /dev/null");
-#}
+#                "-n='cluster' -t=$coverage_cutoff -e=$evalue_cutoff &> /dev/null") }
 
     # it puts in current directory (pwd) two files: all-edges.txt , cog-edges.txt
     if(-e $pwd.'/cog-edges.txt' && -s $pwd.'/all-edges.txt' && -s $coglogfilename && $? == 0)
     {
-
       # cog-edges.txt might be actually empty if no COGs are found
       system("mv -f $pwd/all-edges.txt $pwd/cog-edges.txt $TMP_DIR");
     }
@@ -2717,7 +2719,6 @@ sub find_COGs
   open(COGS,$coglogfilename) || die "# $0 : cannot read $coglogfilename\n";
   while(<COGS>)
   {
-
     #2,A.faa,2,510,1,510,cluster00001,
     #1,A.faa,1,250,1,250,,
     my @data = split(/,/,$_);
@@ -2730,13 +2731,12 @@ sub find_COGs
       $clusterid = ++$n_of_clusters; #print "$clusterid\n";
       $singletons{$id} = $clusterid;
 
-      my @lsematch = grep(/^$id,/||/,$id,/||/,$id$/,@LSEclusters);
-      foreach $c (@lsematch)
+      $lsematch = first { /(?:^|,)$id(?:,|$)/ } @LSEclusters;
+      if(defined($lsematch))
       {
-
         # save observed LSEcluster members
-        push(@{$LSEmembers{$c}},$id);
-        $LSEgenome{$c} = $genome;
+        push(@{$LSEmembers{$lsematch}},$id); #print "$lsematch\n";
+        $LSEgenome{$lsematch} = $genome;
       }
     }
     else
@@ -2762,7 +2762,6 @@ sub find_COGs
     foreach $id (@{$LSEmembers{$c}})
     {
       delete($COGs{$singletons{$id}});
-
       #print "deleting singleton $id\n";
     }
 

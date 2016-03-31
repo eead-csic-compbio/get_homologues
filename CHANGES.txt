@@ -87,7 +87,7 @@
 19012016: fixed Pfam db check in _split_hmmscan.pl (thanks Jon Badalamenti)
 20012016: fixed src/Makefile error in mcl
 20012016: manuals updated
-25012016: fixed bug in _cluster_makeHomolog.pl,_cluster_makeInparalog.pl,_cluster_makeOrtholog.pl reported by Maliha Aziz, which did not affect results, but produce them slower
+25012016: fixed bug in _cluster_make[Homolog|Inparalog|Ortholog].pl reported by Maliha Aziz, which did not affect results, but produced them slower
 01022016: updated download_genomes_ncbi.pl and sample_genome_list.txt to fit current NCBI repositories, and manual
 01022016: removed estimate_RAM from get_homologues.pl, as RAM consumption has been reduced
 03022016: fixed bug in get_homologues.pl which meant pan genome was overestimated with -c; EST not affected, thanks Joaquim Martins Jr!
@@ -110,3 +110,5 @@
 31032016: parse_pangenome_matrix.pl now prints -P & -S values to pangenes_list.txt
 31032016: parse_pangenome_matrix.pl barplots produced with -s have longer Y-axes, which can now be controlled with global $YLIMRATIO
 31032016: get_homologues manual updated, including figures 12 & 13
+31032016: marfil_homology::find_COGs made faster after trimming a couple of regexes and replacing grep with first, thanks Andre Luiz de Oliveira!
+31032016: updated test_Streptococcus/test_Streptococcus_download_list.txt
