@@ -107,3 +107,4 @@
 11032016: created sub parse_Pfam_freqs in marfil_homology.pm
 11032016: manuals updated
 23032016: parse_pangenome_matrix.pl now checks that taxon names in -A/-B lists match those in pangenome_matrix, thanks Maliha Aziz
+31032016: parse_pangenome_matrix.pl now prints -P & -S values to pangenes_list.txt

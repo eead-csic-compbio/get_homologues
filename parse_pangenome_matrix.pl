@@ -80,6 +80,7 @@ elsif(defined($opts{'g'}))
   if(defined($opts{'P'}) && $opts{'P'} > 0 && $opts{'P'} <= 100)
   {
     $CUTOFF = $opts{'P'};
+    $INP_cutoff = $CUTOFF;
   }
 }
 elsif(defined($opts{'e'}))
@@ -117,7 +118,7 @@ if(($INP_absentB ||$INP_absent) && $opts{'S'})
 
 printf("\n# %s -m %s -A %s -B %s -a %d -g %d -e %d -p %s -s %d -l %d -P %d -S %d\n\n",
   $0,$INP_matrix,$INP_includeA,$INP_includeB,$INP_absentB,$INP_absent,
-  $INP_expansions,$INP_refgenome,$INP_plotshell,$INP_list_taxa,$CUTOFF,$INP_skip_singletons);
+  $INP_expansions,$INP_refgenome,$INP_plotshell,$INP_list_taxa,$INP_cutoff,$INP_skip_singletons);
 
 if(!$needB && !$needAB && !$INP_plotshell && !$INP_list_taxa)
 {
@@ -287,8 +288,9 @@ if($INP_absentB)
 
   print "# file with genes absent in B (".scalar(@pansetA)."): $outpanfileA\n";
   open(OUTLIST,">$outpanfileA") || die "# $0 : cannot create $outpanfileA\n";
-  printf OUTLIST ("# %s -m %s -A %s -B %s -g %d -e %d -p %s\n",
-    $0,$INP_matrix,$INP_includeA,$INP_includeB,$INP_absent,$INP_expansions,$INP_refgenome);
+  printf OUTLIST ("# %s -m %s -A %s -B %s -g %d -e %d -p %s -P %d -S %d\n",
+    $0,$INP_matrix,$INP_includeA,$INP_includeB,$INP_absent,$INP_expansions,
+    $INP_refgenome,$INP_cutoff,$INP_skip_singletons);
   
   if($INP_skip_singletons)
   {
@@ -334,9 +336,10 @@ elsif($INP_absent)
   }
 
   print "# file with genes present in set A and absent in B (".scalar(@pansetA)."): $outpanfileA\n";
-  open(OUTLIST,">$outpanfileA") || die "# $0 : cannot create $outpanfileA\n";
-  printf OUTLIST ("# %s -m %s -A %s -B %s -g %d -e %d -p %s\n",
-    $0,$INP_matrix,$INP_includeA,$INP_includeB,$INP_absent,$INP_expansions,$INP_refgenome);
+  open(OUTLIST,">$outpanfileA") || die "# $0 : cannot create $outpanfileA\n";  
+  printf OUTLIST ("# %s -m %s -A %s -B %s -g %d -e %d -p %s -P %d -S %d\n",
+    $0,$INP_matrix,$INP_includeA,$INP_includeB,$INP_absent,$INP_expansions,
+    $INP_refgenome,$INP_cutoff,$INP_skip_singletons);
   
   if($INP_skip_singletons)
   {
@@ -400,8 +403,10 @@ elsif($INP_expansions)
 
   print "# file with genes expanded in set A (".scalar(@expA)."): $outexpanfileA\n";
   open(OUTEXPANLIST,">$outexpanfileA") || die "# $0 : cannot create $outexpanfileA\n";
-  printf OUTEXPANLIST ("# %s -m %s -A %s -B %s -g %d -e %d -p %s\n",
-    $0,$INP_matrix,$INP_includeA,$INP_includeB,$INP_absent,$INP_expansions,$INP_refgenome);
+  printf OUTEXPANLIST ("# %s -m %s -A %s -B %s -g %d -e %d -p %s -P %d -S %d\n",
+    $0,$INP_matrix,$INP_includeA,$INP_includeB,$INP_absent,$INP_expansions,
+    $INP_refgenome,$INP_cutoff,$INP_skip_singletons);
+    
   print OUTEXPANLIST "# genes expanded in set A (".scalar(@expA)."):\n";
   foreach $col (@expA){ print OUTEXPANLIST "$col\n" }
   close(OUTEXPANLIST);
