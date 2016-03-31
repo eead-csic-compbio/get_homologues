@@ -109,3 +109,4 @@
 23032016: parse_pangenome_matrix.pl now checks that taxon names in -A/-B lists match those in pangenome_matrix, thanks Maliha Aziz
 31032016: parse_pangenome_matrix.pl now prints -P & -S values to pangenes_list.txt
 31032016: parse_pangenome_matrix.pl barplots produced with -s have longer Y-axes, which can now be controlled with global $YLIMRATIO
+31032016: get_homologues manual updated, including figures 12 & 13
