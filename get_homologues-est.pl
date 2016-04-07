@@ -471,7 +471,8 @@ if($inputDIR)
   opendir(DIR,$inputDIR) || die "# EXIT : cannot list $inputDIR\n";
   my @inputfiles = sort grep {
     /\.fna$/i || /\.fna\.gz$/i || /\.fna.bz2$/i || 
-    /\.fa$/i || /\.fa\.gz$/i || /\.fa.bz2$/i || 
+    /\.fa$/i || /\.fa\.gz$/i || /\.fa.bz2$/i ||
+    /\.fasta$/i || /\.fasta\.gz$/i || /\.fasta.bz2$/i ||
     /_$/ || /\.clusters$/ # pre-clustered sequences
     } readdir(DIR);
   closedir(DIR); 
