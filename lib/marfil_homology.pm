@@ -2716,7 +2716,6 @@ sub find_COGs
   close(LSE);
 
   # group sequence IDs and count number of taxa in each cluster
-  my $n_of_clusters;
   open(COGS,$coglogfilename) || die "# $0 : cannot read $coglogfilename\n";
   while(<COGS>)
   {
