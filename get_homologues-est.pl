@@ -1460,7 +1460,7 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
     if(!$do_PFAM){ %orthologues = %{$ref_hash_orths} }
     else
     {
-      my $ref_pfam_orths = split_Pfam_clusters( $ref_hash_orths , \%orth_taxa , 1 );
+      my $ref_pfam_orths = split_Pfam_clusters( $ref_hash_orths , \%orth_taxa );
       %orthologues = %{$ref_pfam_orths};
     }
 
@@ -1546,7 +1546,7 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
     if($doMCL)
     {
       my $n_of_inparalogues = 0;
-      foreach $cluster (keys(%orthologues))
+      foreach $cluster (@clusters)
       {
         foreach $taxon (keys(%{$orth_taxa{$cluster}}))
         {
@@ -1594,7 +1594,7 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
       # core genome
       if($doMCL)
       {
-        CLUSTER: foreach $cluster (keys(%orthologues))
+        CLUSTER: foreach $cluster (@clusters)
         {
           # potential core clusters must contain sequences from reference taxon $tmptaxa[0]
           # this check is done only once ($t=1)
@@ -1626,7 +1626,7 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
             }#else{ print "$taxon ne $tmptaxa[$t]\n"; }
           }
         }
-        print "# adding $tmptaxa[$t]: core=$coregenome[$s][$t] pan=$pangenome[$s][$t]\n";
+        #print "# adding $tmptaxa[$t]: core=$coregenome[$s][$t] pan=$pangenome[$s][$t]\n";
       }
       else # BDBH core: orthologues/pairs among two genomes (transitivity: if(orth(0,1) && orth(0,2)) then orth(1,2)
       {
@@ -1687,7 +1687,7 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
         }
       }
 
-      # pan genome (unique genes) : those without hits in recently added genome when compared to all previous
+      # pan genome (unique genes) : those without hits in last added genome when compared to all previous
       for($t2=$t-1;$t2>=0;$t2--)
       {
         $label = $tmptaxa[$t].' '.$tmptaxa[$t2];
@@ -1737,7 +1737,7 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
       {
         next if($n_of_homs_in_genomes{$gene} || 
           $inparalogues{$gene} ||
-          $ref_hash_cloud_genes->{$gene});
+          $ref_hash_cloud_genes->{$gene}); # singletor clusters < min_taxa 
         $pangenome[$s][$t]++;
       }
 

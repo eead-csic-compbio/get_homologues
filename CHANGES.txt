@@ -113,3 +113,4 @@
 31032016: marfil_homology::find_COGs made faster after trimming a couple of regexes and replacing grep with first, thanks Andre Luiz de Oliveira!
 31032016: updated test_Streptococcus/test_Streptococcus_download_list.txt
 31032016: FAQ added to get_homologues-est manual
+08042016: fixed logging of -c core/pan-genome sizes when using -M/-G

@@ -1762,7 +1762,7 @@ if($do_genome_composition)
             }#else{ print "$taxon ne $tmptaxa[$t]\n"; }
           }
         }
-        print "# adding $tmptaxa[$t]: core=$coregenome[$s][$t] pan=$pangenome[$s][$t]\n";
+        #print "# adding $tmptaxa[$t]: core=$coregenome[$s][$t] pan=$pangenome[$s][$t]\n";
       }
       else # BDBH core: orthologues/pairs among two genomes (transitivity: if(orth(0,1) && orth(0,2)) then orth(1,2)
       {
@@ -1817,7 +1817,7 @@ if($do_genome_composition)
         }
       }
 
-      # pan genome (unique genes) : those without hits in recently added genome when compared to all previous
+      # pan genome (unique genes) : those without hits in last added genome when compared to all previous
       for($t2=$t-1;$t2>=0;$t2--)
       {
         $label = $tmptaxa[$t].' '.$tmptaxa[$t2];
