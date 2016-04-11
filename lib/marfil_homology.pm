@@ -2930,9 +2930,9 @@ sub flag_small_clusters
 {
   my ($ref_hash_orths,$ref_hash_orth_taxa,$ref_used_taxa,$min_cluster_size) = @_;
 
-  my ($id,$first,$last,%small,%large);
+  my ($id,$first,$last,%small,%large,%stats);
 
-  # store sequence ids in large enough clusters
+  # store sequence ids of clusters >= than required
   foreach $id (keys(%$ref_hash_orths))
   {
     next if(scalar(keys(%{$ref_hash_orth_taxa->{$id}})) < $min_cluster_size);
@@ -2952,10 +2952,16 @@ sub flag_small_clusters
     {
       next if($large{$id});
       $small{$id} = 1;
+      $stats{$taxon}++;
     }
   }
 
-  printf("\n# flag_small_clusters : %d sequences\n\n",scalar(keys(%small)));
+  print "\n# flag_small_clusters:\n";
+  foreach my $taxon (@$ref_used_taxa)
+  {
+    print "# $taxon : $stats{$taxon}\n";
+  }
+  printf("# total : %d sequences\n\n",scalar(keys(%small)));
 
   return \%small;
 }
