@@ -1580,7 +1580,7 @@ sub get_makeIsoform_outfilename
 
 # Modified from makeInparalog, uses global variables $bpo_file,@gindex2,$TMP_DIR
 # assumes sequences are pre-sorted from largest to smallest
-# Bruno Oct2015
+# Bruno Oct2015, April2016
 sub makeIsoform
 {
   my ($saveRAM,$taxon,$evalue_cutoff,$min_overlap,$same_best_hit,$force_parsing) = @_;
@@ -1601,7 +1601,7 @@ sub makeIsoform
       {
         $refh_redundant_isoforms = $ref_data_structure;
 
-        printf("# %d sequences\n",scalar(keys(%$refh_redundant_isoforms)));
+        printf("# %s : %d sequences\n",$taxon,scalar(keys(%$refh_redundant_isoforms)));
 
         return ($refh_redundant_isoforms);
       }
@@ -1714,7 +1714,7 @@ sub makeIsoform
     printf("# %d isoforms sharing best hit\n",$n_of_besthit_isoforms);
   }
 
-  printf("# %d sequences\n",scalar(keys(%$refh_redundant_isoforms)));
+  printf("# %s : %d sequences\n",$taxon,scalar(keys(%$refh_redundant_isoforms)));
 
   ## save hash to file with Storable::store function
   if(!defined(nstore($refh_redundant_isoforms,$iso_file)))
@@ -2121,7 +2121,7 @@ sub makeOrtholog
       # check coverage on the other BLAST direction as alignments are frequently
       # different and might well improve the coverage (example lspA among Gammaproteobacteria)
 
-		if($pmatch_cutoff && (
+		  if($pmatch_cutoff && (
          ($use_short_sequence && $qcov < $pmatch_cutoff && $scov < $pmatch_cutoff) ||
          (!$use_short_sequence && ($qcov < $pmatch_cutoff || $scov < $pmatch_cutoff)) ))
       {
@@ -2208,7 +2208,6 @@ sub makeHomolog
   my $homol_file = get_makeHomolog_outfilename($ta,$tb);
   if(-s $homol_file && !$force_parsing)
   {
-
     # try to re-use previously calculated homologues
     my ($ref_data_structure);
 
@@ -2237,12 +2236,12 @@ sub makeHomolog
     {
       #$pQid\t$pSid\t$pEvalue\t$ppercID\t$Qcov\t$Scov\t$pQlength\t$pSlength\t$simspan\t$pbits
       ($sid,$ev,$pi,$qcov,$scov) = @$line[1,2,3,4,5];
-
+      print "$line\n";
       next if(!defined($gindex2[$sid]) || $gindex2[$sid] ne $tb);
       last if($ev > $evalue_cutoff);
       next if($pi < $pi_cutoff);
 
-		next if($pmatch_cutoff && (
+		  next if($pmatch_cutoff && (
          ($use_short_sequence && $qcov < $pmatch_cutoff && $scov < $pmatch_cutoff) ||
          (!$use_short_sequence && ($qcov < $pmatch_cutoff || $scov < $pmatch_cutoff)) ));
       $homologues{$qid} = $sid;
