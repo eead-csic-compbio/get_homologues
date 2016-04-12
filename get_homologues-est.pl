@@ -45,8 +45,9 @@ my $MAXPFAMSEQS          = 250;   # default for -m cluster jobs, it is updated t
 my $PRINTCLUSTERSSCREEN  = 0;     # whether cluster names should be printed to screen
 my $FULLENGTHFLAG = 'flcdna';     # input sequences in files with names containing this flag are considered full length, instead of fragments
 my $MINREDOVERLAP = 40;           # as in tgicl, min overlap to handle possibly redundant isoforms
-my $TRIMULTIHSP   = 1;            # correct overlaps when calculating cover of multi-hsp hits  
+my $TRIMULTIHSP   = 1;            # correct overlaps when calculating cover of multi-hsp hits (alternative = 0)
 my $MINSEQLENGTH  = 20;           # min length for input sequences to be considered (~ primer or miRNA) 
+my $NOCLOUDINCORE = 1;            # when calling -M -c -t X initial core/pan size excludes cloud genes, those with occup < X 8alternative 0)
 
 ## list of features/binaries required by this program (do not edit)
 my @FEATURES2CHECK = ('EXE_BLASTN','EXE_FORMATDB','EXE_MCL','EXE_HMMPFAM',
@@ -1555,7 +1556,24 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
           last;
         }
       }
-      $coregenome[$s][0] = $gindex{$tmptaxa[0]}[2] - $n_of_inparalogues;
+      
+      # calculate initial core & pan size
+      if($NOCLOUDINCORE && $min_cluster_size && $min_cluster_size <scalar(@taxa))
+      {
+         my $initial_core_size = 0; 
+         foreach $gene ($gindex{$tmptaxa[0]}[0] .. $gindex{$tmptaxa[0]}[1])
+         {
+            next if($ref_hash_cloud_genes->{$gene}); # singleton clusters
+            $initial_core_size++;
+         }
+          
+         $coregenome[$s][0] = $initial_core_size - $n_of_inparalogues;
+      }
+      else
+      {
+         $coregenome[$s][0] = $gindex{$tmptaxa[0]}[2] - $n_of_inparalogues;
+      }
+      
       if($do_soft){ $softcore[$s][0] = $coregenome[$s][0] }
       $pangenome[$s][0]  = $coregenome[$s][0];
       print "# adding $tmptaxa[0]: core=$coregenome[$s][0] pan=$pangenome[$s][0]\n";
@@ -1626,7 +1644,6 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
             }#else{ print "$taxon ne $tmptaxa[$t]\n"; }
           }
         }
-        #print "# adding $tmptaxa[$t]: core=$coregenome[$s][$t] pan=$pangenome[$s][$t]\n";
       }
       else # BDBH core: orthologues/pairs among two genomes (transitivity: if(orth(0,1) && orth(0,2)) then orth(1,2)
       {
@@ -1722,8 +1739,10 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
         %inparalogues = ();
         foreach $cluster (keys(%orthologues))
         {
+          # skip clusters with occupancy > 1, we're interested only on singletons
           next if(!$orth_taxa{$cluster}{$tmptaxa[$t]} ||
-            $orth_taxa{$cluster}{$tmptaxa[$t]} < 2);
+            $orth_taxa{$cluster}{$tmptaxa[$t]} < 2); 
+                        
           foreach $gene (@{$orthologues{$cluster}})
           {
             next if($gindex2[$gene] ne $tmptaxa[$t]);
