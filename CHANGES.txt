@@ -115,3 +115,6 @@
 31032016: FAQ added to get_homologues-est manual
 08042016: fixed logging of -c core/pan-genome sizes when using -M/-G
 11042016: updated marfil_homology::flag_small_clusters
+12042016: edited get_homologues-est.pl -M -c -t taxa so that initial core/pan size only considers clusters with occupancy >= min_taxa
+12042016: marfil_homology::makeIsoform now prints taxon name to help detect problematic datasets or incomplete BLAST jobs
+12042016: added option -a to plot_pancore_matrix.pl to generate snapshots of pangenome size simulations
