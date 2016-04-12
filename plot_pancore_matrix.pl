@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# 2014 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2014-6 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -11,7 +11,8 @@ $|=1;
 
 use strict;
 use File::Basename;
-use Getopt::Std;
+use Getopt::Std; 
+use File::Path qw(remove_tree);
 use FindBin '$Bin';
 use lib "$Bin/lib";
 use lib "$Bin/lib/bioperl-1.5.2_102/";
@@ -20,10 +21,10 @@ use phyTools;
 my $VERBOSE = 0;  # set to 1 to see R messages, helping explain why fitting fails
 my @FEATURES2CHECK = ('EXE_R');
 
-my ($INP_tabfile,$INP_fittype,%opts) = ('','core_Tettelin');
+my ($INP_tabfile,$INP_fittype,$INP_anim_dir,%opts) = ('','core_Tettelin','');
 my ($Rparams,$FontScale,$pancore_output_png,$pancore_output_pdf,$pancore_output_txt) = ('',0.8);
 
-getopts('hi:f:F:', \%opts);
+getopts('hi:f:F:a:', \%opts);
 
 if(($opts{'h'})||(scalar(keys(%opts))==0))
 {
@@ -33,6 +34,7 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   print   "-f \t type of fit [pan|core_Tettelin|core_Willenbrock|core_both]\n".
     "   \t                                        (default: core_Tettelin, PubMed:16172379,18088402)\n";
   print   "-F \t font scale for fitted formulas         (optional, default=$FontScale)\n";
+  print   "-a \t save snapshots for animations in dir   (optional, example -a animation)\n";
   exit(-1);
 }
 
@@ -59,6 +61,21 @@ if(defined($opts{'F'}))
   if($opts{'F'}>0){ $FontScale = $opts{'F'} }
 }
 
+if(defined($opts{'a'}))
+{
+	$INP_anim_dir = $opts{'a'};
+  
+  if(-e $INP_anim_dir)
+  {
+    print "# $0 : existing directory '$INP_anim_dir' will be removed\n";
+    remove_tree($INP_anim_dir);
+    
+  }
+  
+  print "# $0 : creating directory $INP_anim_dir\n";
+  mkdir($INP_anim_dir);
+}
+
 check_installed_features(@FEATURES2CHECK);
 if(!feature_is_installed('R'))
 {
@@ -67,35 +84,36 @@ if(!feature_is_installed('R'))
 
 if(!$VERBOSE){ $Rparams = '-q 2>&1 > /dev/null' }
 
-printf("\n# %s -i %s -f %s -F %1.2f\n",$0,$INP_tabfile,$INP_fittype,$FontScale);
+printf("\n# %s -i %s -f %s -F %1.2f -a %s\n",
+	$0,$INP_tabfile,$INP_fittype,$FontScale,$INP_anim_dir);
 
 #################################### MAIN PROGRAM  ################################################
 
 if($INP_fittype =~ /pan/)
 {
-  plot_pan_genome($INP_tabfile,$pancore_output_txt,$pancore_output_png,$pancore_output_pdf);
+  plot_pan_genome($INP_tabfile,$pancore_output_txt,$pancore_output_png,$pancore_output_pdf,$INP_anim_dir);
 }
 elsif($INP_fittype =~ /core_both/)
 {
-  plot_core_genome($INP_tabfile,$pancore_output_txt,$pancore_output_png,$pancore_output_pdf,'core_both');
+  plot_core_genome($INP_tabfile,$pancore_output_txt,$pancore_output_png,$pancore_output_pdf,'core_both',$INP_anim_dir);
 }
 
 elsif($INP_fittype =~ /core_Willenbrock/)
 {
-  plot_core_genome($INP_tabfile,$pancore_output_txt,$pancore_output_png,$pancore_output_pdf,'core_Willenbrock');
+  plot_core_genome($INP_tabfile,$pancore_output_txt,$pancore_output_png,$pancore_output_pdf,'core_Willenbrock',$INP_anim_dir);
 }
 else
 {
-  plot_core_genome($INP_tabfile,$pancore_output_txt,$pancore_output_png,$pancore_output_pdf,'core_Tettelin');
+  plot_core_genome($INP_tabfile,$pancore_output_txt,$pancore_output_png,$pancore_output_pdf,'core_Tettelin',$INP_anim_dir);
 }
 
 print "# outfiles: $pancore_output_txt , $pancore_output_png , $pancore_output_pdf\n";
 
 sub plot_core_genome
 {
-  my ($data_file,$TXTfile,$PNGfile,$PDFfile,$fittype) = @_;
+  my ($data_file,$TXTfile,$PNGfile,$PDFfile,$fittype,$anim_dir) = @_;
 
-  my (@genomes,@genes,$g,$expterm,$exptermeq,$expterm2,$exptermeq2,$max,$min,$n_of_genomes);
+  my (@genomes,@genes,$g,$expterm,$exptermeq,$expterm2,$exptermeq2,$max,$min,$n_of_genomes,$n_of_replicates);
 
   my $deftauc = 2.8;
   my $deftaucstep = 0.2;
@@ -120,7 +138,9 @@ sub plot_core_genome
   }
   unlink($PNGfile,$PDFfile);
 
+
   # 1) read input file in boxplot format
+  $n_of_replicates = 0;
   open(DATA,$data_file) || die "# plot_core_genome : cannot read $data_file\n";
   while(<DATA>)
   {
@@ -134,10 +154,11 @@ sub plot_core_genome
       push(@genomes,$g+1);
       push(@genes,$data[$g]);
     }
+    $n_of_replicates++;
   }
   close(DATA);
 
-# 2) write temporary input file in data frame format and get max,min gene numbers
+  # 2) write temporary input file in data frame format and get max,min gene numbers
   my $tmpfile = '_tmp'.basename($data_file);
   open(TMP,">$tmpfile");
   print TMP "genomes\tgenes\n";
@@ -154,147 +175,212 @@ sub plot_core_genome
     open(RSHELL,"|R --no-save $Rparams ") || die "# plot_core_genome : cannot call R: $!\n";
     print RSHELL<<EOF;
 
-	core = read.table('$tmpfile',header=T,sep='\t'); 
+	  core = read.table('$tmpfile',header=T,sep='\t'); 
 	
     txtreport = file('$TXTfile',"w");
 
-	# first try Tettelin fit
-	tauc_value = $deftauc + $deftaucstep;
-	converged = FALSE;
-    	while(converged == FALSE && tauc_value > 0)
-	{
-		param_guess = list(omegac=$max,kc=$min,tauc=tauc_value);
-		try( 
-			{
-			fit = nls('genes ~ omegac + kc * exp($expterm/tauc)',data=core,start=param_guess);
-			sumfit = summary(fit);
-			converged = sumfit\$convInfo[1]\$isConv;
-			} , silent=TRUE); # set to FALSE to see detailed nls fitting messages
-		tauc_value = tauc_value - $deftaucstep;
-	}
+	  # first try Tettelin fit
+	  tauc_value = $deftauc + $deftaucstep;
+	  converged = FALSE;
+    while(converged == FALSE && tauc_value > 0)
+	  {
+		  param_guess = list(omegac=$max,kc=$min,tauc=tauc_value);
+		  try( 
+			  {
+			  fit = nls('genes ~ omegac + kc * exp($expterm/tauc)',data=core,start=param_guess);
+			  sumfit = summary(fit);
+			  converged = sumfit\$convInfo[1]\$isConv;
+			  } , silent=TRUE); # set to FALSE to see detailed nls fitting messages
+		  tauc_value = tauc_value - $deftaucstep;
+	  }
 
-	if(converged == TRUE) 
-	{
-		SER = sumfit\$sigma;
-		coeffs = coef(fit);                  
-		ffit = function(genomes) coeffs['omegac'] + coeffs['kc'] * exp($expterm/coeffs['tauc']); 
-		if(coeffs['kc'] > 1)
-		{
-			fiteq = substitute( coregenes(g) == omegac + kc ~ exp(frac($exptermeq,tauc)) , \
+	  if(converged == TRUE) 
+	  {
+		  SER = sumfit\$sigma;
+		  coeffs = coef(fit);                  
+		  ffit = function(genomes) coeffs['omegac'] + coeffs['kc'] * exp($expterm/coeffs['tauc']); 
+		  if(coeffs['kc'] > 1)
+      {
+			  fiteq = substitute( coregenes(g) == omegac + kc ~ exp(frac($exptermeq,tauc)) , \
 				list(omegac=sprintf("%1.0f",coeffs['omegac']), \
 				kc = sprintf("%1.0f",coeffs['kc']), \
 				tauc = sprintf("%1.2f",coeffs['tauc']) ) ) 
-		}
-		else
-		{
-			fiteq = substitute( coregenes(g) == omegac - kc ~ exp(frac($exptermeq,tauc)) , \
+		  } 
+      else
+      {
+			  fiteq = substitute( coregenes(g) == omegac - kc ~ exp(frac($exptermeq,tauc)) , \
 				list(omegac=sprintf("%1.0f",coeffs['omegac']), \
 				kc = sprintf("%1.0f",-coeffs['kc']), \
 				tauc = sprintf("%1.2f",coeffs['tauc']) ) ) 
-		}	
+		  } 	
         
-        writeLines("# core_Tettelin fit converged", txtreport);
-        writeLines(sprintf("# residual standard error = %1.2f",SER), txtreport);
-        writeLines( paste(fiteq) , txtreport, sep=" " );
-        writeLines( "" , txtreport);
-        fittedvalues = lapply( 1:$n_of_genomes, ffit)
-        writeLines( "# fitted values (genomes, genes) :" , txtreport );
-        for(i in 1:$n_of_genomes ) { 
-            writeLines( sprintf("%d\t%1.1f",i,fittedvalues[i]) , txtreport  );
-        }
-	} else { 
+      writeLines("# core_Tettelin fit converged", txtreport);
+      writeLines(sprintf("# residual standard error = %1.2f",SER), txtreport);
+      writeLines( paste(fiteq) , txtreport, sep=" " );
+      writeLines( "" , txtreport);
+      fittedvalues = lapply( 1:$n_of_genomes, ffit)
+      writeLines( "# fitted values (genomes, genes) :" , txtreport );
+      for(i in 1:$n_of_genomes ) { 
+        writeLines( sprintf("%d\t%1.1f",i,fittedvalues[i]) , txtreport  );
+      }
+	  } else { 
         writeLines("# core_Tettelin fit failed to converge", txtreport)
     }
 	
-	## now try Willenbrock fit
-	tauc_value2 = $deftauc + $deftaucstep;
-	converged2 = FALSE;
-    	while(converged2 == FALSE && tauc_value2 > 0)
-	{
-		param_guess = list(omegac=$max,kc=$min,tauc=tauc_value2);
-		try( 
-			{
-			fit2 = nls('genes ~ omegac + kc * exp($expterm2/tauc)',data=core,start=param_guess);
-			sumfit2 = summary(fit2);
-			converged2 = sumfit2\$convInfo[1]\$isConv;
-			} , silent=TRUE); 
-		tauc_value2 = tauc_value2 - $deftaucstep;
-	}
+	  ## now try Willenbrock fit
+	  tauc_value2 = $deftauc + $deftaucstep;
+	  converged2 = FALSE;
+    while(converged2 == FALSE && tauc_value2 > 0)
+	  {
+		  param_guess = list(omegac=$max,kc=$min,tauc=tauc_value2);
+		  try( 
+			  {
+			  fit2 = nls('genes ~ omegac + kc * exp($expterm2/tauc)',data=core,start=param_guess);
+			  sumfit2 = summary(fit2);
+			  converged2 = sumfit2\$convInfo[1]\$isConv;
+			  } , silent=TRUE); 
+		  tauc_value2 = tauc_value2 - $deftaucstep;
+	  }
 	
-	if(converged2 == TRUE) 
-	{
-		SER2 = sumfit2\$sigma;
-		coeffs2 = coef(fit2);                  
-		ffit2 = function(genomes) coeffs2['omegac'] + coeffs2['kc'] * exp($expterm2/coeffs2['tauc']); 
-		if(coeffs2['kc'] > 1)
-		{
-			fiteq2 = substitute( coregenes(g) == omegac + kc ~ exp(frac($exptermeq2,tauc)) , \
+	  if(converged2 == TRUE) 
+	  {
+		  SER2 = sumfit2\$sigma;
+		  coeffs2 = coef(fit2);                  
+		  ffit2 = function(genomes) coeffs2['omegac'] + coeffs2['kc'] * exp($expterm2/coeffs2['tauc']); 
+		  if(coeffs2['kc'] > 1)
+		  {
+			  fiteq2 = substitute( coregenes(g) == omegac + kc ~ exp(frac($exptermeq2,tauc)) , \
 				list(omegac=sprintf("%1.0f",coeffs2['omegac']), \
 				kc = sprintf("%1.0f",coeffs2['kc']), \
 				tauc = sprintf("%1.2f",coeffs2['tauc']) ) ) 
-		}
-		else
-		{
-			fiteq2 = substitute( coregenes(g) == omegac - kc ~ exp(frac($exptermeq2,tauc)) , \
+		  }
+		  else
+		  {
+			  fiteq2 = substitute( coregenes(g) == omegac - kc ~ exp(frac($exptermeq2,tauc)) , \
 				list(omegac=sprintf("%1.0f",coeffs2['omegac']), \
 				kc = sprintf("%1.0f",-coeffs2['kc']), \
 				tauc = sprintf("%1.2f",coeffs2['tauc']) ) ) 
-		}			           	
+		  }			           	
 
-        writeLines("# core_Willenbrock fit converged", txtreport);
-        writeLines(sprintf("# residual standard error = %1.2f",SER2), txtreport);
-        writeLines( paste(fiteq2) , txtreport, sep=" " );
-        writeLines( "" , txtreport);
-        fittedvalues = lapply( 1:$n_of_genomes, ffit2)
-        writeLines( "# fitted values (genomes, genes) :" , txtreport );
-        for(i in 1:$n_of_genomes ) { 
-            writeLines( sprintf("%d\t%1.1f",i,fittedvalues[i]) , txtreport  );
+      writeLines("# core_Willenbrock fit converged", txtreport);
+      writeLines(sprintf("# residual standard error = %1.2f",SER2), txtreport);
+      writeLines( paste(fiteq2) , txtreport, sep=" " );
+      writeLines( "" , txtreport);
+      fittedvalues = lapply( 1:$n_of_genomes, ffit2)
+      writeLines( "# fitted values (genomes, genes) :" , txtreport );
+      for(i in 1:$n_of_genomes ) { 
+        writeLines( sprintf("%d\t%1.1f",i,fittedvalues[i]) , txtreport  );
         }
-	} else { 
+	  } else { 
         writeLines("# core_Willenbrock fit failed to converge", txtreport)
     }
 
     close(txtreport);
 
-	# actually make charts
-	pdf(file="$PDFfile");
-	plot(core\$genomes,core\$genes,xaxt='n',xlab='genomes (g)',ylab='core genome size (genes)',pch=20);
-	xaxis_labels = 1:$n_of_genomes;
-	axis(side=1,at=xaxis_labels);
-	if(converged == TRUE) 
+	  # actually make charts
+	  pdf(file="$PDFfile");
+	  plot(core\$genomes,core\$genes,xaxt='n',xlab='genomes (g)',ylab='core genome size (genes)',pch=20);
+	  xaxis_labels = 1:$n_of_genomes;
+	  axis(side=1,at=xaxis_labels);
+	  if(converged == TRUE) 
     {
-		curve( ffit , from=1, to=max(core\$genomes), add=T, col="red" );
-		mtext(fiteq,side=3,cex=$FontScale,line=0.5, col="red");
-		#mtext(sprintf("residual standard error = %1.2f",SER),side=4,cex=0.8,line=0.5)
-	}
-	if(converged2 == TRUE) 
+		  curve( ffit , from=1, to=max(core\$genomes), add=T, col="red" );
+		  mtext(fiteq,side=3,cex=$FontScale,line=0.5, col="red");
+		  #mtext(sprintf("residual standard error = %1.2f",SER),side=4,cex=0.8,line=0.5)
+	  }
+	  if(converged2 == TRUE) 
     {
-		curve( ffit2 , from=1, to=max(core\$genomes), add=T, col="blue" );
-		mtext(fiteq2,side=3,cex=$FontScale,line=-2.5, col="blue");
-		#mtext(sprintf("residual standard error = %1.2f",SER),side=4,cex=0.8,line=0.5)
-	}
-		
-	png(file="$PNGfile");
-	plot(core\$genomes,core\$genes,xaxt='n',xlab='genomes (g)',ylab='core genome size (genes)',pch=20);
-	axis(side=1,at=xaxis_labels);
-	if(converged == TRUE) 
-	{	
-		curve( ffit , from=1, to=max(core\$genomes), add=T, col="red" );
-		mtext(fiteq,side=3,cex=$FontScale,line=0.5, col="red");
-		#mtext(sprintf("residual standard error = %1.2f",SER),side=4,cex=0.8,line=0.5)
-	}
-	if(converged2 == TRUE) 
+		  curve( ffit2 , from=1, to=max(core\$genomes), add=T, col="blue" );
+		  mtext(fiteq2,side=3,cex=$FontScale,line=-2.5, col="blue");
+		  #mtext(sprintf("residual standard error = %1.2f",SER),side=4,cex=0.8,line=0.5)
+	  }
+    dev.off()
+    
+	  png(file="$PNGfile");
+	  plot(core\$genomes,core\$genes,xaxt='n',xlab='genomes (g)',ylab='core genome size (genes)',pch=20);
+	  axis(side=1,at=xaxis_labels);
+	  if(converged == TRUE) 
+	  {	
+		  curve( ffit , from=1, to=max(core\$genomes), add=T, col="red" );
+		  mtext(fiteq,side=3,cex=$FontScale,line=0.5, col="red");
+		  #mtext(sprintf("residual standard error = %1.2f",SER),side=4,cex=0.8,line=0.5)
+	  }
+	  if(converged2 == TRUE) 
     {
-		curve( ffit2 , from=1, to=max(core\$genomes), add=T, col="blue" );
-		mtext(fiteq2,side=3,cex=$FontScale,line=-2.5, col="blue");
-		#mtext(sprintf("residual standard error = %1.2f",SER),side=4,cex=0.8,line=0.5)
-	}
-	
-	
-	q()
+		  curve( ffit2 , from=1, to=max(core\$genomes), add=T, col="blue" );
+		  mtext(fiteq2,side=3,cex=$FontScale,line=-2.5, col="blue");
+		  #mtext(sprintf("residual standard error = %1.2f",SER),side=4,cex=0.8,line=0.5)
+	  }
+    dev.off()
+    
+    # make animation pics if required
+    # based on http://www.r-bloggers.com/animated-plots-with-r/
+    anim_dir = "$anim_dir"
+    if(file.exists(anim_dir))
+    {
+      i = 0
+      picname = ''
+      
+      # add first sampling replicate
+      genomes = core\$genomes[1:$n_of_genomes]
+      genes   = core\$genes[1:$n_of_genomes]
+     
+      for(i in 1:$n_of_genomes){
+      
+        if (i < 10) { picname = paste(anim_dir,'/000',i,'plot.png',sep='')}
+        if (i < 100 && i >= 10) { picname = paste(anim_dir,'/00',i,'plot.png', sep='')}
+        if (i >= 100) { picname = paste(anim_dir,'/0', i,'plot.png', sep='')}
+
+        colors = c( rep("green",i) , rep("white",$n_of_genomes-i) )
+
+        png(picname);
+	      plot(genomes,genes,xaxt='n',xlab='genomes (g)',ylab='core genome size (genes)',
+          pch=20, col=colors, main=paste("Genomes/transcriptomes added=",i," replicates=",1));
+	      axis(side=1,at=xaxis_labels);
+        dev.off()
+      }
+     
+      # remaining replicates
+      for(r in 2:$n_of_replicates){
+      
+        last = r*$n_of_genomes
+        genomes = core\$genomes[1:last]
+        genes   = core\$genes[1:last]
+        i=last
+        
+        colors = c( rep("black",(r-1)*$n_of_genomes) , rep("green",$n_of_genomes) )
+        
+        if (i < 10) { picname = paste(anim_dir,'/000',i,'plot.png',sep='')}
+        if (i < 100 && i >= 10) { picname = paste(anim_dir,'/00',i,'plot.png', sep='')}
+        if (i >= 100) { picname = paste(anim_dir,'/0', i,'plot.png', sep='')}
+
+        png(picname);
+	      plot(genomes,genes,xaxt='n',xlab='genomes (g)',ylab='core genome size (genes)',
+          pch=20, col=colors, main=paste("Genomes/transcriptomes added=",last," replicates=",r));
+	      axis(side=1,at=xaxis_labels);
+        dev.off()
+      }    
+      
+      # final plot
+      png(picname);
+	    plot(genomes,genes,xaxt='n',xlab='genomes (g)',ylab='core genome size (genes)',pch=20);
+	    axis(side=1,at=xaxis_labels);
+      if(converged == TRUE) 
+	    {	
+		    curve( ffit , from=1, to=max(core\$genomes), add=T, col="red" );
+		    mtext(fiteq,side=3,cex=$FontScale,line=0.5, col="red");
+		  }
+	    if(converged2 == TRUE) 
+      {
+		    curve( ffit2 , from=1, to=max(core\$genomes), add=T, col="blue" );
+		    mtext(fiteq2,side=3,cex=$FontScale,line=-2.5, col="blue");
+	    }
+      dev.off()
+    }
+  
+	  q()
 EOF
     close RSHELL;
-
   }
   else
   {
@@ -302,86 +388,161 @@ EOF
     open(RSHELL,"|R --no-save $Rparams ") || die "# plot_core_genome : cannot call R: $!\n";
     print RSHELL<<EOF;
 
-	core = read.table('$tmpfile',header=T,sep='\t'); 
+	  core = read.table('$tmpfile',header=T,sep='\t'); 
 
     txtreport = file('$TXTfile',"w");
 
-	tauc_value = $deftauc + $deftaucstep;
-	converged = FALSE;
-    	while(converged == FALSE && tauc_value > 0)
-	{
-		param_guess = list(omegac=$max,kc=$min,tauc=tauc_value);
-		try( 
-			{
-			fit = nls('genes ~ omegac + kc * exp($expterm/tauc)',data=core,start=param_guess);
-			sumfit = summary(fit);
-			converged = sumfit\$convInfo[1]\$isConv;
-			} , silent=TRUE); # set to FALSE to see detailed nls fitting messages
-		tauc_value = tauc_value - $deftaucstep;
-	}
+	  tauc_value = $deftauc + $deftaucstep;
+	  converged = FALSE;
+    while(converged == FALSE && tauc_value > 0)
+	  {
+		  param_guess = list(omegac=$max,kc=$min,tauc=tauc_value);
+		  try( 
+			  {
+			  fit = nls('genes ~ omegac + kc * exp($expterm/tauc)',data=core,start=param_guess);
+			  sumfit = summary(fit);
+			  converged = sumfit\$convInfo[1]\$isConv;
+			  } , silent=TRUE); # set to FALSE to see detailed nls fitting messages
+		  tauc_value = tauc_value - $deftaucstep;
+	  }
 	
-	if(converged == TRUE) 
-	{
-		SER = sumfit\$sigma;
-		coeffs = coef(fit);                  
-		ffit = function(genomes) coeffs['omegac'] + coeffs['kc'] * exp($expterm/coeffs['tauc']); 
-		if(coeffs['kc'] > 1)
-		{
-			fiteq = substitute( coregenes(g) == omegac + kc ~ exp(frac($exptermeq,tauc)) , \
+	  if(converged == TRUE) 
+	  {
+		  SER = sumfit\$sigma;
+		  coeffs = coef(fit);                  
+		  ffit = function(genomes) coeffs['omegac'] + coeffs['kc'] * exp($expterm/coeffs['tauc']); 
+		  if(coeffs['kc'] > 1)
+		  {
+			  fiteq = substitute( coregenes(g) == omegac + kc ~ exp(frac($exptermeq,tauc)) , \
 				list(omegac=sprintf("%1.0f",coeffs['omegac']), \
 				kc = sprintf("%1.0f",coeffs['kc']), \
 				tauc = sprintf("%1.2f",coeffs['tauc']) ) ) 
-		}
-		else
-		{
-			fiteq = substitute( coregenes(g) == omegac - kc ~ exp(frac($exptermeq,tauc)) , \
+		  }
+		  else
+		  {
+			  fiteq = substitute( coregenes(g) == omegac - kc ~ exp(frac($exptermeq,tauc)) , \
 				list(omegac=sprintf("%1.0f",coeffs['omegac']), \
 				kc = sprintf("%1.0f",-coeffs['kc']), \
 				tauc = sprintf("%1.2f",coeffs['tauc']) ) ) 
-		}	
+		  } 	
         
-        writeLines( "# $fittype fit converged" , txtreport );
-        writeLines(sprintf("# residual standard error = %1.2f",SER), txtreport);
-        writeLines( paste(fiteq) , txtreport, sep=" " );
-        writeLines( "" , txtreport);
-        fittedvalues = lapply( 1:$n_of_genomes, ffit)
-        writeLines( "# fitted values (genomes, genes) :" , txtreport );
-        for(i in 1:$n_of_genomes ) { 
-            writeLines( sprintf("%d\t%1.1f",i,fittedvalues[i]) , txtreport  );
-        }
-	} else { 
+      writeLines( "# $fittype fit converged" , txtreport );
+      writeLines(sprintf("# residual standard error = %1.2f",SER), txtreport);
+      writeLines( paste(fiteq) , txtreport, sep=" " );
+      writeLines( "" , txtreport);
+      fittedvalues = lapply( 1:$n_of_genomes, ffit)
+      writeLines( "# fitted values (genomes, genes) :" , txtreport );
+      for(i in 1:$n_of_genomes ) { 
+        writeLines( sprintf("%d\t%1.1f",i,fittedvalues[i]) , txtreport  );
+      }
+	  } else { 
         writeLines( "# $fittype failed to converge", txtreport )
     }
 
     close(txtreport);
 
-	# actually make charts
-	pdf(file="$PDFfile");
-	plot(core\$genomes,core\$genes,xaxt='n',xlab='genomes (g)',ylab='core genome size (genes)',pch=20);
-	xaxis_labels = 1:$n_of_genomes;
-	axis(side=1,at=xaxis_labels);
-	if(converged == TRUE) 
-        {
-		curve( ffit , from=1, to=max(core\$genomes), add=T, col="red" );
-		mtext(fiteq,side=3,cex=$FontScale,line=0.5);
-		mtext(sprintf("residual standard error = %1.2f",SER),side=4,cex=$FontScale,line=0.5)
-	}
-		
-	png(file="$PNGfile");
-	plot(core\$genomes,core\$genes,xaxt='n',xlab='genomes (g)',ylab='core genome size (genes)',pch=20);
-	axis(side=1,at=xaxis_labels);
-	if(converged == TRUE) 
-	{	
-		curve( ffit , from=1, to=max(core\$genomes), add=T, col="red" );
-		mtext(fiteq,side=3,cex=$FontScale,line=0.5);
-		mtext(sprintf("residual standard error = %1.2f",SER),side=4,cex=$FontScale,line=0.5)
-	}
+	  # actually make charts
+	  pdf(file="$PDFfile");
+	  plot(core\$genomes,core\$genes,xaxt='n',xlab='genomes (g)',ylab='core genome size (genes)',pch=20);
+	  xaxis_labels = 1:$n_of_genomes;
+	  axis(side=1,at=xaxis_labels);
+	  if(converged == TRUE) 
+    {
+		  curve( ffit , from=1, to=max(core\$genomes), add=T, col="red" );
+		  mtext(fiteq,side=3,cex=$FontScale,line=0.5);
+		  mtext(sprintf("residual standard error = %1.2f",SER),side=4,cex=$FontScale,line=0.5)
+	  }
+		dev.off()
+    
+	  png(file="$PNGfile");
+	  plot(core\$genomes,core\$genes,xaxt='n',xlab='genomes (g)',ylab='core genome size (genes)',pch=20);
+	  axis(side=1,at=xaxis_labels);
+	  if(converged == TRUE) 
+	  {	
+		  curve( ffit , from=1, to=max(core\$genomes), add=T, col="red" );
+		  mtext(fiteq,side=3,cex=$FontScale,line=0.5);
+		  mtext(sprintf("residual standard error = %1.2f",SER),side=4,cex=$FontScale,line=0.5)
+	  }
+    dev.off()
+    
+    # make animation pics if required
+    anim_dir = "$anim_dir"
+    if(file.exists(anim_dir))
+    {
+      i = 0
+      picname = ''
+      
+      # add first sampling replicate
+      genomes = core\$genomes[1:$n_of_genomes]
+      genes   = core\$genes[1:$n_of_genomes]
+     
+      for(i in 1:$n_of_genomes){
+      
+        if (i < 10) { picname = paste(anim_dir,'/000',i,'plot.png',sep='')}
+        if (i < 100 && i >= 10) { picname = paste(anim_dir,'/00',i,'plot.png', sep='')}
+        if (i >= 100) { picname = paste(anim_dir,'/0', i,'plot.png', sep='')}
+
+        colors = c( rep("green",i) , rep("white",$n_of_genomes-i) )
+
+        png(picname);
+	      plot(genomes,genes,xaxt='n',xlab='genomes (g)',ylab='core genome size (genes)',
+          pch=20, col=colors, main=paste("Genomes/transcriptomes added=",i," replicates=",1));
+	      axis(side=1,at=xaxis_labels);
+        dev.off()
+      }
+     
+      # remaining replicates
+      for(r in 2:$n_of_replicates){
+      
+        last = r*$n_of_genomes
+        genomes = core\$genomes[1:last]
+        genes   = core\$genes[1:last]
+        i=last
+        
+        colors = c( rep("black",(r-1)*$n_of_genomes) , rep("green",$n_of_genomes) )
+        
+        if (i < 10) { picname = paste(anim_dir,'/000',i,'plot.png',sep='')}
+        if (i < 100 && i >= 10) { picname = paste(anim_dir,'/00',i,'plot.png', sep='')}
+        if (i >= 100) { picname = paste(anim_dir,'/0', i,'plot.png', sep='')}
+
+        png(picname);
+	      plot(genomes,genes,xaxt='n',xlab='genomes (g)',ylab='core genome size (genes)',
+          pch=20, col=colors, main=paste("Genomes/transcriptomes added=",last," replicates=",r));
+	      axis(side=1,at=xaxis_labels);
+        dev.off()
+      }    
+      
+      # final plot
+      png(picname);
+	    plot(genomes,genes,xaxt='n',xlab='genomes (g)',ylab='core genome size (genes)',pch=20);
+	    axis(side=1,at=xaxis_labels);
+      if(converged == TRUE) 
+	    {	
+		    curve( ffit , from=1, to=max(core\$genomes), add=T, col="red" );
+		    mtext(fiteq,side=3,cex=$FontScale,line=0.5);
+		    mtext(sprintf("residual standard error = %1.2f",SER),side=4,cex=$FontScale,line=0.5)
+		  }
+      dev.off()
+    }
 	
 	q()
 EOF
     close RSHELL;
   }
-
+  
+  # print summary of animation folder 
+  if(-s $anim_dir)
+  {
+    opendir(ANIMDIR,$anim_dir) || die "# $0 : cannot list $anim_dir\n";
+    my @snapshots = grep{/\.png/} readdir(ANIMDIR);
+    closedir(ANIMDIR);
+    
+    if(@snapshots)
+    {
+      printf("\n# %d animation pics available in folder '%s'\n\n",scalar(@snapshots),$anim_dir);
+    }
+  }
+  
   # 4) clean
   unlink($tmpfile);
 
@@ -392,11 +553,12 @@ EOF
   }
 }
 
+
 sub plot_pan_genome
 {
-  my ($data_file,$TXTfile,$PNGfile,$PDFfile) = @_;
+  my ($data_file,$TXTfile,$PNGfile,$PDFfile,$anim_dir) = @_;
 
-  my (@genomes,@genes,$g,$min,$n_of_genomes);
+  my (@genomes,@genes,$g,$min,$n_of_genomes,$n_of_replicates);
 
   my $deftaup     = 2.5; #Tettelin et al PNAS 2005
   my $defthetap   = 33;
@@ -406,6 +568,7 @@ sub plot_pan_genome
   unlink($PNGfile,$PDFfile);
 
   # 1) read input file in boxplot format
+  $n_of_replicates = 0;
   open(DATA,$data_file) || die "# plot_pan_genome : cannot read $data_file\n";
   while(<DATA>)
   {
@@ -419,10 +582,11 @@ sub plot_pan_genome
       push(@genomes,$g+1);
       push(@genes,$data[$g]);
     }
+    $n_of_replicates++;
   }
   close(DATA);
 
-# 2) write temporary input file in data frame format and get max,min gene numbers
+  # 2) write temporary input file in data frame format and get max,min gene numbers
   my $tmpfile = '_tmp'.basename($data_file);
   open(TMP,">$tmpfile");
   print TMP "genomes\tgenes\n";
@@ -437,7 +601,7 @@ sub plot_pan_genome
 		
 	pan = read.table('$tmpfile',header=T,sep='\t'); 
 
-    txtreport = file('$TXTfile',"w");
+  txtreport = file('$TXTfile',"w");
 
 	taup_value = $deftaup + $deftaupstep;
 	function_string = 'genes ~ omegap + thetap*(genomes-1) + kp * \
@@ -477,13 +641,13 @@ sub plot_pan_genome
                         taup = sprintf("%1.2f",coeffs['taup']) ) )
 		}
 		else if(coeffs['thetap'] > 1 && coeffs['kp'] < 1)
-                {
-                        fiteq = substitute( pangenes(g) == omegap + thetap * (g-1) - kp ~ exp(frac(-2,taup)) ~ frac(1-exp(frac(-(g-1),taup)),1-       exp(frac(-1,taup))), \
+    {
+      fiteq = substitute( pangenes(g) == omegap + thetap * (g-1) - kp ~ exp(frac(-2,taup)) ~ frac(1-exp(frac(-(g-1),taup)),1-       exp(frac(-1,taup))), \
                         list(omegap=sprintf("%1.0f",coeffs['omegap']), \
                         thetap=sprintf("%1.1f",coeffs['thetap']), \
                         kp = sprintf("%1.0f",-coeffs['kp']), \
                         taup = sprintf("%1.2f",coeffs['taup']) ) )
-                }
+    }
 		else
 		{
 			fiteq = substitute( pangenes(g) == omegap - thetap * (g-1) - kp ~ exp(frac(-2,taup)) ~ frac(1-exp(frac(-(g-1),taup)),1-exp(frac(-1,taup))), \
@@ -493,20 +657,20 @@ sub plot_pan_genome
 				taup = sprintf("%1.2f",coeffs['taup']) ) ) 
 		}
 
-        writeLines("# pan fit converged", txtreport);
-        writeLines(sprintf("# residual standard error = %1.2f",SER), txtreport);
-        writeLines( paste(fiteq) , txtreport, sep=" " );
-        writeLines( "" , txtreport);
-        fittedvalues = lapply( 1:$n_of_genomes, ffit)
-        writeLines( "# fitted values (genomes, genes) :" , txtreport );
-        for(i in 1:$n_of_genomes ) { 
-            writeLines( sprintf("%d\t%1.1f",i,fittedvalues[i]) , txtreport  );
-        }
-	} else { 
-        writeLines("# pan fit failed to converge", txtreport)
+    writeLines("# pan fit converged", txtreport);
+    writeLines(sprintf("# residual standard error = %1.2f",SER), txtreport);
+    writeLines( paste(fiteq) , txtreport, sep=" " );
+    writeLines( "" , txtreport);
+    fittedvalues = lapply( 1:$n_of_genomes, ffit)
+    writeLines( "# fitted values (genomes, genes) :" , txtreport );
+    for(i in 1:$n_of_genomes ) { 
+        writeLines( sprintf("%d\t%1.1f",i,fittedvalues[i]) , txtreport  );
     }
+	} else { 
+    writeLines("# pan fit failed to converge", txtreport)
+  }
 
-    close(txtreport);
+  close(txtreport);
 	
 	# actually make charts
 	pdf(file="$PDFfile");
@@ -514,14 +678,12 @@ sub plot_pan_genome
 	xaxis_labels = 1:$n_of_genomes;
 	axis(side=1,at=xaxis_labels);			
 	if(converged == TRUE) 
-        {
+  {
 		curve( ffit , from=1, to=max(pan\$genomes), add=T, col="red" );
 		mtext(fiteq,side=3,cex=$FontScale,line=0.5);
 		mtext(sprintf("residual standard error = %1.2f",SER),side=4,cex=$FontScale,line=0.5)
 	}
-
-
-	
+  
 	png(file="$PNGfile");
 	plot(pan\$genomes,pan\$genes,xaxt='n',xlab='genomes (g)',ylab='pan genome size (genes)',pch=20);
 	axis(side=1,at=xaxis_labels);	
@@ -531,10 +693,83 @@ sub plot_pan_genome
 		mtext(fiteq,side=3,cex=$FontScale,line=0.5);
 		mtext(sprintf("residual standard error = %1.2f",SER),side=4,cex=$FontScale,line=0.5)
 	}
-	
+  
+  # make animation pics if required
+  anim_dir = "$anim_dir"
+  if(file.exists(anim_dir))
+  {
+    i = 0
+    picname = ''
+    
+    # add first sampling replicate
+    genomes = pan\$genomes[1:$n_of_genomes]
+    genes   = pan\$genes[1:$n_of_genomes]
+   
+    for(i in 1:$n_of_genomes){
+    
+      if (i < 10) { picname = paste(anim_dir,'/000',i,'plot.png',sep='')}
+      if (i < 100 && i >= 10) { picname = paste(anim_dir,'/00',i,'plot.png', sep='')}
+      if (i >= 100) { picname = paste(anim_dir,'/0', i,'plot.png', sep='')}
+
+      colors = c( rep("green",i) , rep("white",$n_of_genomes-i) )
+
+      png(picname);
+	    plot(genomes,genes,xaxt='n',xlab='genomes (g)',ylab='pan genome size (genes)',
+        pch=20, col=colors, main=paste("Genomes/transcriptomes added=",i," replicates=",1));
+	    axis(side=1,at=xaxis_labels);
+      dev.off()
+    }
+   
+    # remaining replicates
+    for(r in 2:$n_of_replicates)
+    {
+      last = r*$n_of_genomes
+      genomes = pan\$genomes[1:last]
+      genes   = pan\$genes[1:last]
+      i=last
+      
+      colors = c( rep("black",(r-1)*$n_of_genomes) , rep("green",$n_of_genomes) )
+      
+      if (i < 10) { picname = paste(anim_dir,'/000',i,'plot.png',sep='')}
+      if (i < 100 && i >= 10) { picname = paste(anim_dir,'/00',i,'plot.png', sep='')}
+      if (i >= 100) { picname = paste(anim_dir,'/0', i,'plot.png', sep='')}
+
+      png(picname);
+	    plot(genomes,genes,xaxt='n',xlab='genomes (g)',ylab='pan genome size (genes)',
+        pch=20, col=colors, main=paste("Genomes/transcriptomes added=",last," replicates=",r));
+	    axis(side=1,at=xaxis_labels);
+      dev.off()
+    }    
+    
+    # final plot
+    png(picname);
+	  plot(genomes,genes,xaxt='n',xlab='genomes (g)',ylab='pan genome size (genes)',pch=20);
+	  axis(side=1,at=xaxis_labels);
+    if(converged == TRUE) 
+	  {	
+	    curve( ffit , from=1, to=max(pan\$genomes), add=T, col="red" );
+		  mtext(fiteq,side=3,cex=$FontScale,line=0.5);
+		  mtext(sprintf("residual standard error = %1.2f",SER),side=4,cex=$FontScale,line=0.5)
+	  }
+    dev.off()
+	}
+  
 	q()
 EOF
   close RSHELL;
+
+  # print summary of animation folder 
+  if(-s $anim_dir)
+  {
+    opendir(ANIMDIR,$anim_dir) || die "# $0 : cannot list $anim_dir\n";
+    my @snapshots = grep{/\.png/} readdir(ANIMDIR);
+    closedir(ANIMDIR);
+    
+    if(@snapshots)
+    {
+      printf("\n# %d animation pics available in folder '%s'\n\n",scalar(@snapshots),$anim_dir);
+    }
+  }
 
   # 4) clean
   unlink($tmpfile);
