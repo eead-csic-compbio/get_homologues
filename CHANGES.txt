@@ -119,3 +119,4 @@
 12042016: marfil_homology::makeIsoform now prints taxon name to help detect problematic datasets or incomplete BLAST jobs
 12042016: added option -a to plot_pancore_matrix.pl to generate snapshots of pangenome size simulations
 13042016: added check so that initial core/pan size cannot be < 0 (get_homologues-est.pl)
+13042016: added option -c to plot_matrix_heatmap.sh to filter out excessive redundancy by imposing a maximum similarity cut-off value
