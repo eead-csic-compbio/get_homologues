@@ -1574,6 +1574,8 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
          $coregenome[$s][0] = $gindex{$tmptaxa[0]}[2] - $n_of_inparalogues;
       }
       
+      if($coregenome[$s][0] < 0){ $coregenome[$s][0] = 0 }
+      
       if($do_soft){ $softcore[$s][0] = $coregenome[$s][0] }
       $pangenome[$s][0]  = $coregenome[$s][0];
       print "# adding $tmptaxa[0]: core=$coregenome[$s][0] pan=$pangenome[$s][0]\n";
