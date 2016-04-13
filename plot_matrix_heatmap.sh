@@ -9,7 +9,9 @@
 #: OUTPUT: svg and pdf; png not implemented yet
 
 progname=${0##*/} # plot_matrix_heatmap.sh
-VERSION='0.2_26Feb15' # wrote R function sim2dist() to compute bioNJ tree with ape
+VERSION='v0.3_13Apr16'  # added option -c to filter input matrix by a maximum similarity cut-off value
+                        # to reduce excessive redundancy. Improved the help text printed with -M
+         #'0.2_26Feb15' # wrote R function sim2dist() to compute bioNJ tree with ape
                       # based on ANI sim-matrix, and write it to file as newick string
          #'0.1_16Feb15'; first version
 
@@ -31,7 +33,11 @@ function print_help()
     REQUIRED
        -i <string> presence_absence tab file     
        
-    OPTIONS to tweak the graphical output:
+    OPTIONAL:
+     i) filter out excessive redunancy in the tab-delimited matrix file
+       -c <float> (maximum) similarity cut-off value (e.g. 97.3) [def: $sim_cutoff]
+	
+    ii) tweak the graphical output:
        -t <string> text for plot title                    [def input_tab_file_name]
        -m <integer> margins_horizontal                    [def $margin_hor]
        -v <integer> margins_vertical                      [def $margin_vert] 
@@ -50,7 +56,7 @@ function print_help()
        -M <flag> prints gplot installation instructions and further usage information
        
     EXAMPLE:
-      $progname -i Avg_identity.tab -t "Genus X ANIb (OMCL all clusters)" -N -o pdf
+      $progname -i Avg_identity.tab -c 98.5 -t "Genus X ANIb (OMCL all clusters)" -N -o pdf -m 22 -v 22 -p 20 -H 20 -W 30
 
     #------------------------------------------------------------------------------------------------------------------
     AIM: Plot ordered heatmaps with row and col. dendrogram, from squared numeric (distance or presence-absence) matrix,
@@ -80,8 +86,8 @@ function print_man()
 {
     cat << MAN
     
-    $progname is a simple shell wrapper around heatmap.2() from the gplots pacakge
-    to generate generate ordered heatmaps with row and column dendrograms from
+    $progname is a simple shell wrapper around heatmap.2() from the gplots pacakge.
+    Generates ordered heatmaps with row and column dendrograms from
     an input distace/dissimilarity matrix, or a binary presence-abasence matrix.
     
     1) If the package is not installed on your system, then proceed as follows:
@@ -91,7 +97,7 @@ function print_man()
        > install.packages(c("gplots", "ape"), dependencies=TRUE)
        > q()
        
-       $ exit # quit root account
+       $ exit # exit from the root account
        $ R    # call R
        > library("gplots") # load the lib; do your stuff
        > library("ape") # load the lib; do your stuff
@@ -149,6 +155,8 @@ function check_dependencies()
 tab_file=
 check_dep=0
 
+sim_cutoff=100
+
 text=
 width=15
 height=10
@@ -160,10 +168,12 @@ do_nj=0
 reorder_clusters=1
 
 # See bash cookbook 13.1 and 13.2
-while getopts ':i:t:m:o:p:v:H:W:hMNC?:' OPTIONS
+while getopts ':c:i:t:m:o:p:v:H:W:hMNC?:' OPTIONS
 do
    case $OPTIONS in
 
+   c)   sim_cutoff=$OPTARG
+        ;;
    i)   tab_file=$OPTARG
         ;;
    m)   margin_hor=$OPTARG
@@ -228,7 +238,7 @@ cat << PARAMS
 ##############################################################################################
 >>> $progname v$VERSION run started at $start_time
         working directory = $wkdir
-        input tab_file = $tab_file
+        input tab_file = $tab_file | sim_cutoff = $sim_cutoff
         text=$text|margin_hor=$margin_hor|margin_vert=$margin_vert|points=$points
         width=$width|height=$height|outformat=$outformat
         reorder_clusters=$reorder_clusters|do_bioNJ=$do_nj
@@ -238,8 +248,15 @@ cat << PARAMS
 PARAMS
 
 # 1) prepare R's output file names
-heatmap_outfile="${tab_file%.*}_heatmap.$outformat"
-echo "# Plotting file $heatmap_outfile"
+sim_cutoff_int=$(echo $sim_cutoff | cut -d\. -f1)
+if [ $sim_cutoff_int -ne 100 ]
+then
+   heatmap_outfile="${tab_file%.*}_sim_cutoff_${sim_cutoff}_heatmap.$outformat"
+   echo "# Plotting file $heatmap_outfile"
+else
+   heatmap_outfile="${tab_file%.*}_heatmap.$outformat"
+   echo "# Plotting file $heatmap_outfile"
+fi
 
 nj_tree="${tab_file%.*}_BioNJ.ph"
 
@@ -247,13 +264,17 @@ nj_tree="${tab_file%.*}_BioNJ.ph"
 R --no-save -q <<RCMD > ${progname%.*}_script_run_at_${start_time}.R
 library("gplots")
 library("ape")
-
 options(expressions = 100000) #https://stat.ethz.ch/pipermail/r-help/2004-January/044109.html
-
 tab <- read.table(file="$tab_file", header=TRUE)
 mat_dat <- data.matrix(tab[,2:ncol(tab)])
 rnames <- tab[,1]
 rownames(mat_dat) <- rnames
+
+if($sim_cutoff < 100)
+{
+   rows <- (apply( mat_dat , 1 , function(x) any( x < $sim_cutoff) ) )
+   mat_dat <-  mat_dat[rows, rows]
+}
 
 if($reorder_clusters > 0){
   $outformat("$heatmap_outfile", width=$width, height=$height, pointsize=$pointsize)  
@@ -264,13 +285,11 @@ if($reorder_clusters > 0){
   heatmap.2(mat_dat, cellnote=mat_dat, main="$text", notecol="black", density.info="none", trace="none", margins=c($margin_vert,$margin_hor), lhei = c(1,5), dendrogram = "row", Colv = FALSE)
    dev.off()
 }  
-
 if($do_nj > 0){
   sim2dist <- function(x) 100 - x
   bionj <- bionj(as.dist(apply(mat_dat, 1, sim2dist)))
   write.tree(phy=bionj, file="$nj_tree")
 }
-
 RCMD
 
 if [ -s $heatmap_outfile ]
