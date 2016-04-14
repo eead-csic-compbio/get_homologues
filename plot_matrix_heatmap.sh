@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# 2015 Pablo Vinuesa (1) and Bruno Contreras-Moreira (2):
+# 2015-6 Pablo Vinuesa (1) and Bruno Contreras-Moreira (2):
 # 1: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 # 2: http://www.eead.csic.es/compbio (Laboratory of Computational Biology, EEAD/CSIC, Spain)
 
@@ -34,10 +34,10 @@ function print_help()
        -i <string> presence_absence tab file     
        
     OPTIONAL:
-     i) filter out excessive redunancy in the tab-delimited matrix file
-       -c <float> (maximum) similarity cut-off value (e.g. 97.3) [def: $sim_cutoff]
+     I) filter out excessive redundancy in the tab-delimited ANI matrix file
+       -c <float> (maximum) identity cut-off value (e.g. 97.3) [def: $sim_cutoff]
 	
-    ii) tweak the graphical output:
+    II) tweak the graphical output:
        -t <string> text for plot title                    [def input_tab_file_name]
        -m <integer> margins_horizontal                    [def $margin_hor]
        -v <integer> margins_vertical                      [def $margin_vert] 
