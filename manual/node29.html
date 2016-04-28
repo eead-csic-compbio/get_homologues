@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>A script to test most get_homologues features with a sample dataset</TITLE>
+<META NAME="description" CONTENT="A script to test most get_homologues features with a sample dataset">
+<META NAME="keywords" CONTENT="manual">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="manual.css">
+
+<LINK REL="previous" HREF="node21.html">
+<LINK REL="up" HREF="node13.html">
+<LINK REL="next" HREF="node30.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html458"
+  HREF="node30.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/usr/share/latex2html/icons/next.png"></A> 
+<A NAME="tex2html454"
+  HREF="node13.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/usr/share/latex2html/icons/up.png"></A> 
+<A NAME="tex2html450"
+  HREF="node28.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/usr/share/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html456"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="/usr/share/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html459"
+  HREF="node30.html">Frequently asked questions (FAQs)</A>
+<B> Up:</B> <A NAME="tex2html455"
+  HREF="node13.html">A few examples of</A>
+<B> Previous:</B> <A NAME="tex2html451"
+  HREF="node28.html">Finding out best hits</A>
+ &nbsp; <B>  <A NAME="tex2html457"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00059000000000000000"></A><A NAME="HOWTOTettelin"></A>
+<BR>
+A script to test most get_homologues features with a sample dataset
+</H2>
+
+<P>
+File <code>HOWTOTettelin</code> is a shell script which performs typical uses of <SPAN  CLASS="textit">get_homologues.pl</SPAN>.
+This script can be made executable on the terminal with: <code>$ chmod +x HOWTOTettelin</code>
+and then executed with: <code>$ ./HOWTOTettelin</code>
+The first task carried out by the script is to download the same GenBank files used in the landmark work of Tettelin
+and collaborators (PubMed=http://www.ncbi.nlm.nih.gov/sites/ppmc/articles/PMC1216834/16172379); afterwards
+several analyses are sequentially undertaken:
+
+<P>
+<PRE>
+# 1.0) optionally download genomes in GenBank format from NCBI FTP site
+cd test_Streptococcus
+../download_genomes_ncbi.pl test_Streptococcus_download_list.txt
+cd ..
+
+# 1.1) run BLAST jobs with 4 CPU cores and optionally HMMER 
+./get_homologues.pl -d test_Streptococcus/ -n 4 -o
+./get_homologues.pl -d test_Streptococcus/ -n 4 -D -o
+
+# 1.2) calculate core-genomes with all BDBH, OMCL &amp; COG algorithms
+./get_homologues.pl -d test_Streptococcus/ 
+./get_homologues.pl -d test_Streptococcus/ -M
+./get_homologues.pl -d test_Streptococcus/ -G
+./get_homologues.pl -d test_Streptococcus/ -M -D
+
+# 1.3) calculate consensus core-genome with syntenic genes
+./compare_clusters.pl -s -n -o test_Streptococcus_intersection -d \
+test_Streptococcus_homologues/S_f0_alltaxa_algCOG_e0_,\
+test_Streptococcus_homologues/S_f0_alltaxa_algOMCL_e0_,\
+test_Streptococcus_homologues/S_f0_alltaxa_algBDBH_e0_
+
+# 1.4) calculate core-genome with coverage and identity as in the Tettelin paper (cover=50%,%ID=50)
+./get_homologues.pl -d test_Streptococcus/ -M -C 50 -S 50
+
+# 1.6) calculate core intergenic clusters
+./get_homologues.pl -d test_Streptococcus/ -g
+
+# 1.7) estimate and plot core- and pangenome sizes with all BDBH, OMCL &amp; COG algorithms
+./get_homologues.pl -d test_Streptococcus/ -c
+./get_homologues.pl -d test_Streptococcus/ -M -c
+./get_homologues.pl -d test_Streptococcus/ -G -c
+
+# 2.1) calculate pan-genome with OMCL &amp; COG algorithms
+./get_homologues.pl -d test_Streptococcus/ -M -t 0
+./get_homologues.pl -d test_Streptococcus/ -G -t 0
+
+# 2.2) build consensus pangenomic matrix
+./compare_clusters.pl -d test_Streptococcus_homologues/S_f0_0taxa_algCOG_e0_,\
+test_Streptococcus_homologues/S_f0_0taxa_algOMCL_e0_ -m -T -o test_Streptococcus_intersection
+
+# 2.3) plot pangenomic compartments and estimate core- and pan-genome size with mixture models
+./parse_pangenome_matrix.pl -m test_Streptococcus_intersection/pangenome_matrix_t0.tab -s
+
+# 2.4) check accesory genes present in A genomes and absent in B
+./parse_pangenome_matrix.pl -m test_Streptococcus_intersection/pangenome_matrix_t0.tab \
+	-A test_Streptococcus/A.list -B test_Streptococcus/B.list -g -e
+</PRE>
+
+<P>
+Readers looking for a fully worked out
+example, including a comprehensive interpretation of results, can read our book chapter 
+"Robust Identification of Orthologues and Paralogues for Microbial Pan-Genomics Using GET_HOMOLOGUES: A Case Study of pIncAC Plasmids" 
+(PubMed=http://www.ncbi.nlm.nih.gov/pubmed/?term=2534386825343868).
+
+<P>
+
+<BR><HR>
+<ADDRESS>
+Bruno Contreras Moreira
+2016-04-28
+</ADDRESS>
+</BODY>
+</HTML>

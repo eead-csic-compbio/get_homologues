@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Required binaries</TITLE>
+<META NAME="description" CONTENT="Required binaries">
+<META NAME="keywords" CONTENT="manual">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="manual.css">
+
+<LINK REL="next" HREF="node6.html">
+<LINK REL="previous" HREF="node4.html">
+<LINK REL="up" HREF="node3.html">
+<LINK REL="next" HREF="node6.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html150"
+  HREF="node6.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/usr/share/latex2html/icons/next.png"></A> 
+<A NAME="tex2html146"
+  HREF="node3.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/usr/share/latex2html/icons/up.png"></A> 
+<A NAME="tex2html140"
+  HREF="node4.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/usr/share/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html148"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="/usr/share/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html151"
+  HREF="node6.html">Optional software dependencies</A>
+<B> Up:</B> <A NAME="tex2html147"
+  HREF="node3.html">Requirements and installation</A>
+<B> Previous:</B> <A NAME="tex2html141"
+  HREF="node4.html">Perl modules</A>
+ &nbsp; <B>  <A NAME="tex2html149"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00032000000000000000"></A> <A NAME="binaries"></A>
+<BR>
+Required binaries
+</H2>
+
+<P>
+The Perl script <SPAN  CLASS="textit">install.pl</SPAN>, already mentioned in section <A HREF="node3.html#install">2</A>, checks whether the included 
+precompiled binaries for http://sourceforge.net/projects/cogtriangles/files/COGtriangles, 
+http://hmmer.janelia.org/hmmer, http://www.micans.org/mclMCL 
+and ftp://ftp.ncbi.nlm.nih.gov/blast/executables/BLAST
+are in place and ready to be used by <SPAN  CLASS="textit">get_homologues</SPAN>. However, if any of these binaries fails to work in
+your system, perhaps due a different architecture or due to missing libraries, it will be necessary to obtain 
+an appropriate version for your system or to compile them with your own compiler.
+
+<P>
+In order to compile <SPAN  CLASS="textit">MCL</SPAN> the GNU <SPAN  CLASS="textit">gcc</SPAN> compiler is required, although it should most certainly already be 
+installed on your system. If not, you might install it by any of the alternatives listed in section <A HREF="node4.html#perlmods">2.1</A>.
+For instance, in Ubuntu this works well: <code>$ sudo apt-get install gcc</code> . The compilation steps are 
+as follows:
+<PRE>
+$ cd bin/mcl-14-137;
+$ ./configure`;
+$ make
+</PRE>
+
+<P>
+To compile <SPAN  CLASS="textit">COGtriangles</SPAN> the GNU <SPAN  CLASS="textit">g++</SPAN> compiler is required. You should obtain it by any of the alternatives listed in section <A HREF="node4.html#perlmods">2.1</A>.
+The compilation would then include several steps:
+<PRE>
+$cd bin/COGsoft;
+$cd COGlse; make;
+$cd ../COGmakehash;make;
+$cd ../COGreadblast;make;
+$cd ../COGtriangles;make
+</PRE>
+
+<P>
+Regarding BLAST, <SPAN  CLASS="textit">get_homologues</SPAN> uses BLAST+ binaries, which
+can be easily downloaded from the ftp://ftp.ncbi.nlm.nih.gov/blast/executables/NCBI FTP site.
+The packed binaries are <SPAN  CLASS="textit">blastp</SPAN> and <SPAN  CLASS="textit">makeblastdb</SPAN> from version <SPAN  CLASS="textit">ncbi-blast-2.2.27+</SPAN>. If these do
+not work in your machine or your prefer to use older BLAST versions, then it will be necessary to
+edit file <SPAN  CLASS="textit">lib/phyTools.pm</SPAN>. First, environmental variable <code>$ENV{'BLAST_PATH'}</code> needs to be set to 
+the right path in your system (inside subroutine <code>sub set_phyTools_env</code>).
+<BR>
+Variables <code>$ENV{'EXE_BLASTP'}</code> and <code>$ENV{'EXE_FORMATDB'}</code> also need to be changed to the appropriate
+BLAST binaries, which are respectively <SPAN  CLASS="textit">blastall</SPAN> and <SPAN  CLASS="textit">formatdb</SPAN>.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html150"
+  HREF="node6.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/usr/share/latex2html/icons/next.png"></A> 
+<A NAME="tex2html146"
+  HREF="node3.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/usr/share/latex2html/icons/up.png"></A> 
+<A NAME="tex2html140"
+  HREF="node4.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/usr/share/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html148"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="/usr/share/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html151"
+  HREF="node6.html">Optional software dependencies</A>
+<B> Up:</B> <A NAME="tex2html147"
+  HREF="node3.html">Requirements and installation</A>
+<B> Previous:</B> <A NAME="tex2html141"
+  HREF="node4.html">Perl modules</A>
+ &nbsp; <B>  <A NAME="tex2html149"
+  HREF="node1.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Bruno Contreras Moreira
+2016-04-28
+</ADDRESS>
+</BODY>
+</HTML>

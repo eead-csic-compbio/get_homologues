@@ -1,0 +1,325 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Clustering orthologous proteins from a few FASTA files</TITLE>
+<META NAME="description" CONTENT="Clustering orthologous proteins from a few FASTA files">
+<META NAME="keywords" CONTENT="manual">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="manual.css">
+
+<LINK REL="next" HREF="node15.html">
+<LINK REL="previous" HREF="node13.html">
+<LINK REL="up" HREF="node13.html">
+<LINK REL="next" HREF="node15.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html275"
+  HREF="node15.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/usr/share/latex2html/icons/next.png"></A> 
+<A NAME="tex2html271"
+  HREF="node13.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/usr/share/latex2html/icons/up.png"></A> 
+<A NAME="tex2html265"
+  HREF="node13.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/usr/share/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html273"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="/usr/share/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html276"
+  HREF="node15.html">Clustering orthologous proteins from</A>
+<B> Up:</B> <A NAME="tex2html272"
+  HREF="node13.html">A few examples of</A>
+<B> Previous:</B> <A NAME="tex2html266"
+  HREF="node13.html">A few examples of</A>
+ &nbsp; <B>  <A NAME="tex2html274"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00051000000000000000"></A> <A NAME="FASTAORFs"></A>
+<BR>
+Clustering orthologous proteins from a few FASTA files
+</H2>
+
+<P>
+This example takes the provided sample input folder <code>sample_buch_fasta</code>,
+which contains the proteins sets of four 
+http://en.wikipedia.org/wiki/Buchnera_and compiles clusters of BDBH sequences, which are candidates to be orthologues, with this command:
+<BR><code>$ ./get_homologues.pl -d sample_buch_fasta </code> . 
+
+<P>
+The output should look like this (contained in file <code>sample_output.txt</code>):
+<PRE> 
+# ./get_homologues.pl -i 0 -d sample_buch_fasta -o 0 -e 0 -f 0 -r 0 -t all -c 0 -I 0 
+# -m local -n 2 -M 0 -G 0 -P 0 -C 75 -S 1 -E 1e-05 -F 1.5 -N 0 -B 50 -s 0 -D 0 -g 0 -a '0' -x  -R 0
+
+# results_directory=sample_buch_fasta_homologues
+# parameters: MAXEVALUEBLASTSEARCH=0.01 MAXPFAMSEQS=250
+
+# checking input files...
+# Buch_aph_APS.faa 574
+# Buch_aph_Bp.faa 507
+# Buch_aph_Cc.faa 357
+# Buch_aphid_Sg.faa 546
+
+# 4 genomes, 1984 sequences
+
+# taxa considered = 4 sequences = 1984 residues = 650959 MIN_BITSCORE_SIM = 17.2
+
+# mask=BuchaphCc_f0_alltaxa_algBDBH_e0_ (_algBDBH)
+
+# running makeblastdb with sample_buch_fasta_homologues/Buch_aph_APS.faa.fasta
+
+# running makeblastdb with sample_buch_fasta_homologues/Buch_aph_Bp.faa.fasta
+
+# running makeblastdb with sample_buch_fasta_homologues/Buch_aph_Cc.faa.fasta
+
+# running makeblastdb with sample_buch_fasta_homologues/Buch_aphid_Sg.faa.fasta
+
+# running BLAST searches ...
+# done
+
+# concatenating and sorting blast results...
+# sorting _Buch_aph_APS.faa results (0.12MB)
+# sorting _Buch_aph_Bp.faa results (0.11MB)
+# sorting _Buch_aph_Cc.faa results (0.084MB)
+# sorting _Buch_aphid_Sg.faa results (0.11MB)
+# done
+
+
+# parsing blast result! (sample_buch_fasta_homologues/tmp/all.blast , 0.42MB)
+# parsing blast file finished
+
+# creating indexes, this might take some time (lines=9.30e+03) ...
+
+# construct_taxa_indexes: number of taxa found = 4
+# number of file addresses = 9.3e+03 number of BLAST queries  = 2.0e+03
+
+# clustering orthologous sequences
+
+# clustering inparalogues in Buch_aph_Cc.faa (reference)
+# 0 sequences
+
+# clustering inparalogues in Buch_aph_APS.faa
+# 1 sequences
+
+# finding BDBHs between Buch_aph_Cc.faa and Buch_aph_APS.faa
+# 324 sequences
+
+# clustering inparalogues in Buch_aph_Bp.faa
+# 0 sequences
+
+# finding BDBHs between Buch_aph_Cc.faa and Buch_aph_Bp.faa
+# 326 sequences
+
+# clustering inparalogues in Buch_aphid_Sg.faa
+# 0 sequences
+
+# finding BDBHs between Buch_aph_Cc.faa and Buch_aphid_Sg.faa
+# 317 sequences
+
+# looking for valid ORF clusters (n_of_taxa=4)...
+
+
+# number_of_clusters = 305
+# cluster_list = sample_buch_fasta_homologues/BuchaphCc_f0_alltaxa_algBDBH_e0_.cluster_list
+# cluster_directory = sample_buch_fasta_homologues/BuchaphCc_f0_alltaxa_algBDBH_e0_
+
+# runtime: 64 wallclock secs ( 0.74 usr  0.08 sys + 61.49 cusr  0.47 csys = 62.78 CPU)
+# RAM use: 20.3 MB
+</PRE>
+
+<P>
+In summary, the output details the processing steps required:
+
+<UL>
+<LI>Reading and parsing input files 
+(<code>Buch_aph_APS.faa,Buch_aph_Bp.faa,Buch_aph_Cc.faa,Buch_aphid_Sg.faa</code>),
+which contain 574, 507, 357 and 546 protein sequences, respectively. In total there are
+four input taxa and 1984 sequences.
+</LI>
+<LI>Preparing input sequences for BLAST.
+</LI>
+<LI>Running BLAST searches and sorting the results.
+</LI>
+<LI>Parsing the complete volume of sorted BLAST results.
+</LI>
+<LI>Searching for orthologous sequences using the BDBH algorithm, which requires a reference taxon or proteome
+to start with (see Figure <A HREF="node11.html#BDBHflow">3</A>).
+</LI>
+<LI>Clustering orthologous sequences and put them in files inside an appropriate folder. In this example
+the relevant output is directory <code>sample_buch_fasta_homologues/BuchaphCc_f0_alltaxa_algBDBH_e0_</code> together with
+file <code>sample_buch_fasta_homologues/BuchaphCc_f0_alltaxa_algBDBH_e0_.cluster_list</code>, which lists the found 
+clusters and their taxa composition. It can be seen that the folder name contains the key settings used to 
+cluster the sequences contained therein:
+
+<BR>
+<BR>
+<BR>
+<BR><PRE>
+BuchaphCc_f0_alltaxa_algBDBH_e0_
+|         |  |       |       |   
+|         |  |       |       -e option was not used (inparalogues are in)
+|         |  |       the clustering algorithm is BDBD (default)
+|         |  all clusters contain at least 1 sequence from each taxa (default -t behavior)
+|         -f option not used (no length filtering)
+reference proteome
+</PRE>
+In this case a total of 305 protein sequence clusters are produced, which include the original FASTA headers plus
+information of which segment was actually aligned by BLAST for inclusion in the cluster:
+
+<P>
+<PRE>
+&gt;gi|116515296| Rho [Buchnera aphidicola str. Cc (Cinara cedri)] | aligned:1-419 (420)
+MNLTKLKNTSVSKLIILGEKIGLENLARMRKQDIIFSILKQHSKSGEDIFGDGVLEILQDGFGFLRSSDSSYLAGPDDIYVSPS...
+&gt;gi|15617182| termination factor Rho [Buchnera aphidicola str. APS] | aligned:1-419 (419)
+MNLTALKNMPVSELITLGEKMGLENLARMRKQDIIFAILKQHAKSGEDIFGDGVLEILQDGFGFLRSADSSYLAGPDDIYVSPS...
+&gt;gi|27905006| termination factor Rho [Buchnera aphidicola str. Bp] | aligned:1-419 (419)
+MNLTALKNIPVSELIFLGDNAGLENLARMRKQDIIFSILKQHAKSGEDIFGDGVLEILQDGFGFLRSSDSSYLAGPDDIYVSPS...
+&gt;gi|21672828| termination factor Rho [Buchnera aphidicola str. Sg] | aligned:1-419 (419)
+MNLTALKNMPVSELITLGEKMGLENLARMRKQDIIFAILKQHAKSGEDIFGDGVLEILQDGFGFLRSADSSYLAGPDDIYVSPS...
+</PRE>
+</LI>
+</UL>
+
+<P>
+If we wanted to test a different sequence clustering algorithm we could run
+<BR><code>$ ./get_homologues.pl -d sample_buch_fasta -G </code> , 
+<BR>
+which will produce 298 clusters
+employing the COG triangles algorithm (see Table <A HREF="node11.html#tab:algs">2</A>) in folder 
+<BR><code>sample_buch_fasta_homologues/BuchaphCc_f0_alltaxa_algCOG_e0_</code>. 
+<BR>
+<P>
+Furthermore, typing <code>$ ./get_homologues.pl -d sample_buch_fasta -M </code>
+<BR>
+produces 308 clusters employing the OMCL algorithm in folder 
+<BR><code>sample_buch_fasta_homologues/BuchaphCc_f0_alltaxa_algOMCL_e0_</code>. 
+<BR>
+<P>
+Now we can make use of script <SPAN  CLASS="textit">compare_clusters.pl</SPAN> 
+to get the intersection between these cluster sets and choose only the consensus subset.
+We will need to type (without any blanks between folder names, in a single long line) and execute:
+<PRE>
+./compare_clusters.pl -o sample_intersection -d \
+sample_buch_fasta_homologues/BuchaphCc_f0_alltaxa_algBDBH_e0_, \
+sample_buch_fasta_homologues/BuchaphCc_f0_alltaxa_algCOG_e0_, \
+sample_buch_fasta_homologues/BuchaphCc_f0_alltaxa_algOMCL_e0_
+</PRE>     
+
+<P>
+The following output is produced:
+<PRE>
+# number of input cluster directories = 3
+
+# parsing clusters in sample_buch_fasta_homologues/BuchaphCc_f0_alltaxa_algBDBH_e0_ ...
+# cluster_list in place, will parse it (BuchaphCc_f0_alltaxa_algBDBH_e0_.cluster_list)
+# number of clusters = 305
+# parsing clusters in sample_buch_fasta_homologues/BuchaphCc_f0_alltaxa_algCOG_e0_ ...
+# cluster_list in place, will parse it (BuchaphCc_f0_alltaxa_algCOG_e0_.cluster_list)
+# number of clusters = 298
+# parsing clusters in sample_buch_fasta_homologues/BuchaphCc_f0_alltaxa_algOMCL_e0_ ...
+# cluster_list in place, will parse it (BuchaphCc_f0_alltaxa_algOMCL_e0_.cluster_list)
+# number of clusters = 308
+
+# intersection output directory: sample_intersection
+
+# intersection size = 295 clusters
+
+# intersection list = sample_intersection/intersection_t0.cluster_list
+
+# input set: sample_intersection/BuchaphCc_f0_alltaxa_algBDBH_e0_.venn_t0.txt
+# input set: sample_intersection/BuchaphCc_f0_alltaxa_algCOG_e0_.venn_t0.txt
+# input set: sample_intersection/BuchaphCc_f0_alltaxa_algOMCL_e0_.venn_t0.txt
+
+# Venn diagram = sample_intersection/venn_t0.pdf
+# Venn region file: sample_intersection/unique_BuchaphCc_f0_alltaxa_algBDBH_e0_.venn_t0.txt (5)
+# Venn region file: sample_intersection/unique_BuchaphCc_f0_alltaxa_algCOG_e0_.venn_t0.txt (0)
+# Venn region file: sample_intersection/unique_BuchaphCc_f0_alltaxa_algOMCL_e0_.venn_t0.txt (5)
+</PRE>
+
+<P>
+The 295 resulting clusters, those present in all input cluster sets, are placed in a new folder
+which was designated by parameter <code>-o sample_intersection</code>. Note that these are clusters that belong to
+the core-genome, as they contain sequence from all input taxa. A Venn diagram,
+such as the one in Figure <A HREF="#fig:venn">7</A>, might also be produced which summarizes the analysis.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:venn"></A><A NAME="366"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 7:</STRONG>
+Venn diagram showing the overlap between clusters of 'orthologous' sequences produced
+by three different algorithms and otherwise identical settings.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="1400" HEIGHT="1400" ALIGN="BOTTOM" BORDER="0"
+ SRC="./sample_intersection_venn.png"
+ ALT="Image sample_intersection_venn">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+If we are interested only in clusters containing single-copy proteins from all input species, 
+as they are probably safer orthologues, we can add the option <code>-t 4</code> to our previous command,
+as our example dataset contains 4 input proteomes.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html275"
+  HREF="node15.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/usr/share/latex2html/icons/next.png"></A> 
+<A NAME="tex2html271"
+  HREF="node13.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/usr/share/latex2html/icons/up.png"></A> 
+<A NAME="tex2html265"
+  HREF="node13.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/usr/share/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html273"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="/usr/share/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html276"
+  HREF="node15.html">Clustering orthologous proteins from</A>
+<B> Up:</B> <A NAME="tex2html272"
+  HREF="node13.html">A few examples of</A>
+<B> Previous:</B> <A NAME="tex2html266"
+  HREF="node13.html">A few examples of</A>
+ &nbsp; <B>  <A NAME="tex2html274"
+  HREF="node1.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Bruno Contreras Moreira
+2016-04-28
+</ADDRESS>
+</BODY>
+</HTML>

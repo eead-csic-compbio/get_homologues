@@ -1,0 +1,285 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Obtaining a pangenome matrix</TITLE>
+<META NAME="description" CONTENT="Obtaining a pangenome matrix">
+<META NAME="keywords" CONTENT="manual">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="manual.css">
+
+<LINK REL="next" HREF="node23.html">
+<LINK REL="previous" HREF="node21.html">
+<LINK REL="up" HREF="node21.html">
+<LINK REL="next" HREF="node23.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html378"
+  HREF="node23.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/usr/share/latex2html/icons/next.png"></A> 
+<A NAME="tex2html374"
+  HREF="node21.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/usr/share/latex2html/icons/up.png"></A> 
+<A NAME="tex2html368"
+  HREF="node21.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/usr/share/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html376"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="/usr/share/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html379"
+  HREF="node23.html">Interrogating a pangenome matrix</A>
+<B> Up:</B> <A NAME="tex2html375"
+  HREF="node21.html">Performing genome composition analyses</A>
+<B> Previous:</B> <A NAME="tex2html369"
+  HREF="node21.html">Performing genome composition analyses</A>
+ &nbsp; <B>  <A NAME="tex2html377"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00058100000000000000"></A><A NAME="pange"></A>
+<BR>
+Obtaining a pangenome matrix
+</H3>
+
+<P>
+First we will try option <code>-t 0</code> in combination with the OMCL or the COG algorithms.
+By enforcing this option we are actually asking for all possible clusters, including those which might not 
+contain sequences from all input genomes (taxa). For this reason the use of this option usually means
+that a large number of clusters are reported. This is particularly true for COG runs, since this algorithm
+does not resolve clusters involving less than 3 genomes. The default algorithm BDBH is not available with this option.
+
+<BR>
+For instance, by calling
+<code>$ ./get_homologues.pl -d sample_plasmids_gbk -t 0 -G</code> we obtain 199 clusters:
+<BR><PRE>
+[...]
+# looking for valid ORF clusters (n_of_taxa=0)...
+
+# number_of_clusters = 199
+# cluster_list = [...]/EcoliplasmidpMUR050_f0_0taxa_algCOG_e0_.cluster_list
+# cluster_directory = sample_plasmids_gbk_homologues/EcoliplasmidpMUR050_f0_0taxa_algCOG_e0_
+</PRE>
+
+<P>
+By choosing the OMCL algorithm we obtain a smaller set of clusters, which we can test by typing on the terminal
+<code>$ ./get_homologues.pl -d sample_plasmids_gbk -t 0 -M</code>:
+<PRE>
+[...]
+# looking for valid ORF clusters (n_of_taxa=0)...
+
+# number_of_clusters = 193
+# cluster_list = [...]/EcoliplasmidpMUR050_f0_0taxa_algOMCL_e0_.cluster_list
+# cluster_directory = sample_plasmids_gbk_homologues/EcoliplasmidpMUR050_f0_0taxa_algOMCL_e0_
+</PRE>
+
+<P>
+We can now take advantage of script <SPAN  CLASS="textit">compare_clusters.pl</SPAN>, and the generated cluster directories,
+to compile the corresponding pangenome matrix. This can be accomplished for a single cluster set:
+<PRE>
+./compare_clusters.pl -o sample_intersection -m -d \
+sample_plasmids_gbk_homologues/Uncultured[...]_f0_0taxa_algCOG_e0_
+</PRE>
+
+<P>
+or for the intersection of several sets, in order to get a consensus pangenome matrix:
+<PRE>
+./compare_clusters.pl -o sample_intersection -m -d \
+sample_plasmids_gbk_homologues/Uncultured[...]_f0_0taxa_algCOG_e0_,\
+sample_plasmids_gbk_homologues/Uncultured[...]_f0_0taxa_algOMCL_e0_
+</PRE>
+
+<P>
+The ouput of the latter command will include the following lines:
+<PRE>
+[...]
+
+# number of input cluster directories = 2
+
+# parsing clusters in sample_plasmids_gbk_homologues/Uncultured[...]_f0_0taxa_algCOG_e0_ ...
+# cluster_list in place, will parse it ([...]/Uncultured[...]_f0_0taxa_algCOG_e0_.cluster_list)
+# ERROR: skipping cluster 62_transposase.faa , seems to duplicate 59_transposase.faa
+# ERROR: skipping cluster 116_tnpA.faa , seems to duplicate 59_transposase.faa
+# number of clusters = 197
+# parsing clusters in sample_plasmids_gbk_homologues/Uncultured[...]_f0_0taxa_algOMCL_e0_ ...
+# cluster_list in place, will parse it ([...]/Uncultured[...]_f0_0taxa_algOMCL_e0_.cluster_list)
+# number of clusters = 193
+[...]
+
+# intersection size = 180 clusters
+
+# intersection list = sample_intersection/intersection_t0.cluster_list
+
+# pangenome_file = sample_intersection/pangenome_matrix_t0.tab
+# pangenome_phylip file = sample_intersection/pangenome_matrix_t0.phylip
+# input set: sample_intersection/Uncultured[...]_f0_0taxa_algCOG_e0_.venn_t0.txt
+# input set: sample_intersection/Uncultured[...]_f0_0taxa_algOMCL_e0_.venn_t0.txt
+
+# Venn diagram = sample_intersection/venn_t0.pdf
+# Venn region file: sample_intersection/unique_Uncultured[...]_f0_0taxa_algCOG_e0_.venn_t0.txt (17)
+# Venn region file: sample_intersection/unique_Uncultured[...]_f0_0taxa_algOMCL_e0_.venn_t0.txt (13)
+</PRE>
+
+<P>
+Note that skipped clusters correspond precisely to COG unresolved clusters.
+This script produces two versions of the same pangenomic matrix:
+
+<UL>
+<LI>A full detailed matrix in tab-separated columns, with taxa/genomes as rows and sequence clusters as columns, 
+in which cells with natural numbers indicate whether a given taxa contains one or more sequences from a given cluster.
+Such files can be read and edited with any text editor or spreadsheet software.
+<PRE>
+source:folder                   3_EcoRII.faa  8_tnpA.faa  22_traA.faa  36_beta-lactamase[...]
+K_pneumoniae_12_plasmid_12.gb   1             0           1            2
+K_pneumoniae_9_plasmid_9.gb     1             0           0            2
+K_oxytoca_plasmid_pKOX105.gb    1             0           1            1
+[...]
+</PRE>
+
+<P>
+</LI>
+<LI>A reduced binary matrix in a format suitable for 
+http://evolution.genetics.washington.edu/phylip/doc/discrete.htmlPHYLIP discrete character analysis software, 
+which looks like this:
+<PRE>
+        12    180   &lt;-12 taxa, 180 clusters
+0000000000    0000000011001000000000100000111111101100000000000 ...
+0000000001    0000000010000000000000000000000000001000000000000 ... 
+0000000002    0000000010000000000000100000000001111111111111111
+0000000003    0000000010000000000000000000000000000000000000000
+0000000004    0000000010000000000000000000000000000000010000000
+0000000005    0000000110011100100000101000000000100001000000000
+0000000006    0000000011000000000000100000000000000000000000000
+0000000007    0000000001011000000001111111111110000000000000000
+0000000008    0000000101111111111111000000000000000000000000000
+0000000009    0000000000000000000000000000000000000000000000000
+0000000010    0000000010001000000000000000000000000000000000000
+0000000011    1111111110000000000000000000000000000000000000000 ...
+</PRE>
+
+<P>
+</LI>
+</UL>
+
+<P>
+Indeed, when option <code>-T</code> is toggled, as in the next example,
+<PRE>
+./compare_clusters.pl -o sample_intersection -m -T -d \
+sample_plasmids_gbk_homologues/Uncultured[...]_f0_0taxa_algCOG_e0_,\
+sample_plasmids_gbk_homologues/Uncultured[...]_f0_0taxa_algOMCL_e0_
+</PRE>
+
+<P>
+then the script calls program PARS from the 
+http://evolution.genetics.washington.edu/phylip/doc/pars.htmlPHYLIP suite
+to produce one or more alternative parsimony trees that capture the phylogeny implied in this matrix, adding the following 
+lines to the produced output:
+<PRE>
+# parsimony results by PARS (PHYLIP suite, evolution.genetics.washington.edu/phylip/doc/pars.html):
+# pangenome_phylip tree = sample_intersection/pangenome_matrix_t0.phylip.ph
+# pangenome_phylip log = sample_intersection/pangenome_matrix_t0.phylip.log
+</PRE>
+
+<P>
+Please note that the resulting http://en.wikipedia.org/wiki/Newick_formatNewick format <code>.ph</code> file can contain several trees 
+separated by ';', one per line. In order to plot them, as in the next figure, it might be necessary, depending on the software used, 
+to leave only one. This is the case for instance for MEGA or TreeView.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:parstree"></A><A NAME="792"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure:</STRONG>
+Example of pangenomic tree of the consensus COG &amp; OMCL pangenomic matrix obtained for a few plasmids. 
+Such trees can be useful to create the A and B lists discussed in section <A HREF="node23.html#pangeplot">4.8.2</A>.
+Plot produced with http://tree.bio.ed.ac.uk/software/figtreeFigTree, with midpoint root.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="327" HEIGHT="307" ALIGN="BOTTOM" BORDER="0"
+ SRC="./parstree.png"
+ ALT="Image parstree">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+A complementary view of the same data con be obtained with script <SPAN  CLASS="textit">plot_matrix_heatmap.sh</SPAN>:
+<PRE>
+cd sample_intersection
+../plot_matrix_heatmap.sh -i pangenome_matrix_t0.tab
+</PRE>
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:panheatmap"></A><A NAME="482"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 10:</STRONG>
+Heatmap of the previous pangenome matrix, with dendrograms sorting genomes and sequence clusters.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="473" HEIGHT="315" ALIGN="BOTTOM" BORDER="0"
+ SRC="./pangenome_matrix_t0_heatmap.png"
+ ALT="Image pangenome_matrix_t0_heatmap">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html378"
+  HREF="node23.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/usr/share/latex2html/icons/next.png"></A> 
+<A NAME="tex2html374"
+  HREF="node21.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/usr/share/latex2html/icons/up.png"></A> 
+<A NAME="tex2html368"
+  HREF="node21.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/usr/share/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html376"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="/usr/share/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html379"
+  HREF="node23.html">Interrogating a pangenome matrix</A>
+<B> Up:</B> <A NAME="tex2html375"
+  HREF="node21.html">Performing genome composition analyses</A>
+<B> Previous:</B> <A NAME="tex2html369"
+  HREF="node21.html">Performing genome composition analyses</A>
+ &nbsp; <B>  <A NAME="tex2html377"
+  HREF="node1.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Bruno Contreras Moreira
+2016-04-28
+</ADDRESS>
+</BODY>
+</HTML>

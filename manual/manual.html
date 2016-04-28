@@ -1,0 +1,3567 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>get_homologues manual</TITLE>
+<META NAME="description" CONTENT="get_homologues manual">
+<META NAME="keywords" CONTENT="manual">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="manual.css">
+
+</HEAD>
+
+<BODY >
+
+<P>
+<H1 ALIGN=CENTER><SPAN  CLASS="textit">get_homologues</SPAN> manual</H1>
+<P ALIGN=CENTER><STRONG>Bruno Contreras-Moreira (1,2) and Pablo Vinuesa (3)</STRONG>
+<BR><I><A NAME="tex2html4"
+  HREF="http://www.araid.es">1. Fundaci&#243;n ARAID</A>
+and <A NAME="tex2html5"
+  HREF="http://www.eead.csic.es">2. Estaci&#243;n Experimental de Aula Dei-CSIC</A></I>
+<BR><FONT SIZE=-1><A NAME="tex2html6"
+  HREF="http://www.ccg.unam.mx/~vinuesa">3. Centro de Ciencias Gen&#243;micas, Universidad Nacional Aut&#243;noma de M&#233;xico</A></FONT>
+</P>
+<HR>
+
+<P>
+<BR>
+
+<H2><A NAME="SECTION00010000000000000000">
+Contents</A>
+</H2>
+<!--Table of Contents-->
+
+<UL CLASS="TofC">
+<LI><A NAME="tex2html134"
+  HREF="manual.html#SECTION00020000000000000000">1 Description</A>
+<LI><A NAME="tex2html135"
+  HREF="manual.html#SECTION00030000000000000000">2 Requirements and installation</A>
+<UL>
+<LI><A NAME="tex2html136"
+  HREF="manual.html#SECTION00031000000000000000">2.1 Perl modules</A>
+<LI><A NAME="tex2html137"
+  HREF="manual.html#SECTION00032000000000000000">2.2 Required binaries</A>
+<LI><A NAME="tex2html138"
+  HREF="manual.html#SECTION00033000000000000000">2.3 Optional software dependencies</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html139"
+  HREF="manual.html#SECTION00040000000000000000">3 User manual</A>
+<UL>
+<LI><A NAME="tex2html140"
+  HREF="manual.html#SECTION00041000000000000000">3.1 Input data</A>
+<LI><A NAME="tex2html141"
+  HREF="manual.html#SECTION00042000000000000000">3.2 Obtaining (bacterial) GenBank input files</A>
+<LI><A NAME="tex2html142"
+  HREF="manual.html#SECTION00043000000000000000">3.3 (Eukaryotic) FASTA amino acid input files</A>
+<LI><A NAME="tex2html143"
+  HREF="manual.html#SECTION00044000000000000000">3.4 Program options</A>
+<LI><A NAME="tex2html144"
+  HREF="manual.html#SECTION00045000000000000000">3.5 Accompanying scripts</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html145"
+  HREF="manual.html#SECTION00050000000000000000">4 A few examples of use</A>
+<UL>
+<LI><A NAME="tex2html146"
+  HREF="manual.html#SECTION00051000000000000000">4.1 Clustering orthologous proteins from a few FASTA files</A>
+<LI><A NAME="tex2html147"
+  HREF="manual.html#SECTION00052000000000000000">4.2 Clustering orthologous proteins from a single FASTA file</A>
+<LI><A NAME="tex2html148"
+  HREF="manual.html#SECTION00053000000000000000">4.3 Clustering genes and proteins extracted from GenBank files</A>
+<LI><A NAME="tex2html149"
+  HREF="manual.html#SECTION00054000000000000000">4.4 Clustering genes and proteins that share Pfam domain architecture</A>
+<LI><A NAME="tex2html150"
+  HREF="manual.html#SECTION00055000000000000000">4.5 Clustering syntenic/neighbor genes</A>
+<LI><A NAME="tex2html151"
+  HREF="manual.html#SECTION00056000000000000000">4.6 Comparing clusters with external sequence sets</A>
+<LI><A NAME="tex2html152"
+  HREF="manual.html#SECTION00057000000000000000">4.7 Clustering intergenic segments from GenBank files</A>
+<LI><A NAME="tex2html153"
+  HREF="manual.html#SECTION00058000000000000000">4.8 Performing genome composition analyses</A>
+<LI><A NAME="tex2html154"
+  HREF="manual.html#SECTION00059000000000000000">4.9 A script to test most get_homologues features with a sample dataset</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html155"
+  HREF="manual.html#SECTION00060000000000000000">5 Frequently asked questions (FAQs)</A>
+<UL>
+<LI><A NAME="tex2html156"
+  HREF="manual.html#SECTION00061000000000000000">5.1 Installation</A>
+<LI><A NAME="tex2html157"
+  HREF="manual.html#SECTION00062000000000000000">5.2 Run options</A>
+<LI><A NAME="tex2html158"
+  HREF="manual.html#SECTION00063000000000000000">5.3 Downstream analyses</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html159"
+  HREF="manual.html#SECTION00070000000000000000">6 Frequent warnings and error messages</A>
+<LI><A NAME="tex2html160"
+  HREF="manual.html#SECTION00080000000000000000">7 Credits and references</A>
+</UL>
+<!--End of Table of Contents-->
+
+<P>
+
+<H1><A NAME="SECTION00020000000000000000">
+<SPAN CLASS="arabic">1</SPAN> Description</A>
+</H1>
+
+<P>
+This document describes the software <SPAN  CLASS="textit">get_homologues</SPAN> and provides a few examples on how to install and use it. 
+<SPAN  CLASS="textit">get_homologues</SPAN> is mainly written in the Perl programming language and includes several algorithms
+designed for three main tasks:
+
+<UL>
+<LI>Clustering protein and nucleotide sequences in homologous (possibly orthologous) groups, on the grounds of sequence similarity.
+</LI>
+<LI>Identification of orthologous groups of intergenic regions, flanked by orthologous open reading frames (ORFs), 
+conserved across related genomes.
+</LI>
+<LI>Definition of pan- and core-genomes by calculation of overlapping sets of proteins.
+</LI>
+</UL>
+
+<P>
+While the program was mainly developed for the study of bacterial genomes in GenBank format, 
+it can also be applied to eukaryotic sets of sequences, although in this case the meaning of terms such as core- 
+or pan-genome might change, and intergenic regions might be much larger.  
+
+<P>
+The twin <SPAN  CLASS="textit">manual_get_homologues-est.pdf</SPAN> file describes the specific options of <SPAN  CLASS="textit">get_homologues-est</SPAN>, 
+designed and tested for the task of clustering transcripts and, more generally, DNA-sequences of strains of the same species. 
+
+<P>
+
+<H1><A NAME="SECTION00030000000000000000"></A> <A NAME="install"></A>
+<BR>
+<SPAN CLASS="arabic">2</SPAN> Requirements and installation
+</H1>
+
+<P>
+<SPAN  CLASS="textit">get_homologues.pl</SPAN> is a Perl5 program bundled with a few binary files. 
+The software has been tested on 64-bit Linux boxes, and on Intel MacOSX 10.11.1 systems.
+Therefore, a Perl5 interpreter is needed to run this software, which 
+is usually installed by default on these operating systems. In addition, the package includes a few extra scripts 
+which can be useful for downloading GenBank files and for the analysis of the results.
+
+<P>
+In order to install and test this software please follow these steps:
+
+<OL>
+<LI>Unpack the software with: <code>$ tar xvfz get_homologues_X.Y.tgz</code> 
+</LI>
+<LI><code>$ cd get_homologues_X.Y</code>
+</LI>
+<LI><code>$ ./install.pl</code> 
+<BR>
+Please follow the indications in case some required part is missing. 
+
+<P>
+</LI>
+<LI>Type <code>$ ./get_homologues.pl -v</code> which will tell exactly which features are available.
+</LI>
+<LI>Test the main Perl script, named <code>get_homologues.pl</code>, with the included sample input folder <code>sample_buch_fasta</code>
+by means of the instruction:
+<BR><code>$ ./get_homologues.pl -d sample_buch_fasta</code> . 
+You should get an output similar to the contents of file <code>sample_output.txt</code>. 
+
+<P>
+</LI>
+<LI>Optionally modify your <code>$PATH</code> environment variable to include <SPAN  CLASS="textit">get_homologues.pl</SPAN>.
+Please copy the following lines to the <code>.bash_profile</code> or 
+<code>.bashrc</code> files, found in your home directory, replacing <code>[INSTALL_PATH]</code> by the full path of the installation folder:
+<PRE>
+export GETHOMS=[INSTALL_PATH]/get_homologues_X.Y
+export PATH=${GETHOMS}/:${PATH}
+</PRE>
+This change will be effective in a new terminal or after running: <code>$ source ~/.bash_profile</code>
+</LI>
+</OL>
+
+<P>
+The rest of this section might be safely skipped if installation went fine, 
+it was written to help solve installation problems.
+
+<P>
+
+<H2><A NAME="SECTION00031000000000000000"></A> <A NAME="perlmods"></A>
+<BR>
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">1</SPAN> Perl modules
+</H2>
+
+<P>
+A few Perl core modules are required by the <SPAN  CLASS="textit">get_homologues.pl</SPAN> script, which should be 
+already installed on your system: Cwd, FindBin, File::Basename, File::Spec, File::Temp, FileHandle, List::Util,
+Getopt::Std, Benchmark and Storable. 
+
+<P>
+In addition, the <SPAN  CLASS="textit">Bio::Seq</SPAN>, <SPAN  CLASS="textit">Bio::SeqIO</SPAN>, <SPAN  CLASS="textit">Bio::Graphics</SPAN> and <SPAN  CLASS="textit">Bio::SeqFeature::Generic</SPAN> 
+modules from the <A NAME="tex2html7"
+  HREF="http://www.bioperl.org">Bioperl</A>
+collection, 
+and module <A NAME="tex2html8"
+  HREF="<"><</A>840>>http://search.cpan.org/perldoc?Parallelare also required, and have been included in the <SPAN  CLASS="textit">get_homologues</SPAN> bundle for your convenience.
+
+<P>
+Should this version of BioPerl fail in your system (as diagnosed by <SPAN  CLASS="textit">install.pl</SPAN>) 
+it might be necessary to install it from scratch. 
+However, before trying to download it, you might want to check whether 
+it is already living on your system, by typing on the terminal:
+<BR><code>$ perl -MBio::Root::Version -e 'print $Bio::Root::Version::VERSION'</code>
+
+<P>
+If you get a message <code>Can't locate Bio/Root/Version...</code> then you need to actually install it, which 
+can sometimes become troublesome due to failed dependencies. For this reason usually the easiest way of
+installing it, provided that you have root privileges, 
+it is to use the software manager of your Linux distribution (such as <SPAN  CLASS="textit">synaptic/apt-get</SPAN> 
+in Ubuntu, <SPAN  CLASS="textit">yum</SPAN> in Fedora or <SPAN  CLASS="textit">YaST</SPAN> in openSUSE). If you prefer the terminal please use the 
+<SPAN  CLASS="textit">cpan</SPAN> program with administrator privileges (<code>sudo</code> in Ubuntu): 
+<BR><code>$ cpan -i C/CJ/CJFIELDS/BioPerl-1.6.1.tar.gz</code>
+
+<P>
+This form should be also valid:
+<BR><code>$ perl -MCPAN -e 'install C/CJ/CJFIELDS/BioPerl-1.6.1.tar.gz'</code>
+<BR>
+Please check this <A NAME="tex2html9"
+  HREF="http://bioperl.open-bio.org/wiki/Installing_Bioperl_for_Unix">tutorial</A>
+if you need further help.
+<BR>
+<P>
+The accompanying script <SPAN  CLASS="textit">download_genomes_ncbi.pl</SPAN> imports <SPAN  CLASS="textit">File::Fetch</SPAN>, which
+should be bundled by default as well. In case it is missing on your Fedora systems, it can be installed 
+as root with: <code>$ yum install perl-File-Fetch</code>
+
+<P>
+
+<H2><A NAME="SECTION00032000000000000000"></A> <A NAME="binaries"></A>
+<BR>
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">2</SPAN> Required binaries
+</H2>
+
+<P>
+The Perl script <SPAN  CLASS="textit">install.pl</SPAN>, already mentioned in section <A HREF="#install">2</A>, checks whether the included 
+precompiled binaries for <A NAME="tex2html10"
+  HREF="http://sourceforge.net/projects/cogtriangles/files/">COGtriangles</A>, 
+<A NAME="tex2html11"
+  HREF="http://hmmer.janelia.org/">hmmer</A>, <A NAME="tex2html12"
+  HREF="http://www.micans.org/mcl">MCL</A>
+and <A NAME="tex2html13"
+  HREF="ftp://ftp.ncbi.nlm.nih.gov/blast/executables/">BLAST</A>
+are in place and ready to be used by <SPAN  CLASS="textit">get_homologues</SPAN>. However, if any of these binaries fails to work in
+your system, perhaps due a different architecture or due to missing libraries, it will be necessary to obtain 
+an appropriate version for your system or to compile them with your own compiler.
+
+<P>
+In order to compile <SPAN  CLASS="textit">MCL</SPAN> the GNU <SPAN  CLASS="textit">gcc</SPAN> compiler is required, although it should most certainly already be 
+installed on your system. If not, you might install it by any of the alternatives listed in section <A HREF="#perlmods">2.1</A>.
+For instance, in Ubuntu this works well: <code>$ sudo apt-get install gcc</code> . The compilation steps are 
+as follows:
+<PRE>
+$ cd bin/mcl-14-137;
+$ ./configure`;
+$ make
+</PRE>
+
+<P>
+To compile <SPAN  CLASS="textit">COGtriangles</SPAN> the GNU <SPAN  CLASS="textit">g++</SPAN> compiler is required. You should obtain it by any of the alternatives listed in section <A HREF="#perlmods">2.1</A>.
+The compilation would then include several steps:
+<PRE>
+$cd bin/COGsoft;
+$cd COGlse; make;
+$cd ../COGmakehash;make;
+$cd ../COGreadblast;make;
+$cd ../COGtriangles;make
+</PRE>
+
+<P>
+Regarding BLAST, <SPAN  CLASS="textit">get_homologues</SPAN> uses BLAST+ binaries, which
+can be easily downloaded from the <A NAME="tex2html14"
+  HREF="ftp://ftp.ncbi.nlm.nih.gov/blast/executables/">NCBI FTP</A>
+site.
+The packed binaries are <SPAN  CLASS="textit">blastp</SPAN> and <SPAN  CLASS="textit">makeblastdb</SPAN> from version <SPAN  CLASS="textit">ncbi-blast-2.2.27+</SPAN>. If these do
+not work in your machine or your prefer to use older BLAST versions, then it will be necessary to
+edit file <SPAN  CLASS="textit">lib/phyTools.pm</SPAN>. First, environmental variable <code>$ENV{'BLAST_PATH'}</code> needs to be set to 
+the right path in your system (inside subroutine <code>sub set_phyTools_env</code>).
+<BR>
+Variables <code>$ENV{'EXE_BLASTP'}</code> and <code>$ENV{'EXE_FORMATDB'}</code> also need to be changed to the appropriate
+BLAST binaries, which are respectively <SPAN  CLASS="textit">blastall</SPAN> and <SPAN  CLASS="textit">formatdb</SPAN>.
+
+<P>
+
+<H2><A NAME="SECTION00033000000000000000"></A> <A NAME="dependencies"></A>
+<BR>
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">3</SPAN> Optional software dependencies
+</H2>
+
+<P>
+It is possible to make use of <SPAN  CLASS="textit">get_homologues</SPAN> on a computer farm or high-performance computing cluster
+managed by <A NAME="tex2html15"
+  HREF="http://gridscheduler.sourceforge.net/">gridengine</A>. In particular we have tested this feature with 
+versions GE 6.0u8, 6.2u4, 2011.11p1 
+invoking the program with option <code>-m cluster</code>.
+For this command to work it might be necessary to edit the <SPAN  CLASS="textit">get_homologues.pl</SPAN> file and add the right 
+path to set global variable <code>$SGEPATH</code>. To find out the installation path of your SGE installation
+you might try the next terminal command: <code>$ which qsub</code>
+<BR>
+In case you have access to a multi-core computer you can follow the steps at
+<BR><A NAME="tex2html16"
+  HREF="http://bioinfoperl.blogspot.com.es/2015/04/howto-install-grid-engine-on-multi-core-box-gethomologues.html">http://bioinfoperl.blogspot.com.es/2015/04/howto-install-grid-engine-on-multi-core-box-gethomologues.html</A>
+to set up your own Grid Engine cluster and speed up your calculations.
+
+<P>
+For cluster-based operations three bundled Perl scripts are invoked:
+<BR><code>_cluster_makeHomolog.pl</code>, <code>_cluster_makeInparalog.pl</code> and <code>_cluster_makeOrtholog.pl</code> .
+
+<P>
+It is also possible to invoke Pfam domain scanning from <SPAN  CLASS="textit">get_homologues</SPAN>. This option 
+requires the bundled binary <SPAN  CLASS="textit">hmmscan</SPAN>, which is part of the <A NAME="tex2html17"
+  HREF="http://hmmer.janelia.org">HMMER3</A>
+package,
+whose path is set in file <SPAN  CLASS="textit">lib/phyTools.pm</SPAN> (variable <code>$ENV{'EXE_HMMPFAM'}</code>). 
+Should this binary not work in your system, a fresh install might be the solution, say in <code>/your/path/hmmer-3.1b2/</code>.
+In this case you'll have to edit file <SPAN  CLASS="textit">lib/phyTools.pm</SPAN> and modify the relevant:
+<PRE>
+if( ! defined($ENV{'EXE_HMMPFAM'}) )
+{ 
+	$ENV{'EXE_HMMPFAM'} = '/your/path/hmmer-3.1b2/src/hmmscan --noali --acc --cut_ga '; 
+}
+</PRE>
+The Pfam HMM library is also required and the <SPAN  CLASS="textit">install.pl</SPAN> script should take care of it.
+However, you can manually download it from the appropriate
+<A NAME="tex2html18"
+  HREF="ftp://ftp.sanger.ac.uk/pub/databases/Pfam/current_release/Pfam-A.hmm.gz">Pfam FTP site</A>.
+This file needs to be decompressed, either in the default <SPAN  CLASS="textit">db</SPAN> folder or in any other location, 
+and then it should be formatted with the program <SPAN  CLASS="textit">hmmpress</SPAN>, which is also part of the 
+<SPAN  CLASS="textit">HMMER3</SPAN> package. A valid command sequence could be:
+<PRE>
+$ cd db;
+$ wget ftp://ftp.sanger.ac.uk/pub/databases/Pfam/current_release/Pfam-A.hmm.gz .;
+$ gunzip Pfam-A.hmm.gz;
+$ /your/path/hmmer-3.1b2/src/hmmpress Pfam-A.hmm
+</PRE>
+Finally, you'll need to edit file <SPAN  CLASS="textit">lib/phyTools.pm</SPAN> and modify the relevant line to:
+<PRE>
+if( ! defined($ENV{"PFAMDB"}) ){ $ENV{"PFAMDB"} = "db/Pfam-A.hmm"; }
+</PRE>
+
+<P>
+In order to reduce the memory footprint of <SPAN  CLASS="textit">get_homologues</SPAN> it is possible to take advantage of the
+<A NAME="tex2html19"
+  HREF="http://en.wikipedia.org/wiki/Berkeley_DB">Berkeley_DB</A>
+database engine, which requires Perl core module
+<A NAME="tex2html20"
+  HREF="http://search.cpan.org/perldoc?DB_File">DB_File</A>, which should be installed on all major Linux distributions.
+
+<P>
+Similarly, in order to take full advantage of the accompanying script <SPAN  CLASS="textit">parse_pangenome_matrix.pl</SPAN>, 
+particularly for option <code>-p</code>, the installation of module <A NAME="tex2html21"
+  HREF="http://search.cpan.org/perldoc?GD">GD</A>
+is recommended.
+An easy way to install them, provided that you have administrator privileges,  
+is with help from the software manager of your Linux distribution (such as <SPAN  CLASS="textit">synaptic/apt-get</SPAN> 
+in Ubuntu, <SPAN  CLASS="textit">yum</SPAN> in Fedora or <SPAN  CLASS="textit">YaST</SPAN> in openSUSE). 
+
+<P>
+This can usually be done on the terminal as well, in different forms:
+<PRE>
+$ sudo apt-get -y install libgd-gd2-perl  # Ubuntu/Debian-based distros
+
+$ yum -y install perl-GD                  # Redhat and derived distros
+
+$ zypper --assume-yes install perl-GD     # SuSE
+
+$ cpan -i GD                              # will require administrator privileges (sudo)
+
+$ perl -MCPAN -e 'install GD'             # will require administrator privileges (sudo)
+</PRE>
+
+<P>
+The installation of perl-GD on macOSX systems is known to be <A NAME="tex2html22"
+  HREF="http://www.bugzilla.org/docs/2.16/html/osx.html">troublesome</A>.
+<BR>
+<BR>
+<P>
+The accompanying scripts <SPAN  CLASS="textit">compare_clusters.pl</SPAN>, <SPAN  CLASS="textit">plot_pancore_matrix.pl</SPAN>, <SPAN  CLASS="textit">parse_pangenome_matrix.pl</SPAN>,
+<BR><SPAN  CLASS="textit">plot_matrix_heatmap.sh</SPAN>, <SPAN  CLASS="textit">hcluster_matrix.sh</SPAN> require the installation of the statistical software 
+<A NAME="tex2html23"
+  HREF="http://www.r-project.org">R</A>, 
+which usually is listed by software managers in all major Linux distributions.
+In some cases (some <A NAME="tex2html24"
+  HREF="http://cran.r-project.org/bin/linux/suse/README.html">SuSE versions</A>
+and 
+some <A NAME="tex2html25"
+  HREF="http://fedoraproject.org/wiki/EPEL/FAQ#How_can_I_install_the_packages_from_the_EPEL_software_repository.3F">Redhat-like distros</A>)
+it will be necessary to add a repository to your package manager.
+R can be installed  from the terminal:
+<PRE>
+$ sudo apt-get -y install r-base r-base-dev      # Ubuntu/Debian-based distros
+
+$ yum -y install R                               # RedHat and derived distros
+
+$ zypper --assume-yes R-patched R-patched-devel  # Suse
+</PRE>
+
+<P>
+Please visit <A NAME="tex2html26"
+  HREF="http://cran.r-project.org/bin/macosx/">CRAN</A>
+to download and install R on macOSX systems, which is straightforward.
+<BR>
+<BR>
+<P>
+In addition to R itself, <SPAN  CLASS="textit">plot_matrix_heatmap.sh</SPAN> and <SPAN  CLASS="textit">hcluster_matrix.sh</SPAN> require some R packages to run, 
+which can be easily installed from the R command line with: 
+<PRE>
+&gt; install.packages(c("ape", "gplots", "cluster"), dependencies=TRUE)
+</PRE>
+
+<P>
+The script <SPAN  CLASS="textit">compare_clusters.pl</SPAN> might require the installation of program PARS from the 
+<A NAME="tex2html27"
+  HREF="http://evolution.genetics.washington.edu/phylip/doc/pars.html">PHYLIP suite</A>, which should be already bundled 
+with your copy of <SPAN  CLASS="textit">get_homologues</SPAN>.
+<BR>
+<P>
+Finally, <SPAN  CLASS="textit">download_genomes_ncbi.pl</SPAN> might require <code>wget</code> in order to download WGS genomes, 
+but should be installed on most systems.
+
+<P>
+
+<H1><A NAME="SECTION00040000000000000000">
+<SPAN CLASS="arabic">3</SPAN> User manual</A>
+</H1>
+
+<P>
+This section describes the available options for the <SPAN  CLASS="textit">get_homologues</SPAN> software.
+
+<P>
+
+<H2><A NAME="SECTION00041000000000000000"></A> <A NAME="input"></A>
+<BR>
+<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">1</SPAN> Input data
+</H2>
+
+<P>
+The input required to run <SPAN  CLASS="textit">get_homologues</SPAN> can be of two types: 
+<DL COMPACT>
+<DT>1</DT>
+<DD>A single file with amino acid sequences in FASTA format, 
+in which headers include a taxon name between square brackets, including at least two words 
+and a first capital letter, as shown in the example:
+<PRE>
+&gt;protein 123 [Species 1]
+MANILLLDNIDSFTYNLVEQLRNQKNNVLVYRNTVSIDIIFNSLKKLTHPILMLSPGPSLPKHAGCMLDL
+PEKFVINSYFEKMIMSVRNNCDRVCGFQFHPESILTTHGDQILEKIIHWASLKYITNKKQ
+&gt;gi|10923402| [Species 2]
+IKKVKGDIPIVGICLGHQAIVEAYGGIIGYAGEIFHGKASLIRHDGLEMFEGVPQPLPVARYHSLICNKI
+PEKFVINSYFEKMIMSVRNNCDRVCGFQFHPESILTTHGDQILEKIIHWASLKYITNKKQ
+...
+</PRE>
+
+<P>
+</DD>
+<DT>2</DT>
+<DD>A directory or folder containing several files in either FASTA format (extensions '.faa' or '.fasta', 
+containing amino acid sequences) or GenBank files (extension '.gbk', one file per organism). 
+The advantage of this option is that new files can be added to the input folder in the future and 
+previous calculations will be conserved. This might be useful to study a group of organisms for 
+which a few genomes are available, and then keep adding new genomes as they become available. 
+This directory can actually contain a mixture of FASTA and GenBank files.
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00042000000000000000"></A> <A NAME="downGenBank"></A>
+<BR>
+<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN> Obtaining (bacterial) GenBank input files
+</H2>
+
+<P>
+The <A NAME="tex2html29"
+  HREF="http://www.ncbi.nlm.nih.gov/Sitemap/samplerecord.html">GenBank</A>
+format 
+is routinely used to describe genomic sequences, usually taking one file per chromosome or genomic 
+contig. Each file contains a reference DNA genomic sequence plus a collection of genes and their products, 
+making it possible to extract simultaneously the sequence of every ORF and its corresponding protein products. 
+
+<P>
+GenBank files are the recommended input format for bacterial sequences, as they permit the compilation
+of DNA and protein sequences clusters, which might have different applications.
+
+<P>
+There are many ways to obtain GenBank files, starting by manual browsing and downloading from the
+<A NAME="tex2html30"
+  HREF="http://www.ncbi.nlm.nih.gov/genbank">NCBI site</A>, keeping in mind that <SPAN ID="txt175">full files</SPAN>, 
+which include the reference nucleotide sequences, should be downloaded. In fact, <SPAN  CLASS="textit">get_homologues.pl</SPAN>
+will fail to parse any ORF in summary GenBank files. 
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:genbankfull"></A><A NAME="180"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 1:</STRONG>
+NCBI download widget showing the choice of 'GenBank (full)' format, 
+which contains the raw reference nucleotide sequences.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="902" HEIGHT="326" ALIGN="BOTTOM" BORDER="0"
+ SRC="./genbankfull.png"
+ ALT="Image genbankfull">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Often users take <SPAN ID="txt184">custom-made GenBank files</SPAN>, resulting from in-house genome assemblies, to be analysed. 
+In most cases genes from such files don't have GenBank identifiers assigned yet, and so we recommend 
+adding the field <code>locus_tag</code> to each CDS feature so that parsed sequences can be properly identified.
+
+<P>
+For their use with <SPAN  CLASS="textit">get_homologues</SPAN>,
+GenBank files for the same species (for example, from the main chromosome and from a couple of plasmids)
+must be concatenated. For instance, the genomic sequences of <SPAN  CLASS="textit">Rhizobium etli CFN 42</SPAN> comprise
+<A NAME="tex2html31"
+  HREF="<"><</A>841>>http://www.ncbi.nlm.nih.gov/genome?Db=genome&amp;term=rhizobiumwhich can be concatenated into a single <SPAN  CLASS="textit">_Rhizobium_etli_CFN42.gbk</SPAN> file.
+
+<P>
+In order to assist in this task this software package includes the accompanying script
+<SPAN  CLASS="textit">download_genomes_ncbi.pl</SPAN>. We will explain its use by fetching some of the <SPAN  CLASS="textit">Yersinia pestis</SPAN>
+genomic sequences used in a <A NAME="tex2html32"
+  HREF="http://www.ncbi.nlm.nih.gov/pubmed/21037571">2010 paper</A>
+by Morelli <SPAN  CLASS="textit">et al</SPAN>:
+
+<P>
+<PRE>
+Group   Name         Accession Number    Status
+0.PE2   Pestoides F  NC_009381           Completed Sanger genome			
+0.PE3   Angola       NC_010159           Completed Sanger genome			
+0.PE4   91001        NC_005810           Completed Sanger genome			
+0.ANT2  B42003004    NZ_AAYU00000000     Draft Sanger genome 				
+1.ANT1  UG05-0454    NZ_AAYR00000000     Draft Sanger genome (12.3X coverage)
+1.ANT1  Antiqua      NC_008150           Completed Sanger genome			
+1.IN3   E1979001     NZ_AAYV00000000     Draft Sanger genome 				
+1.ORI1  CA88-4125    NZ_ABCD00000000     Draft Sanger genome 				
+1.ORI1  FV-1         NZ_AAUB00000000     Draft Sanger genome				 
+1.ORI1  CO92         NC_003143           Completed Sanger genome  		 
+1.ORI2  F1991016     NZ_ABAT00000000     Draft Sanger genome				 
+1.ORI3  IP674        ERA000177           Draft 454 genome (82X coverage)   
+1.ORI3  IP275        NZ_AAOS00000000     Draft Sanger genome (7.6X coverage) 
+1.ORI3  MG05-1020    NZ_AAYS00000000     Draft Sanger genome (12.1X coverage)
+2.ANT1  Nepal516     NZ_ACNQ00000000     Draft Sanger genome				 
+2.MED1  KIM          NC_004088           Completed Sanger genome  		 
+2.MED2  K1973002     NZ_AAYT00000000     Draft Sanger genome
+</PRE>
+
+<P>
+In order to use <SPAN  CLASS="textit">download_genomes_ncbi.pl</SPAN> is is necessary to feed it a text file listing which 
+genomes are to be downloaded. The next examples show the exact format required, 
+as does the bundled file <code>sample_genome_list.txt</code>.
+
+<BR>
+<BR>
+First, it can be seen that completed genomes have NC accession numbers, and 
+can be added to the list as follows:
+<PRE>
+NC_010159                   Yersinia_pestis_Angola
+</PRE>
+Other annotated genomes can be added using their assembly code, as in this example:
+can be added to the list as follows:
+<PRE>
+GCA_000016445.1_ASM1644v1   Yersinia_pestis_Pestoides_F
+</PRE>
+Finally, draft WGS genomes, which can be browsed at
+<BR><A NAME="tex2html33"
+  HREF="http://www.ncbi.nlm.nih.gov/Traces/wgs">http://www.ncbi.nlm.nih.gov/Traces/wgs</A>,
+can be listed in our download file by adding their four-letter code of their prefixes, as follows:
+<PRE>
+AAYU01                      Yersinia_pestis_B42003004
+</PRE>
+
+<P>
+Finally, the <code>genome_list.txt</code> file will look as this:
+<PRE>
+NC_010159                  Yersinia_pestis_Angola    
+GCA_000016445.1_ASM1644v1  Yersinia_pestis_Pestoides_F
+AAYU01                     Yersinia_pestis_B42003004
+</PRE>
+Note that only the first two columns (separated by blanks) are read in, and that lines can be commented out
+by adding a '#' as the first character. 
+<BR>
+<P>
+Now we can run the following terminal command to fetch these genomes:
+<BR><code>$ ./download_genomes_ncbi.pl genome_list.txt</code>
+<BR>
+which will put several <SPAN  CLASS="textit">_Yersinia_pestis_*.gbk</SPAN> files in the current directory, which are now
+ready to be used by <SPAN  CLASS="textit">get_homologues</SPAN>.
+
+<P>
+
+<H2><A NAME="SECTION00043000000000000000">
+<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">3</SPAN> (Eukaryotic) FASTA amino acid input files</A>
+</H2>
+
+<P>
+Due to the complexity of eukaryotic genomes, which are split in many chromosomes and contigs and usually contain complex gene models, 
+the preferred format taken by <SPAN  CLASS="textit">get_homologues</SPAN> for their sequences is <A NAME="tex2html34"
+  HREF="http://en.wikipedia.org/wiki/FASTA_format">FASTA</A>. 
+
+<P>
+While eukaryotic GenBank files can be fed in, during development we have not tested nor benchmarked the 
+compilation of clusters of nucleotide eukaryotic sequences, which can be more error prone due to the inclusion of, for instance, 
+introns and pseudogenes. Therefore we currently cannot recommend the use of eukaryotic GenBank input files.
+
+<P>
+Of course FASTA format can also be used for prokaryotic amino acid sequences, as in the case of the
+example <code>sample_buch_fasta</code> folder, which contains protein sequences found in four <SPAN  CLASS="textit">Buchnera aphidicola</SPAN> genomes.
+
+<P>
+If your data are DNA coding sequences you can translate them to protein sequences for use with <SPAN  CLASS="textit">get_homologues</SPAN>,
+for instance by means of a Perl command in the terminal, with a little help from Bioperl <A HREF="#perlmods">2.1</A>. 
+It is a long command, which is split in three chunks to fit in this page:
+<PRE>
+$ perl -MBio::Seq -lne 'if(/^(&gt;.*)/){$h=$1}else{$fa{$h}.=$_} \
+	END{ foreach $h (sort(keys(%fa))){ $fa{$h}=Bio::Seq-&gt;new(-seq=&gt;$fa{$h})-&gt;translate()-&gt;seq(); \ 
+	print "$h\n$fa{$h}\n" }}' your_CDS_file.fna
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION00044000000000000000"></A> <A NAME="options"></A>
+<BR>
+<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">4</SPAN> Program options
+</H2>
+
+<P>
+<PRE>
+-v print version, credits and checks installation
+-d directory with input FASTA files ( .faa / .fna ),           (overrides -i,
+   GenBank files ( .gbk ), 1 per genome, or a subdirectory      use of pre-clustered sequences
+   ( subdir.clusters / subdir_ ) with pre-clustered sequences   ignores -c, -g)
+   ( .faa / .fna ); allows for new files to be added later;    
+   creates output folder named 'directory_homologues'
+-i input amino acid FASTA file with [taxon names] in headers,  (required unless -d is set)
+   creates output folder named 'file_homologues'
+   
+   
+Optional parameters:
+-o only run BLAST/Pfam searches and exit                       (useful to pre-compute searches)
+-c report genome composition analysis                          (follows order in -I file if enforced,
+                                                                ignores -r,-t,-e)
+-R set random seed for genome composition analysis             (optional, requires -c, example -R 1234,
+                                                                required for mixing -c with -c -a runs)
+-s save memory by using BerkeleyDB; default parsing stores
+   sequence hits in RAM
+-m runmode [local|cluster]                                     (default local)
+-n nb of threads for BLAST/HMMER/MCL in 'local' runmode        (default=2)
+-I file with .faa/.gbk files in -d to be included              (takes all by default, requires -d)
+
+
+Algorithms instead of default bidirectional best-hits (BDBH):
+-G use COGtriangle algorithm (COGS, PubMed=20439257)           (requires 3+ genomes|taxa)
+-M use orthoMCL algorithm (OMCL, PubMed=12952885)
+
+
+Options that control sequence similarity searches:
+-C min %coverage in BLAST pairwise alignments                  (range [1-100],default=75)
+-E max E-value                                                 (default=1e-05,max=0.01)
+-D require equal Pfam domain composition                       (recommended with -m cluster
+   when defining similarity-based orthology
+-S min %sequence identity in BLAST query/subj pairs            (range [1-100],default=1 [BDBH|OMCL])
+-N min BLAST neighborhood correlation PubMed=18475320          (range [0,1],default=0 [BDBH|OMCL])
+-b compile core-genome with minimum BLAST searches             (ignores -c [BDBH])
+
+
+Options that control clustering:
+-t report sequence clusters including at least t taxa          (default t=numberOfTaxa,
+                                                                t=0 reports all clusters [OMCL|COGS])
+-a report clusters of sequence features in GenBank files       (requires -d and .gbk files,
+   instead of default 'CDS' GenBank features                    example -a 'tRNA,rRNA',
+                                                                NOTE: uses blastn instead of blastp,
+                                                                ignores -g,-D)
+-g report clusters of intergenic sequences flanked by ORFs     (requires -d and .gbk files)
+   in addition to default 'CDS' clusters
+-f filter by %length difference within clusters                (range [1-100], by default sequence
+                                                                length is not checked)
+-r reference proteome .faa/.gbk file                           (by default takes file with
+                                                                least sequences; with BDBH sets
+                                                                first taxa to start adding genes)
+-e exclude clusters with inparalogues                          (by default inparalogues are
+                                                                included)
+-x allow sequences in multiple COG clusters                    (by default sequences are allocated
+                                                                to single clusters [COGS])
+-F orthoMCL inflation value                                    (range [1-5], default=1.5 [OMCL])
+-A calculate average identity of clustered sequences,          (optional, creates tab-separated matrix,
+ by default uses blastp results but can use blastn with -a      recommended with -t 0 [OMCL|COGS])
+-z add soft-core to genome composition analysis                (optional, requires -c [OMCL|COGS])
+</PRE>
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:flow"></A><A NAME="224"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 2:</STRONG>
+Flowchart of get_homologues.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="734" HEIGHT="1164" ALIGN="BOTTOM" BORDER="0"
+ SRC="./flow.png"
+ ALT="Image flow">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Typing <code>$ ./get_homologues.pl -h</code> on the terminal will show the available options, shown on the previous pages.
+
+<P>
+The only required option is either <code>-i</code>, used to choose an input file, or <code>-d</code> instead, which indicates 
+an input folder, as seen in section <A HREF="#input">3.1</A>. It is important to remark that in principle only files 
+with extensions <code>.faa</code> and <code>.gbk</code> are considered when parsing the <code>-d</code> directory. 
+By using <code>.faa</code> input files in theory you might only calculate clusters of protein sequences.
+In contrast, the advantage of using <code>.gbk</code> files is that you obtain both nucleotide and protein clusters.
+If both types of input files are combined, only protein clusters will be produced.
+However, if each input <code>.faa</code> file has a twin <code>.fna</code> file in place, containing the corresponding
+nucleotide sequences in the same order, the program will attempt to produce the corresponding clusters of nucleotide sequences.
+The possible input file combinations are summarized in Table <A HREF="#tab:informats">1</A>:
+
+<P>
+<BR><P></P>
+<DIV ALIGN="CENTER"><A NAME="236"></A>
+<TABLE>
+<CAPTION><STRONG>Table 1:</STRONG>
+Valid input file combinations.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<TABLE CELLPADDING=3 BORDER="1" ALIGN="CENTER">
+<TR><TD ALIGN="LEFT">input file extensions</TD>
+<TD ALIGN="CENTER">output clusters</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><code>.gbk</code></TD>
+<TD ALIGN="CENTER">amino acid + DNA sequence</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><code>.faa</code></TD>
+<TD ALIGN="CENTER">amino acid sequence</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><code>.gbk</code> &amp; <code>.faa</code></TD>
+<TD ALIGN="CENTER">amino acid sequence</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><code>.faa</code> &amp; <code>.fna</code></TD>
+<TD ALIGN="CENTER">amino acid + DNA sequence</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><code>.gbk</code> &amp; <code>.faa</code> &amp; <code>.fna</code></TD>
+<TD ALIGN="CENTER">amino acid + DNA sequence</TD>
+</TR>
+</TABLE>
+</DIV>
+
+<A NAME="tab:informats"></A></TD></TR>
+</TABLE>
+</DIV><P></P>
+<BR>
+
+<P>
+The use of an input folder or directory (<code>-d</code>)
+is recommended as it allows for new files to be added there in the future, reducing the computing required
+for updated analyses. For instance, if a user does a first analysis with 5 input genomes today, it is possible
+to check how the resulting clusters would change when adding an extra 10 genomes tomorrow, by copying these new 10 
+<code>.faa</code> / <code>.gbk</code> input files to the pre-existing <code>-d</code> folder, so that all previous BLAST searches are re-used.
+
+<P>
+In addition to <code>.gbk</code> and <code>.faa</code> files, the input directory can also contain <SPAN  CLASS="textbf">one subfolder</SPAN> with pre-clustered sequences.
+This feature was designed so that users can add previously produced <SPAN  CLASS="textit">get_homologues</SPAN> clusters, 
+or any other set of grouped sequences in FASTA format, to be analysed. For such a subfolder to be recognized, it must
+be named <code>subdir.clusters</code> or <code>subdir_</code>. Sample data folder <code>sample_buch_fasta/</code> contains such an example subfolder
+which can be uncompressed to be tested. It is important to note that, during subsequent calculations, 
+<SPAN  CLASS="textbf">these clusters are represented by the first sequence found in each</SPAN>. However, the output of the program will include 
+all pre-clustered sequences for convenience. 
+
+<P>
+All remaining flags are options that can modify the default behavior of the program, which is to use the 
+bidirectional best hit algorithm (BDBH) in order to compile clusters of potential orthologous ORFs,
+taking the smallest genome as a reference. By default protein sequences are used to guide the clustering, thus
+relying on BLASTP searches.
+
+<P>
+Perhaps the most important optional parameter would be the choice of clustering algorithm (Table <A HREF="#tab:algs">2</A>):
+<BR><P></P>
+<DIV ALIGN="CENTER"><A NAME="254"></A>
+<TABLE>
+<CAPTION><STRONG>Table 2:</STRONG>
+List of available clustering algorithms.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<TABLE CELLPADDING=3 BORDER="1" ALIGN="CENTER">
+<TR><TD ALIGN="LEFT">name</TD>
+<TD ALIGN="LEFT">option</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=360>&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT">BDBH</TD>
+<TD ALIGN="LEFT">default</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=360>Starting from a reference genome, keep adding genomes stepwise while storing the sequence clusters
+that result of merging the latest bidirectional best hits, as illustrated in Figure <A HREF="#BDBHflow">3</A>.</TD>
+</TR>
+<TR><TD ALIGN="LEFT">COGS</TD>
+<TD ALIGN="LEFT"><code>-G</code></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=360>Merges triangles of inter-genomic symmetrical best matches, as described in 
+PubMed=<A NAME="tex2html37"
+  HREF="http://www.ncbi.nlm.nih.gov/sites/ppmc/articles/PMC2881409/">20439257</A>. 
+Note that a single sequence might occasionally be included in several COGS clusters with option <code>-x</code>.</TD>
+</TR>
+<TR><TD ALIGN="LEFT">OMCL</TD>
+<TD ALIGN="LEFT"><code>-M</code></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=360>OrthoMCL v1.4, uses the Markov Cluster Algorithm to group sequences,
+with inflation (<code>-F</code>) controlling cluster granularity, as described in 
+PubMed=<A NAME="tex2html38"
+  HREF="http://www.ncbi.nlm.nih.gov/sites/ppmc/articles/PMC403725/">12952885</A>.</TD>
+</TR>
+</TABLE>
+</DIV>
+
+<A NAME="tab:algs"></A></TD></TR>
+</TABLE>
+</DIV><P></P>
+<BR>
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="BDBHflow"></A><A NAME="260"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 3:</STRONG>
+Flowchart of BDBH algorithm with default parameters and G genomes. 
+First, inparalogues, defined as intra-specific bidirectional best hits (BDBHs), are identified in each genome;
+second, new genomes are incrementally compared to the reference genome and their BDBHs annotated;
+finally, clusters containing at least 1 sequence per genome are conserved.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="746" HEIGHT="1157" ALIGN="BOTTOM" BORDER="0"
+ SRC="./BDBH.png"
+ ALT="Image BDBH">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+The remaining options are now reviewed:
+
+<P>
+
+<UL>
+<LI>Apart from showing the credits, option <code>-v</code> can be helpful after installation, 
+for it prints the enabled features of the program, which of course depend on the required and optional 
+binaries mentioned in sections <A HREF="#binaries">2.2</A> and <A HREF="#dependencies">2.3</A>.
+
+<P>
+</LI>
+<LI><code>-o</code> is ideally used to submit to a computer cluster the required BLAST (and Pfam) searches, preparing a job for posterior 
+analysis on a single computer.
+
+<P>
+</LI>
+<LI><code>-c</code> is used to request a pan- and core-genome analysis of the input genomes, which will be output as a tab-separated data file. 
+The number of samples for the genome composition analysis is set to 10 by default, but this can be edited at the header of 
+<code>get_homologues.pl</code> (check the <code>$NOFSAMPLESREPORT</code> variable). In addition, variables <code>$MIN_PERSEQID_HOM</code> and 
+<code>$MIN_COVERAGE_HOM</code>, with default values 0 and 20, respectively, control how homologues are called. These values can
+as well be edited to require more stringent identity and coverage requirements in order to call a sequence homologous, and therefore, redundant.
+
+<P>
+</LI>
+<LI><code>-R</code> takes a number that will be used to seed the random generator used with option <code>-c</code>. By using the
+same seed in different <code>-c</code> runs the user ensures that genomes are sampled in the same order.
+
+<P>
+</LI>
+<LI><code>-s</code> can be used to reduce the memory footprint, provided that the Perl module 
+<A NAME="tex2html44"
+  HREF="http://search.cpan.org/perldoc?BerkeleyDB">BerkeleyDB</A>
+is in place (please check section <A HREF="#dependencies">2.3</A>). 
+This option usually makes <SPAN  CLASS="textit">get_homologues</SPAN> slower, but for very large datasets or in machines with little memory resources 
+this might be the only way to complete a job.
+
+<P>
+</LI>
+<LI><code>-m</code> allows the choice of runmode, which can be either <code>-m local</code> (the default) or 
+<code>-m cluster</code>. In the second case global variable <code>$SGEPATH</code> might need to be appropriately set, as explained in section <A HREF="#dependencies">2.3</A>,
+as well as <code>$QUEUESETTINGS</code>, that specificies for instance a particular queue name for your cluster jobs.
+
+<P>
+</LI>
+<LI><code>-n</code> sets the number of threads/CPUs to dedicate to each BLAST/HMMER job run locally, which by default is 2.
+
+<P>
+</LI>
+<LI><code>-I list_file.txt</code> allows the user to restrict a <SPAN  CLASS="textit">get_homologues</SPAN> job to a subset of the genomes included in the input <code>-d </code> folder. 
+This flag can be used in conjunction with <code>-c</code> to control the order in which genomes are considered during pan- and core-genome analyses.
+Taking the <code>sample_buch_fasta</code> folder, a valid <code>list_file.txt</code> could contain these lines:
+<PRE>
+Buch_aph_APS.faa  
+Buch_aph_Bp.faa  
+Buch_aph_Cc.faa
+</PRE>
+
+<P>
+</LI>
+<LI>option <code>-C</code> sets the minimum percentage of coverage required to call two sequences best hits, 
+as illustrated in the figure. The larger these values get, the smaller the chance that two sequences are 
+found to be reciprocal  best hits. The default coverage value is set to 75%. 
+This parameter has a large impact on the results obtained and its optimal values will depend on the input 
+data and the anticipated use of the produced clusters:
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="278"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 4:</STRONG>
+Coverage [BDBH,OMCL] and overall segment coverage [COGS] illustrated with the
+alignment of sequence 'query' to two aligned fragments of sequence 'subject', where 1,s1,e1,s2,e2 and L 
+are alignment coordinates.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="263" HEIGHT="143" ALIGN="BOTTOM" BORDER="0"
+ SRC="./match_cover.png"
+ ALT="Image match_cover">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+</LI>
+<LI><code>-E</code> sets the maximum expectation value (E-value) for BLAST alignments. This value is by default set to 1e-05. 
+This parameter might be adjusted for nucleotide BLAST searches or for very short proteins, under 40 residues.
+
+<P>
+</LI>
+<LI><code>-S</code> can be passed to require a minimum % sequence identity for two sequences to be called best hits. 
+This option does not affect COGS runs; its default value is set to 1. 
+
+<P>
+</LI>
+<LI><code>-N</code> sets a minimum neighborhood correlation, as defined in 
+PubMed=<A NAME="tex2html45"
+  HREF="http://www.ncbi.nlm.nih.gov/sites/ppmc/articles/PMC2377100/">18475320</A>,
+for two sequences to be called best hits. In this context 'neighborhood' is the set of homologous sequences reported by BLAST,
+with the idea that two reliable best hits should have similar sets of homologous sequences.
+
+<P>
+</LI>
+<LI><code>-D</code> is an extra restriction for calling best hits, that should have identical Pfam domain compositions. Note that this
+option requires scanning all input sequences for Pfam domains, and this task requires some software to be installed (see section <A HREF="#dependencies">2.3</A>)
+and extra computing time, ideally on a computer cluster (<code>-m cluster</code>). 
+While for BDBH domain filtering is done at the time bidirectional best hits are called, this processing step is performed only after the 
+standard OMCL and COGS algorithms have completed, to preserve each algorithm features.
+
+<P>
+</LI>
+<LI><code>-b</code> reduces the number of pairwise BLAST searches performed while compiling core-genomes with algorithm BDBH,
+reducing considerably memory and run-time requirements (for <SPAN CLASS="MATH"><IMG
+ WIDTH="17" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img1.png"
+ ALT="$G$"></SPAN> genomes, 3G searches are launched instead of the default <SPAN CLASS="MATH"><IMG
+ WIDTH="24" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img2.png"
+ ALT="$G^{2}$"></SPAN>).
+It comes at the cost of being less exhaustive in finding inparalogues, but in our bacterial benchmarks this potential, undesired 
+effect was negligible.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:BDBHmin"></A><A NAME="812"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 5:</STRONG>
+For  <SPAN CLASS="MATH"><IMG
+ WIDTH="17" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img1.png"
+ ALT="$G$"></SPAN> genomes, a typical get_homologues job requires running <SPAN CLASS="MATH"><IMG
+ WIDTH="24" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img2.png"
+ ALT="$G^{2}$"></SPAN> BLAST searches in order to compare all against all sequences,
+including against itself to help infer inparalogues. Therefore, the resources required for calculating BLAST jobs grow quadratically. 
+Instead, the BDBH algorithm with option -b requires only 3G BLAST searches (in grey) for any reference genome.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="669" HEIGHT="347" ALIGN="BOTTOM" BORDER="0"
+ SRC="./BDBHmin.png"
+ ALT="Image BDBHmin">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+</LI>
+<LI><code>-t</code> is used to control which sequence clusters should be reported. By default only clusters which include at least one sequence 
+per genome are output. However, a value of <code>-t 2</code> would report all clusters containing sequences from at least 2 taxa. A especial
+case is <code>-t 0</code>, which will report all clusters found, even those with sequences from a single genome. 
+
+<P>
+</LI>
+<LI><code>-a</code> forces the program to extract user-selected sequence features typically contained in GenBank files, such as 
+tRNA or rRNA genes, instead of default CDSs. When using this option clusters are compiled by comparing nucleotide sequences
+with BLASTN. Note that such BLASTN searches are expected to be less sensitive than default BLASTP searches.
+
+<P>
+</LI>
+<LI><code>-g</code> can be used to request the compilation of clusters of intergenic sequences. This implies the calculation of ORF clusters and then
+a search for pairs of 'orthologous' ORFs which flanking conserved intergenic regions, with the constraints set by three global variables in the
+header of <code>get_homologues.pl</code>: <A NAME="intergdefs"></A><PRE>
+my $MININTERGENESIZE     = 200;   # minimum length (nts) required for intergenic 
+                                  # segments to be considered
+my $MAXINTERGENESIZE     = 700;
+my $INTERGENEFLANKORF    = 180;   # length in nts of intergene flanks borrowed 
+                                  # from neighbor ORFs
+</PRE>
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:flanks"></A><A NAME="298"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 6:</STRONG>
+Two divergent ORFs flanking an intergenic region. Only 180 bases from each ORF are taken for compiling intergenic
+clusters.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="820" HEIGHT="63" ALIGN="BOTTOM" BORDER="0"
+ SRC="./flankingORFs.png"
+ ALT="Image flankingORFs">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+</LI>
+<LI><code>-f</code> filters out cluster sequences with large differences in length. This flag 
+compares sequences within a cluster to the first (arbitrary) reference sequence. Those with length difference 
+(either shorter or longer) beyond the selected threshold will be removed. This might cause 
+the resulting cluster to be entirely removed if the final number of taxa falls below the <code>-t</code> minimum.
+
+<P>
+</LI>
+<LI><code>-r</code> allows the choice of any input genome (of course included in <code>-d</code> folder) 
+as the reference, instead of the default smaller one. If possible, resulting clusters are named using gene names from 
+this genome, which can be used to select well annotated species for this purpose. In addition, when using the default 
+BDBH algorithm, the reference proteome is the one chosen to start adding genes in the clustering process. Therefore,
+when using BDBH, the choice of reference proteome can have a large impact on the resulting number of clusters. By default,
+the taxon with least genes is taken as reference. It is possible to change the way clusters are named by editing subroutine 
+<code>extract_gene_name</code> in file <code>lib/phyTools.pm</code>.
+
+<P>
+</LI>
+<LI><code>-e</code> excludes clusters with inparalogues, defined as sequences with best hits in its own genome. 
+This option might be helpful to rule out clusters including several sequences from the same species, which might be of 
+interest for users employing these clusters for primer design, for instance.
+
+<P>
+</LI>
+<LI><code>-x</code> allows COG-generated sequence clusters to contain the same sequence in more than one cluster.
+
+<P>
+</LI>
+<LI><code>-F</code> is the inflation value that governs Markov Clustering in OMCL runs, as explained in 
+PubMed=<A NAME="tex2html46"
+  HREF="http://www.ncbi.nlm.nih.gov/sites/ppmc/articles/PMC403725/">12952885</A>. As a rule of thumb,
+low inflation values (<code>-F 1</code>)result in the inclusion of more sequences in fewer groups, whilst large values 
+produce more, smaller clusters (<code>-F 4</code>).
+
+<P>
+</LI>
+<LI><code>-A</code> tells the program to produce a tab-separated file with average % sequence identity values among pairs of genomes, 
+computed from sequences in the final set of clusters (see also option <code>-t </code>). 
+By default these identities are derived from BLASTP alignments, and hence correspond to amino acid sequence identities. 
+However, as explained earlier, option -a forces the program to use nucleotide sequences and run BLASTN
+instead, and therefore, -a 'CDS' combined -A will produce genomic average nucleotide sequence identities (ANI), as used
+in the literature to help define prokaryotic species 
+(PubMed=<A NAME="tex2html47"
+  HREF="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2776425/">19855009</A>). 
+
+<P>
+</LI>
+<LI><code>-z</code> can be called when performing a genome composition analysis with clustering algorithms OMCL or COGS.
+In addition to the core- and pan-genome tab-separated files mentioned earlier (see option <code>-c</code>), this flag requests 
+a soft-core report, considering all sequence clusters present in a fraction of genomes defined by global variable <code>$SOFTCOREFRACTION</code>,
+with a default value of 0.95. This choice produces a composition report more robust to assembly or annotation errors than the core-genome.
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H2><A NAME="SECTION00045000000000000000">
+<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">5</SPAN> Accompanying scripts</A>
+</H2>
+
+<P>
+The following Perl scripts are included in the bundle to assist in the interpretation of results generated
+by <SPAN  CLASS="textit">get_homologues.pl</SPAN>:
+
+<P>
+
+<UL>
+<LI><SPAN  CLASS="textit">download_genomes_ncbi.pl</SPAN>, a script which is described in section <A HREF="#downGenBank">3.2</A> 
+with examples.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">compare_clusters.pl</SPAN> primarily calculates the intersection between cluster sets, 
+which can be used to select clusters supported by different algorithms or settings.
+This script can also produce syntenic clusters, pangenome matrices, 
+<A NAME="tex2html48"
+  HREF="http://orthoxml.org/xml/Main.html">OrthoXML reports</A>, 
+and Venn diagrams 
+(this last optional feature requires R, please check section <A HREF="#dependencies">2.3</A>).
+Examples of use of this script are presented in sections <A HREF="#FASTAORFs">4.1</A>, <A HREF="#synteny">4.5</A> and <A HREF="#pange">4.8.1</A>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">parse_pangenome_matrix.pl</SPAN> is a script that can be used to analyze pan-genome sets, in order to
+find genes present in a group A of species which are absent in set B. The identified genes can be
+mapped onto the underlying genome contigs of a reference genome included in A. Moreover this script can be used
+for calculating and plotting cloud, shell and core genome compartments. Please see examples in sections
+<A HREF="#pangeplot">4.8.2</A> and <A HREF="#shellplot">4.8.3</A>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">make_nr_pangenome_matrix.pl</SPAN> is provided to post-process pangenome matrices in case the user wishes 
+to remove redundant clusters.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">plot_pancore_matrix.pl</SPAN>, a Perl script to plot pan/core-genome sampling results and to fit regression 
+curves with help from <A NAME="tex2html49"
+  HREF="http://www.r-project.org">R</A>
+functions. An example of use of this script is given in section <A HREF="#composition">4.8.4</A>.
+Please check section <A HREF="#dependencies">2.3</A> for the requirements of this script. 
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">check_BDBHs.pl</SPAN> is a script that can be used, after a previous <SPAN  CLASS="textit">get_homologues</SPAN> run, to find out the
+bidirectional best hits of a sequence identifier chosen by the user. It can also retrieve the Pfam annotations of a sequence and its
+reciprocal best hits. See section <A HREF="#checkBDBH">4.8.7</A>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">add_pancore_matrices.pl</SPAN> can be used to add pan/core-matrices produced by previous
+<SPAN  CLASS="textit">get_homologues -c -R</SPAN> runs on the same set of genomes, with the aim of combining default CDS clusters
+and -a 'rRNA,tRNA' results.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">add_pangenome_matrices.pl</SPAN> can be used similarly to add two pangenome matrices produced by 
+<SPAN  CLASS="textit">compare_clusters.pl</SPAN>, for instance from sets of CDS and rRNA,tRNA clusters.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">pfam_enrich.pl</SPAN> calculates the enrichment of a set of sequence clusters in terms of Pfam domains,
+by using <A NAME="tex2html50"
+  HREF="https://stat.ethz.ch/R-manual/R-patched/library/stats/html/fisher.test.html">Fisher's exact test</A>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">annotate_cluster.pl</SPAN> can be used to retrieve a multiple alignment view of the supporting local BLAST alignments
+of the sequences in the cluster, and to annotate any encoded Pfam domain.
+
+<P>
+</LI>
+</UL>
+
+<P>
+In addition, two shell scripts are also included:
+
+<P>
+
+<UL>
+<LI><SPAN  CLASS="textit">plot_matrix_heatmap.sh</SPAN> calculates ordered heatmaps with attached row and column dendrograms from squared 
+tab-separated numeric matrices, which can be presence/absence pangenomic matrices or similarity / identity matrices as those 
+produced by <SPAN  CLASS="textit">get_homologues</SPAN> with flag <code>-A</code>. From the later type of matrix a distance matrix can optionally be calculated
+to drive a neighbor joining tree. See example on section <A HREF="#pange">4.8.1</A>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">hcluster_matrix.sh</SPAN> generates a distance matrix out of a tab-separated numeric matrix, which is then used to call 
+R functions <code>hclust()</code> and <code>heatmap.2()</code> in order to produce a heatmap. 
+
+<P>
+</LI>
+</UL>
+
+<P>
+To check the options of any of these scripts please invoke them from the terminal with flag <code>-h</code>. 
+For instance, typing <code>$ ./compare_clusters.pl -h</code> in the terminal will produce the following:
+<PRE> 
+-h 	 this message
+-d 	 comma-separated names of cluster directories, which           
+   	 usually have associated dir.cluster_list files. These lists
+   	 avoid parsing taxon names from FASTA headers, which might be
+   	 error prone.
+
+-o 	 output directory                                              
+-n 	 use nucleotide sequence .fna clusters                         
+-r 	 take first cluster dir as reference set, which might contain  
+   	 a single representative sequence per cluster                  
+-s 	 use only clusters with syntenic genes                         
+-t 	 use only clusters with single-copy orthologues from -t taxa   
+-I 	 produce clusters with single-copy seqs from ALL taxa in file  
+-m 	 produce intersection pangenome matrices                       
+   	                                                               
+-x 	 produce cluster report in OrthoXML format                     
+-T 	 produce parsimony-based pangenomic tree
+</PRE> 
+
+<P>
+
+<H1><A NAME="SECTION00050000000000000000"></A> <A NAME="default"></A>
+<BR>
+<SPAN CLASS="arabic">4</SPAN> A few examples of use
+</H1>
+
+<P>
+This section presents a few different ways of running <SPAN  CLASS="textit">get_homologues.pl</SPAN> 
+and the accompanying scripts with provided sample input data.
+
+<P>
+
+<H2><A NAME="SECTION00051000000000000000"></A> <A NAME="FASTAORFs"></A>
+<BR>
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">1</SPAN> Clustering orthologous proteins from a few FASTA files
+</H2>
+
+<P>
+This example takes the provided sample input folder <code>sample_buch_fasta</code>,
+which contains the proteins sets of four 
+<A NAME="tex2html52"
+  HREF="<"><</A>842>>http://en.wikipedia.org/wiki/Buchnera_and compiles clusters of BDBH sequences, which are candidates to be orthologues, with this command:
+<BR><code>$ ./get_homologues.pl -d sample_buch_fasta </code> . 
+
+<P>
+The output should look like this (contained in file <code>sample_output.txt</code>):
+<PRE> 
+# ./get_homologues.pl -i 0 -d sample_buch_fasta -o 0 -e 0 -f 0 -r 0 -t all -c 0 -I 0 
+# -m local -n 2 -M 0 -G 0 -P 0 -C 75 -S 1 -E 1e-05 -F 1.5 -N 0 -B 50 -s 0 -D 0 -g 0 -a '0' -x  -R 0
+
+# results_directory=sample_buch_fasta_homologues
+# parameters: MAXEVALUEBLASTSEARCH=0.01 MAXPFAMSEQS=250
+
+# checking input files...
+# Buch_aph_APS.faa 574
+# Buch_aph_Bp.faa 507
+# Buch_aph_Cc.faa 357
+# Buch_aphid_Sg.faa 546
+
+# 4 genomes, 1984 sequences
+
+# taxa considered = 4 sequences = 1984 residues = 650959 MIN_BITSCORE_SIM = 17.2
+
+# mask=BuchaphCc_f0_alltaxa_algBDBH_e0_ (_algBDBH)
+
+# running makeblastdb with sample_buch_fasta_homologues/Buch_aph_APS.faa.fasta
+
+# running makeblastdb with sample_buch_fasta_homologues/Buch_aph_Bp.faa.fasta
+
+# running makeblastdb with sample_buch_fasta_homologues/Buch_aph_Cc.faa.fasta
+
+# running makeblastdb with sample_buch_fasta_homologues/Buch_aphid_Sg.faa.fasta
+
+# running BLAST searches ...
+# done
+
+# concatenating and sorting blast results...
+# sorting _Buch_aph_APS.faa results (0.12MB)
+# sorting _Buch_aph_Bp.faa results (0.11MB)
+# sorting _Buch_aph_Cc.faa results (0.084MB)
+# sorting _Buch_aphid_Sg.faa results (0.11MB)
+# done
+
+
+# parsing blast result! (sample_buch_fasta_homologues/tmp/all.blast , 0.42MB)
+# parsing blast file finished
+
+# creating indexes, this might take some time (lines=9.30e+03) ...
+
+# construct_taxa_indexes: number of taxa found = 4
+# number of file addresses = 9.3e+03 number of BLAST queries  = 2.0e+03
+
+# clustering orthologous sequences
+
+# clustering inparalogues in Buch_aph_Cc.faa (reference)
+# 0 sequences
+
+# clustering inparalogues in Buch_aph_APS.faa
+# 1 sequences
+
+# finding BDBHs between Buch_aph_Cc.faa and Buch_aph_APS.faa
+# 324 sequences
+
+# clustering inparalogues in Buch_aph_Bp.faa
+# 0 sequences
+
+# finding BDBHs between Buch_aph_Cc.faa and Buch_aph_Bp.faa
+# 326 sequences
+
+# clustering inparalogues in Buch_aphid_Sg.faa
+# 0 sequences
+
+# finding BDBHs between Buch_aph_Cc.faa and Buch_aphid_Sg.faa
+# 317 sequences
+
+# looking for valid ORF clusters (n_of_taxa=4)...
+
+
+# number_of_clusters = 305
+# cluster_list = sample_buch_fasta_homologues/BuchaphCc_f0_alltaxa_algBDBH_e0_.cluster_list
+# cluster_directory = sample_buch_fasta_homologues/BuchaphCc_f0_alltaxa_algBDBH_e0_
+
+# runtime: 64 wallclock secs ( 0.74 usr  0.08 sys + 61.49 cusr  0.47 csys = 62.78 CPU)
+# RAM use: 20.3 MB
+</PRE>
+
+<P>
+In summary, the output details the processing steps required:
+
+<UL>
+<LI>Reading and parsing input files 
+(<code>Buch_aph_APS.faa,Buch_aph_Bp.faa,Buch_aph_Cc.faa,Buch_aphid_Sg.faa</code>),
+which contain 574, 507, 357 and 546 protein sequences, respectively. In total there are
+four input taxa and 1984 sequences.
+</LI>
+<LI>Preparing input sequences for BLAST.
+</LI>
+<LI>Running BLAST searches and sorting the results.
+</LI>
+<LI>Parsing the complete volume of sorted BLAST results.
+</LI>
+<LI>Searching for orthologous sequences using the BDBH algorithm, which requires a reference taxon or proteome
+to start with (see Figure <A HREF="#BDBHflow">3</A>).
+</LI>
+<LI>Clustering orthologous sequences and put them in files inside an appropriate folder. In this example
+the relevant output is directory <code>sample_buch_fasta_homologues/BuchaphCc_f0_alltaxa_algBDBH_e0_</code> together with
+file <code>sample_buch_fasta_homologues/BuchaphCc_f0_alltaxa_algBDBH_e0_.cluster_list</code>, which lists the found 
+clusters and their taxa composition. It can be seen that the folder name contains the key settings used to 
+cluster the sequences contained therein:
+
+<BR>
+<BR>
+<BR>
+<BR><PRE>
+BuchaphCc_f0_alltaxa_algBDBH_e0_
+|         |  |       |       |   
+|         |  |       |       -e option was not used (inparalogues are in)
+|         |  |       the clustering algorithm is BDBD (default)
+|         |  all clusters contain at least 1 sequence from each taxa (default -t behavior)
+|         -f option not used (no length filtering)
+reference proteome
+</PRE>
+In this case a total of 305 protein sequence clusters are produced, which include the original FASTA headers plus
+information of which segment was actually aligned by BLAST for inclusion in the cluster:
+
+<P>
+<PRE>
+&gt;gi|116515296| Rho [Buchnera aphidicola str. Cc (Cinara cedri)] | aligned:1-419 (420)
+MNLTKLKNTSVSKLIILGEKIGLENLARMRKQDIIFSILKQHSKSGEDIFGDGVLEILQDGFGFLRSSDSSYLAGPDDIYVSPS...
+&gt;gi|15617182| termination factor Rho [Buchnera aphidicola str. APS] | aligned:1-419 (419)
+MNLTALKNMPVSELITLGEKMGLENLARMRKQDIIFAILKQHAKSGEDIFGDGVLEILQDGFGFLRSADSSYLAGPDDIYVSPS...
+&gt;gi|27905006| termination factor Rho [Buchnera aphidicola str. Bp] | aligned:1-419 (419)
+MNLTALKNIPVSELIFLGDNAGLENLARMRKQDIIFSILKQHAKSGEDIFGDGVLEILQDGFGFLRSSDSSYLAGPDDIYVSPS...
+&gt;gi|21672828| termination factor Rho [Buchnera aphidicola str. Sg] | aligned:1-419 (419)
+MNLTALKNMPVSELITLGEKMGLENLARMRKQDIIFAILKQHAKSGEDIFGDGVLEILQDGFGFLRSADSSYLAGPDDIYVSPS...
+</PRE>
+</LI>
+</UL>
+
+<P>
+If we wanted to test a different sequence clustering algorithm we could run
+<BR><code>$ ./get_homologues.pl -d sample_buch_fasta -G </code> , 
+<BR>
+which will produce 298 clusters
+employing the COG triangles algorithm (see Table <A HREF="#tab:algs">2</A>) in folder 
+<BR><code>sample_buch_fasta_homologues/BuchaphCc_f0_alltaxa_algCOG_e0_</code>. 
+<BR>
+<P>
+Furthermore, typing <code>$ ./get_homologues.pl -d sample_buch_fasta -M </code>
+<BR>
+produces 308 clusters employing the OMCL algorithm in folder 
+<BR><code>sample_buch_fasta_homologues/BuchaphCc_f0_alltaxa_algOMCL_e0_</code>. 
+<BR>
+<P>
+Now we can make use of script <SPAN  CLASS="textit">compare_clusters.pl</SPAN> 
+to get the intersection between these cluster sets and choose only the consensus subset.
+We will need to type (without any blanks between folder names, in a single long line) and execute:
+<PRE>
+./compare_clusters.pl -o sample_intersection -d \
+sample_buch_fasta_homologues/BuchaphCc_f0_alltaxa_algBDBH_e0_, \
+sample_buch_fasta_homologues/BuchaphCc_f0_alltaxa_algCOG_e0_, \
+sample_buch_fasta_homologues/BuchaphCc_f0_alltaxa_algOMCL_e0_
+</PRE>     
+
+<P>
+The following output is produced:
+<PRE>
+# number of input cluster directories = 3
+
+# parsing clusters in sample_buch_fasta_homologues/BuchaphCc_f0_alltaxa_algBDBH_e0_ ...
+# cluster_list in place, will parse it (BuchaphCc_f0_alltaxa_algBDBH_e0_.cluster_list)
+# number of clusters = 305
+# parsing clusters in sample_buch_fasta_homologues/BuchaphCc_f0_alltaxa_algCOG_e0_ ...
+# cluster_list in place, will parse it (BuchaphCc_f0_alltaxa_algCOG_e0_.cluster_list)
+# number of clusters = 298
+# parsing clusters in sample_buch_fasta_homologues/BuchaphCc_f0_alltaxa_algOMCL_e0_ ...
+# cluster_list in place, will parse it (BuchaphCc_f0_alltaxa_algOMCL_e0_.cluster_list)
+# number of clusters = 308
+
+# intersection output directory: sample_intersection
+
+# intersection size = 295 clusters
+
+# intersection list = sample_intersection/intersection_t0.cluster_list
+
+# input set: sample_intersection/BuchaphCc_f0_alltaxa_algBDBH_e0_.venn_t0.txt
+# input set: sample_intersection/BuchaphCc_f0_alltaxa_algCOG_e0_.venn_t0.txt
+# input set: sample_intersection/BuchaphCc_f0_alltaxa_algOMCL_e0_.venn_t0.txt
+
+# Venn diagram = sample_intersection/venn_t0.pdf
+# Venn region file: sample_intersection/unique_BuchaphCc_f0_alltaxa_algBDBH_e0_.venn_t0.txt (5)
+# Venn region file: sample_intersection/unique_BuchaphCc_f0_alltaxa_algCOG_e0_.venn_t0.txt (0)
+# Venn region file: sample_intersection/unique_BuchaphCc_f0_alltaxa_algOMCL_e0_.venn_t0.txt (5)
+</PRE>
+
+<P>
+The 295 resulting clusters, those present in all input cluster sets, are placed in a new folder
+which was designated by parameter <code>-o sample_intersection</code>. Note that these are clusters that belong to
+the core-genome, as they contain sequence from all input taxa. A Venn diagram,
+such as the one in Figure <A HREF="#fig:venn">7</A>, might also be produced which summarizes the analysis.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:venn"></A><A NAME="374"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 7:</STRONG>
+Venn diagram showing the overlap between clusters of 'orthologous' sequences produced
+by three different algorithms and otherwise identical settings.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="420" HEIGHT="420" ALIGN="BOTTOM" BORDER="0"
+ SRC="./sample_intersection_venn.png"
+ ALT="Image sample_intersection_venn">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+If we are interested only in clusters containing single-copy proteins from all input species, 
+as they are probably safer orthologues, we can add the option <code>-t 4</code> to our previous command,
+as our example dataset contains 4 input proteomes.
+
+<P>
+
+<H2><A NAME="SECTION00052000000000000000"></A> <A NAME="singleFASTA"></A>
+<BR>
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">2</SPAN> Clustering orthologous proteins from a single FASTA file
+</H2>
+
+<P>
+A similar analysis could be performed with a single input FASTA file containing amino acid sequences, provided
+that each contains a [taxon name] in its header, as explained in section <A HREF="#input">3.1</A>:
+
+<P>
+<PRE>
+&gt;gi|10957100|ref|NP_057962.1| ... [Buchnera aphidicola str. APS (Acyrthosiphon pisum)]
+MFLIEKRRKLIQKKANYHSDPTTVFNHLCGSRPATLLLETAEVNKKNNLESIMIVDSAIRVSAVKNSVKI
+TALSENGAEILSILKENPHKKIKFFEKNKSINLIFPSLDNNLDEDKKIFSLSVFDSFRFIMKSVNNTKRT
+SKAMFFGGLFSYDLISNFESLPNVKKKQKCPDFCFYLAETLLVVDHQKKTCLIQSSLFGRNVDEKNRIKK
+RTEEIEKKLEEKLTSIPKNKTTVPVQLTSNISDFQYSSTIKKLQKLIQKGEIFQVVPSRKFFLPCDNSLS
+AYQELKKSNPSPYMFFMQDEDFILFGASPESSLKYDEKNRQIELYPIAGTRPRGRKKDGTLDLDLDSRIE
+LEMRTNHKELAEHLMLVDLARNDLARICEPGSRYVSDLVKVDKYSHVMHLVSKVVGQLKYGLDALHAYSS
+CMNMGTLTGAPKVRAMQLIAEYEGEGRGSYGGAIGYFTDLGNLDTCITIRSAYVESGVATIQAGAGVVFN
+SIPEDEVKESLNKAQAVINAIKKAHFTMGSS
+[...]
+&gt;gi|15616637|ref|NP_239849.1| ... [Buchnera aphidicola str. APS (Acyrthosiphon pisum)]
+MTSTKEIKNKIVSVTNTKKITKAMEMVAVSKMRKTEERMRSGRPYSDIIRKVIDHVTQGNLEYKHSYLEE
+RKTNRIGMIIISTDRGLCGGLNTNLFKQVLFKIQNFAKVNIPCDLILFGLKSLSVFKLCGSNILAKATNL
+GENPKLEELINSVGIILQEYQCKRIDKIFIAYNKFHNKMSQYPTITQLLPFSKKNDQDASNNNWDYLYEP
+ESKLILDTLFNRYIESQVYQSILENIASEHAARMIAMKTATDNSGNRIKELQLVYNKVRQANITQELNEI
+VSGASAVSID
+[...]
+&gt;gi|21672839|ref|NP_660906.1| ... [Buchnera aphidicola str. Sg (Schizaphis graminum)]
+MHLNKMKKVSLKTYLVLFFLIFFIFCSFWFIKPKEKKLKLEKLRYEEVIKKINAKNNQNLKSVENFITEN
+KNIYGTLSSLFLAKKYILDKNLDKALIQLNNSLKYTKEENLQNILKIRIAKIKIQQNKNQDAIKILEEIK
+DNSWKNIVENMKGDIFMKNKEIKKAILAWKKSKYLEKSNASKEIINMKINEIKR
+</PRE>
+
+<P>
+It is possible to analyze the provided sample input file <code>sample_buchnera.faa</code> with the following command:
+<BR><code>$ ./get_homologues.pl -i sample_buchnera.faa </code> . 
+
+<P>
+Obtaining:
+
+<P>
+<PRE>
+# results_directory=sample_buchnera_homologues
+# parameters: MAXEVALUEBLASTSEARCH=0.01 MAXPFAMSEQS=250
+
+# checking input files...
+# sample_buchnera.faa
+
+# created file sample_buchnera_homologues/tmp/all.fa (4 genomes, 1984 sequences)
+
+# taxa considered = 4 sequences = 1984 residues = 650959 MIN_BITSCORE_SIM = 17.2
+
+# mask=BuchneraaphidicolastrCcCinaracedri3_f0_alltaxa_algBDBH_e0_ (_algBDBH)
+
+# running makeblastdb with sample_buchnera_homologues/tmp/all.fa
+# running local BLAST search
+# done
+
+
+# parsing blast result! (sample_buchnera_homologues/tmp/all.blast , 0.44MB)
+# parsing blast file finished
+
+# creating indexes, this might take some time (lines=9.30e+03) ...
+
+# construct_taxa_indexes: number of taxa found = 4
+# number of file addresses = 9.3e+03 number of BLAST queries  = 2.0e+03
+
+# clustering orthologous sequences
+
+# clustering inparalogues in Buchnera_aphidicola_str__Cc__Cinara_cedri__3.faa (reference)
+# 0 sequences
+
+[...]
+
+# looking for valid ORF clusters (n_of_taxa=4)...
+
+
+# number_of_clusters = 305
+# cluster_list = [...]/BuchneraaphidicolastrCcCinaracedri3_f0_alltaxa_algBDBH_e0_.cluster_list
+# cluster_directory = [...]/BuchneraaphidicolastrCcCinaracedri3_f0_alltaxa_algBDBH_e0_
+
+# runtime: 55 wallclock secs ( 0.76 usr  0.04 sys + 51.75 cusr  0.23 csys = 52.78 CPU)
+# RAM use: 21.3 MB
+</PRE>     
+
+<P>
+
+<H2><A NAME="SECTION00053000000000000000"></A> <A NAME="gbkfiles"></A>
+<BR>
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">3</SPAN> Clustering genes and proteins extracted from GenBank files
+</H2>
+
+<P>
+The use of input files in GenBank format allows clustering nucleotide sequences in addition
+to proteins, since this format supports the annotation of raw genomic sequences. 
+This example illustrates this feature by taking the input folder
+<code>sample_plasmids_gbk</code>, which contains 12 GenBank files of plasmid replicons,
+which we analyze by running <code>$ ./get_homologues.pl -d sample_plasmids_gbk </code>:
+
+<P>
+<PRE>
+# results_directory=sample_plasmids_gbk_homologues
+# parameters: MAXEVALUEBLASTSEARCH=0.01 MAXPFAMSEQS=250
+
+# checking input files...
+# E_coli_ST131_plasmid_pKC394.gb 55
+# E_coli_plasmid_pMUR050.gb 60
+# IncN_plasmid_R46.gb 63
+# K_oxytoca_plasmid_pKOX105.gb 69
+# K_pneumoniae_12_plasmid_12.gb 92
+# K_pneumoniae_9_plasmid_9.gb 87
+# K_pneumoniae_KP96_plasmid_pKP96.gb 64
+# S_enterica_subsp_enterica_serovar_Dublin_plasmid_pMAK2.gb 52
+# Uncultured_bacterium_plasmid_pRSB201.gb 58
+# Uncultured_bacterium_plasmid_pRSB203.gb 49
+# Uncultured_bacterium_plasmid_pRSB205.gb 52
+# Uncultured_bacterium_plasmid_pRSB206.gb 55
+
+# 12 genomes, 756 sequences
+
+# taxa considered = 12 sequences = 756 residues = 184339 MIN_BITSCORE_SIM = 16.0
+
+# mask=EcoliplasmidpMUR050_f0_alltaxa_algBDBH_e0_ (_algBDBH)
+
+[..]
+# running BLAST searches ...
+# done
+
+# concatenating and sorting blast results...
+# sorting _E_coli_ST131_plasmid_pKC394.gb results (0.026MB)
+# sorting _E_coli_plasmid_pMUR050.gb results (0.026MB)
+# sorting _IncN_plasmid_R46.gb results (0.026MB)
+# sorting _K_oxytoca_plasmid_pKOX105.gb results (0.031MB)
+# sorting _K_pneumoniae_12_plasmid_12.gb results (0.036MB)
+# sorting _K_pneumoniae_9_plasmid_9.gb results (0.027MB)
+# sorting _K_pneumoniae_KP96_plasmid_pKP96.gb results (0.026MB)
+# sorting _S_enterica_subsp_enterica_serovar_Dublin_plasmid_pMAK2.gb results (0.025MB)
+# sorting _Uncultured_bacterium_plasmid_pRSB201.gb results (0.029MB)
+# sorting _Uncultured_bacterium_plasmid_pRSB203.gb results (0.023MB)
+# sorting _Uncultured_bacterium_plasmid_pRSB205.gb results (0.026MB)
+# sorting _Uncultured_bacterium_plasmid_pRSB206.gb results (0.026MB)
+# done
+
+
+# parsing blast result! (sample_plasmids_gbk_homologues/tmp/all.blast , 0.33MB)
+# parsing blast file finished
+
+# creating indexes, this might take some time (lines=7.61e+03) ...
+
+# construct_taxa_indexes: number of taxa found = 12
+# number of file addresses = 7.6e+03 number of BLAST queries  = 7.6e+02
+
+# clustering orthologous sequences
+
+# clustering inparalogues in E_coli_plasmid_pMUR050.gb (reference)
+# 2 sequences
+
+[...]
+# looking for valid ORF clusters (n_of_taxa=12)...
+
+
+# number_of_clusters = 24
+# cluster_list = [...]_homologues/EcoliplasmidpMUR050_f0_alltaxa_algBDBH_e0_.cluster_list
+# cluster_directory = sample_plasmids_gbk_homologues/EcoliplasmidpMUR050_f0_alltaxa_algBDBH_e0_
+
+# runtime: 28 wallclock secs ( 1.62 usr  0.33 sys + 24.31 cusr  1.57 csys = 27.83 CPU)
+# RAM use: 19.5 MB
+</PRE>
+
+<P>
+This outcome is similar to that explained in example <A HREF="#FASTAORFs">4.1</A>, with the notable difference 
+that now both protein and nucleotide sequence clusters (24) are produced, as GenBank files usually contain both types 
+of sequences. File <code>EcoliplasmidpMUR050_f0_alltaxa_algBDBH_e0_.cluster_list.cluster_list</code>
+<BR>
+summarizes the contents and composition of the clusters stored in folder
+<BR><code>EcoliplasmidpMUR050_f0_alltaxa_algBDBH_e0_</code>. 
+<BR>
+For instance, the data concerning cluster <code>100_traJ</code> looks like this:
+<PRE>
+cluster 100_traJ size=12 taxa=12 file: 100_traJ.faa dnafile: 100_traJ.fna
+: E_coli_plasmid_pMUR050.gb
+: E_coli_ST131_plasmid_pKC394.gb
+: IncN_plasmid_R46.gb
+: K_oxytoca_plasmid_pKOX105.gb
+: K_pneumoniae_12_plasmid_12.gb
+: K_pneumoniae_9_plasmid_9.gb
+: K_pneumoniae_KP96_plasmid_pKP96.gb
+: S_enterica_subsp_enterica_serovar_Dublin_plasmid_pMAK2.gb
+: Uncultured_bacterium_plasmid_pRSB201.gb
+: Uncultured_bacterium_plasmid_pRSB203.gb
+: Uncultured_bacterium_plasmid_pRSB205.gb
+: Uncultured_bacterium_plasmid_pRSB206.gb
+</PRE>
+
+<P>
+The two FASTA files produced for this cluster are now dissected. 
+Note that each header includes the coordinates of the sequence in the context of a genomic contig.
+For instance, the first sequence was extracted from the leading strand of GenBank contig AY522431, 
+positions 44726-46255, out of a total 56634 nucleotides. Furthermore, the names of neighboring genes
+are annotated when available, in order to capture some synteny information. These syntenic data 
+can be valuable when evaluating possible orthologous genes, as conservation of genomic position (also
+operon context) strongly suggests orthology among prokaryots:
+<BR>
+<BR>
+<P>
+<PRE>
+&gt;GI:109390522 |[Escherichia coli]||traJ|1530|AY522431(56634):44726-46255:-1 [...]|neighbour_genes:traI,traK|
+ATGGACGATAGAGAAAGAGGCTTAGCATTTTTATTTGCAATTACTTTGCCTCCAGTGATGGTATGGTTTCTAGTT...
+[...]
+</PRE>
+<P>
+<SMALL CLASS="SMALL">and 
+</SMALL>
+<P>
+<PRE>
+&gt;GI:109390522 |[Escherichia coli]||traJ|1530|AY522431(56634):44726-46255:-1 [...] | aligned:1-509 (509)
+MDDRERGLAFLFAITLPPVMVWFLV...
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION00054000000000000000"></A> <A NAME="PfamClusters"></A>
+<BR>
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">4</SPAN> Clustering genes and proteins that share Pfam domain architecture
+</H2>
+
+<P>
+The BDBH algorithm in <SPAN  CLASS="textit">get_homologues.pl</SPAN> can be modified by requiring bidirectional best hits to
+share the same domain architecture, annotated in terms of Pfam domains. For large volumes of sequences 
+this taks should be accomplished on a computer cluster, but of course can also be performed locally.
+The command on the terminal could then be: <code>$ ./get_homologues.pl -d sample_plasmids_gbk -D</code> 
+<BR>
+<P>
+The generated output should be:
+
+<P>
+<PRE>
+# results_directory=sample_plasmids_gbk_homologues
+# parameters: MAXEVALUEBLASTSEARCH=0.01 MAXPFAMSEQS=250
+
+# checking input files...
+# E_coli_ST131_plasmid_pKC394.gb 55
+# E_coli_plasmid_pMUR050.gb 60
+# IncN_plasmid_R46.gb 63
+# K_oxytoca_plasmid_pKOX105.gb 69
+# K_pneumoniae_12_plasmid_12.gb 92
+# K_pneumoniae_9_plasmid_9.gb 87
+# K_pneumoniae_KP96_plasmid_pKP96.gb 64
+# S_enterica_subsp_enterica_serovar_Dublin_plasmid_pMAK2.gb 52
+# Uncultured_bacterium_plasmid_pRSB201.gb 58
+# Uncultured_bacterium_plasmid_pRSB203.gb 49
+# Uncultured_bacterium_plasmid_pRSB205.gb 52
+# Uncultured_bacterium_plasmid_pRSB206.gb 55
+
+# 12 genomes, 756 sequences
+
+# taxa considered = 12 sequences = 756 residues = 184339 MIN_BITSCORE_SIM = 16.0
+
+# mask=EcoliplasmidpMUR050_f0_alltaxa_algBDBH_Pfam_e0_ (_algBDBH_Pfam)
+
+# skipped genome parsing (sample_plasmids_gbk_homologues/tmp/selected.genomes)
+
+
+# submitting Pfam HMMER jobs ... 
+[...]
+# done
+
+# concatenating Pfam files ([...]/_E_coli_ST131_plasmid_pKC394.gb.fasta.pfam)...
+# done
+
+[..]
+
+# parsing Pfam domain assignments (generating sample_plasmids_gbk_homologues/tmp/all.pfam) ...
+
+# skip BLAST searches and parsing
+
+# WARNING: please remove/rename results directory:
+# '/home/contrera/codigo/cvs/get_homologues/sample_plasmids_gbk_homologues/'
+# if you change the sequences in your .gbk/.faa files or want to re-run
+
+# creating indexes, this might take some time (lines=7.61e+03) ...
+
+# construct_taxa_indexes: number of taxa found = 12
+# number of file addresses = 7.6e+03 number of BLAST queries  = 7.6e+02
+
+# creating Pfam indexes, this might take some time (lines=7.54e+02) ...
+
+
+# clustering orthologous sequences
+
+# clustering inparalogues in E_coli_plasmid_pMUR050.gb (reference)
+# 2 sequences (re-using previous results)
+
+[...]
+
+# looking for valid ORF clusters (n_of_taxa=12)...
+
+
+# number_of_clusters = 24
+# cluster_list = [...]/EcoliplasmidpMUR050_f0_alltaxa_algBDBH_Pfam_e0_.cluster_list
+# cluster_directory = sample_plasmids_gbk_homologues/EcoliplasmidpMUR050_f0_alltaxa_algBDBH_Pfam_e0_
+</PRE>     
+
+<P>
+Matching Pfam domains are summarized in the <code>.cluster_list</code> file, with this format:
+<PRE>  
+cluster 606_.. size=8 taxa=8 Pfam=PF04471, file: 606_...faa 606_...fna
+</PRE>  
+
+<P>
+
+<H2><A NAME="SECTION00055000000000000000"></A> <A NAME="synteny"></A>
+<BR>
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">5</SPAN> Clustering syntenic/neighbor genes
+</H2>
+
+<P>
+The sequence clusters derived from a set of GenBank files can be further processed in order to select those
+that contain only syntenic genes, defined as those having at least one neighbor included in other
+clusters. Again we will invoke script <SPAN  CLASS="textit">compare_clusters.pl</SPAN> for this task:
+<PRE>
+./compare_clusters.pl -o sample_intersection -s -d \
+sample_plasmids_gbk_homologues/EcoliplasmidpMUR050_f0_alltaxa_algBDBH_e0_
+</PRE>     
+
+<P>
+The following output is produced:
+<PRE>
+# number of input cluster directories = 1
+
+# parsing clusters in sample_plasmids_gbk_homologues/EcoliplasmidpMUR050_f0_alltaxa_algBDBH_e0_ ...
+# cluster_list in place, will parse it ([...]/EcoliplasmidpMUR050_f0_alltaxa_algBDBH_e0_.cluster_list)
+# number of clusters = 24
+
+# intersection output directory: sample_intersection
+
+# intersection size = 21 clusters (syntenic)
+
+# intersection list = sample_intersection/intersection_t0_s.cluster_list
+</PRE>
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:synteny"></A><A NAME="415"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 8:</STRONG>
+A cluster is called syntenic when it contains neighboring genes which are also contained in other single
+clusters. In this example, genes X and Z of species 1,2 and 3 are found to be syntenic, regardless of their orientation.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="309" HEIGHT="346" ALIGN="BOTTOM" BORDER="0"
+ SRC="./neighbors.png"
+ ALT="Image neighbors">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+
+<H2><A NAME="SECTION00056000000000000000">
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">6</SPAN> Comparing clusters with external sequence sets</A>
+</H2>
+
+<P>
+Sometimes we will need to compare clusters of possibly orthologous sequences, produced by <SPAN  CLASS="textit">get_homologues.pl</SPAN> 
+in any of the ways explained earlier, with a set of sequences defined elsewere, for instance in a publication. 
+This can be done to validate a set of core clusters and to check that nothing important was left out.
+We can accomplish just this with help from script <SPAN  CLASS="textit">compare_clusters.pl</SPAN>, invoking option <code>-r</code>, 
+which indicates that the first parsed cluster folder is actually a reference to be compared.
+
+<P>
+To illustrate this application we have set a folder with 4 protein sequences from <SPAN  CLASS="textit">Buchnera aphidicola</SPAN> from strain <SPAN  CLASS="textit">Cinara cedri</SPAN>
+(directory <code>sample_buch_fasta/sample_proteins</code>), each sequence in a single FASTA file. Note that these clusters must contain 
+sequences contained in the larger dataset which we want to compare with, otherwise the script will not match them. Headers are not
+used by the program, only the sequences matter.
+
+<P>
+In order to check whether these sequences are clustered in any of the clusters generated earlier, say with BDBH, 
+we will issue a command such as:
+
+<P>
+<PRE>
+./compare_clusters.pl -o sample_intersection -r -d \
+sample_buch_fasta/sample_proteins,\
+sample_buch_fasta_homologues/BuchaphCc_f0_alltaxa_algBDBH_e0_\
+</PRE>     
+
+<P>
+The following output should be produced:
+<PRE>
+# number of input cluster directories = 2
+
+# parsing clusters in sample_buch_fasta/sample_proteins ...
+# no cluster list in place, checking directory content ...
+# WARNING: [taxon names] will be automatically extracted from FASTA headers,
+# please watch out for errors
+
+# number of clusters = 4
+# parsing clusters in sample_buch_fasta_homologues/BuchaphCc_f0_alltaxa_algBDBH_e0_ ...
+# cluster_list in place, will parse it ([...]/BuchaphCc_f0_alltaxa_algBDBH_e0_.cluster_list)
+# number of clusters = 305
+
+# intersection output directory: sample_intersection
+
+# intersection size = 4 clusters
+
+# intersection list = sample_intersection/intersection_t0.cluster_list
+
+# input set: sample_intersection/sample_proteins.venn_t0.txt
+# input set: sample_intersection/BuchaphCc_f0_alltaxa_algBDBH_e0_.venn_t0.txt
+
+# Venn diagram = sample_intersection/venn_t0.pdf
+# Venn region file: sample_intersection/unique_sample_proteins.venn_t0.txt (0)
+# Venn region file: sample_intersection/unique_BuchaphCc_f0_alltaxa_algBDBH_e0_.venn_t0.txt (301)
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION00057000000000000000"></A> <A NAME="intergen"></A>
+<BR>
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">7</SPAN> Clustering intergenic segments from GenBank files
+</H2>
+
+<P>
+The use of input files in GenBank format also allows the extraction of clusters
+of flanked orthologous intergenic regions, which might be of interest as these are expected to 
+mutate at higher rates compared to coding sequences. In this example this feature is
+illustrated by processing folder <code>sample_plasmids_gbk</code> with options 
+<code>-g -I sample_plasmids_gbk/include_list.txt</code> 
+<BR>
+The restraints that apply to the parsed
+intergenic regions are defined by three global variables variables within <code>get_homologues.pl</code>,
+as explained in section <A HREF="#intergdefs">3.4</A>. These default values might be edited for specific taks;
+for instance, chloroplast intergenic regions are usually much smaller than 200 bases, the default size, 
+and therefore variable <code>$MININTERGENESIZE</code> should be set to a smaller value.
+Moreover, in this example we restrict the search for conserved intergenic segments to  
+<SPAN  CLASS="textit">Klebsiella pneumoniae</SPAN> plasmids, 
+by creating a file <code>sample_plasmids_gbk/include_list.txt</code> with these contents:
+<PRE>
+K_pneumoniae_12_plasmid_12.gb
+K_pneumoniae_9_plasmid_9.gb
+K_pneumoniae_KP96_plasmid_pKP96.gb
+</PRE>
+
+<P>
+We can now execute 
+<BR><code>$ ./get_homologues.pl -d sample_plasmids_gbk -g -I sample_plasmids_gbk/include_list.txt</code>:
+
+<P>
+<PRE>
+# results_directory=sample_plasmids_gbk_homologues
+# parameters: MAXEVALUEBLASTSEARCH=0.01 MAXPFAMSEQS=250
+
+# checking input files...
+# E_coli_ST131_plasmid_pKC394.gb 55 (intergenes=7)
+# E_coli_plasmid_pMUR050.gb 60 (intergenes=12)
+# IncN_plasmid_R46.gb 63 (intergenes=11)
+# K_oxytoca_plasmid_pKOX105.gb 69 (intergenes=13)
+# K_pneumoniae_12_plasmid_12.gb 92 (intergenes=11)
+# K_pneumoniae_9_plasmid_9.gb 87 (intergenes=12)
+# K_pneumoniae_KP96_plasmid_pKP96.gb 64 (intergenes=18)
+# S_enterica_subsp_enterica_serovar_Dublin_plasmid_pMAK2.gb 52 (intergenes=9)
+# Uncultured_bacterium_plasmid_pRSB201.gb 58 (intergenes=9)
+# Uncultured_bacterium_plasmid_pRSB203.gb 49 (intergenes=7)
+# Uncultured_bacterium_plasmid_pRSB205.gb 52 (intergenes=8)
+# Uncultured_bacterium_plasmid_pRSB206.gb 55 (intergenes=10)
+
+# 12 genomes, 756 sequences
+
+# included input files (3):
+: K_pneumoniae_12_plasmid_12.gb K_pneumoniae_12_plasmid_12.gb 92
+: K_pneumoniae_9_plasmid_9.gb K_pneumoniae_9_plasmid_9.gb 87
+: K_pneumoniae_KP96_plasmid_pKP96.gb K_pneumoniae_KP96_plasmid_pKP96.gb 64
+
+[...]
+
+# looking for valid ORF clusters (n_of_taxa=3)...
+
+
+# number_of_clusters = 31
+# cluster_list = sample_plasmids_gbk_homologues/[...]include_list.txt_algBDBH_e0_.cluster_list
+# cluster_directory = sample_plasmids_gbk_homologues/[...]include_list.txt_algBDBH_e0_
+
+# looking for valid clusters of intergenic regions (n_of_taxa=3)...
+# parameters: MININTERGENESIZE=200 MAXINTERGENESIZE=700 INTERGENEFLANKORF=180
+
+
+# number_of_intergenic_clusters = 1
+# intergenic_cluster_list = [...]/[...]_intergenic200_700_180_.cluster_list
+# intergenic_cluster_directory = sample_plasmids_gbk_homologues/[...]_intergenic200_700_180_
+
+# runtime:  1 wallclock secs ( 0.10 usr  0.01 sys +  0.05 cusr  0.01 csys =  0.17 CPU)
+# RAM use: 67.8 MB
+</PRE>
+
+<P>
+Intergenic clusters, illustrated by Figure <A HREF="#fig:flanks">3.4</A>, include upper-case nucleotides 
+to mark up the sequence of flanking ORFs, with the intergenic region itself in lower-case, 
+and the names of the flanking ORFs in the FASTA header, with their strand in parentheses:
+<PRE>
+&gt;1 | intergenic18|coords:63706..64479|length:774|neighbours:GI:165928631(-1),GI:165928630(1)...
+CGCGCCATTGCTGGCCTGAAGGTATTCCCAATACCCTCCCTGGTAGTCTTTAGCGTAACGATTCAGAAAGGACTGAATGAAGTGATCTGCGCTGAAGAAAGCG
+CCACGAAATGCCGCAGGCATGAAGTTCATGCGGGCGTTTTCAGAAATGTAGCGGGCGGTGATTTCGATAGTTTCCATgatacttcctctttaagccgataccg
+gcgatggttaagcggcaggcacatcacctgccactttttaattatcgtacaatggggcgttaaagtcaatacaagtacggattatatttacctaattttatgc
+ccgtcagagcatggaaggcgacctcgccggactccaccggacaccgggggcaaatcgccggaaactgcgggactgaccggagcgacaggccacccccctccct
+gctagcccgccgccacgcggccggttacaggggacactgagaaagcagaaagccaacaaacactatatatagcgttcgttggcagctgaagcagcactacata
+tagtagagtacctgtaaaacttgccaacctgaccataacagcgatactgtataagtaaacagtgatttggaagatcgctATGAAGGTCGATATTTTTGAAAGC
+TCCGGCGCCAGCCGGGTACACAGCATCCCTTTTTATCTGCAAAGAATTTCTGCGGGGTTCCCCAGCCCGGCCCAGGGCTATGAAAAGCAGGAGTTAAACCTGC
+ATGAGTATTGTGTTCGTCACCCTTCAGCAACTTACTTCCTGCGGGTTTCTGGC
+&gt;2 | intergenic3|coords:9538..10293|length:756|neighbours:GI:209574108(-1),GI:209574109(1)...
+CGCGCCATTGCTGGCCTGAAGGTATTCCCAATACCCTCCCTGGTAGTCTTTAGCGTAACGATTCAGAAAGGACTGAATGAAGTGATCTGCGCTGAAGAAAGCG
+CCACGAAATGCCGCAGGCATGAAGTTCATGCGGGCGTTTTCAGAAATGTAGCGGGCGGTGATTTCGATAGTTTCCATgatacttcctctttaagccgataccg
+gcgatggttaagcggcaggcacatcacctgccactttttaattatcgtacaatggggcgttaaagtcaatacaagtacggattatatttacctaattttatgc
+ccgtcagagcatggaaggcgacctcgccggactccaccggacaccgggggcaaatcgccggaaactgcgggactgaccggagcgacaggccacccccctccct
+gctagcccgccgccacgcggccggttacaggggacactgagaaagcagaaagccaacaaacactatatatagcgttcgttggcagctgaagcagcactacata
+tagtagagtacctgtaaaacttgccaacctgaccataacagcgatactgtataagtaaacaGTGATTTGGAAGATCGCTATGAAGGTCGATATTTTTGAAAGC
+TCCGGCGCCAGCCGGGTACACAGCATCCCTTTTTATCTGCAAAGAATTTCTGCGGGGTTCCCCAGCCCGGCCCAGGGCTATGAAAAGCAGGAGTTAAACCTGC
+ATGAGTATTGTGTTCGTCACCCTTCAGCAACTTAC
+...
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION00058000000000000000">
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">8</SPAN> Performing genome composition analyses</A>
+</H2> 
+
+<P>
+The next few examples illustrate how <SPAN  CLASS="textit">get_homologues.pl</SPAN> might be used to analyze the genomic evolution
+of a group of related organisms, the core-genome and the pan-genome, using the terms coined
+by Tettelin and collaborators (PubMed=<A NAME="tex2html54"
+  HREF="http://www.ncbi.nlm.nih.gov/sites/ppmc/articles/PMC1216834/">16172379</A>).
+
+<P>
+
+<H3><A NAME="SECTION00058100000000000000"></A><A NAME="pange"></A>
+<BR>
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">1</SPAN> Obtaining a pangenome matrix
+</H3>
+
+<P>
+First we will try option <code>-t 0</code> in combination with the OMCL or the COG algorithms.
+By enforcing this option we are actually asking for all possible clusters, including those which might not 
+contain sequences from all input genomes (taxa). For this reason the use of this option usually means
+that a large number of clusters are reported. This is particularly true for COG runs, since this algorithm
+does not resolve clusters involving less than 3 genomes. The default algorithm BDBH is not available with this option.
+
+<BR>
+For instance, by calling
+<code>$ ./get_homologues.pl -d sample_plasmids_gbk -t 0 -G</code> we obtain 199 clusters:
+<BR><PRE>
+[...]
+# looking for valid ORF clusters (n_of_taxa=0)...
+
+# number_of_clusters = 199
+# cluster_list = [...]/EcoliplasmidpMUR050_f0_0taxa_algCOG_e0_.cluster_list
+# cluster_directory = sample_plasmids_gbk_homologues/EcoliplasmidpMUR050_f0_0taxa_algCOG_e0_
+</PRE>
+
+<P>
+By choosing the OMCL algorithm we obtain a smaller set of clusters, which we can test by typing on the terminal
+<code>$ ./get_homologues.pl -d sample_plasmids_gbk -t 0 -M</code>:
+<PRE>
+[...]
+# looking for valid ORF clusters (n_of_taxa=0)...
+
+# number_of_clusters = 193
+# cluster_list = [...]/EcoliplasmidpMUR050_f0_0taxa_algOMCL_e0_.cluster_list
+# cluster_directory = sample_plasmids_gbk_homologues/EcoliplasmidpMUR050_f0_0taxa_algOMCL_e0_
+</PRE>
+
+<P>
+We can now take advantage of script <SPAN  CLASS="textit">compare_clusters.pl</SPAN>, and the generated cluster directories,
+to compile the corresponding pangenome matrix. This can be accomplished for a single cluster set:
+<PRE>
+./compare_clusters.pl -o sample_intersection -m -d \
+sample_plasmids_gbk_homologues/Uncultured[...]_f0_0taxa_algCOG_e0_
+</PRE>
+
+<P>
+or for the intersection of several sets, in order to get a consensus pangenome matrix:
+<PRE>
+./compare_clusters.pl -o sample_intersection -m -d \
+sample_plasmids_gbk_homologues/Uncultured[...]_f0_0taxa_algCOG_e0_,\
+sample_plasmids_gbk_homologues/Uncultured[...]_f0_0taxa_algOMCL_e0_
+</PRE>
+
+<P>
+The ouput of the latter command will include the following lines:
+<PRE>
+[...]
+
+# number of input cluster directories = 2
+
+# parsing clusters in sample_plasmids_gbk_homologues/Uncultured[...]_f0_0taxa_algCOG_e0_ ...
+# cluster_list in place, will parse it ([...]/Uncultured[...]_f0_0taxa_algCOG_e0_.cluster_list)
+# ERROR: skipping cluster 62_transposase.faa , seems to duplicate 59_transposase.faa
+# ERROR: skipping cluster 116_tnpA.faa , seems to duplicate 59_transposase.faa
+# number of clusters = 197
+# parsing clusters in sample_plasmids_gbk_homologues/Uncultured[...]_f0_0taxa_algOMCL_e0_ ...
+# cluster_list in place, will parse it ([...]/Uncultured[...]_f0_0taxa_algOMCL_e0_.cluster_list)
+# number of clusters = 193
+[...]
+
+# intersection size = 180 clusters
+
+# intersection list = sample_intersection/intersection_t0.cluster_list
+
+# pangenome_file = sample_intersection/pangenome_matrix_t0.tab
+# pangenome_phylip file = sample_intersection/pangenome_matrix_t0.phylip
+# input set: sample_intersection/Uncultured[...]_f0_0taxa_algCOG_e0_.venn_t0.txt
+# input set: sample_intersection/Uncultured[...]_f0_0taxa_algOMCL_e0_.venn_t0.txt
+
+# Venn diagram = sample_intersection/venn_t0.pdf
+# Venn region file: sample_intersection/unique_Uncultured[...]_f0_0taxa_algCOG_e0_.venn_t0.txt (17)
+# Venn region file: sample_intersection/unique_Uncultured[...]_f0_0taxa_algOMCL_e0_.venn_t0.txt (13)
+</PRE>
+
+<P>
+Note that skipped clusters correspond precisely to COG unresolved clusters.
+This script produces two versions of the same pangenomic matrix:
+
+<UL>
+<LI>A full detailed matrix in tab-separated columns, with taxa/genomes as rows and sequence clusters as columns, 
+in which cells with natural numbers indicate whether a given taxa contains one or more sequences from a given cluster.
+Such files can be read and edited with any text editor or spreadsheet software.
+<PRE>
+source:folder                   3_EcoRII.faa  8_tnpA.faa  22_traA.faa  36_beta-lactamase[...]
+K_pneumoniae_12_plasmid_12.gb   1             0           1            2
+K_pneumoniae_9_plasmid_9.gb     1             0           0            2
+K_oxytoca_plasmid_pKOX105.gb    1             0           1            1
+[...]
+</PRE>
+
+<P>
+</LI>
+<LI>A reduced binary matrix in a format suitable for 
+<A NAME="tex2html59"
+  HREF="http://evolution.genetics.washington.edu/phylip/doc/discrete.html">PHYLIP</A>
+discrete character analysis software, 
+which looks like this:
+<PRE>
+        12    180   &lt;-12 taxa, 180 clusters
+0000000000    0000000011001000000000100000111111101100000000000 ...
+0000000001    0000000010000000000000000000000000001000000000000 ... 
+0000000002    0000000010000000000000100000000001111111111111111
+0000000003    0000000010000000000000000000000000000000000000000
+0000000004    0000000010000000000000000000000000000000010000000
+0000000005    0000000110011100100000101000000000100001000000000
+0000000006    0000000011000000000000100000000000000000000000000
+0000000007    0000000001011000000001111111111110000000000000000
+0000000008    0000000101111111111111000000000000000000000000000
+0000000009    0000000000000000000000000000000000000000000000000
+0000000010    0000000010001000000000000000000000000000000000000
+0000000011    1111111110000000000000000000000000000000000000000 ...
+</PRE>
+
+<P>
+</LI>
+</UL>
+
+<P>
+Indeed, when option <code>-T</code> is toggled, as in the next example,
+<PRE>
+./compare_clusters.pl -o sample_intersection -m -T -d \
+sample_plasmids_gbk_homologues/Uncultured[...]_f0_0taxa_algCOG_e0_,\
+sample_plasmids_gbk_homologues/Uncultured[...]_f0_0taxa_algOMCL_e0_
+</PRE>
+
+<P>
+then the script calls program PARS from the 
+<A NAME="tex2html60"
+  HREF="http://evolution.genetics.washington.edu/phylip/doc/pars.html">PHYLIP suite</A>
+to produce one or more alternative parsimony trees that capture the phylogeny implied in this matrix, adding the following 
+lines to the produced output:
+<PRE>
+# parsimony results by PARS (PHYLIP suite, evolution.genetics.washington.edu/phylip/doc/pars.html):
+# pangenome_phylip tree = sample_intersection/pangenome_matrix_t0.phylip.ph
+# pangenome_phylip log = sample_intersection/pangenome_matrix_t0.phylip.log
+</PRE>
+
+<P>
+Please note that the resulting <A NAME="tex2html61"
+  HREF="http://en.wikipedia.org/wiki/Newick_format">Newick format</A>
+<code>.ph</code> file can contain several trees 
+separated by ';', one per line. In order to plot them, as in the next figure, it might be necessary, depending on the software used, 
+to leave only one. This is the case for instance for MEGA or TreeView.
+
+<P>
+A complementary view of the same data con be obtained with script <SPAN  CLASS="textit">plot_matrix_heatmap.sh</SPAN>:
+<PRE>
+cd sample_intersection
+../plot_matrix_heatmap.sh -i pangenome_matrix_t0.tab
+</PRE>
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:parstree"></A><A NAME="813"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 9:</STRONG>
+Example of pangenomic tree of the consensus COG and OMCL pangenomic matrix obtained for a few plasmids. 
+Such trees can be useful to create the A and B lists discussed in the next section.
+Plot produced with <A NAME="tex2html55"
+  HREF="http://tree.bio.ed.ac.uk/software/figtree">FigTree</A>, with midpoint root.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="653" HEIGHT="613" ALIGN="BOTTOM" BORDER="0"
+ SRC="./parstree.png"
+ ALT="Image parstree">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:panheatmap"></A><A NAME="489"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 10:</STRONG>
+Heatmap of the previous pangenome matrix, with dendrograms sorting genomes and sequence clusters.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="905" HEIGHT="427" ALIGN="BOTTOM" BORDER="0"
+ SRC="./pangenome_matrix_t0_heatmap.png"
+ ALT="Image pangenome_matrix_t0_heatmap">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+
+<H3><A NAME="SECTION00058200000000000000"></A><A NAME="pangeplot"></A>
+<BR>
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">2</SPAN> Interrogating a pangenome matrix
+</H3>
+
+<P>
+Script <SPAN  CLASS="textit">parse_pangenome_matrix.pl</SPAN> can be used to analyze a pangenome matrix, 
+such as that created in the previous section.
+It was primarily designed to identify genes present in a group A of species which are absent in another 
+group B, but can also be used to find expansions/contractions of gene families. 
+If you require the genes present/expanded in B with respect to A, just reverse them.
+Expanded clusters are defined as those where all A taxa contain more sequences than the maximum 
+number of corresponding sequences in any taxa of group B.  
+
+<P>
+We now review these features with the same plasmid set of previous sections, analyzing the pangenome matrix
+produced by intersecting several cluster sets on section <A HREF="#pange">4.8.1</A>.
+Let's say we are interested 
+in finding plasmid genes present in <SPAN  CLASS="textit">Klebsiella oxytoca</SPAN> which are not encoded in <SPAN  CLASS="textit">K.pneumoniae KP96</SPAN>.
+In order to do this we first create a couple of text files to define sets A and B, 
+called <code>A.txt</code> and <code>B.txt</code>, which we place inside folder <code>sample_plasmids_gbk</code>.
+The content of A and B files should be one line per species. In this example file
+<code>A.txt</code> contains a single line:
+<code>K_oxytoca_plasmid_pKOX105.gb</code>
+As well as <code>B.txt</code>:
+<code>K_pneumoniae_KP96_plasmid_pKP96.gb</code>
+We can now execute the script as follows:
+<BR><PRE>
+./parse_pangenome_matrix.pl -m sample_intersection/pangenome_matrix_t0.tab \
+-A sample_plasmids_gbk/A.txt -B sample_plasmids_gbk/B.txt -g
+</PRE>
+
+<P>
+The output should be:
+<PRE>
+# matrix contains 180 clusters and 12 taxa
+
+# taxa included in group A = 1
+
+# taxa included in group B = 1
+
+# finding genes present in A which are absent in B ...
+# file with genes present in set A and absent in B (21): [...]pangenome_matrix_t0__pangenes_list.txt
+</PRE>
+
+<P>
+It can be seen that 21 genes were found to be present in A and absent in B.
+In the case of pangenome matrices derived from GenBank files, as in this example, it is possible to 
+produce a map of these genes in the genomic context of any species included in A, which should be queried using 
+option <code>-l</code>. A valid syntax would be:
+<PRE>
+./parse_pangenome_matrix.pl -m sample_intersection/pangenome_matrix_t0.tab \
+-A sample_plasmids_gbk/A.txt -B sample_plasmids_gbk/B.txt -g \
+-p 'Klebsiella oxytoca KOX105'
+</PRE>
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:pangemat"></A><A NAME="508"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 11:</STRONG>
+Map of plasmid OX105 highlighting 7 genes absent in pKP96.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="904" HEIGHT="82" ALIGN="BOTTOM" BORDER="0"
+ SRC="./sample_pangenome_AB.png"
+ ALT="Image sample_pangenome_AB">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+By default, <SPAN  CLASS="textit">parse_pangenome_matrix.pl</SPAN> requires present genes to be present in all genomes of A and none of B.
+However, as genomes might not be completelly annotated, it is possible to make these tests more flexible by controlling the cutoff for inclusion,
+by using flag <code>-P</code>. For instance, the next command will require genes to be present only in 90% of A genomes and missing in 90% of B genomes:
+<PRE>
+./parse_pangenome_matrix.pl -m sample_intersection/pangenome_matrix_t0.tab \
+-A sample_plasmids_gbk/A.txt -B sample_plasmids_gbk/B.txt -g -P 90
+</PRE> 
+
+<P>
+Note that the most flexible way of finding out genes absent in a set of genomes within a pangenome matrix is by using option <code>-a</code>, 
+which does not require an A list, rather a B list is sufficient. It is called as in the example:
+<PRE>
+./parse_pangenome_matrix.pl -m sample_intersection/pangenome_matrix_t0.tab \
+-B sample_plasmids_gbk/B.txt -a
+</PRE> 
+
+<P>
+
+<H3><A NAME="SECTION00058300000000000000"></A><A NAME="shellplot"></A>
+<BR>
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">3</SPAN> Calculating cloud, shell and core genomes
+</H3>
+
+<P>
+<SPAN  CLASS="textit">parse_pangenome_matrix.pl</SPAN> can also be employed to classify genes in these four compartments:
+
+<P>
+<BR><P></P>
+<DIV ALIGN="CENTER"><A NAME="815"></A>
+<TABLE>
+<CAPTION><STRONG>Table 3:</STRONG>
+Definitions of pangenome compartments as used by <SPAN  CLASS="textit">parse_pangenome_matrix.pl</SPAN>.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<TABLE CELLPADDING=3 BORDER="1" ALIGN="CENTER">
+<TR><TD ALIGN="LEFT">core</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=360>Genes contained in all considered genomes/taxa.</TD>
+</TR>
+<TR><TD ALIGN="LEFT">soft core</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=360>Genes contained in 95% of the considered genomes/taxa, as in the work of Kaas and collaborators (PubMed=<A NAME="tex2html63"
+  HREF="http://www.ncbi.nlm.nih.gov/pubmed/23114024">23114024</A>).</TD>
+</TR>
+<TR><TD ALIGN="LEFT">cloud</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=360>Genes present only in a few genomes/taxa. The cutoff is defined as the class next to the most populated non-core
+cluster class.</TD>
+</TR>
+<TR><TD ALIGN="LEFT">shell</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=360>Remaining genes, present in several genomes/taxa.</TD>
+</TR>
+</TABLE>
+</DIV>
+
+<A NAME="tab:shelldef"></A></TD></TR>
+</TABLE>
+</DIV><P></P>
+<BR>
+
+<P>
+The script is invoked as follows:
+<BR><PRE>
+./parse_pangenome_matrix.pl -m sample_intersection/pangenome_matrix_t0.tab -s
+</PRE>
+
+<P>
+The output is as follows:
+<PRE>
+# matrix contains 180 clusters and 12 taxa
+
+# cloud size: 124 list: sample_intersection/pangenome_matrix_t0__cloud_list.txt
+# shell size: 23 list: sample_intersection/pangenome_matrix_t0__shell_list.txt
+# soft core size: 33 list: sample_intersection/pangenome_matrix_t0__softcore_list.txt
+# core size: 24 (included in soft core) list: sample_intersection/pangenome_matrix_t0__core_list.txt
+
+# globals controlling R plots: $YLIMRATIO=1.2
+
+# shell bar plots: sample_intersection/pangenome_matrix_t0__shell.png , [...]shell.pdf
+# shell circle plots: sample_intersection/pangenome_matrix_t0__shell_circle.png , [...]circle.pdf
+
+# pan-genome size estimates (Snipen mixture model PMID:19691844): [...]shell_estimates.tab
+Core.size Pan.size BIC LogLikelihood
+2 components 24 193 1056.08217644576 -520.251652946544
+3 components 23 370 583.140322949438 -278.587769347493
+4 components 14 417 570.835786136617 -267.242544090193
+5 components 13 703 579.364023427564 -266.313705884776
+6 components 12 954 589.754861142051 -266.31616789113
+7 components 13 808 600.134442088951 -266.313001513689
+8 components 8 549 610.689900917556 -266.397774077102
+9 components 0 572 621.283299953595 -266.501516744231
+10 components 0 489 632.354613188809 -266.844216
+Sample 24 180 NA NA
+</PRE>
+
+<P>
+Apart from text files listing the cluster names that take part in each of the four compartments, two types of plots are
+generated. The lenght of Y-axes in barplots can be controlled with global variable <code>$YLIMRATIO</code>.
+Note that the output also includes estimates of the pan- and core-genome sizes as calculated by the 
+binomial mixture model of Snipen and collaborators
+(PubMed=<A NAME="tex2html67"
+  HREF="http://www.ncbi.nlm.nih.gov/pubmed/19691844">19691844</A>).
+A simple interpretation is that as soon as likelihood converges then adding more 
+components does not improve the mixture model. Please check that paper for a full explanation. 
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:pangematbar"></A><A NAME="816"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 12:</STRONG>
+Barplot of the pangenome matrix created in section <A HREF="#pange">4.8.1</A>. 
+Core clusters are in white for clarity, but note that according to the definitions in Table <A HREF="#tab:shelldef">3</A> the soft core also includes the strict core.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="480" HEIGHT="480" ALIGN="BOTTOM" BORDER="0"
+ SRC="./shell.png"
+ ALT="Image shell">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:pangematbar"></A><A NAME="817"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 13:</STRONG>
+Area plot of the pangenome matrix created in section <A HREF="#pange">4.8.1</A>. 
+Note that the soft core compartment includes also the core, as implied by the definition in Table <A HREF="#tab:shelldef">3</A>.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="480" HEIGHT="480" ALIGN="BOTTOM" BORDER="0"
+ SRC="./circleshell.png"
+ ALT="Image circleshell">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+
+<H3><A NAME="SECTION00058400000000000000"></A><A NAME="composition"></A>
+<BR>
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">4</SPAN> Estimating core/pan-genome size by sampling genomes
+</H3>
+
+<P>
+The pioneer work of Tettelin and collaborators 
+(PubMed=<A NAME="tex2html72"
+  HREF="http://www.ncbi.nlm.nih.gov/sites/ppmc/articles/PMC1216834/">16172379</A>) unveiled
+that bacterial genomes are dynamic containers that harbour essential genes and also 
+accessory elements, which might be unique to each community. <SPAN  CLASS="textit">get_homologues.pl</SPAN> can be used
+to perform such genome composition analyses. 
+The rationale is to sample a set of genomes (present in the input folder) and keep adding genome
+after genome keeping track of i) the novel genes added to the pool and ii) the genes that fall in 
+pre-existing clusters.
+This sampling experiment can be done with any of the included 3 algorithms (please see Table <A HREF="#tab:algs">2</A>), 
+by invoking option <code>-c </code>. For instance, we could try <code>$ ./get_homologues.pl -d sample_buch_fasta -c</code>:
+<BR><PRE>
+[... same as first example ...]
+
+# genome composition report (samples=10,permutations=24)
+# genomic report parameters: MIN_PERSEQID_HOM=0 MIN_COVERAGE_HOM=20
+# genome order:
+# 0 Buch_aph_APS.faa
+# 1 Buch_aph_Bp.faa
+# 2 Buch_aph_Cc.faa
+# 3 Buch_aphid_Sg.faa
+
+## sample 0 (Buch_aph_APS.faa | 0,1,2,3,)
+# adding Buch_aph_APS.faa: core=574 pan=574
+[...]
+
+# pan-genome (number of genes, can be plotted with plot_pancore_matrix.pl)
+# file=sample_buch_fasta_homologues/pan_genome_algBDBH.tab
+genomes	mean	stddev	|	samples
+0	490	90	|	574	507	507	546	357	357	546	574	357	574	
+1	572	28	|	598	585	585	587	521	521	562	592	575	598	
+2	597	5	|	606	593	594	594	594	596	600	599	591	606	
+3	608	5	|	615	602	600	608	605	605	611	613	605	615	
+
+# core-genome (number of genes, can be plotted with plot_pancore_matrix.pl)
+# file=sample_buch_fasta_homologues/core_genome_algBDBH.tab
+genomes	mean	stddev	|	samples
+0	490	90	|	574	507	507	546	357	357	546	574	357	574	
+1	420	82	|	466	466	466	523	324	324	317	523	324	466	
+2	327	36	|	319	319	434	315	310	315	313	318	309	319	
+3	310	4	|	313	313	313	311	304	304	311	313	304	313	
+
+[... same as first example ...]
+</PRE>
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:core"></A><A NAME="fig:pan"></A><A NAME="818"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 14:</STRONG>
+Core-genome (left) and pan-genome (right) estimates after ten random samples of 4 taxa. 
+Fitted curves follow functions first proposed by Tettelin in 2005 
+(PubMed=<A NAME="tex2html68"
+  HREF="http://www.ncbi.nlm.nih.gov/sites/ppmc/articles/PMC1216834/">16172379</A>).
+Residual standard errors are reported on the right margin as a measure of the goodness of fit.</CAPTION>
+<TR><TD><TABLE  WIDTH="50%">
+<TR><TD>
+<DIV ALIGN="CENTER">
+
+</DIV><IMG
+  WIDTH="480" HEIGHT="480" ALIGN="BOTTOM" BORDER="0"
+ SRC="./core_genome_algBDBH.png"
+ ALT="Image core_genome_algBDBH">
+</TD></TR>
+</TABLE>
+ 
+<TABLE  WIDTH="50%">
+<TR><TD>
+<DIV ALIGN="CENTER">
+
+</DIV><IMG
+  WIDTH="480" HEIGHT="480" ALIGN="BOTTOM" BORDER="0"
+ SRC="./pan_genome_algBDBH.png"
+ ALT="Image pan_genome_algBDBH">
+</TD></TR>
+</TABLE></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+As can be seen, the output now contains two data frames which summarize the 
+genome composition analysis done by sampling, which are also stored as tab-separated files.
+These text files can be used to plot the core- and pan-genome, with help from
+the accompanying script <SPAN  CLASS="textit">plot_pancore_matrix.pl</SPAN>. A suitable command would be: 
+<BR><code> ./plot_pancore_matrix.pl -i sample_buch_fasta_homologues/core_genome_algBDBH.tab -f core_Tettelin</code>
+<BR>
+<P>
+The script also supports the core function as modified by Willenbrock and 
+collaborators (PubMed=<A NAME="tex2html73"
+  HREF="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2246269">18088402</A>), 
+as shown on the next figure in a more realistic set of 35 genomes. Both fits can be superimposed 
+by calling option <code> -f core_both</code>.
+
+<P>
+Besides standard core- and pan-genomes, it is possible to estimate the evolution of the soft core-genome, 
+which is a relaxed version of the core that considers genes found in a fraction (by default 0.95) of genomes, and thus accommodates 
+some annotation or assembly errors. This experiment can be done with either the OMCl or COGS algorithms 
+by invoking options <code>-c -z</code>. The resulting data file can be plotted the same way.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:core2"></A><A NAME="582"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 15:</STRONG>
+Core-genome estimate after ten random samples of 35 taxa.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="540" HEIGHT="540" ALIGN="BOTTOM" BORDER="0"
+ SRC="./sample_core_genome2.png"
+ ALT="Image sample_core_genome2">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+The genome composition analyses presented so far are actually random sampling experiments. 
+It is thus worth mentioning that the user can control the order in which genomes are sampled during
+these simulations, by enforcing a list of genomes with option <code>-I</code>, already introduced in section <A HREF="#intergen">4.7</A>,
+or by setting the seed of the random number generator with option <code>-R</code>.
+In the first case only one sampling is performed and therefore the standard deviation of the core and pan values is zero.
+The second strategy ensures that sampling order is conserved in different program executions and thus allows merging CDS 
+core-genomes and non-coding genes (such as rRNAs) core-genomes computed separately over the same set of taxa, with help from
+accompanying script <SPAN  CLASS="textit">add_pancore_matrices.pl</SPAN>.
+
+<P>
+
+<P>
+
+<H3><A NAME="SECTION00058500000000000000"></A><A NAME="enrich"></A>
+<BR>
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">5</SPAN> Calculating Pfam enrichment of cluster sets
+</H3>
+
+<P>
+Provided that Pfam domains have been annotated in advance (see section <A HREF="#PfamClusters">4.4</A>),
+it is possible to calculate whether a set of clusters, for instance those that take part of the shell (see <A HREF="#shellplot">4.8.3</A>),
+are enriched on a set of protein domains. To this end <SPAN  CLASS="textit">pfam_enrich.pl</SPAN> can be invoked as follows:
+<BR>
+<P>
+<PRE>
+$ ./pfam_enrich.pl -d sample_plasmids_gbk_homologues/ \
+  -c sample_plasmids_gbk_homologues/UnculturedbacteriumplasmidpRSB203_f0_0taxa_algOMCL_e0_ \
+  -x sample_intersection/pangenome_matrix_t0__shell_list.txt -t less -p 1.0
+</PRE>
+
+<P>
+There are several input data required for this kind analysis:
+
+<UL>
+<LI>A folder containing previously computed Pfam-annotations (<code>-d</code>).
+</LI>
+<LI>A directory with FASTA-format cluster files (<code>-c</code>), obtained on earlier steps. These will be the 'control' set.
+</LI>
+<LI>A file with a list of clusters defining a subset of 'experiment' clusters (<code>-x</code>).
+</LI>
+<LI>The desired type of <A NAME="tex2html74"
+  HREF="https://stat.ethz.ch/R-manual/R-patched/library/stats/html/fisher.test.html">Fisher's exact test</A>, 
+either <code>greater</code>, <code>two.sided</code> or <code>less</code>, as in this example. The default is <code>greater</code>, which will test for Pfam
+domains over-represented in 'experiment' clusters. Instead, <code>greater</code> tests for under-represented Pfam domains.
+</LI>
+<LI>A threshold on FDR-adjusted P-values, set to 0.05 by default. Note that in this toy example it was set to 1.0
+</LI>
+<LI>Optionally flag <code>-r</code> can be used to sample only sequences from a selected reference taxon.
+</LI>
+<LI>If using nucleotide clusters, then option <code>-n</code> should be called.
+</LI>
+</UL>
+
+<P>
+The output is as follows:
+<PRE>
+# parsing clusters...
+# 756 sequences extracted from 193 clusters
+
+# total experiment sequence ids = 148
+# total control    sequence ids = 756
+
+# parse_Pfam_freqs: set1 = 19 Pfams set2 = 103 Pfams
+
+# fisher exact test type: 'less'
+# multi-testing p-value adjustment: fdr
+# adjusted p-value threshold: 1
+
+# total annotated domains: experiment=19 control=144
+
+#PfamID	counts(exp)	counts(ctr)	freq(exp)	freq(ctr)	p-value	p-value(adj)	description
+PF00239	0	6	0.000e+00	4.167e-02	4.833e-01	9.860e-01	Resolvase, N terminal domain
+PF01526	0	6	0.000e+00	4.167e-02	4.833e-01	9.860e-01	Tn3 transposase DDE domain
+PF02796	0	3	0.000e+00	2.083e-02	6.928e-01	9.860e-01	Helix-turn-helix domain of resolvase
+PF12681	0	3	0.000e+00	2.083e-02	6.928e-01	9.860e-01	Glyoxalase-like domain
+[...]
+</PRE>
+
+<P>
+
+<H3><A NAME="SECTION00058600000000000000"></A><A NAME="avgidmatrix"></A>
+<BR>
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">6</SPAN> Estimating average identity matrices
+</H3>
+
+<P>
+If we recall for a moment the example GenBank files analyzed on section <A HREF="#gbkfiles">4.3</A> we can
+demonstrate how to calculate average identity matrices, which can then be used to compare genome members of
+a pangenome. To do so we will add a few flags to the previous command, in addition to flag <code>-A</code>, which specifically
+asks for an identity matrix to be calculated: <code>$ ./get_homologues.pl -d sample_plasmids_gbk -A -t 0 -M</code>
+
+<P>
+This will produce the following output:
+<PRE>
+[...]
+# number_of_clusters = 193
+# cluster_list = [...]/UnculturedbacteriumplasmidpRSB203_f0_0taxa_algOMCL_e0_.cluster_list
+# cluster_directory = [...]/UnculturedbacteriumplasmidpRSB203_f0_0taxa_algOMCL_e0_
+
+# average_identity_matrix_file = 
+# [...]/UnculturedbacteriumplasmidpRSB203_f0_0taxa_algOMCL_e0_Avg_identity.tab
+# NOTE: matrix computed on blastp results
+</PRE>
+
+<P>
+Note that on this example the produced identity matrix was calculated with the BLASTP scores among protein sequences included on the resulting 
+clusters (193). If average nucleotide identities are desired the command must be modified to:
+
+<P>
+<code>$ ./get_homologues.pl -d sample_plasmids_gbk -a 'CDS' -A -t 0 -M</code>
+
+<P>
+Such matrices can then be used to calculate heatmaps and dendrograms that capture how similar the coding sequences are among genomes.
+An example of this would be:
+
+<P>
+<PRE>
+cd sample_plasmids_gbk_homologues
+../hcluster_matrix.sh -i EcoliST131plasmidpKC394_f0_0taxa_CDS_algOMCL_e0_Avg_identity.tab
+</PRE>
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:ANImap"></A><A NAME="611"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 16:</STRONG>
+Example heatmap derived from an average nucleotide identity matrix calculated with get_homologues.pl.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="905" HEIGHT="603" ALIGN="BOTTOM" BORDER="0"
+ SRC="./Avg_identity_heatmap.png"
+ ALT="Image Avg_identity_heatmap">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+
+<H3><A NAME="SECTION00058700000000000000"></A><A NAME="checkBDBH"></A>
+<BR>
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">8</SPAN>.<SPAN CLASS="arabic">7</SPAN> Finding out best hits of a particular sequence
+</H3>
+
+<P>
+After running <SPAN  CLASS="textit">get_homologues</SPAN> with almost any set of parameters, you will always end up with a lot of BLAST files
+of all-against-all involved taxa. The accompanying script <SPAN  CLASS="textit">check_BDBHs.pl</SPAN> can help you find out which are the best BLAST
+hits of any sequence that might interest you.
+First, as cluster names are not always informative, you'll need to find out the internal identifier used by the software to handle your 
+target sequence. For instance, we might want to investigate protein CspE among our 4 <SPAN  CLASS="textit">Buchnera</SPAN> taxa. The command to achieve this would be:
+<code>$ ./check_BDBHs.pl -d sample_buch_fasta_homologues -g -i CspE</code>:
+<BR>
+<P>
+And we obtain:
+<PRE>
+# Sequences containing label CspE:
+
+1360,Buch_aph_Cc.faa,gi|116515229|ref|YP_802858.1| CspE [Buchnera aphidicola str. Cc (Cinara cedri)]
+</PRE>
+
+<P>
+Now that we know the identifier (1360), we can check its best hits:
+
+<P>
+<code>$ ./check_BDBHs.pl -d sample_buch_fasta_homologues -i 1360</code>
+<BR>
+<P>
+Output contains the identifiers of best hits in both directions, their bit-scores, E-values, 
+alignment %coverages and annotated Pfam protein domains when available:
+
+<P>
+<PRE>
+# query = 1360
+# query fullname = gi|116515229|ref|YP_802858.1| CspE [Buchnera aphidicola str. Cc (Cinara cedri)] 
+
+# list of bidirectional best-hits:
+dir	query	  sbjct	  bits	  Eval	  %ident	cover	  Pfam	   annotation
+:						                                             [Buch_aph_APS.faa]
+&gt;	   1360	    467	   136	 4e-42	    97.1	100.0	  NA	     gi|15617086|..cold shock protein E
+
+&lt;	    467	   1360	   136	 4e-42	    97.1	100.0	  NA
+:						                                             [Buch_aph_Bp.faa]
+&gt;	   1360	    972	   135	 1e-41	    95.7	100.0	  NA	     gi|27904911|..cold shock protein E
+
+&lt;	    972	   1360	   135	 1e-41	    95.7	100.0	  NA
+:						                                             [Buch_aphid_Sg.faa]
+&gt;	   1360	   1883	   136	 4e-42	    97.1	100.0	  NA	     gi|21672738|..cold shock protein E
+
+&lt;	   1883	   1360	   136	 4e-42	    97.1	100.0	  NA
+</PRE>
+
+<P>
+If previous <SPAN  CLASS="textit">get_homologues</SPAN> jobs included the calculation of Pfam domains, then option <code>-D</code> can be added to
+produce a richer report, that now includes the identifiers of Pfam domains such as 
+<A NAME="tex2html76"
+  HREF="http://pfam.sanger.ac.uk/family/PF00313">PF00313</A>, sorted on their position along the sequence:
+
+<P>
+<PRE>
+dir	query	  sbjct	  bits	  Eval	  %ident	cover	  Pfam	   annotation
+:						                                             [Buch_aph_APS.faa]
+&gt;	   1360	    467	   136	 4e-42	    97.1	100.0	  PF00313,	     gi|15617086|..cold shock protein E
+
+&lt;	    467	   1360	   136	 4e-42	    97.1	100.0	  PF00313,
+...
+</PRE>
+
+<P>
+Note that this script works by parsing files <code>all.p2o.csv</code> and <code>all.bpo</code>, which are created at run-time by
+<SPAN  CLASS="textit">get_homologues</SPAN> in folder <code>tmp/</code> within the results directory. 
+These are text files that can be inspected with help from any text editor.
+
+<P>
+
+<H2><A NAME="SECTION00059000000000000000"></A><A NAME="HOWTOTettelin"></A>
+<BR>
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">9</SPAN> A script to test most get_homologues features with a sample dataset
+</H2>
+
+<P>
+File <code>HOWTOTettelin</code> is a shell script which performs typical uses of <SPAN  CLASS="textit">get_homologues.pl</SPAN>.
+This script can be made executable on the terminal with: <code>$ chmod +x HOWTOTettelin</code>
+and then executed with: <code>$ ./HOWTOTettelin</code>
+The first task carried out by the script is to download the same GenBank files used in the landmark work of Tettelin
+and collaborators (PubMed=<A NAME="tex2html77"
+  HREF="http://www.ncbi.nlm.nih.gov/sites/ppmc/articles/PMC1216834/">16172379</A>); afterwards
+several analyses are sequentially undertaken:
+
+<P>
+<PRE>
+# 1.0) optionally download genomes in GenBank format from NCBI FTP site
+cd test_Streptococcus
+../download_genomes_ncbi.pl test_Streptococcus_download_list.txt
+cd ..
+
+# 1.1) run BLAST jobs with 4 CPU cores and optionally HMMER 
+./get_homologues.pl -d test_Streptococcus/ -n 4 -o
+./get_homologues.pl -d test_Streptococcus/ -n 4 -D -o
+
+# 1.2) calculate core-genomes with all BDBH, OMCL &amp; COG algorithms
+./get_homologues.pl -d test_Streptococcus/ 
+./get_homologues.pl -d test_Streptococcus/ -M
+./get_homologues.pl -d test_Streptococcus/ -G
+./get_homologues.pl -d test_Streptococcus/ -M -D
+
+# 1.3) calculate consensus core-genome with syntenic genes
+./compare_clusters.pl -s -n -o test_Streptococcus_intersection -d \
+test_Streptococcus_homologues/S_f0_alltaxa_algCOG_e0_,\
+test_Streptococcus_homologues/S_f0_alltaxa_algOMCL_e0_,\
+test_Streptococcus_homologues/S_f0_alltaxa_algBDBH_e0_
+
+# 1.4) calculate core-genome with coverage and identity as in the Tettelin paper (cover=50%,%ID=50)
+./get_homologues.pl -d test_Streptococcus/ -M -C 50 -S 50
+
+# 1.6) calculate core intergenic clusters
+./get_homologues.pl -d test_Streptococcus/ -g
+
+# 1.7) estimate and plot core- and pangenome sizes with all BDBH, OMCL &amp; COG algorithms
+./get_homologues.pl -d test_Streptococcus/ -c
+./get_homologues.pl -d test_Streptococcus/ -M -c
+./get_homologues.pl -d test_Streptococcus/ -G -c
+
+# 2.1) calculate pan-genome with OMCL &amp; COG algorithms
+./get_homologues.pl -d test_Streptococcus/ -M -t 0
+./get_homologues.pl -d test_Streptococcus/ -G -t 0
+
+# 2.2) build consensus pangenomic matrix
+./compare_clusters.pl -d test_Streptococcus_homologues/S_f0_0taxa_algCOG_e0_,\
+test_Streptococcus_homologues/S_f0_0taxa_algOMCL_e0_ -m -T -o test_Streptococcus_intersection
+
+# 2.3) plot pangenomic compartments and estimate core- and pan-genome size with mixture models
+./parse_pangenome_matrix.pl -m test_Streptococcus_intersection/pangenome_matrix_t0.tab -s
+
+# 2.4) check accesory genes present in A genomes and absent in B
+./parse_pangenome_matrix.pl -m test_Streptococcus_intersection/pangenome_matrix_t0.tab \
+	-A test_Streptococcus/A.list -B test_Streptococcus/B.list -g -e
+</PRE>
+
+<P>
+Readers looking for a fully worked out
+example, including a comprehensive interpretation of results, can read our book chapter 
+"Robust Identification of Orthologues and Paralogues for Microbial Pan-Genomics Using GET_HOMOLOGUES: A Case Study of pIncAC Plasmids" 
+(PubMed=<A NAME="tex2html78"
+  HREF="http://www.ncbi.nlm.nih.gov/pubmed/?term=25343868">25343868</A>).
+
+<P>
+
+<H1><A NAME="SECTION00060000000000000000"></A> <A NAME="FAQs"></A>
+<BR>
+<SPAN CLASS="arabic">5</SPAN> Frequently asked questions (FAQs)
+</H1>
+
+<P>
+
+<H2><A NAME="SECTION00061000000000000000">
+<SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">1</SPAN> Installation</A>
+</H2> 
+
+<P>
+
+<UL>
+<LI>Is it necessary to have a computer cluster to run <SPAN  CLASS="textit">get_homologues.pl</SPAN>?
+
+<P>
+Not really. It can be run on a single machine, but if you have say, more than microbial genomes, the required all-against-all BLAST jobs 
+would take some time to complete, depending on your hardware. If this is your case we recommend setting option <code>-n</code> to the number 
+of cores of your processor,
+as this way BLAST/HMMER jobs will be split and sent to different jobs and the required computing time proportionally reduced.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:RAM"></A><A NAME="647"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 17:</STRONG>
+Runtime of a typical bacterial genomic BLASTP jobs as calculated with 1 to 8 CPU cores when splitting the job in batches.
+Note that the optimal batch size in this test is 100 sequences (compared  to 250 and 500 sequences).</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="495" HEIGHT="764" ALIGN="BOTTOM" BORDER="0"
+ SRC="./split_blast_bench.png"
+ ALT="Image split_blast_bench">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+</LI>
+<LI>How do I set up <SPAN  CLASS="textit">get_homologues.pl</SPAN> to run in a computer cluster?
+
+<P>
+Cluster jobs are submitted by invoking option <code>-m cluster</code>, instead of explicitely calling <code>qsub</code>.
+The fist time such a job is run the following error can be seen:
+<PRE>
+# running BLAST searches ...
+Unable to run job: You have to specify a queue, with the '-q' option to qsub.
+Exiting.
+[...]
+</PRE>
+
+<P>
+This usually means that <code>qsub</code> jobs inside <SPAN  CLASS="textit">get_homologues.pl</SPAN> lack a target queue in the cluster. 
+Please find out the name of the right queue for your jobs, perhaps something as simple as such as <code>-q default</code>,
+and edit the relevant line in the header of <SPAN  CLASS="textit">get_homologues.pl</SPAN>:
+<PRE>
+my $QUEUESETTINGS = ' -q default ';
+</PRE>
+
+<P>
+</LI>
+<LI>Does <SPAN  CLASS="textit">get_homologues.pl</SPAN> run on Windows?
+
+<P>
+As Perl is not installed by default on Windows, not BerkeleyDB is easily installed there, we haven't ported this software to these systems.
+However, with some work, you could probably set up a windows machine to run <SPAN  CLASS="textit">get_homologues.pl</SPAN> and most of its dependencies. 
+Nevertheless, we have tested the package only on Linux and macOSX systems, and currently the only option for Windows users would be to set up a 
+<A NAME="tex2html82"
+  HREF="https://www.virtualbox.org/">VirtualBox</A>
+Linux box, and then installing <SPAN  CLASS="textit">get_homologues.pl</SPAN> there. 
+
+<P>
+NOTE: If you don't know how to do this please check these resources:
+<A NAME="tex2html83"
+  HREF="http://www.wikihow.com/Install-Ubuntu-on-VirtualBox">Install-Ubuntu-on-VirtualBox</A>
+or 
+<A NAME="tex2html84"
+  HREF="http://virtualboxes.org/images/ubuntu/">virtualboxes</A>.
+
+<P>
+</LI>
+<LI>How much memory does my computer require to run <SPAN  CLASS="textit">get_homologues.pl</SPAN>?
+
+<P>
+This depends directly on the size and number of the genomes to be analyzed. 
+A recent benchmark with 71 Mycobacterium genomes and 280k sequences yielded a RAM usage of just over 3700 MB, 
+confirming that versions 2.* have a much reduced memory footprint (see Figure <A HREF="#fig:RAMtime">18</A>, in the original 
+benchmark up to 40 microbial genomes could be analyzed on a 8Gb RAM Linux box).
+<BR>
+Moreover, as mentioned in section <A HREF="#options">3.4</A>, the <code>-s</code> flag option reduces the memory footprint of your 
+<SPAN  CLASS="textit">get_homologues</SPAN> up to 20-fold, allowing running large jobs in machines with small RAM resources. 
+Therefore, if you are running a large job that fails to finish succesfully, the most common
+explanation would be that it was killed by the operating system for taking too much memory. In those cases it is
+advisable to re-run the same job with the <code>-s</code> flag.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:RAMtime"></A><A NAME="674"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 18:</STRONG>
+Computing time and RAM requirements of the BDBH, COG and OMCL algorithms when processing input volumes of increasing size. 
+Performance is measured also with BerkeleyDB (-s flag). </CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="914" HEIGHT="1053" ALIGN="BOTTOM" BORDER="0"
+ SRC="./performance.png"
+ ALT="Image performance">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+</LI>
+<LI>What's the performance gain of v2?
+
+<P>
+After evolving parts of the original code base, and fixing some bugs (see CHANGES.txt), both 
+<SPAN  CLASS="textit">get_homologues.pl</SPAN> and <SPAN  CLASS="textit">get_homologues-est.pl</SPAN> have significantly improved their performance, as can be seen 
+in the figure, which combines data from the original benchmark and new data generated after v2 was in place. 
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:RAMtimev2"></A><A NAME="684"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 19:</STRONG>
+Computing time and RAM requirements of the original algorithm (OMCL, measured on 6 sequence sets) 
+as compared to the updated v2 code (measured on 3 three sets).</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="807" HEIGHT="970" ALIGN="BOTTOM" BORDER="0"
+ SRC="./performance_v2.png"
+ ALT="Image performance_v2">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+</LI>
+<LI>BLAST jobs fail in my computer cluster, how can I sort this out?
+
+<P>
+When solving problems related with submitting jobs to the cluster it is 
+necessary to check the generated <code>.queue</code> files, which capture any errors that might occur during job submission.
+If you check one of these files an find a message such as
+<BR><code>blast: error while loading shared libraries: libbz2.so.1: cannot open shared object file</code>
+this means that some cluster nodes will require the installation of 32-bit compatibility library <code>libbz2.so.1</code>, 
+which can be done with root privileges typing this command from your cluster master node:
+<BR><code>rocks run host compute "yum -y install bzip2-libs.i386"</code> 
+<BR>
+<BR>
+Another solution would be to use BLAST binaries native to your cluster architecture, as explained in section <A HREF="#binaries">2.2</A>.
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H2><A NAME="SECTION00062000000000000000">
+<SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">2</SPAN> Run options</A>
+</H2> 
+
+<P>
+
+<UL>
+<LI>Why is it that I can't re-use BLAST results from the original <SPAN  CLASS="textit">get_homologues-est.pl</SPAN> after updating to <SPAN  CLASS="textit">get_homologues-est.pl</SPAN>?
+
+<P>
+In the v2 code family BLAST parsing evolved to capture -outfmt 6 'qseqid sseqid pident length qlen slen qstart qend sstart send evalue bitscore'. 
+However, the original code base was capturing different data columns and this implies that old BLAST results from previous releases won't work anymore.
+
+<P>
+</LI>
+<LI>Is there any real scenario in that the default value for -S flag is the best option?
+
+<P>
+Option -S 1 means that two sequences can be considered orthologues or inparalogues with any sequence identity, 
+provided that <!-- MATH
+ $Evalue < max(Evalue)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="171" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="img3.png"
+ ALT="$Evalue &lt; max(Evalue)$"></SPAN> and alignment coverage is sufficient (<code>-C</code>). This can be useful when
+comparing very divergent genomes/proteomes, where orthologues can be distant in terms of sequence. 
+If a reciprocal hit between genomes A and B is, say 30% identical, still it is a likely orthologue. 
+It could of course be a false positive, and that's why you need to know, perhaps by using <code>-A</code>, the average identity
+among proteins in those genomes, and ultimately a gene phylogenetic tree, including species A, B and others to compare
+ to the species tree.
+
+<P>
+</LI>
+<LI>Could you please explain a bit more what option <code>-o</code> is good for?
+
+<P>
+This option is useful in situations like the following: you have access to a compute cluster with modern compute nodes (64bit cores and a good amount of memory), 
+but the master computer is an old, 32bit machine with limited RAM (say 1GB or less). Under such a setting, it would be convenient to distribute the first steps 
+of the pipeline (all against all BLAST jobs) on the cluster using options <code>-o -m cluster</code>. The downstream parsing of the BLAST results, which is 
+memory-consuming, could then be executed logged in from one of the more powerful compute nodes or from a powerful server.
+
+<P>
+</LI>
+<LI>Would it be possible, after running the all-against-all BLAST jobs using option <code>-o</code>, to log into three different compute nodes 
+and execute the downstream pipeline on each node for a different clustering algorithm (i.e. BDBHs, COG and OMCL)?
+
+<P>
+No, as each <SPAN  CLASS="textit">get_homologues.pl</SPAN> job requires exclusive access to the data directory and prevents other jobs to access it simultaneously.
+
+<P>
+</LI>
+<LI>Does the -I option have any impact on the calculation of the core and pan genomes, including their graphical representations?
+
+<P>
+Of course, as this option enforces the program to sample once the list of genomes in the implicit order of the list. The fitting of pan-/core-genome
+functions will be affected as there will be less points to do the noon-linear fitting.
+
+<P>
+</LI>
+<LI>What is the minimum value for BLAST neighborhood correlation parameter?
+
+<P>
+This parameter captures the concept of BLAST neighborhood explained in 
+PubMed=<A NAME="tex2html85"
+  HREF="http://www.ncbi.nlm.nih.gov/sites/ppmc/articles/PMC2377100/">18475320</A>, and is calculated as a  
+a positive Pearson correlation coefficient. In this context, sequences A and B should have a similar list 
+of BLAST matches if they truly are orthologues.
+This parameter is by default set to 0, so it takes no effect. As its values approaches to 1, it gets more difficult to call
+bidirectional best hits, as they will be required to have very similar lists of BLAST hits.
+
+<P>
+</LI>
+<LI>Could you explain a bit more about the meaning/effect of the <code>-t</code> option?
+
+<P>
+You should use <code>-t 0</code> (zero) when you need to get all clusters of homologous sequences. 
+This will generate files containing 2 or more homologous sequences from one or more taxa. 
+By default, <SPAN  CLASS="textit">get_homologues.pl</SPAN> sets t=numberOfTaxa, that is, it will provide the user with clusters of homologous sequences 
+that contain at least one sequence from each taxon. Note that singleton clusters (just one sequence per organism) will be produced  
+if combined with option <code>-e</code>, which excludes clusters containing inparalogues. In this later case, the resulting clusters will 
+contain only single copy genes from each taxon, i.e. the orthologues. This is convenient if you want to use resulting gene families 
+to do for example genome-level phylogenetic analyses using only the repertoire of orthologous single copy genes. Note, however, that  
+such clusters are not suitable for pangenome analyses. For such analyses, instead, please use auxiliary script <SPAN  CLASS="textit">compare_clusters.pl</SPAN> 
+with the set of clusters obtained with <code>-t 0</code>.
+
+<P>
+</LI>
+<LI>And what about option -a, what are these other GenBank file features?
+
+<P>
+Thoroughly annotated genomes (see for example the GenBank file for Escherichia coli K12 MG1655: Escherichia_coli_K_12_substr__MG1655_uid225.gbk) 
+have many features, incluing ribosomal rRNAs, integenic spacers, tRNAas, 'mat_peptide', 'repeat_region', and miscellaneous features, noted as 'misc_feature', 
+in the corresponding GenBank files. Miscellaneous features report on diverse things such as cryptic prophages, the target sites of resolvases involved 
+in replicon replication,  and many more "miscellaneous" features. Note that there is great heterogeneity both in the format and detail of annotating 
+genome features. By default, <SPAN  CLASS="textit">get_homologues.pl</SPAN> will extract only the 'CDS' feature (i.e. the sequences for protein-coding sequences) from the 
+GenBank file. By using option <code>-a</code> the user can select which features to parse, such as 'tRNA' or 'rRNA'. 
+
+<P>
+</LI>
+<LI>Could you explain what the inflation parameter of orthoMCL is and how to decide what value to use?
+
+<P>
+The original OrthoMCL paper (PubMed=<A NAME="tex2html86"
+  HREF="http://www.ncbi.nlm.nih.gov/sites/ppmc/articles/PMC403725/">12952885</A>) explains it:
+"[...] changing the inflation index affects cluster tightness: Lower inflation values result in the inclusion of more sequences in fewer groups, 
+whereas increasing the inflation index fragments clusters and reduces the number of sequences included". 
+In our benchmarks with bacterial genomes this parameter shows a very modest, negligible effect.  
+
+<P>
+</LI>
+<LI>I've run the <SPAN  CLASS="textit">get_homologues.pl</SPAN> pipeline some time ago. I would like to add some new genomes to the previous analysis. 
+How do I proceed so as to reuse as much of the previous computations as possible?
+
+<P>
+If you still conserve the original input folder with FASTA or GenBank sequence files and the results <code>_homologues</code> directory,
+both contained in the same directory, all you will have to do is to copy the new sequence files to the input folder and re-run
+<SPAN  CLASS="textit">get_homologues.pl</SPAN>. This will ensure that only new required BLAST/PFam searches are completed, conserving the previous results as much 
+as possible.
+
+<P>
+</LI>
+<LI>How does <SPAN  CLASS="textit">get_homologues.pl</SPAN> decide how to name a certain cluster file? Is this affected by the use of -r?
+
+<P>
+Cluster files are named using gene names from the reference genome, or from the first included genome otherwise.
+If a given genome R is selected with option <code>-r</code> then gene names from R will be used preferably. 
+It is possible to change the way clusters are named by editing subroutine <code>extract_gene_name</code> in file <code>lib/phyTools.pm</code>.
+
+<P>
+</LI>
+<LI>What happens if I perform the above explained steps but using a different reference genome?
+
+<P>
+The most obvious effect is that any resulting clusters will now be named according to gene names of the new reference genome.
+A more subtle consequence for BDBH jobs is that now all genomes are compared to this reference, see figure <A HREF="#BDBHflow">3</A>,
+and this will change the order in which bidirectional best hits are computed.
+
+<P>
+</LI>
+<LI>How are the gene clusters named if no -r reference genome is specified?
+
+<P>
+In this case the genome with the least number of genes/features will be taken as the reference,
+and resulting sequence clusters will be named according to gene names of this reference genome, 
+which might not be the best annotated genome in your set. For this reason it is often a good idea to set as reference genome
+one with a good annotation, for instance the species or strain described in <A NAME="tex2html87"
+  HREF="http://www.ncbi.nlm.nih.gov/refseq/">RefSeq</A>.
+
+<P>
+</LI>
+<LI>I have 40 draft genomes annotated in gbk format and I am using <SPAN  CLASS="textit">get_homologues</SPAN> to obtain the core and pan genomes. 
+My plan is to run <SPAN  CLASS="textit">get_homologues</SPAN> with BDBH and -b to speed up the process. How can I choose the most appropriate reference genome?
+
+<P>
+Option <code>-b</code> is only suited for core-genome calculation, not pangenome. If this is really the desired task, the genome with the least number 
+of annotated genes should be used as a reference, which is what the program would do by default, or else the best-annotated among small genomes.
+However, note that this sort of core-genome calculation is most sensitive to missing genes, usually due to poor automatic annotations, which is 
+why compiling a pangenome matrix is recommended when possible (see Section <A HREF="#pange">4.8.1</A>), so that a more robust soft-core can be estimated.
+
+<P>
+</LI>
+<LI>Why does option '-t 0' not work with BDBH in <SPAN  CLASS="textit">get_homologues.pl</SPAN>? Is this also the reason BDBH cannot be used in a pangenome matrix analysis?
+
+<P>
+The reason is that BDBH uses a single reference genome and thus by definition cannot track genes not present in the reference. 
+Therefore, pangenome matrices produced by the BDBH algorithm would be incomplete, considering only clusters including genes from the reference genome.
+For this reason BDBH is adequate for core-genome calculation, but not for pan-genomes. 
+
+<P>
+</LI>
+<LI>When the initial BLAST is being performed, does <SPAN  CLASS="textit">get_homologues.pl</SPAN> take into account the database size 
+(i.e. the number of genes being BLASTed), or because the BLASTing is not done as an all-vs-all manner, do you not consider this as a factor in the analysis?
+
+<P>
+Within <code>lib/marfil_homology.pm</code> there is a global variable <code>$BLAST_DB_SIZE</code> set to 100_000_000 for that purpose.
+That value is the fixed effective search space during BLAST searches so that any resulting E-values are comparable, even across experiments
+or algorithm (BDBH, OMCL, COGS).
+
+<P>
+</LI>
+<LI>I would like to get information of inparalogues and orthologues from each genome. I found several files in the tmp directory, 
+such as <code>inparalogues_Buch_aph_APS.faa</code>. Could you explain about the files or a method to extract the information?
+
+<P>
+According to our working definition, all sequences grouped together in the same .faa/.fna cluster are likely orthologues, 
+although you should always keep in mind that orthology is an evolutionary concept and therefore sequence-based approaches 
+such as those in <SPAN  CLASS="textit">get_homologues.pl</SPAN> are simpler approximations. What is different with inparalogues? 
+They are supposed to be duplicated genes that appeared after species separation, and therefore their orthology relationships 
+are many-to-one or many-to-many. Inparalogues are easy to spot in clusters produced by <SPAN  CLASS="textit">get_homologues.pl</SPAN> because 
+they are 2+ sequences from the same genome in the same cluster cluster. If you wish to know which inparalogue is most similar 
+to an orthologous gene the best option is to run <SPAN  CLASS="textit">check_BDBHs.pl</SPAN>, which is explained on Section <A HREF="#checkBDBH">4.8.7</A>.
+
+<P>
+</LI>
+<LI>I have been using GET_HOMOLOGUES and I could not figure out which is the default value for saving blastp hits, I mean, 
+the value set for '-max_target_seqs'
+
+<P>
+BLAST parameter <code>-max_target_seqs</code> is set to the number of sequences of the query proteome, which usually is a large number 
+that ensures all good quality hits are recovered.
+
+<P>
+</LI>
+<LI>How does buffer flushing affects <SPAN  CLASS="textit">get_homologues.pl</SPAN>?
+
+<P>
+Although <SPAN  CLASS="textit">get_homologues.pl</SPAN> scripts explicitily flush output buffers (set with <code>$|=1</code>), 
+users can occasionally experience buffering problems when writing to slow, external hard drives, as output files are often very large. 
+Such problems have been reported when calling <code>-G</code> option, which in turn invokes subroutine <code>find_COGs</code> and calls several
+external binaries, whose buffers cannot be flushed from the scripts. If that happens to you please consider increasing the sleep time
+in that sub, which by default is 10 seconds.
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H2><A NAME="SECTION00063000000000000000">
+<SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">3</SPAN> Downstream analyses</A>
+</H2>
+
+<P>
+
+<UL>
+<LI>What are pancore and pangenome files/matrices?
+
+<P>
+Pancore matrices contain estimates of core- and pan-genomes and they are produced by <SPAN  CLASS="textit">get_homologues.pl</SPAN> with option <code>-c</code>.
+These files take names such as <code>pan_genome_algBDBH_C75.tab</code>, which record the algorithm employed, and are generated by random-sampling genomes. 
+Sampling can be controlled and reproduced by using the same random-number generator seed  (see section <code>-R</code> in Section <A HREF="#options">3.4</A>). 
+Such files can be used to render plots (and fitted functions) with script <code>plot_pancore_matrix.pl</code>, as shown in Section <A HREF="#composition">4.8.4</A>.
+
+<P>
+Instead, pangenome matrices are generated by accessory script <SPAN  CLASS="textit">compare_clusters.pl</SPAN>, and contain information about what which genomes contain sequences
+from gene clusters, with no sampling involved (see Section <A HREF="#pange">4.8.1</A>).
+They take names such as <code>pangenome_matrix_t0.tab</code>.
+
+<P>
+</LI>
+<LI>Is it possible to plot pangenome matrices with <SPAN  CLASS="textit">compare_clusters.pl</SPAN> using a single cluster directory?
+
+<P>
+Yes, no problem. The script will generate the <code>intersection_t0.cluster_list</code> , <code>pangenome_matrix_t0.phylip</code> and <code>pangenome_matrix_t0.tab</code> 
+files based on the clusters found by the chosen algorithm. The only thing you won't find in the directory are Venn diagrams, since at least 2 cluster sets 
+(generated by 2 algorithms) are required to compute them.
+
+<P>
+</LI>
+<LI>What is the advantage of providing multiple cluster output directories to the -d 'dir1,dir2,dir3'  option of <SPAN  CLASS="textit">compare_clusters.pl</SPAN>?
+
+<P>
+When provided with the output directories holding the clusters generated by 2 or 3 algorithms, the script will select only those clusters that 
+contain exactly the same sequences in each of the clusters. This may be valuable for example if the user is interested in defining a very robust 
+core genome set, containing only those families with exactly the same members, independently of the chosen algorithm. However, it is possible that 
+several otherwise important families get lost for downstream analyses, such as presence-absence analyses of gene families in pairs of lineages, 
+which can be done with <SPAN  CLASS="textit">parse_pangenome_matrix.pl</SPAN>. 
+
+<P>
+</LI>
+<LI>We have sequenced 25 bacteria genomes and used <SPAN  CLASS="textit">get_homologues.pl</SPAN> to get orthologs included in all the 25 strains. 
+As I already used BDBH method for core genome analysis, now I cannot switch to COG method for pangenome matrix generation.
+Could you indicate me how to get the full pangenome matrix using BDBH method?
+
+<P>
+BDBH results cannot be used for pangenome analysis, but you could re-run the software with the same 25 input genomes, now adding <code>-t 0 -M</code> for OMCL,
+probably the best choice for such an analysis. This will re-use all blast results previously calculated and resume until OMCL analysis is completed.
+Usually core sets produced by BDBH, COGS and OCML are very similar. Therefore, most of your previously tested core genes should also be picked up 
+by OCML on this second run, and presumably you could now proceed to pangenome analysis.
+
+<P>
+</LI>
+<LI>I am a PhD student doing some work on different strains. My input is .gbk from draft genomes and my aim at this point is to see what 
+are core-genes in each of 3 groups and which of these are shared with the other 2 groups. I have been working under the impression that I 
+can make 3 different groups and compare them or can I only make 1 big group and compare the results for different methods?
+
+<P>
+You have calculated 3 core-genomes from 3 different sets of strains and now you want to know the subset of core-genes present 
+in all individual core-genomes. If you check compare_clusters.pl option you'll see that it says
+"by default cluster dirs are expected to be derived from the same taxa", which is exactly what's failing in your examples.
+If you want to find common core-clusters present if all 3 sets and also those shared by only some of the taxa I guess you should build a
+pangenome matrix by running get_homologues.pl with all strains together with option -t 0. The matrix itself will give you the clusters 
+present/absent in all and some of the strains, which I guess is what you need. The script parse_pangenome_matrix.pl can read this matrix 
+and further help you identify these clusters.
+
+<P>
+</LI>
+<LI>Could you please give a use case for <SPAN  CLASS="textit">compare_clusters.pl -r</SPAN>?
+
+<P>
+Option <code>-r</code> can be used to compare a list of core genes from a single genome G,
+that is, with clusters containing only sequences from G, to clusters of a larger group of taxa (A,B,C,...,G) that includes G.
+
+<P>
+</LI>
+<LI>The parsimony tree produced by <code>compare_cluster.pls -T</code> cannot be opened by MEGA.
+
+<P>
+Program PARS from the <A NAME="tex2html88"
+  HREF="http://evolution.genetics.washington.edu/phylip/doc/pars.html">PHYLIP suite</A>
+often produces several 
+alternative parsimony trees contained in the <code>pangenome_matrix_t0.phylip.ph</code> file, one per line. Some phylogeny programs, such as
+<A NAME="tex2html89"
+  HREF="http://www.megasoftware.net">MEGA</A>, require splitting these trees in separate files in order to properly read and plot them.
+
+<P>
+</LI>
+<LI>Parsing a pangenome matrix with A &amp; B lists yields zero clusters.
+
+<P>
+When a command such as <code>./parse_pangenome_matrix.pl -m pangenome_matrix_t0.tab -A A.txt -B B.txt -g</code> is invoked, 
+the passed A &amp; B files must contain taxon names matching exactly those of corresponding input files, including the extension. Instead of
+a list such as:
+<PRE>
+taxonA 
+taxonB_001
+...
+taxonZ244
+</PRE>
+
+<P>
+the list should be:
+<PRE>
+taxonA.faa
+taxonB_001.faa
+...
+taxonZ244.faa
+</PRE>
+
+<P>
+</LI>
+<LI>How does <SPAN  CLASS="textit">make_nr_pangenome_matrix.pl</SPAN> work?
+
+<P>
+Please refer to <SPAN  CLASS="textit">manual_get_homologues-est.pdf</SPAN> for an example application of this script.
+
+<P>
+</LI>
+<LI>How does <SPAN  CLASS="textit">annotate_cluster.pl</SPAN> work?
+
+<P>
+Please refer to <SPAN  CLASS="textit">manual_get_homologues-est.pdf</SPAN> for an example application of this script.
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H1><A NAME="SECTION00070000000000000000">
+<SPAN CLASS="arabic">6</SPAN> Frequent warnings and error messages</A>
+</H1> 
+
+<P>
+<BR><P></P>
+<DIV ALIGN="CENTER"><A NAME="773"></A>
+<TABLE>
+<CAPTION><STRONG>Table 4:</STRONG>
+Frequent warnings and error messages produced by get_homologues and kin scripts.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<TABLE CELLPADDING=3 BORDER="1" ALIGN="CENTER">
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=180>error message</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=252>practical meaning</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=180>EXIT : cannot find previous input file XXXX, please re-run everything</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=252>This can happen when re-running the program with an input <code>-d directory</code>
+which used to contain more sequences files, or with different names. This prevents the software
+to recycle previous results, as it cannot ensure that sequences are still numbered consistently.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=180>WARNING: could not extract nucleotide sequences from file XXXX</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=252>You'll see this warning when using an uncomplete input GenBank file, lacking the nucleotide sequence at the bottom.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=180>WARNING: can only extract genes (not CDSs) from file XXXX</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=252>Occurs when reading a GenBank file lacking CDS features.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=180>WARNING: cannot use nucleotide sequences in file XXXX as they do not match those in file YYYY</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=252>This warning occurs when a twin XXXX <code>.fna</code> file (see Table <A HREF="#tab:informats">1</A>) contains a different number of sequences
+than the corresponding YYYY <code>.faa</code> file, and cannot therefore be safely used to compile DNA clusters.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=180>EXIT, XXXX does not exist, Pfam search failed...</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=252>Occurs when a Pfam job submitted to the cluster (option <code>-D</code>) failed to report back and terminate. 
+The solution is often to re-run the program, as it will only re-submit the missing Pfam jobs.
+When solving problems with submitting jobs to the cluster queue it is helpful to check the .queue files.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=180>EXIT: cannot format BLAST sequence base</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=252>Happens when for some reason the collection of input sequences could not be formatted for BLAST. 
+This might surface hard drive trouble or simply an architecture issue.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=180>EXIT, XXXX.blastout does not exist, BLAST search failed...</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=252>Again a BLAST error, spotted for failing to produce a BLAST output. Often the solution is simply to re-run,
+as this might be simply a cluster overload problem. 
+When solving problems with submitting jobs to the cluster queue it is often helpful top check the .queue files.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=180>EXIT: parsed XXXX output (YYYY) seems to be empty, please remove 'input_homologues/' and re-run</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=252>Another BLAST/Pfam error, which can happen if the programs fails to parse the results.
+The simplest solution is usually to do as suggested and re-run.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=180>WARNING: please remove/rename results directory: XXXX if you change the sequences in your .gbk/.faa files or want to re-run</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=252>This warning is issued only to make it clear that the program is recycling previous BLAST results, 
+which is usually a good idea, unless you specifically changed the contents of your input files 
+(which should't be that common).</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=180>EXIT: cannot compile intergenic clusters as not all input GenBank files are valid</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=252>This message appears when the user requested intergenic clusters (option <code>-g </code>) but not all
+parsed GenBank files contained nucleotide sequences. The solution is to check the input files and 
+correct the offending one, which likely is uncomplete and lacks the nucleotide sequence at the bottom.</TD>
+</TR>
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=180>WARNING: skipping cluster 123_XXX.fna , seems to duplicate 456_YYY.fna</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=252>This is issued by <SPAN  CLASS="textit">compare_clusters.pl</SPAN> when it finds, usually singleton, clusters with identical sequences produced by
+the COG or OMCL algorithms. This can happen when such clusters contain short sequences, or perhaps with composition biases, that
+yield few or even no BLAST hits when compared to all other sequences in a given setup. As these kinds of clusters can confound 
+posterior analysis they are currently ignored by <SPAN  CLASS="textit">compare_clusters.pl</SPAN>.</TD>
+</TR>
+</TABLE>
+</DIV>
+
+<A NAME="tab:warns"></A></TD></TR>
+</TABLE>
+</DIV><P></P>
+<BR>
+
+<P>
+
+<H1><A NAME="SECTION00080000000000000000">
+<SPAN CLASS="arabic">7</SPAN> Credits and references</A>
+</H1>
+
+<P>
+<SPAN  CLASS="textit">get_homologues.pl</SPAN> is designed, created and maintained at the 
+<A NAME="tex2html91"
+  HREF="http://www.eead.csic.es/compbio">Laboratory of Computational Biology</A>
+at 
+Estaci&#243;n Experimental de Aula Dei/CSIC in Zaragoza (Spain) and at the 
+<A NAME="tex2html92"
+  HREF="http://www.ccg.unam.mx/~vinuesa">Center for Genomic Sciences</A>
+of 
+Universidad Nacional Aut&#243;noma de M&#233;xico (CCG/UNAM).
+
+<P>
+The code was written mostly by Bruno Contreras-Moreira and Pablo Vinuesa, but it also includes 
+code and binaries from <A NAME="tex2html93"
+  HREF="http://www.orthomcl.org">OrthoMCL v1.4</A>
+(algorithm OMCL, <code>-M</code>),
+<A NAME="tex2html94"
+  HREF="http://sourceforge.net/projects/cogtriangles">COGtriangles v2.1</A>
+(algorithm COGS, <code>-G</code>),
+<A NAME="tex2html95"
+  HREF="http://blast.ncbi.nlm.nih.gov">NCBI Blast+</A>, <A NAME="tex2html96"
+  HREF="https://github.com/desmid/mview">MVIEW</A>
+and <A NAME="tex2html97"
+  HREF="http://www.bioperl.org">BioPerl 1.5.2</A>.
+
+<P>
+Other contributors: Carlos P Cantalapiedra, Roland Wilhelm.
+
+<BR>
+<BR>
+We ask the reader to cite the main references describing the <SPAN  CLASS="textit">get_homologues</SPAN> software,
+
+<P>
+
+<UL>
+<LI>Contreras-Moreira,B and Vinuesa,P (2013) GET_HOMOLOGUES, a versatile software package 
+for scalable and robust microbial pangenome analysis. Appl.Environ.Microbiol. 79:7696-7701.
+</LI>
+<LI>Vinuesa P and Contreras-Moreira B (2015) Robust Identification of Orthologues and Paralogues 
+for Microbial Pan-Genomics Using GET_HOMOLOGUES: A Case Study of pIncA/C Plasmids. In Bacterial 
+Pangenomics, Methods in Molecular Biology Volume 1231, 203-232, edited by A Mengoni, M Galardini 
+and M Fondi.
+</LI>
+</UL>
+
+<P>
+and also the original papers describing the included algorithms and databases, accordingly:
+
+<P>
+
+<UL>
+<LI>Li L, Stoeckert CJ Jr, Roos DS (2003) OrthoMCL: identification of ortholog 
+groups for eukaryotic genomes. Genome Res. 13(9):2178-89.
+
+<P>
+</LI>
+<LI>Kristensen DM, Kannan L, Coleman MK, Wolf YI, Sorokin A, Koonin EV, 
+Mushegian A (2010) A low-polynomial algorithm for assembling clusters of orthologous 
+groups from intergenomic symmetric best matches. Bioinformatics 26(12):1481-7.
+
+<P>
+</LI>
+<LI>Altschul SF, Madden TL, Schaffer AA, Zhang J, Zhang Z, Miller W and Lipman DJ (1997)
+Gapped BLAST and PSI-BLAST: a new generation of protein database search programs.
+Nucl. Acids Res. 25(17): 3389-3402.
+
+<P>
+</LI>
+<LI>Stajich JE, Block D, Boulez K, Brenner SE, Chervitz SA, Dagdigian C, Fuellen G, 
+Gilbert JG, Korf I, Lapp H, Lehväslaiho H, Matsalla C, Mungall CJ, Osborne BI, 
+Pocock MR, Schattner P, Senger M, Stein LD, Stupka E, Wilkinson MD, Birney E. (2002)
+The Bioperl toolkit: Perl modules for the life sciences. Genome Res. 12(10):1611-8.
+
+<P>
+</LI>
+<LI>hmmscan :: search sequence(s) against a profile database HMMER 3.1b2 (Feb 2015) http://hmmer.org
+Copyright (C) 2015 Howard Hughes Medical Institute.
+Freely distributed under the GNU General Public License (GPLv3).
+
+<P>
+</LI>
+<LI>Finn RD, Bateman A, Clements J, Coggill P, Eberhardt RY, Eddy SR, Heger A, 
+Hetherington K, Holm L, Mistry J, Sonnhammer EL, Tate J, Punta M. (2014)
+Pfam: the protein families database. Nucleic Acids Res. 42:D222-30. 
+
+<P>
+</LI>
+<LI>Brown NP, Leroy C, Sander C (1998) MView: A Web compatible database search or 
+multiple alignment viewer. Bioinformatics. 14 (4):380-381. 
+
+<P>
+</LI>
+</UL>
+
+<P>
+If you use the accompanying scripts the following references should also be cited:
+
+<UL>
+<LI>R Core Team (2013) R: A Language and Environment for Statistical Computing. http://www.R-project.org
+R Foundation for Statistical Computing, Vienna, Austria, ISBN3-900051-07-0 
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H1><A NAME="SECTION00090000000000000000">
+About this document ...</A>
+</H1>
+ <STRONG><SPAN  CLASS="textit">get_homologues</SPAN> manual</STRONG><P>
+This document was generated using the
+<A HREF="http://www.latex2html.org/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 2008 (1.71)
+<P>
+Copyright &#169; 1993, 1994, 1995, 1996,
+Nikos Drakos, 
+Computer Based Learning Unit, University of Leeds.
+<BR>
+Copyright &#169; 1997, 1998, 1999,
+<A HREF="http://www.maths.mq.edu.au/~ross/">Ross Moore</A>, 
+Mathematics Department, Macquarie University, Sydney.
+<P>
+The command line arguments were: <BR>
+ <STRONG>latex2html</STRONG> <TT>manual -no_antialias_text -split 0 -dir manual -no_navigation -show_section_numbers</TT>
+<P>
+The translation was initiated by Bruno Contreras Moreira on 2016-04-28
+<BR><HR>
+<ADDRESS>
+Bruno Contreras Moreira
+2016-04-28
+</ADDRESS>
+</BODY>
+</HTML>
