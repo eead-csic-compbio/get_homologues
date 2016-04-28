@@ -1,0 +1,210 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Accompanying scripts</TITLE>
+<META NAME="description" CONTENT="Accompanying scripts">
+<META NAME="keywords" CONTENT="manual">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="manual.css">
+
+<LINK REL="previous" HREF="node11.html">
+<LINK REL="up" HREF="node7.html">
+<LINK REL="next" HREF="node13.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html235"
+  HREF="node13.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/usr/share/latex2html/icons/next.png"></A> 
+<A NAME="tex2html231"
+  HREF="node7.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/usr/share/latex2html/icons/up.png"></A> 
+<A NAME="tex2html227"
+  HREF="node11.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/usr/share/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html233"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="/usr/share/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html236"
+  HREF="node13.html">A few examples of</A>
+<B> Up:</B> <A NAME="tex2html232"
+  HREF="node7.html">User manual</A>
+<B> Previous:</B> <A NAME="tex2html228"
+  HREF="node11.html">Program options</A>
+ &nbsp; <B>  <A NAME="tex2html234"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00045000000000000000">
+Accompanying scripts</A>
+</H2>
+
+<P>
+The following Perl scripts are included in the bundle to assist in the interpretation of results generated
+by <SPAN  CLASS="textit">get_homologues.pl</SPAN>:
+
+<P>
+
+<UL>
+<LI><SPAN  CLASS="textit">download_genomes_ncbi.pl</SPAN>, a script which is described in section <A HREF="node9.html#downGenBank">3.2</A> 
+with examples.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">compare_clusters.pl</SPAN> primarily calculates the intersection between cluster sets, 
+which can be used to select clusters supported by different algorithms or settings.
+This script can also produce syntenic clusters, pangenome matrices, 
+http://orthoxml.org/xml/Main.htmlOrthoXML reports, 
+and Venn diagrams 
+(this last optional feature requires R, please check section <A HREF="node6.html#dependencies">2.3</A>).
+Examples of use of this script are presented in sections <A HREF="node14.html#FASTAORFs">4.1</A>, <A HREF="node18.html#synteny">4.5</A> and <A HREF="node22.html#pange">4.8.1</A>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">parse_pangenome_matrix.pl</SPAN> is a script that can be used to analyze pan-genome sets, in order to
+find genes present in a group A of species which are absent in set B. The identified genes can be
+mapped onto the underlying genome contigs of a reference genome included in A. Moreover this script can be used
+for calculating and plotting cloud, shell and core genome compartments. Please see examples in sections
+<A HREF="node23.html#pangeplot">4.8.2</A> and <A HREF="node24.html#shellplot">4.8.3</A>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">make_nr_pangenome_matrix.pl</SPAN> is provided to post-process pangenome matrices in case the user wishes 
+to remove redundant clusters.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">plot_pancore_matrix.pl</SPAN>, a Perl script to plot pan/core-genome sampling results and to fit regression 
+curves with help from http://www.r-project.orgR functions. An example of use of this script is given in section <A HREF="node25.html#composition">4.8.4</A>.
+Please check section <A HREF="node6.html#dependencies">2.3</A> for the requirements of this script. 
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">check_BDBHs.pl</SPAN> is a script that can be used, after a previous <SPAN  CLASS="textit">get_homologues</SPAN> run, to find out the
+bidirectional best hits of a sequence identifier chosen by the user. It can also retrieve the Pfam annotations of a sequence and its
+reciprocal best hits. See section <A HREF="node28.html#checkBDBH">4.8.7</A>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">add_pancore_matrices.pl</SPAN> can be used to add pan/core-matrices produced by previous
+<SPAN  CLASS="textit">get_homologues -c -R</SPAN> runs on the same set of genomes, with the aim of combining default CDS clusters
+and -a 'rRNA,tRNA' results.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">add_pangenome_matrices.pl</SPAN> can be used similarly to add two pangenome matrices produced by 
+<SPAN  CLASS="textit">compare_clusters.pl</SPAN>, for instance from sets of CDS and rRNA,tRNA clusters.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">pfam_enrich.pl</SPAN> calculates the enrichment of a set of sequence clusters in terms of Pfam domains,
+by using https://stat.ethz.ch/R-manual/R-patched/library/stats/html/fisher.test.htmlFisher's exact test.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">annotate_cluster.pl</SPAN> can be used to retrieve a multiple alignment view of the supporting local BLAST alignments
+of the sequences in the cluster, and to annotate any encoded Pfam domain.
+
+<P>
+</LI>
+</UL>
+
+<P>
+In addition, two shell scripts are also included:
+
+<P>
+
+<UL>
+<LI><SPAN  CLASS="textit">plot_matrix_heatmap.sh</SPAN> calculates ordered heatmaps with attached row and column dendrograms from squared 
+tab-separated numeric matrices, which can be presence/absence pangenomic matrices or similarity / identity matrices as those 
+produced by <SPAN  CLASS="textit">get_homologues</SPAN> with flag <code>-A</code>. From the later type of matrix a distance matrix can optionally be calculated
+to drive a neighbor joining tree. See example on section <A HREF="node22.html#pange">4.8.1</A>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">hcluster_matrix.sh</SPAN> generates a distance matrix out of a tab-separated numeric matrix, which is then used to call 
+R functions <code>hclust()</code> and <code>heatmap.2()</code> in order to produce a heatmap. 
+
+<P>
+</LI>
+</UL>
+
+<P>
+To check the options of any of these scripts please invoke them from the terminal with flag <code>-h</code>. 
+For instance, typing <code>$ ./compare_clusters.pl -h</code> in the terminal will produce the following:
+<PRE> 
+-h 	 this message
+-d 	 comma-separated names of cluster directories, which           
+   	 usually have associated dir.cluster_list files. These lists
+   	 avoid parsing taxon names from FASTA headers, which might be
+   	 error prone.
+
+-o 	 output directory                                              
+-n 	 use nucleotide sequence .fna clusters                         
+-r 	 take first cluster dir as reference set, which might contain  
+   	 a single representative sequence per cluster                  
+-s 	 use only clusters with syntenic genes                         
+-t 	 use only clusters with single-copy orthologues from -t taxa   
+-I 	 produce clusters with single-copy seqs from ALL taxa in file  
+-m 	 produce intersection pangenome matrices                       
+   	                                                               
+-x 	 produce cluster report in OrthoXML format                     
+-T 	 produce parsimony-based pangenomic tree
+</PRE> 
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html235"
+  HREF="node13.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/usr/share/latex2html/icons/next.png"></A> 
+<A NAME="tex2html231"
+  HREF="node7.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/usr/share/latex2html/icons/up.png"></A> 
+<A NAME="tex2html227"
+  HREF="node11.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/usr/share/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html233"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="/usr/share/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html236"
+  HREF="node13.html">A few examples of</A>
+<B> Up:</B> <A NAME="tex2html232"
+  HREF="node7.html">User manual</A>
+<B> Previous:</B> <A NAME="tex2html228"
+  HREF="node11.html">Program options</A>
+ &nbsp; <B>  <A NAME="tex2html234"
+  HREF="node1.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Bruno Contreras Moreira
+2016-04-28
+</ADDRESS>
+</BODY>
+</HTML>

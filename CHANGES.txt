@@ -120,3 +120,4 @@
 12042016: added option -a to plot_pancore_matrix.pl to generate snapshots of pangenome size simulations
 13042016: added check so that initial core/pan size cannot be < 0 (get_homologues-est.pl)
 14042016: added option -c to plot_matrix_heatmap.sh to filter out excessive redundancy by imposing a max identity cut-off value
+28042016: updated manuals for the web

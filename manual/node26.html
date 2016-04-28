@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Calculating Pfam enrichment of cluster sets</TITLE>
+<META NAME="description" CONTENT="Calculating Pfam enrichment of cluster sets">
+<META NAME="keywords" CONTENT="manual">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="manual.css">
+
+<LINK REL="next" HREF="node27.html">
+<LINK REL="previous" HREF="node25.html">
+<LINK REL="up" HREF="node21.html">
+<LINK REL="next" HREF="node27.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html426"
+  HREF="node27.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/usr/share/latex2html/icons/next.png"></A> 
+<A NAME="tex2html422"
+  HREF="node21.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/usr/share/latex2html/icons/up.png"></A> 
+<A NAME="tex2html416"
+  HREF="node25.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/usr/share/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html424"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="/usr/share/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html427"
+  HREF="node27.html">Estimating average identity matrices</A>
+<B> Up:</B> <A NAME="tex2html423"
+  HREF="node21.html">Performing genome composition analyses</A>
+<B> Previous:</B> <A NAME="tex2html417"
+  HREF="node25.html">Estimating core/pan-genome size by</A>
+ &nbsp; <B>  <A NAME="tex2html425"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00058500000000000000"></A><A NAME="enrich"></A>
+<BR>
+Calculating Pfam enrichment of cluster sets
+</H3>
+
+<P>
+Provided that Pfam domains have been annotated in advance (see section <A HREF="node17.html#PfamClusters">4.4</A>),
+it is possible to calculate whether a set of clusters, for instance those that take part of the shell (see <A HREF="node24.html#shellplot">4.8.3</A>),
+are enriched on a set of protein domains. To this end <SPAN  CLASS="textit">pfam_enrich.pl</SPAN> can be invoked as follows:
+<BR>
+<P>
+<PRE>
+$ ./pfam_enrich.pl -d sample_plasmids_gbk_homologues/ \
+  -c sample_plasmids_gbk_homologues/UnculturedbacteriumplasmidpRSB203_f0_0taxa_algOMCL_e0_ \
+  -x sample_intersection/pangenome_matrix_t0__shell_list.txt -t less -p 1.0
+</PRE>
+
+<P>
+There are several input data required for this kind analysis:
+
+<UL>
+<LI>A folder containing previously computed Pfam-annotations (<code>-d</code>).
+</LI>
+<LI>A directory with FASTA-format cluster files (<code>-c</code>), obtained on earlier steps. These will be the 'control' set.
+</LI>
+<LI>A file with a list of clusters defining a subset of 'experiment' clusters (<code>-x</code>).
+</LI>
+<LI>The desired type of https://stat.ethz.ch/R-manual/R-patched/library/stats/html/fisher.test.htmlFisher's exact test, 
+either <code>greater</code>, <code>two.sided</code> or <code>less</code>, as in this example. The default is <code>greater</code>, which will test for Pfam
+domains over-represented in 'experiment' clusters. Instead, <code>greater</code> tests for under-represented Pfam domains.
+</LI>
+<LI>A threshold on FDR-adjusted P-values, set to 0.05 by default. Note that in this toy example it was set to 1.0
+</LI>
+<LI>Optionally flag <code>-r</code> can be used to sample only sequences from a selected reference taxon.
+</LI>
+<LI>If using nucleotide clusters, then option <code>-n</code> should be called.
+</LI>
+</UL>
+
+<P>
+The output is as follows:
+<PRE>
+# parsing clusters...
+# 756 sequences extracted from 193 clusters
+
+# total experiment sequence ids = 148
+# total control    sequence ids = 756
+
+# parse_Pfam_freqs: set1 = 19 Pfams set2 = 103 Pfams
+
+# fisher exact test type: 'less'
+# multi-testing p-value adjustment: fdr
+# adjusted p-value threshold: 1
+
+# total annotated domains: experiment=19 control=144
+
+#PfamID	counts(exp)	counts(ctr)	freq(exp)	freq(ctr)	p-value	p-value(adj)	description
+PF00239	0	6	0.000e+00	4.167e-02	4.833e-01	9.860e-01	Resolvase, N terminal domain
+PF01526	0	6	0.000e+00	4.167e-02	4.833e-01	9.860e-01	Tn3 transposase DDE domain
+PF02796	0	3	0.000e+00	2.083e-02	6.928e-01	9.860e-01	Helix-turn-helix domain of resolvase
+PF12681	0	3	0.000e+00	2.083e-02	6.928e-01	9.860e-01	Glyoxalase-like domain
+[...]
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html426"
+  HREF="node27.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/usr/share/latex2html/icons/next.png"></A> 
+<A NAME="tex2html422"
+  HREF="node21.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/usr/share/latex2html/icons/up.png"></A> 
+<A NAME="tex2html416"
+  HREF="node25.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/usr/share/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html424"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="/usr/share/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html427"
+  HREF="node27.html">Estimating average identity matrices</A>
+<B> Up:</B> <A NAME="tex2html423"
+  HREF="node21.html">Performing genome composition analyses</A>
+<B> Previous:</B> <A NAME="tex2html417"
+  HREF="node25.html">Estimating core/pan-genome size by</A>
+ &nbsp; <B>  <A NAME="tex2html425"
+  HREF="node1.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Bruno Contreras Moreira
+2016-04-28
+</ADDRESS>
+</BODY>
+</HTML>

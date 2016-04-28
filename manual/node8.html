@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Input data</TITLE>
+<META NAME="description" CONTENT="Input data">
+<META NAME="keywords" CONTENT="manual">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="manual.css">
+
+<LINK REL="next" HREF="node9.html">
+<LINK REL="previous" HREF="node7.html">
+<LINK REL="up" HREF="node7.html">
+<LINK REL="next" HREF="node9.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html189"
+  HREF="node9.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/usr/share/latex2html/icons/next.png"></A> 
+<A NAME="tex2html185"
+  HREF="node7.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/usr/share/latex2html/icons/up.png"></A> 
+<A NAME="tex2html179"
+  HREF="node7.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/usr/share/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html187"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="/usr/share/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html190"
+  HREF="node9.html">Obtaining (bacterial) GenBank input</A>
+<B> Up:</B> <A NAME="tex2html186"
+  HREF="node7.html">User manual</A>
+<B> Previous:</B> <A NAME="tex2html180"
+  HREF="node7.html">User manual</A>
+ &nbsp; <B>  <A NAME="tex2html188"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00041000000000000000"></A> <A NAME="input"></A>
+<BR>
+Input data
+</H2>
+
+<P>
+The input required to run <SPAN  CLASS="textit">get_homologues</SPAN> can be of two types: 
+<DL COMPACT>
+<DT>1</DT>
+<DD>A single file with amino acid sequences in FASTA format, 
+in which headers include a taxon name between square brackets, including at least two words 
+and a first capital letter, as shown in the example:
+<PRE>
+&gt;protein 123 [Species 1]
+MANILLLDNIDSFTYNLVEQLRNQKNNVLVYRNTVSIDIIFNSLKKLTHPILMLSPGPSLPKHAGCMLDL
+PEKFVINSYFEKMIMSVRNNCDRVCGFQFHPESILTTHGDQILEKIIHWASLKYITNKKQ
+&gt;gi|10923402| [Species 2]
+IKKVKGDIPIVGICLGHQAIVEAYGGIIGYAGEIFHGKASLIRHDGLEMFEGVPQPLPVARYHSLICNKI
+PEKFVINSYFEKMIMSVRNNCDRVCGFQFHPESILTTHGDQILEKIIHWASLKYITNKKQ
+...
+</PRE>
+
+<P>
+</DD>
+<DT>2</DT>
+<DD>A directory or folder containing several files in either FASTA format (extensions '.faa' or '.fasta', 
+containing amino acid sequences) or GenBank files (extension '.gbk', one file per organism). 
+The advantage of this option is that new files can be added to the input folder in the future and 
+previous calculations will be conserved. This might be useful to study a group of organisms for 
+which a few genomes are available, and then keep adding new genomes as they become available. 
+This directory can actually contain a mixture of FASTA and GenBank files.
+</DD>
+</DL>
+
+<P>
+<BR><HR>
+<ADDRESS>
+Bruno Contreras Moreira
+2016-04-28
+</ADDRESS>
+</BODY>
+</HTML>

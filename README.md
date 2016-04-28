@@ -16,9 +16,9 @@ We kindly ask you to report errors or bugs in the program to the authors and to 
 
 ![logo CSIC](pics/logoCSIC.png) ![logo ARAID](pics/logoARAID.gif) ![logo UNAM](pics/logoUNAM.png)
 
-Installation instructions are summarized on [README.txt](./README.txt) and full documentation is available in two files:
+Installation instructions are summarized on [README.txt](./README.txt) and full documentation is available in two flavours:
 
-|version|file|
-|-------|----|
-|original, for the analysis of bacterial pangenomes|[manual_get_homologues.pdf](./manual_get_homologues.pdf)|
-|EST, for the analysis of intra-species eukaryotic pangenomes, tested on plants|[manual_get_homologues-est.pdf](./manual_get_homologues-est.pdf)|
+|version|HTML|PDF|
+|-------|---|---|
+|original, for the analysis of bacterial pangenomes|[manual](manual/index.html)|[manual_get_homologues.pdf](./manual_get_homologues.pdf)|
+|EST, for the analysis of intra-species eukaryotic pangenomes, tested on plants|[manual-est](manual-est/index.html)|[manual_get_homologues-est.pdf](./manual_get_homologues-est.pdf)|
