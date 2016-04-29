@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Clustering orthologous proteins from a single FASTA file</TITLE>
+<META NAME="description" CONTENT="Clustering orthologous proteins from a single FASTA file">
+<META NAME="keywords" CONTENT="manual">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="manual.css">
+
+<LINK REL="next" HREF="node16.html">
+<LINK REL="previous" HREF="node14.html">
+<LINK REL="up" HREF="node13.html">
+<LINK REL="next" HREF="node16.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html287"
+  HREF="node16.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/usr/share/latex2html/icons/next.png"></A> 
+<A NAME="tex2html283"
+  HREF="node13.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/usr/share/latex2html/icons/up.png"></A> 
+<A NAME="tex2html277"
+  HREF="node14.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/usr/share/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html285"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="/usr/share/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html288"
+  HREF="node16.html">Clustering genes and proteins</A>
+<B> Up:</B> <A NAME="tex2html284"
+  HREF="node13.html">A few examples of</A>
+<B> Previous:</B> <A NAME="tex2html278"
+  HREF="node14.html">Clustering orthologous proteins from</A>
+ &nbsp; <B>  <A NAME="tex2html286"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00052000000000000000"></A> <A NAME="singleFASTA"></A>
+<BR>
+Clustering orthologous proteins from a single FASTA file
+</H2>
+
+<P>
+A similar analysis could be performed with a single input FASTA file containing amino acid sequences, provided
+that each contains a [taxon name] in its header, as explained in section <A HREF="node8.html#input">3.1</A>:
+
+<P>
+<PRE>
+&gt;gi|10957100|ref|NP_057962.1| ... [Buchnera aphidicola str. APS (Acyrthosiphon pisum)]
+MFLIEKRRKLIQKKANYHSDPTTVFNHLCGSRPATLLLETAEVNKKNNLESIMIVDSAIRVSAVKNSVKI
+TALSENGAEILSILKENPHKKIKFFEKNKSINLIFPSLDNNLDEDKKIFSLSVFDSFRFIMKSVNNTKRT
+SKAMFFGGLFSYDLISNFESLPNVKKKQKCPDFCFYLAETLLVVDHQKKTCLIQSSLFGRNVDEKNRIKK
+RTEEIEKKLEEKLTSIPKNKTTVPVQLTSNISDFQYSSTIKKLQKLIQKGEIFQVVPSRKFFLPCDNSLS
+AYQELKKSNPSPYMFFMQDEDFILFGASPESSLKYDEKNRQIELYPIAGTRPRGRKKDGTLDLDLDSRIE
+LEMRTNHKELAEHLMLVDLARNDLARICEPGSRYVSDLVKVDKYSHVMHLVSKVVGQLKYGLDALHAYSS
+CMNMGTLTGAPKVRAMQLIAEYEGEGRGSYGGAIGYFTDLGNLDTCITIRSAYVESGVATIQAGAGVVFN
+SIPEDEVKESLNKAQAVINAIKKAHFTMGSS
+[...]
+&gt;gi|15616637|ref|NP_239849.1| ... [Buchnera aphidicola str. APS (Acyrthosiphon pisum)]
+MTSTKEIKNKIVSVTNTKKITKAMEMVAVSKMRKTEERMRSGRPYSDIIRKVIDHVTQGNLEYKHSYLEE
+RKTNRIGMIIISTDRGLCGGLNTNLFKQVLFKIQNFAKVNIPCDLILFGLKSLSVFKLCGSNILAKATNL
+GENPKLEELINSVGIILQEYQCKRIDKIFIAYNKFHNKMSQYPTITQLLPFSKKNDQDASNNNWDYLYEP
+ESKLILDTLFNRYIESQVYQSILENIASEHAARMIAMKTATDNSGNRIKELQLVYNKVRQANITQELNEI
+VSGASAVSID
+[...]
+&gt;gi|21672839|ref|NP_660906.1| ... [Buchnera aphidicola str. Sg (Schizaphis graminum)]
+MHLNKMKKVSLKTYLVLFFLIFFIFCSFWFIKPKEKKLKLEKLRYEEVIKKINAKNNQNLKSVENFITEN
+KNIYGTLSSLFLAKKYILDKNLDKALIQLNNSLKYTKEENLQNILKIRIAKIKIQQNKNQDAIKILEEIK
+DNSWKNIVENMKGDIFMKNKEIKKAILAWKKSKYLEKSNASKEIINMKINEIKR
+</PRE>
+
+<P>
+It is possible to analyze the provided sample input file <code>sample_buchnera.faa</code> with the following command:
+<BR><code>$ ./get_homologues.pl -i sample_buchnera.faa </code> . 
+
+<P>
+Obtaining:
+
+<P>
+<PRE>
+# results_directory=sample_buchnera_homologues
+# parameters: MAXEVALUEBLASTSEARCH=0.01 MAXPFAMSEQS=250
+
+# checking input files...
+# sample_buchnera.faa
+
+# created file sample_buchnera_homologues/tmp/all.fa (4 genomes, 1984 sequences)
+
+# taxa considered = 4 sequences = 1984 residues = 650959 MIN_BITSCORE_SIM = 17.2
+
+# mask=BuchneraaphidicolastrCcCinaracedri3_f0_alltaxa_algBDBH_e0_ (_algBDBH)
+
+# running makeblastdb with sample_buchnera_homologues/tmp/all.fa
+# running local BLAST search
+# done
+
+
+# parsing blast result! (sample_buchnera_homologues/tmp/all.blast , 0.44MB)
+# parsing blast file finished
+
+# creating indexes, this might take some time (lines=9.30e+03) ...
+
+# construct_taxa_indexes: number of taxa found = 4
+# number of file addresses = 9.3e+03 number of BLAST queries  = 2.0e+03
+
+# clustering orthologous sequences
+
+# clustering inparalogues in Buchnera_aphidicola_str__Cc__Cinara_cedri__3.faa (reference)
+# 0 sequences
+
+[...]
+
+# looking for valid ORF clusters (n_of_taxa=4)...
+
+
+# number_of_clusters = 305
+# cluster_list = [...]/BuchneraaphidicolastrCcCinaracedri3_f0_alltaxa_algBDBH_e0_.cluster_list
+# cluster_directory = [...]/BuchneraaphidicolastrCcCinaracedri3_f0_alltaxa_algBDBH_e0_
+
+# runtime: 55 wallclock secs ( 0.76 usr  0.04 sys + 51.75 cusr  0.23 csys = 52.78 CPU)
+# RAM use: 21.3 MB
+</PRE>     
+
+<P>
+
+<BR><HR>
+<ADDRESS>
+Bruno Contreras Moreira
+2016-04-28
+</ADDRESS>
+</BODY>
+</HTML>

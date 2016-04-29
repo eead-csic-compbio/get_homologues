@@ -1,0 +1,1619 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>get_homologues-est manual</TITLE>
+<META NAME="description" CONTENT="get_homologues-est manual">
+<META NAME="keywords" CONTENT="manual-est">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="manual-est.css">
+
+</HEAD>
+
+<BODY >
+
+<P>
+<H1 ALIGN=CENTER>get_homologues-est manual</H1>
+<P ALIGN=CENTER><STRONG>Bruno Contreras-Moreira (1,2) and Pablo Vinuesa (3)</STRONG>
+<BR><I><A NAME="tex2html2"
+  HREF="http://www.araid.es">1. Fundaci&#243;n ARAID</A>
+and <A NAME="tex2html3"
+  HREF="http://www.eead.csic.es">2. Estaci&#243;n Experimental de Aula Dei-CSIC</A></I>
+<BR><FONT SIZE=-1><A NAME="tex2html4"
+  HREF="http://www.ccg.unam.mx/~vinuesa">3. Centro de Ciencias Gen&#243;micas, Universidad Nacional Aut&#243;noma de M&#233;xico</A></FONT>
+</P>
+<HR>
+
+<P>
+<BR>
+
+<H2><A NAME="SECTION00010000000000000000">
+Contents</A>
+</H2>
+<!--Table of Contents-->
+
+<UL CLASS="TofC">
+<LI><A NAME="tex2html84"
+  HREF="manual-est.html#SECTION00020000000000000000">1 Description</A>
+<LI><A NAME="tex2html85"
+  HREF="manual-est.html#SECTION00030000000000000000">2 Requirements and installation</A>
+<UL>
+<LI><A NAME="tex2html86"
+  HREF="manual-est.html#SECTION00031000000000000000">2.1 Perl modules</A>
+<LI><A NAME="tex2html87"
+  HREF="manual-est.html#SECTION00032000000000000000">2.2 Required binaries</A>
+<LI><A NAME="tex2html88"
+  HREF="manual-est.html#SECTION00033000000000000000">2.3 Optional software dependencies</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html89"
+  HREF="manual-est.html#SECTION00040000000000000000">3 User manual</A>
+<UL>
+<LI><A NAME="tex2html90"
+  HREF="manual-est.html#SECTION00041000000000000000">3.1 Input data</A>
+<LI><A NAME="tex2html91"
+  HREF="manual-est.html#SECTION00042000000000000000">3.2 Program options</A>
+<LI><A NAME="tex2html92"
+  HREF="manual-est.html#SECTION00043000000000000000">3.3 Accompanying scripts</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html93"
+  HREF="manual-est.html#SECTION00050000000000000000">4 A few examples</A>
+<UL>
+<LI><A NAME="tex2html94"
+  HREF="manual-est.html#SECTION00051000000000000000">4.1 Extracting coding sequences (CDS) from transcripts</A>
+<LI><A NAME="tex2html95"
+  HREF="manual-est.html#SECTION00052000000000000000">4.2 Clustering orthologous transcripts from FASTA files, one per strain</A>
+<LI><A NAME="tex2html96"
+  HREF="manual-est.html#SECTION00053000000000000000">4.3 Producing a nucleotide-based pangenome matrix</A>
+<LI><A NAME="tex2html97"
+  HREF="manual-est.html#SECTION00054000000000000000">4.4 Making and annotating a non-redundant pangenome matrix</A>
+<LI><A NAME="tex2html98"
+  HREF="manual-est.html#SECTION00055000000000000000">4.5 Annotating a sequence cluster</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html99"
+  HREF="manual-est.html#SECTION00060000000000000000">5 Frequently asked questions (FAQs)</A>
+<LI><A NAME="tex2html100"
+  HREF="manual-est.html#SECTION00070000000000000000">6 Credits and references</A>
+</UL>
+<!--End of Table of Contents-->
+
+<P>
+
+<H1><A NAME="SECTION00020000000000000000">
+<SPAN CLASS="arabic">1</SPAN> Description</A>
+</H1>
+
+<P>
+This document describes <SPAN  CLASS="textit">get_homologues-est</SPAN>, a fork of <SPAN  CLASS="textit">get_homologues</SPAN> for clustering homologous 
+transcript sequences of strains/populations of the same species. This algorithm has been designed and tested with 
+plant transcripts and CDS sequences, and uses BLASTN to compare DNA sequences. The main tasks for which this was conceived are:
+
+<UL>
+<LI>Finding and translating coding regions (CDSs) within raw transcripts.
+</LI>
+<LI>Clustering transcripts/CDS nucleotide sequences in homologous (possibly orthologous) groups, on the grounds of DNA sequence similarity.
+</LI>
+<LI>Definition of pan- and core-transcriptomes by calculation of overlapping sets of CDSs. 
+</LI>
+</UL>
+
+<P>
+The core algorithms of <SPAN  CLASS="textit">get_homologues-est</SPAN> have been adapted from <SPAN  CLASS="textit">get_homologues</SPAN>, and are therefore explained 
+in <A NAME="tex2html5"
+  HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>. 
+This document focuses mostly on EST-specific options.
+
+<P>
+
+<H1><A NAME="SECTION00030000000000000000"></A> <A NAME="install"></A>
+<BR>
+<SPAN CLASS="arabic">2</SPAN> Requirements and installation
+</H1>
+
+<P>
+<SPAN  CLASS="textit">get_homologues-est.pl</SPAN> is a Perl5 program bundled with a few binary files. 
+The software has been tested on 64-bit Linux boxes, and on Intel MacOSX 10.11.1 systems.
+Therefore, a Perl5 interpreter is needed to run this software, which 
+is usually installed by default on these operating systems. 
+
+<P>
+In order to install and test this software please follow these steps:
+
+<OL>
+<LI>Unpack the software with: <code>$ tar xvfz get_homologues_X.Y.tgz</code> 
+</LI>
+<LI><code>$ cd get_homologues_X.Y</code>
+</LI>
+<LI><code>$ ./install.pl</code> 
+<BR>
+Please follow the indications in case some required part is missing. 
+
+<P>
+</LI>
+<LI>Type <code>$ ./get_homologues-est.pl -v</code> which will tell exactly which features are available.
+</LI>
+<LI>Test the main Perl script, named <code>get_homologues-est.pl</code>, with the included sample input folder 
+
+<P>
+<code>sample_transcripts_fasta</code>
+by means of the instruction:
+<BR><code>$ ./get_homologues-est.pl -d sample_transcripts_fasta</code> . 
+You should get an output similar to the contents of file <code>sample_output_est.txt</code>. 
+
+<P>
+</LI>
+<LI>Optionally modify your <code>$PATH</code> environment variable to include <SPAN  CLASS="textit">get_homologues-est.pl</SPAN>.
+Please copy the following lines to the <code>.bash_profile</code> or 
+<code>.bashrc</code> files, found in your home directory, replacing <code>[INSTALL_PATH]</code> by the full path of the installation folder:
+<PRE>
+export GETHOMS=[INSTALL_PATH]/get_homologues_X.Y
+export PATH=${GETHOMS}/:${PATH}
+</PRE>
+This change will be effective in a new terminal or after running: <code>$ source ~/.bash_profile</code>
+</LI>
+</OL>
+
+<P>
+The rest of this section might be safely skipped if installation went fine, 
+it was written to help solve installation problems.
+
+<P>
+
+<H2><A NAME="SECTION00031000000000000000"></A> <A NAME="perlmods"></A>
+<BR>
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">1</SPAN> Perl modules
+</H2>
+
+<P>
+A few Perl core modules are required by the <SPAN  CLASS="textit">get_homologues-est.pl</SPAN> script, which should be 
+already installed on your system: Cwd, FindBin, File::Basename, File::Spec, File::Temp, FileHandle, List::Util, 
+Getopt::Std, Benchmark and Storable.
+
+<P>
+In addition, the <SPAN  CLASS="textit">Bio::Seq</SPAN>, <SPAN  CLASS="textit">Bio::SeqIO</SPAN>, <SPAN  CLASS="textit">Bio::Graphics</SPAN> and <SPAN  CLASS="textit">Bio::SeqFeature::Generic</SPAN> 
+modules from the <A NAME="tex2html6"
+  HREF="http://www.bioperl.org">Bioperl</A>
+collection, 
+and module <A NAME="tex2html7"
+  HREF="<"><</A>421>>http://search.cpan.org/perldoc?Parallelare also required, and have been included in the <SPAN  CLASS="textit">get_homologues-est</SPAN> bundle for your convenience.
+
+<P>
+Should this version of BioPerl fail in your system (as diagnosed by <SPAN  CLASS="textit">install.pl</SPAN>) 
+it might be necessary to install it from scratch. 
+However, before trying to download it, you might want to check whether 
+it is already living on your system, by typing on the terminal:
+<BR><code>$ perl -MBio::Root::Version -e 'print $Bio::Root::Version::VERSION'</code>
+
+<P>
+If you get a message <code>Can't locate Bio/Root/Version...</code> then you need to actually install it, which 
+can sometimes become troublesome due to failed dependencies. For this reason usually the easiest way of
+installing it, provided that you have root privileges, 
+it is to use the software manager of your Linux distribution (such as <SPAN  CLASS="textit">synaptic/apt-get</SPAN> 
+in Ubuntu, <SPAN  CLASS="textit">yum</SPAN> in Fedora or <SPAN  CLASS="textit">YaST</SPAN> in openSUSE). If you prefer the terminal please use the 
+<SPAN  CLASS="textit">cpan</SPAN> program with administrator privileges (<code>sudo</code> in Ubuntu): 
+<BR><code>$ cpan -i C/CJ/CJFIELDS/BioPerl-1.6.1.tar.gz</code>
+
+<P>
+This form should be also valid:
+<BR><code>$ perl -MCPAN -e 'install C/CJ/CJFIELDS/BioPerl-1.6.1.tar.gz'</code>
+<BR>
+Please check this <A NAME="tex2html8"
+  HREF="http://bioperl.open-bio.org/wiki/Installing_Bioperl_for_Unix">tutorial</A>
+if you need further help.
+<BR>
+<P>
+
+<H2><A NAME="SECTION00032000000000000000"></A> <A NAME="binaries"></A>
+<BR>
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">2</SPAN> Required binaries
+</H2>
+
+<P>
+In order to properly read (optionally) compressed input files, <SPAN  CLASS="textit">get_homologues-est</SPAN> requires <code>gunzip</code> and
+<code>bunzip2</code>, which should be universally installed on most systems.
+
+<P>
+The Perl script <SPAN  CLASS="textit">install.pl</SPAN>, already mentioned in section <A HREF="#install">2</A>, checks whether the included 
+precompiled binaries for <A NAME="tex2html9"
+  HREF="http://hmmer.janelia.org/">hmmer</A>, <A NAME="tex2html10"
+  HREF="http://www.micans.org/mcl">MCL</A>
+and <A NAME="tex2html11"
+  HREF="ftp://ftp.ncbi.nlm.nih.gov/blast/executables/">BLAST</A>
+are in place and ready to be used by <SPAN  CLASS="textit">get_homologues-est</SPAN>. 
+This includes also <A NAME="tex2html12"
+  HREF="http://sourceforge.net/projects/cogtriangles/files/">COGtriangles</A>, which is used only by 
+prokaryotic <SPAN  CLASS="textit">get_homologues</SPAN>. However, if any of these binaries fails to work in
+your system, perhaps due a different architecture or due to missing libraries, it will be necessary to obtain 
+an appropriate version for your system or to compile them with your own compiler.
+
+<P>
+In order to compile <SPAN  CLASS="textit">MCL</SPAN> the GNU <SPAN  CLASS="textit">gcc</SPAN> compiler is required, although it should most certainly already be 
+installed on your system. If not, you might install it by any of the alternatives listed in section <A HREF="#perlmods">2.1</A>.
+For instance, in Ubuntu this works well: <code>$ sudo apt-get install gcc</code> . The compilation steps are 
+as follows:
+<PRE>
+$ cd bin/mcl-14-137;
+$ ./configure`;
+$ make
+</PRE>
+
+<P>
+To compile <SPAN  CLASS="textit">COGtriangles</SPAN> the GNU <SPAN  CLASS="textit">g++</SPAN> compiler is required. You should obtain it by any of the alternatives listed in section <A HREF="#perlmods">2.1</A>.
+The compilation would then include several steps:
+<PRE>
+$cd bin/COGsoft;
+$cd COGlse; make;
+$cd ../COGmakehash;make;
+$cd ../COGreadblast;make;
+$cd ../COGtriangles;make
+</PRE>
+
+<P>
+Regarding BLAST, <SPAN  CLASS="textit">get_homologues-est</SPAN> uses BLAST+ binaries, which
+can be easily downloaded from the <A NAME="tex2html13"
+  HREF="ftp://ftp.ncbi.nlm.nih.gov/blast/executables/">NCBI FTP</A>
+site.
+The packed binaries are <SPAN  CLASS="textit">blastp</SPAN> and <SPAN  CLASS="textit">makeblastdb</SPAN> from version <SPAN  CLASS="textit">ncbi-blast-2.2.27+</SPAN>. If these do
+not work in your machine or your prefer to use older BLAST versions, then it will be necessary to
+edit file <SPAN  CLASS="textit">lib/phyTools.pm</SPAN>. First, environmental variable <code>$ENV{'BLAST_PATH'}</code> needs to be set to 
+the right path in your system (inside subroutine <code>sub set_phyTools_env</code>).
+<BR>
+Variables <code>$ENV{'EXE_BLASTP'}</code> and <code>$ENV{'EXE_FORMATDB'}</code> also need to be changed to the appropriate
+BLAST binaries, which are respectively <SPAN  CLASS="textit">blastall</SPAN> and <SPAN  CLASS="textit">formatdb</SPAN>.
+
+<P>
+
+<H2><A NAME="SECTION00033000000000000000"></A> <A NAME="dependencies"></A>
+<BR>
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">3</SPAN> Optional software dependencies
+</H2>
+
+<P>
+It is possible to make use of <SPAN  CLASS="textit">get_homologues-est</SPAN> on a computer farm or high-performance computing cluster
+managed by <A NAME="tex2html14"
+  HREF="http://gridscheduler.sourceforge.net/">gridengine</A>. In particular we have tested this feature with 
+versions GE 6.0u8, 6.2u4, 2011.11p1 
+invoking the program with option <code>-m cluster</code>.
+For this command to work it might be necessary to edit the <SPAN  CLASS="textit">get_homologues-est.pl</SPAN> file and add the right 
+path to set global variable <code>$SGEPATH</code>. To find out the installation path of your SGE installation
+you might try the next terminal command: <code>$ which qsub</code>
+<BR>
+In case you have access to a multi-core computer you can follow the steps at
+<BR><A NAME="tex2html15"
+  HREF="http://bioinfoperl.blogspot.com.es/2015/04/howto-install-grid-engine-on-multi-core-box-gethomologues.html">blog post</A>
+to set up your own Grid Engine cluster and speed up your calculations.
+
+<P>
+For cluster-based operations three bundled Perl scripts are invoked:
+<BR><code>_cluster_makeHomolog.pl</code>, <code>_cluster_makeInparalog.pl</code> and <code>_cluster_makeOrtholog.pl</code> .
+
+<P>
+It is also possible to invoke Pfam domain scanning from <SPAN  CLASS="textit">get_homologues-est</SPAN>. This option 
+requires the bundled binary <SPAN  CLASS="textit">hmmscan</SPAN>, which is part of the <A NAME="tex2html16"
+  HREF="http://hmmer.janelia.org">HMMER3</A>
+package,
+whose path is set in file <SPAN  CLASS="textit">lib/phyTools.pm</SPAN> (variable <code>$ENV{'EXE_HMMPFAM'}</code>). 
+Should this binary not work in your system, a fresh install might be the solution, say in <code>/your/path/hmmer-3.1b2/</code>.
+In this case you'll have to edit file <SPAN  CLASS="textit">lib/phyTools.pm</SPAN> and modify the relevant:
+<PRE>
+if( ! defined($ENV{'EXE_HMMPFAM'}) )
+{ 
+	$ENV{'EXE_HMMPFAM'} = '/your/path/hmmer-3.1b2/src/hmmscan --noali --acc --cut_ga '; 
+}
+</PRE>
+The Pfam HMM library is also required and the <SPAN  CLASS="textit">install.pl</SPAN> script should take care of it.
+However, you can manually download it from the appropriate
+<A NAME="tex2html17"
+  HREF="ftp://ftp.sanger.ac.uk/pub/databases/Pfam/current_release/Pfam-A.hmm.gz">Pfam FTP site</A>.
+This file needs to be decompressed, either in the default <SPAN  CLASS="textit">db</SPAN> folder or in any other location, 
+and then it should be formatted with the program <SPAN  CLASS="textit">hmmpress</SPAN>, which is also part of the 
+<SPAN  CLASS="textit">HMMER3</SPAN> package. A valid command sequence could be:
+<PRE>
+$ cd db;
+$ wget ftp://ftp.sanger.ac.uk/pub/databases/Pfam/current_release/Pfam-A.hmm.gz .;
+$ gunzip Pfam-A.hmm.gz;
+$ /your/path/hmmer-3.1b2/src/hmmpress Pfam-A.hmm
+</PRE>
+Finally, you'll need to edit file <SPAN  CLASS="textit">lib/phyTools.pm</SPAN> and modify the relevant line to:
+<PRE>
+if( ! defined($ENV{"PFAMDB"}) ){ $ENV{"PFAMDB"} = "db/Pfam-A.hmm"; }
+</PRE>
+
+<P>
+In order to reduce the memory footprint of <SPAN  CLASS="textit">get_homologues-est</SPAN> it is possible to take advantage of the
+<A NAME="tex2html18"
+  HREF="http://en.wikipedia.org/wiki/Berkeley_DB">Berkeley_DB</A>
+database engine, which requires Perl core module
+<A NAME="tex2html19"
+  HREF="http://search.cpan.org/perldoc?DB_File">DB_File</A>, which should be installed on all major Linux distributions.
+
+<P>
+The accompanying script <SPAN  CLASS="textit">transcripts2cds.pl</SPAN> should work out of the box, but the more efficient
+<SPAN  CLASS="textit">transcripts2cdsCPP.pl</SPAN> requires the installation of module <A NAME="tex2html20"
+  HREF="<"><</A>422>>http://search.cpan.org/perldoc?Inlinewhich in turn requires <A NAME="tex2html21"
+  HREF="<"><</A>423>>http://search.cpan.org/perldoc?InlineThe installation of these modules is known to be troublesome in some systems, but the standard way should work in most cases:
+
+<P>
+<PRE>
+$ yum -y install gcc-c++ perl-Inline-C perl-Inline-CPP  # Redhat and derived distros
+
+$ sudo apt-get -y install g++             # Ubuntu/Debian-based distros, and then cpan below
+
+$ cpan -i Inline::C Inline::CPP           # will require administrator privileges (sudo)
+</PRE>
+
+<P>
+Similarly, in order to take full advantage of the accompanying script <SPAN  CLASS="textit">parse_pangenome_matrix.pl</SPAN>, 
+particularly for option <code>-p</code>, the installation of module <A NAME="tex2html22"
+  HREF="http://search.cpan.org/perldoc?GD">GD</A>
+is recommended.
+An easy way to install them, provided that you have administrator privileges,  
+is with help from the software manager of your Linux distribution (such as <SPAN  CLASS="textit">synaptic/apt-get</SPAN> 
+in Ubuntu, <SPAN  CLASS="textit">yum</SPAN> in Fedora or <SPAN  CLASS="textit">YaST</SPAN> in openSUSE). 
+
+<P>
+This can usually be done on the terminal as well, in different forms:
+<PRE>
+$ sudo apt-get -y install libgd-gd2-perl  # Ubuntu/Debian-based distros
+
+$ yum -y install perl-GD                  # Redhat and derived distros
+
+$ zypper --assume-yes install perl-GD     # SuSE
+
+$ cpan -i GD                              # will require administrator privileges (sudo)
+
+$ perl -MCPAN -e 'install GD'             # will require administrator privileges (sudo)
+</PRE>
+
+<P>
+The installation of perl-GD on macOSX systems is known to be <A NAME="tex2html23"
+  HREF="http://www.bugzilla.org/docs/2.16/html/osx.html">troublesome</A>.
+<BR>
+<BR>
+<P>
+The accompanying scripts <SPAN  CLASS="textit">compare_clusters.pl</SPAN>, <SPAN  CLASS="textit">plot_pancore_matrix.pl</SPAN>, <SPAN  CLASS="textit">parse_pangenome_matrix.pl</SPAN>,
+<BR>
+<BR><SPAN  CLASS="textit">plot_matrix_heatmap.sh</SPAN>, <SPAN  CLASS="textit">hcluster_matrix.sh</SPAN> require the installation of the statistical software 
+<A NAME="tex2html24"
+  HREF="http://www.r-project.org">R</A>, 
+which usually is listed by software managers in all major Linux distributions.
+In some cases (some <A NAME="tex2html25"
+  HREF="http://cran.r-project.org/bin/linux/suse/README.html">SuSE versions</A>
+and 
+some <A NAME="tex2html26"
+  HREF="http://fedoraproject.org/wiki/EPEL/FAQ#How_can_I_install_the_packages_from_the_EPEL_software_repository.3F">Redhat-like distros</A>)
+it will be necessary to add a repository to your package manager.
+R can be installed  from the terminal:
+<PRE>
+$ sudo apt-get -y install r-base r-base-dev      # Ubuntu/Debian-based distros
+
+$ yum -y install R                               # RedHat and derived distros
+
+$ zypper --assume-yes R-patched R-patched-devel  # Suse
+</PRE>
+
+<P>
+Please visit <A NAME="tex2html27"
+  HREF="http://cran.r-project.org/bin/macosx/">CRAN</A>
+to download and install R on macOSX systems, which is straightforward.
+<BR>
+<BR>
+<P>
+In addition to R itself, <SPAN  CLASS="textit">plot_matrix_heatmap.sh</SPAN> and <SPAN  CLASS="textit">hcluster_matrix.sh</SPAN> require some R packages to run, 
+which can be easily installed from the R command line with: 
+<PRE>
+&gt; install.packages(c("ape", "gplots", "cluster"), dependencies=TRUE)
+</PRE>
+
+<P>
+Finally, the script <SPAN  CLASS="textit">compare_clusters.pl</SPAN> might require the installation of program PARS from the 
+<A NAME="tex2html28"
+  HREF="http://evolution.genetics.washington.edu/phylip/doc/pars.html">PHYLIP suite</A>, which should be already bundled 
+with your copy of <SPAN  CLASS="textit">get_homologues</SPAN>.
+
+<P>
+
+<P>
+
+<H1><A NAME="SECTION00040000000000000000">
+<SPAN CLASS="arabic">3</SPAN> User manual</A>
+</H1>
+
+<P>
+This section describes the available options for the <SPAN  CLASS="textit">get_homologues-est</SPAN> software.
+
+<P>
+
+<H2><A NAME="SECTION00041000000000000000"></A> <A NAME="input"></A>
+<BR>
+<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">1</SPAN> Input data
+</H2>
+
+<P>
+This program takes input sequences in FASTA format, which might be GZIP- or BZIP2-compressed, contained in a 
+directory or folder containing several files with extension '.fna', which can have twin <code>.faa</code> files with 
+translated amino acid sequences for the corresponding CDSs. File names matching the tag 'flcdna' are handled as 
+full-length transcripts, and this information will be used downstream in order to estimate coverage.
+Global variable <code>$MINSEQLENGTH</code> controls the minimum length of sequences to be considered; the default value is 20.
+
+<P>
+
+<H2><A NAME="SECTION00042000000000000000"></A> <A NAME="options"></A>
+<BR>
+<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN> Program options
+</H2>
+
+<P>
+Typing <code>$ ./get_homologues-est.pl -h</code> on the terminal will show the basic options:
+<PRE>
+-v print version, credits and checks installation
+-d directory with input FASTA files (.fna , optionally .faa),  (use of pre-clustered sequences
+   1 per sample, or subdirectories (subdir.clusters/subdir_)    ignores -c)
+   with pre-clustered sequences (.faa/.fna ). Files matching
+   tag 'flcdna' are handled as full-length transcripts.
+   Allows for files to be added later.
+   Creates output folder named 'directory_est_homologues'
+
+Optional parameters:
+-o only run BLAST/Pfam searches and exit                       (useful to pre-compute searches)
+-i cluster redundant isoforms, including those that can be     (min overlap, default: -i 40,
+   concatenated with no overhangs, and perform                  use -i 0 to disable)
+   calculations with longest
+-c report transcriptome composition analysis                   (follows order in -I file if enforced,
+                                                                ignores -r,-e)
+-R set random seed for genome composition analysis             (optional, requires -c, example -R 1234)
+-s save memory by using BerkeleyDB; default parsing stores
+   sequence hits in RAM
+-m runmode [local|cluster]                                     (default: -m local)
+-n nb of threads for BLASTN/HMMER/MCL in 'local' runmode       (default=2)
+-I file with .fna files in -d to be included                   (takes all by default, requires -d)
+
+Algorithms instead of default bidirectional best-hits (BDBH):
+-M use orthoMCL algorithm (OMCL, PubMed=12952885)
+
+Options that control sequence similarity searches:
+-C min %coverage of shortest sequence in BLAST alignments      (range [1-100],default: -C 75)
+-E max E-value                                                 (default: -E 1e-05 , max=0.01)
+-D require equal Pfam domain composition                       (best with -m cluster or -n threads)
+   when defining similarity-based orthology
+-S min %sequence identity in BLAST query/subj pairs            (range [1-100],default: -S 1 [BDBH|OMCL])
+-b compile core-transcriptome with minimum BLAST searches      (ignores -c [BDBH])
+
+Options that control clustering:
+-t report sequence clusters including at least t taxa          (default: t=numberOfTaxa,
+                                                                t=0 reports all clusters [OMCL])
+-L add redundant isoforms to clusters                          (optional, requires -i)
+-r reference transcriptome .fna file                           (by default takes file with
+                                                                least sequences; with BDBH sets
+                                                                first taxa to start adding genes)
+-e exclude clusters with inparalogues                          (by default inparalogues are
+                                                                included)
+-F orthoMCL inflation value                                    (range [1-5], default: -F 1.5 [OMCL])
+-A calculate average identity of clustered sequences,          (optional, creates tab-separated matrix,
+ uses blastn results                                            recommended with -t 0 [OMCL])
+-z add soft-core to genome composition analysis                (optional, requires -c [OMCL])
+</PRE>
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:flow"></A><A NAME="174"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 1:</STRONG>
+Flowchart of get_homologues-est.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="706" HEIGHT="1151" ALIGN="BOTTOM" BORDER="0"
+ SRC="./flow-est.png"
+ ALT="Image flow-est">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+The only required option is <code>-d</code>, which indicates 
+an input folder, as seen in section <A HREF="#input">3.1</A>. It is important to remark that in principle only files 
+with extensions <code>.fna / .fa</code> and optionally <code>.faa</code> are considered when parsing the <code>-d</code> directory. 
+By using <code>.faa</code> input files protein sequences can be used to scan Pfam domains and included in output clusters.
+
+<P>
+The use of an input folder or directory (<code>-d</code>)
+is recommended as it allows for new files to be added there in the future, reducing the computing required
+for updated analyses. For instance, if a user does a first analysis with 5 input genomes today, it is possible
+to check how the resulting clusters would change when adding an extra 10 genomes tomorrow, by copying these new 10 
+<code>.faa</code> / <code>.gbk</code> input files to the pre-existing <code>-d</code> folder, so that all previous BLAST searches are re-used.
+
+<P>
+All remaining flags are options that can modify the default behavior of the program, which is to use the 
+bidirectional best hit algorithm (BDBH) in order to compile clusters of potential orthologous DNA sequences,
+taking the smallest genome as a reference. By default nucleotide sequences are used to guide the clustering, thus
+relying on BLASTN searches.
+
+<P>
+Perhaps the most important optional parameter would be the choice of clustering algorithm (Table <A HREF="#tab:algs">1</A>):
+<BR><P></P>
+<DIV ALIGN="CENTER"><A NAME="188"></A>
+<TABLE>
+<CAPTION><STRONG>Table 1:</STRONG>
+List of available clustering algorithms. Note that the COG triangles algorithm is not supported.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<TABLE CELLPADDING=3 BORDER="1" ALIGN="CENTER">
+<TR><TD ALIGN="LEFT">name</TD>
+<TD ALIGN="LEFT">option</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=360>&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT">BDBH</TD>
+<TD ALIGN="LEFT">default</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=360>Starting from a reference genome, keep adding genomes stepwise while storing the sequence clusters
+that result of merging the latest bidirectional best hits.</TD>
+</TR>
+<TR><TD ALIGN="LEFT">OMCL</TD>
+<TD ALIGN="LEFT"><code>-M</code></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=360>OrthoMCL v1.4, uses the Markov Cluster Algorithm to group sequences,
+with inflation (<code>-F</code>) controlling cluster granularity, as described in 
+PubMed=<A NAME="tex2html30"
+  HREF="http://www.ncbi.nlm.nih.gov/sites/ppmc/articles/PMC403725/">12952885</A>.</TD>
+</TR>
+</TABLE>
+</DIV>
+
+<A NAME="tab:algs"></A></TD></TR>
+</TABLE>
+</DIV><P></P>
+<BR>
+
+<P>
+The remaining options are now reviewed:
+
+<P>
+
+<UL>
+<LI>Apart from showing the credits, option <code>-v</code> can be helpful after installation, 
+for it prints the enabled features of the program.
+
+<P>
+</LI>
+<LI><code>-o</code> is ideally used to submit to a computer cluster the required BLAST (and Pfam) searches, preparing a job for posterior 
+analysis on a single computer.
+
+<P>
+</LI>
+<LI><code>-i</code> can be used to filter out short, redundant isoforms which overlap, with no overhangs, for a minimun length. 
+By default this is set to <code>$MINREDOVERLAP=40</code> as in PubMed=<A NAME="tex2html34"
+  HREF="http://www.ncbi.nlm.nih.gov/pubmed/12651724">12651724</A>.
+This EST-specific feature can be turned off by setting <code>-i 0</code>. Redundant isoforms will not be output unless <code>-L</code> is set. 
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="197"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 2:</STRONG>
+Redundant isoforms (dashed) are optionally removed from an input sequence set if they overlap a longer 
+sequence over a length <SPAN CLASS="MATH"><IMG
+ WIDTH="36" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.png"
+ ALT="$ \geq 40$"></SPAN> (A) or when they are completely matched (B). 
+In either case a 100% sequence identity is required.
+By calling option -L all redundant isoforms are included in the output.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="804" HEIGHT="313" ALIGN="BOTTOM" BORDER="0"
+ SRC="./isoforms.png"
+ ALT="Image isoforms">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+</LI>
+<LI><code>-c</code> is used to request a pan- and core-genome analysis of the input sequences, which will be output as tab-separated files. 
+The number of samples for the genome composition analysis is set to 20 by default, but this can be edited at the header of 
+<code>get_homologues-est.pl</code> (check the <code>$NOFSAMPLESREPORT</code> variable). As <SPAN  CLASS="textit">get_homologues-est</SPAN> is meant to be used primarily for 
+the study of transcripts/CDSs of the same species, it uses appropriate thresholds to define new accessory genes 
+(<code>$MIN_PERSEQID_HOM=95</code>, <code>$MIN_COVERAGE_HOM=75</code>), which mean that genes/transcripts added to the pool must be <SPAN CLASS="MATH"><IMG
+ WIDTH="50" HEIGHT="30" ALIGN="MIDDLE" BORDER="0"
+ SRC="img2.png"
+ ALT="$ &lt;95\%$"></SPAN> identical in sequence
+to any previous sequence (as in PubMed=<A NAME="tex2html35"
+  HREF="http://www.ncbi.nlm.nih.gov/pubmed/21572440">21572440</A>)) with cover <SPAN CLASS="MATH"><IMG
+ WIDTH="50" HEIGHT="30" ALIGN="MIDDLE" BORDER="0"
+ SRC="img3.png"
+ ALT="$ &gt;75\%$"></SPAN>. Note that these 
+default values are different to those in <SPAN  CLASS="textit">get_homologues</SPAN>. 
+When combined with flag <code>-t</code> (see below), the composition analysis will disregard clusters reported in an arbitrary number of strains.
+This feature can be used to filter out singletons or artifacts which might arise from <SPAN  CLASS="textit">de novo</SPAN> assembled transcriptomes.
+
+<P>
+</LI>
+<LI><code>-R</code> takes a number that will be used to seed the random generator used with option <code>-c</code>. By using the
+same seed in different <code>-c</code> runs the user ensures that genomes are sampled in the same order.
+
+<P>
+</LI>
+<LI><code>-s</code> can be used to reduce the memory footprint, provided that the Perl module 
+<A NAME="tex2html36"
+  HREF="http://search.cpan.org/perldoc?BerkeleyDB">BerkeleyDB</A>
+is in place. 
+This option usually makes <SPAN  CLASS="textit">get_homologues-est</SPAN> slower, but for very large datasets or in machines with little memory resources 
+this might be the only way to complete a job.
+
+<P>
+</LI>
+<LI><code>-m</code> allows the choice of runmode, which can be either <code>-m local</code> (the default) or 
+<code>-m cluster</code>. In the second case global variable <code>$SGEPATH</code> might need to be appropriately set, 
+as explained in 
+<A NAME="tex2html37"
+  HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>,
+as well as <code>$QUEUESETTINGS</code>, that specificies for instance a particular queue name for your cluster jobs.
+
+<P>
+</LI>
+<LI><code>-n</code> sets the number of threads/CPUs to dedicate to each BLAST/HMMER/mcl job run locally, which by default is 2.
+
+<P>
+</LI>
+<LI><code>-I list_file.txt</code> allows the user to restrict a <SPAN  CLASS="textit">get_homologues-est</SPAN> job to a subset of FASTA files included in the input <code>-d </code> folder. 
+This flag can be used in conjunction with <code>-c</code> to control the order in which genomes are considered during pan- and core-transcriptome analyses.
+Taking the <code>sample_RNAseq</code> folder, a valid <code>list_file.txt</code> could contain these lines:
+<PRE>
+Esterel.trinity.fna.bz2  
+Franka.trinity.fna.bz2
+</PRE>
+
+<P>
+</LI>
+<LI>option <code>-C</code> sets the minimum percentage of coverage required to call two sequences best hits.
+As EST/transcripts are frequently truncated, by default coverage is calculated with respect to the shortest sequence in the pair,
+unless both of them come from a full-length collection (see <A HREF="#input">3.1</A>).
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="217"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 3:</STRONG>
+Coverage illustrated with the alignment of sequence 'query' to two aligned fragments of sequence 'subject'.
+Lq and Ls are the lengths of both sequences, and s1,e1,s2,e2 and Lq are alignment coordinates.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="719" HEIGHT="237" ALIGN="BOTTOM" BORDER="0"
+ SRC="./match_cover-est.png"
+ ALT="Image match_cover-est">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+</LI>
+<LI><code>-E</code> sets the maximum expectation value (E-value) for BLASTN alignments. This value is by default set to 1e-05. 
+
+<P>
+</LI>
+<LI><code>-D</code> is an extra restriction for calling best hits, that should have identical Pfam domain compositions. Note that this
+option requires scanning all input sequences for Pfam domains, and this task requires extra computing time, 
+ideally on a computer cluster (<code>-m cluster</code>). 
+While for BDBH domain filtering is done at the time bidirectional best hits are called, this processing step is performed only after the 
+standard OMCL algorithms have completed, to preserve the algorithm features.
+
+<P>
+</LI>
+<LI><code>-S</code> can be passed to require a minimum % sequence identity for two sequences to be called best hits. 
+The default value is set to 1. 
+
+<P>
+</LI>
+<LI><code>-b</code> reduces the number of pairwise BLAST searches performed while compiling core-genomes with algorithm BDBH,
+reducing considerably memory and run-time requirements (for <SPAN CLASS="MATH"><IMG
+ WIDTH="16" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img4.png"
+ ALT="$ G$"></SPAN> genomes, 3G searches are launched instead of the default <SPAN CLASS="MATH"><IMG
+ WIDTH="23" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img5.png"
+ ALT="$ G^{2}$"></SPAN>).
+It comes at the cost of being less exhaustive in finding inparalogues, but in our bacterial benchmarks this potential, undesired 
+effect was negligible.
+
+<P>
+</LI>
+<LI><code>-t</code> is used to control which sequence clusters should be reported. By default only clusters which include at least one sequence 
+per genome are output. However, a value of <code>-t 2</code> would report all clusters containing sequences from at least 2 taxa. A especial
+case is <code>-t 0</code>, which will report all clusters found, even those with sequences from a single genome. 
+
+<P>
+</LI>
+<LI><code>-r</code> allows the choice of any input sequence set (of course included in <code>-d</code> folder) 
+as the reference, instead of the default smaller one. If possible, resulting clusters are named using CDS/transcript names from 
+this genome, which can be used to select well annotated species for this purpose. 
+
+<P>
+</LI>
+<LI><code>-e</code> excludes clusters with inparalogues, defined as sequences with best hits in its own genome. 
+This option might be helpful to rule out clusters including several sequences from the same species, which might be of 
+interest for users employing these clusters for primer design, for instance.
+
+<P>
+</LI>
+<LI><code>-F</code> is the inflation value that governs Markov Clustering in OMCL runs, as explained in 
+PubMed=<A NAME="tex2html38"
+  HREF="http://www.ncbi.nlm.nih.gov/sites/ppmc/articles/PMC403725/">12952885</A>. As a rule of thumb,
+low inflation values (<code>-F 1</code>)result in the inclusion of more sequences in fewer groups, whilst large values 
+produce more, smaller clusters (<code>-F 4</code>).
+
+<P>
+</LI>
+<LI><code>-A</code> tells the program to produce a tab-separated file with average % sequence identity values among pairs of genomes, 
+computed from sequences in the final set of clusters (see also option <code>-t </code>). 
+By default these identities are derived from BLASTN alignments, and hence correspond to nucleotide sequence identities, to
+produce genomic average nucleotide sequence identities (ANI). 
+
+<P>
+</LI>
+<LI><code>-z</code> can be called when performing a genome composition analysis with clustering algorithm OMCL.
+In addition to the core- and pan-genome tab-separated files mentioned earlier (see option <code>-c</code>), this flag requests 
+a soft-core report, considering all sequence clusters present in a fraction of genomes defined by global variable <code>$SOFTCOREFRACTION</code>,
+with a default value of 0.95. This choice produces a composition report more robust to assembly or annotation errors than the core-genome.
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H2><A NAME="SECTION00043000000000000000">
+<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">3</SPAN> Accompanying scripts</A>
+</H2>
+
+<P>
+The following Perl and shell scripts are included in each release to assist in the interpretation of results generated
+by <SPAN  CLASS="textit">get_homologues-est.pl</SPAN>. See examples of use in <SPAN  CLASS="textit">manual_get_homologues.pdf</SPAN>
+<A NAME="tex2html39"
+  HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>:
+
+<P>
+
+<UL>
+<LI><SPAN  CLASS="textit">compare_clusters.pl</SPAN> primarily calculates the intersection between cluster sets, 
+which can be used to select clusters supported by different algorithms or settings.
+This script can also produce pangenome matrices and Venn diagrams.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">parse_pangenome_matrix.pl</SPAN> is a script that can be used to analyze pan-genome sets, in order to
+find transcripts/genes present in a group A of strains which are absent in set B. This script can also be used
+for calculating and plotting cloud, shell and core genome compartments. 
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">make_nr_pangenome_matrix.pl</SPAN> is provided to post-process pangenome matrices in case the user wishes 
+to remove redundant clusters, using either nucleotide or protein sequence identity cut-offs.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">plot_pancore_matrix.pl</SPAN>, a Perl script to plot pan/soft/core-genome sampling results and to fit regression 
+curves with help from <A NAME="tex2html40"
+  HREF="http://www.r-project.org">R</A>
+functions. 
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">check_BDBHs.pl</SPAN> is a script that can be used, after a previous <SPAN  CLASS="textit">get_homologues-est</SPAN> run, to find out the
+bidirectional best hits of a sequence identifier chosen by the user. It can also retrieve the Pfam annotations of a sequence and its
+reciprocal best hits. 
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">add_pancore_matrices.pl</SPAN> can be used to add pan/core-matrices produced by previous
+<SPAN  CLASS="textit">get_homologues.est -c -R</SPAN> runs on the same set of genomes, with the aim of combining clusters.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">annotate_cluster.pl</SPAN> can be used to retrieve a multiple alignment view of the supporting local BLAST alignments
+of the sequences in the cluster, and to annotate any encoded Pfam domain.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">plot_matrix_heatmap.sh</SPAN> calculates ordered heatmaps with attached row and column dendrograms from 
+tab-separated numeric matrices, which can be presence/absence pangenomic matrices or similarity / identity matrices as those 
+produced by <SPAN  CLASS="textit">get_homologues-est</SPAN> with flag <code>-A</code>. 
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">hcluster_matrix.sh</SPAN> generates a distance matrix out of a tab-separated numeric matrix, which is then used to call 
+R functions <code>hclust()</code> and <code>heatmap.2()</code> in order to produce a heatmap. 
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textit">pfam_enrich.pl</SPAN> calculates the enrichment of a set of sequence clusters in terms of Pfam domains,
+by using <A NAME="tex2html41"
+  HREF="https://stat.ethz.ch/R-manual/R-patched/library/stats/html/fisher.test.html">Fisher's exact test</A>.
+
+<P>
+</LI>
+</UL>
+
+<P>
+Apart from these, auxiliar <SPAN  CLASS="textit">transcripts2cds.pl</SPAN> script is bundled to assist in the
+analysis of transcripts. In particular, this script can be used to annotate potential Open Reading Frames (ORFs) contained within raw transcripts, 
+which might be truncated or contain introns. This script uses <A NAME="tex2html42"
+  HREF="https://transdecoder.github.io">TransDecoder</A>, BLASTX and SWISSPROT, which should 
+be installed by running: <!-- MATH
+ $./install.pl$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="78" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="img6.png"
+ ALT="$ ./install.pl$"></SPAN>
+
+<P>
+<PRE> 
+usage: ./transcripts2cds.pl [options] &lt;input FASTA file(s) with transcript nucleotide sequences&gt;
+
+-h this message
+-p check only 'plus' strand                                  (optional, default both strands)
+-l min length for CDS                                        (optional, default=50 amino acid residues)
+-g genetic code to use during translation                    (optional, default=1, example: -g 11)
+-d run blastx against selected protein FASTA database file   (default=swissprot, example: -d db.faa)
+-E max E-value during blastx search                          (default=1e-05)
+-n number of threads for BLASTX jobs                         (default=2)
+
+-G show available genetic codes and exit
+</PRE> 
+
+<P>
+
+<H1><A NAME="SECTION00050000000000000000"></A> <A NAME="default"></A>
+<BR>
+<SPAN CLASS="arabic">4</SPAN> A few examples
+</H1>
+
+<P>
+This section presents typical ways of running <SPAN  CLASS="textit">get_homologues-est.pl</SPAN> 
+and the accompanying scripts with provided sample input data. 
+Please check file 
+<A NAME="tex2html43"
+  HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>
+for more examples, particularly for the auxiliary scripts,
+which are not explained in this document.
+
+<P>
+
+<H2><A NAME="SECTION00051000000000000000"></A> <A NAME="transcripts2cds"></A>
+<BR>
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">1</SPAN> Extracting coding sequences (CDS) from transcripts
+</H2>
+
+<P>
+This example takes the provided sample file <code>sample_transcripts.fna</code> to demonstrate how to
+annotate coding sequences contained in those sequences by calling <code>transcripts2cds.pl</code>.
+Note that <code>transcripts2cdsCPP.pl</code> is significantly faster, but requires an optional Perl module (see <A HREF="#dependencies">2.3</A>).
+
+<P>
+This is an optional pre-processing step which you might not want to do, as the software should be able to properly handle any
+nucleotides sequences suitable for BLASTN. However, coding sequences have the advantage that can be translated to amino acids and thus used
+to scan Pfam domains further down in the analysis (see option <code>-D</code>).
+
+<P>
+A simple command would be, which will discard sequences less than 50b long, and will aligned them to SWISSPROT proteins in order to annotate
+coding regions. In case of overlap, Transdecoder-defined and BLASTX-based coding regions are combined provided that a <code>$MINCONOVERLAP=90</code>
+overlap, with no mismatches, is found; otherwise the latter are given higher priority:
+
+<P>
+<code>./transcripts2cdsCPP.pl -n 10 sample_transcripts.fna</code> 
+
+<P>
+The output should look like this (contained in file <code>sample_transcripts_output.txt</code>):
+<PRE> 
+# ./transcripts2cdsCPP.pl -p 0 -m  -d /path/get_homs-est/db/swissprot -E 1e-05 -l 50 -g 1 -n 10
+# input files(s):
+# sample_transcripts.fna
+
+## processing file sample_transcripts.fna ...
+# running transdecoder...
+# parsing transdecoder output (_sample_transcripts.fna_minl50.transdecoder.cds.gz) ...
+# running blastx...
+# parsing blastx output (_sample_transcripts.fna_eval1e-05.blastx.gz) ...
+# calculating consensus sequences ...
+# input transcripts = 9
+# transcripts with ORFs = 7
+# transcripts with no ORFs = 2
+# output files: sample_transcripts.fna_minl50_eval1e-05.transcript.fna , 
+# sample_transcripts.fna_minl50_eval1e-05.cds.fna , 
+# sample_transcripts.fna_minl50_eval1e-05.cds.faa , 
+# sample_transcripts.fna_minl50_eval1e-05.noORF.fna
+</PRE>
+
+<P>
+The resulting CDS files can be then analyzed with <SPAN  CLASS="textit">get_homologues-est.pl</SPAN>.
+
+<P>
+Apart from the listed output files, which include translated protein sequences, temporary files are stored in the working directory,
+which of course can be removed, but will be re-used if the same job is re-run later, such as 
+<code>_sample_transcripts.fna_eval1e-05.blastx.gz</code>, 
+<BR><code>_sample_transcripts.fna_minl50.transdecoder.cds.gz</code> or
+<BR><code>_sample_transcripts.fna_minl50.transdecoder.pep.gz</code>.
+<BR>
+<BR>
+<P>
+Note that CDS sequences can be deduced for a collection of transcriptomes and put in the same folder, 
+so that they can all be analyzed together with <SPAN  CLASS="textit">get_homologues-est.pl</SPAN>. 
+Such files support calling option <code>-D</code>, which will annotate Pfam domains contained in those sequences,
+and can then also be used to calculate enrichment as explained in 
+<A NAME="tex2html44"
+  HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>.
+
+<P>
+
+<H2><A NAME="SECTION00052000000000000000">
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">2</SPAN> Clustering orthologous transcripts from FASTA files, one per strain</A>
+</H2> 
+
+<P>
+This example takes the sample input folder <code>sample_transcripts_fasta</code>,
+which contains automatically assembled transcripts (<A NAME="tex2html48"
+  HREF="https://github.com/trinityrnaseq/trinityrnaseq/wiki">Trinity</A>) 
+of three <SPAN  CLASS="textit">Hordeum vulgare</SPAN> strains (barley), plus a set of full-length cDNA collection of cultivar <SPAN  CLASS="textit">Haruna Nijo</SPAN>,
+to show to produce clusters of transcripts.
+
+<P>
+The next command uses the OMCL algorithm to cluster sequences, produces a composition report, including the soft-core, 
+and finally computes an Average Nucleotide Identity matrix on the produced clusters. Note that redundant isoforms are filtered, 
+keeping only the longest one (you can turn this feature off with <code>-i 0</code>):
+<BR>
+<P>
+<code>$ ./get_homologues-est.pl -d sample_transcripts_fasta -M -c -z -A </code> . 
+
+<P>
+The output should look like this (contained in file <code>sample_output_est.txt</code>):
+
+<P>
+<PRE> 
+# results_directory=/path/sample_transcripts_fasta_est_homologues
+# parameters: MAXEVALUEBLASTSEARCH=0.01 MAXPFAMSEQS=250 BATCHSIZE=100
+
+# checking input files...
+# Esterel.trinity.fna.bz2 5892  median length = 506
+# Franka.trinity.fna.bz2 6036  median length = 523
+# Hs_Turkey-19-24.trinity.fna.bz2 6204  median length = 476
+# flcdnas_Hnijo.fna.gz 28620 [full length sequences] median length = 1504
+
+# 4 genomes, 46752 sequences
+
+# taxa considered = 4 sequences = 46752 residues = 63954041
+
+# mask=Esterel_alltaxa_algOMCL_e0_ (_algOMCL)
+[...]
+
+# re-using previous isoform clusters
+# 42 sequences
+# 65 sequences
+# 61 sequences
+# 2379 sequences
+
+# creating indexes, this might take some time (lines=2.08e+05) ...
+
+# construct_taxa_indexes: number of taxa found = 4
+# number of file addresses/BLAST queries = 4.4e+04
+
+# genome composition report (samples=20,permutations=24,seed=0)
+# genomic composition parameters: MIN_PERSEQID_HOM=95 MIN_COVERAGE_HOM=75 SOFTCOREFRACTION=0.95 
+[...]
+
+# file=sample_transcripts_fasta_est_homologues/core_genome_algOMCL.tab
+genomes	mean	stddev	|	samples
+0	8744	7017	|	4610	4610	4610	...
+1	1157	734	|	540	475	2042	...
+2	296	109	|	109	354	387	...
+3	91	0	|	91	91	91	...
+
+# file=sample_transcripts_fasta_est_homologues/soft-core_genome_algOMCL.tab
+genomes	mean	stddev	|	samples
+0	8744	7017	|	4610	4610	4610	...
+1	3538	2335	|	2462	2247	8205	...
+2	2219	1005	|	837	3505	2182	...
+3	716	109	|	903	658	625	...
+
+# clustering orthologous sequences
+
+# looking for valid sequence clusters (n_of_taxa=4)...
+
+# number_of_clusters = 91
+# cluster_list = sample_transcripts_fasta_est_homologues/Esterel_alltaxa_algOMCL_e0_.cluster_list
+# cluster_directory = sample_transcripts_fasta_est_homologues/Esterel_alltaxa_algOMCL_e0_
+
+# average_nucleotide_identity_matrix_file = 
+# sample_transcripts_fasta_est_homologues/Esterel_alltaxa_algOMCL_e0_Avg_identity.tab
+</PRE>
+
+<P>
+Notice that both core and soft-core sampling experiments are reported, considering genes found in all strains and also in 95% strains, respectively.
+
+<P>
+The produced Average Nucleotide Identity matrix looks like this:
+
+<P>
+<BR>
+<DIV ALIGN="CENTER">
+<TABLE CELLPADDING=3 BORDER="1" ALIGN="CENTER">
+<TR><TD ALIGN="LEFT">genomes</TD>
+<TD ALIGN="CENTER">Esterel</TD>
+<TD ALIGN="CENTER">Franka</TD>
+<TD ALIGN="CENTER">HsTurkey</TD>
+<TD ALIGN="CENTER">flcdnasHnijo</TD>
+</TR>
+<TR><TD ALIGN="LEFT">Esterel</TD>
+<TD ALIGN="CENTER">100</TD>
+<TD ALIGN="CENTER">96.96</TD>
+<TD ALIGN="CENTER">95.88</TD>
+<TD ALIGN="CENTER">95.87</TD>
+</TR>
+<TR><TD ALIGN="LEFT">Franka</TD>
+<TD ALIGN="CENTER">96.96</TD>
+<TD ALIGN="CENTER">100</TD>
+<TD ALIGN="CENTER">96.01</TD>
+<TD ALIGN="CENTER">96.31</TD>
+</TR>
+<TR><TD ALIGN="LEFT">HsTurkey</TD>
+<TD ALIGN="CENTER">95.88</TD>
+<TD ALIGN="CENTER">96.01</TD>
+<TD ALIGN="CENTER">100</TD>
+<TD ALIGN="CENTER">93.25</TD>
+</TR>
+<TR><TD ALIGN="LEFT">flcdnasHnijo</TD>
+<TD ALIGN="CENTER">95.87</TD>
+<TD ALIGN="CENTER">96.31</TD>
+<TD ALIGN="CENTER">93.25</TD>
+<TD ALIGN="CENTER">100</TD>
+</TR>
+</TABLE>
+</DIV>
+<A NAME="tab:ANIsample"></A>
+<BR>
+
+<P>
+Provided that optional R modules described in 
+<A NAME="tex2html49"
+  HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>
+are installed, this matrix can be plotted with:
+<BR><code>./plot_matrix_heatmap.sh -i sample_[...]/Esterel_alltaxa_algOMCL_e0_Avg_identity.tab</code>
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:ANImat"></A><A NAME="287"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 4:</STRONG>
+Plot of Average Nucleotide Identity matrix</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="905" HEIGHT="430" ALIGN="BOTTOM" BORDER="0"
+ SRC="./Esterel_Avg_identity_heatmap.png"
+ ALT="Image Esterel_Avg_identity_heatmap">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+If the previous command is changed by adding option <code>-t -2</code> only transcripts present in at least two strains will be considered,
+which are output in folder: 
+<BR><code>sample_transcripts_fasta_est_homologues/Esterel_2taxa_algOMCL_e0_</code>
+
+<BR>
+This second command produces a significantly different pan-genome composition matrix, which changes from:
+
+<P>
+<PRE>
+# file=sample_transcripts_fasta_est_homologues/pan_genome_algOMCL.tab
+genomes	mean	stddev	|	samples
+0	8744	7017	|	4610	4610	4610	...
+1	15363	7026	|	8943	8955	22475	...
+2	22607	5513	|	13106	25909	24897	...	
+3	28392	539	|	29155	28210	27562	...
+</PRE>
+
+<P>
+to
+
+<P>
+<PRE>
+# file=sample_transcripts_fasta_est_homologues/pan_genome_2taxa_algOMCL.tab
+genomes	mean	stddev	|	samples
+0	9145	7695	|	4617	4617	4617	...
+1	10646	7019	|	6550	6245	6643	...
+2	11444	6689	|	8003	7308	6862	...
+3	11549	6687	|	8123	7410	6959	...
+</PRE>
+
+<P>
+Both matrices can be plotted with script <SPAN  CLASS="textit">plot_pancore_matrix.pl</SPAN>, with a command such as: 
+<BR><code> ./plot_pancore_matrix.pl -i sample_transcripts_fasta_est_homologues/pan_genome_algOMCL.tab -f pan</code>
+<BR>
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:pant0"></A><A NAME="fig:pant2"></A><A NAME="308"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 5:</STRONG>
+Pan-genome (-t 0, left) and pan-genome (-t 2,  right) estimates based on random samples of 4 strains. 
+As the left example illustrates, four strains are usually not enough to fit a Tettelin-like function.</CAPTION>
+<TR><TD><TABLE  WIDTH="50%">
+<TR><TD>
+<DIV ALIGN="CENTER">
+
+</DIV><IMG
+  WIDTH="480" HEIGHT="480" ALIGN="BOTTOM" BORDER="0"
+ SRC="./pan_genome_algOMCL.png"
+ ALT="Image pan_genome_algOMCL">
+</TD></TR>
+</TABLE>
+ 
+<TABLE  WIDTH="50%">
+<TR><TD>
+<DIV ALIGN="CENTER">
+
+</DIV><IMG
+  WIDTH="480" HEIGHT="480" ALIGN="BOTTOM" BORDER="0"
+ SRC="./pan_genome_2taxa_algOMCL.png"
+ ALT="Image pan_genome_2taxa_algOMCL">
+</TD></TR>
+</TABLE></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:pangenomet"></A><A NAME="313"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 6:</STRONG>
+Core-genome, soft-core-genome and pan-genome composition analysis of 17 barley transcript sets. 
+Note that the pan-genome simulation was done with all clusters (left) and with all clusters found in at least three transcriptomes (right),
+illustrating the effect of option -t 3, which might be useful to remove low confidence sequences.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="888" HEIGHT="805" ALIGN="BOTTOM" BORDER="0"
+ SRC="./pangenomet.png"
+ ALT="Image pangenomet">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+
+<H2><A NAME="SECTION00053000000000000000">
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">3</SPAN> Producing a nucleotide-based pangenome matrix</A>
+</H2>
+
+<P>
+The clusters obtained in the previous section with option <code>-t 2</code> can be used to compile a pangenome matrix
+without singletons with this command:
+<BR><code>./compare_clusters.pl -d sample_[...]/Esterel_2taxa_algOMCL_e0_ -o outdir -n -m</code>
+
+<BR><PRE>
+# number of input cluster directories = 1
+
+# parsing clusters in sample_transcripts_fasta_est_homologues/Esterel_2taxa_algOMCL_e0_ ...
+# cluster_list in place, will parse it (sample_[...]/Esterel_2taxa_algOMCL_e0_.cluster_list)
+# number of clusters = 5259
+
+# intersection output directory: outdir
+
+# intersection size = 5259 clusters
+
+# intersection list = outdir/intersection_t0.cluster_list
+
+# pangenome_file = outdir/pangenome_matrix_t0.tab
+# pangenome_phylip file = outdir/pangenome_matrix_t0.phylip
+</PRE>
+
+<P>
+If the optional R modules described in 
+<A NAME="tex2html51"
+  HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>
+are installed, such a pangenome matrix can be used to hierarchically cluster strains with this command:
+<BR><code>./hcluster_matrix.sh -i outdir/pangenome_matrix_t0.tab</code>
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:hclustpange"></A><A NAME="325"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 7:</STRONG>
+Hierarchical grouping of strains based on pangenome matrix.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="905" HEIGHT="399" ALIGN="BOTTOM" BORDER="0"
+ SRC="./pangenome_matrix_t0_heatmap-est.png"
+ ALT="Image pangenome_matrix_t0_heatmap-est">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+
+<H2><A NAME="SECTION00054000000000000000">
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">4</SPAN> Making and annotating a non-redundant pangenome matrix</A>
+</H2>
+
+<P>
+The script <code>make_nr_pangenome_matrix.pl</code> produces a non-redundant pangenome matrix by 
+comparing all clusters to each other, taking the median sequence in each cluster. 
+By default nucleotide sequences are compared, but if the original input of 
+<SPAN  CLASS="textit">get_homologues-est</SPAN> comprised both DNA and protein sequences, the user can also choose peptide
+sequences to compute redundancy, which probably make more sense in terms of protein function.
+On the contrary, it would seem more appropriate to use DNA sequences to measure diversity.
+
+<P>
+In this example a DNA-based non-redundant pangenome matrix is computed with BLASTN assuming 
+that sequences might be truncated (option <code>-e</code>) and using 10 processor cores and a coverage cutoff of 50%:
+<BR><code>./make_nr_pangenome_matrix.pl -m outdir/pangenome_matrix_t0.tab -n 10 -e -C 50</code>
+
+<P>
+<PRE>
+# input matrix contains 5259 clusters and 4 taxa
+
+# filtering clusters ...
+# 5259 clusters with taxa &gt;= 1 and sequence length &gt;= 0
+
+# sorting clusters and extracting median sequence ...
+
+# running makeblastdb with outdir/pangenome_matrix_t0_nr_t1_l0_e1_C50_S90.fna
+
+# parsing blast result! (outdir/pangenome_matrix_t0_nr_t1_l0_e1_C50_S90.blast , 0.34MB)
+# parsing file finished
+
+# 5226 non-redundant clusters
+# created: outdir/pangenome_matrix_t0_nr_t1_l0_e1_C50_S90.fna
+
+# printing nr pangenome matrix ...
+# created: outdir/pangenome_matrix_t0_nr_t1_l0_e1_C50_S90.tab
+</PRE>
+
+<P>
+Note that the previous command can be modified to match external reference sequences, 
+for instance from <A NAME="tex2html52"
+  HREF="http://www.ebi.ac.uk/uniprot">Swissprot</A>,
+or pre-computed clusters, such as groups of orthologous sequences, 
+so that the resulting matrix contains cross-references to those external clusters, and their annotations.
+In either case, both input clusters and reference sequences must be of the same type: either nucleotides or peptides.
+
+<P>
+The next example shows how a set of clusters produced by <SPAN  CLASS="textit">get_homologues-est</SPAN> can be matched to some nucleotide 
+reference sequences, in this case annotated rice cDNAs:
+
+<P>
+<code>./make_nr_pangenome_matrix.pl -m outdir/pangenome_matrix_t0.tab -n 10 -e -C 50 -f oryza.fna</code>
+
+<P>
+This is the produced output:
+<PRE>
+# input matrix contains 5259 clusters and 4 taxa
+
+# filtering clusters ...
+# 5259 clusters with taxa &gt;= 1 and sequence length &gt;= 0
+
+# sorting clusters and extracting median sequence ...
+# re-using previous BLAST output outdir/pangenome_matrix_t0_nr_t1_l0_e1_C50_S90.blast
+
+# parsing blast result! (outdir/pangenome_matrix_t0_nr_t1_l0_e1_C50_S90.blast , 0.34MB)
+# parsing file finished
+
+# 5226 non-redundant clusters
+# created: outdir/pangenome_matrix_t0_nr_t1_l0_e1_C50_S90.fna
+
+# 66339 reference sequences parsed in oryza.fna
+
+# parsing blast result! (outdir/pangenome_matrix_t0_nr_t1_l0_e1_C50_S90_ref.blast , 0.37MB)
+# parsing file finished
+
+# matching nr clusters to reference (%alignment coverage cutoff=50) ...
+
+# printing nr pangenome matrix ...
+# created: outdir/pangenome_matrix_t0_nr_t1_l0_e1_C50_S90_ref_c50_s50.tab
+
+# NOTE: matrix can be transposed for your convenience with:
+
+  perl -F'\t' -ane '$r++;for(1 .. @F){$m[$r][$_]=$F[$_-1]}; \
+    $mx=@F;END{for(1 .. $mx){for $t(1 .. $r){print"$m[$t][$_]\t"}print"\n"}}' \
+    outdir/pangenome_matrix_t0_nr_t1_l0_e1_C50_S90_ref_c50_s50.tab
+</PRE>
+
+<P>
+The suggested perl command can be invoked to tranpose the matrix, which now contains rows such as these:
+<PRE>
+non-redundant	Franka.bz2.nucl	Esterel.bz2.nucl	flcdnas_Hnijo.gz.nucl	...	redundant	reference	
+1_TR2804-c0_g1_i1.fna	1	1	0	0	NA	LOC_Os09g07300.1 cDNA|BIG, putative, expressed	
+2_TR1554-c0_g1_i1.fna	0	2	1	0	NA	LOC_Os03g53280.1 cDNA|WD domain containing protein	
+6_TR3918-c0_g1_i1.fna	0	1	1	0	NA	NA	
+...
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION00055000000000000000">
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">5</SPAN> Annotating a sequence cluster</A>
+</H2>
+
+<P>
+After analyzing pan-genome or pan-transcriptome clusters it might be interesting to find out what kind of proteins they enconde,
+or we might just want to double-check the BLAST matches that support a produced cluster. 
+The script <SPAN  CLASS="textit">annotate_cluster.pl</SPAN> does just that, and be used with both nucleotide and peptide clusters.
+It can be called like this: 
+
+<P>
+<code>./annotate_cluster.pl -f outdir/1004_TR425-c0_g2_i1.fna -o 1004_TR425-c0_g2_i1.aln.fna -D</code>
+<BR>
+<P>
+And will produce this output:
+
+<P>
+<PRE>
+# total   sequences: 3
+
+# Pfam domains: PF10602,PF01399,
+# Pfam annotation: 26S proteasome subunit RPN7;PCI domain;
+# aligned sequences: 3 width:   1595
+# alignment file: 1004_TR425-c0_g2_i1.aln.fna
+</PRE>
+
+<P>
+If option <code>-b</code> is enforced a blunt-end alignment is produced, which might be useful for further analyses.
+In either case, the produced FASTA alignment file will contain sequence variants and Pfam domains in each header,
+in addition to the relevant BLAST scores:
+
+<P>
+<PRE>
+&gt;TR425|c0_g2_i1_[Esterel.trinity.fna.bz2] bits E-value N qy ht 1:1595 SNPs:123,1169,.. Pfam:..
+CCTGCTGGTGCATTTTTTTACAAACAGTTGGCACAGAGTATTTGTTGCTAATTGTGTTCGTTTTCTTGAA...
+</PRE>
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:annotcluster"></A><A NAME="416"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 8:</STRONG>
+Fragment of alignment produced by <SPAN  CLASS="textit">annotate_cluster.pl</SPAN>, 
+created with <A NAME="tex2html53"
+  HREF="http://www.mbio.ncsu.edu/bioedit/bioedit.html">BioEdit</A>.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="730" HEIGHT="376" ALIGN="BOTTOM" BORDER="0"
+ SRC="./annotcluster.png"
+ ALT="Image annotcluster">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+
+<H1><A NAME="SECTION00060000000000000000"></A> <A NAME="FAQs"></A>
+<BR>
+<SPAN CLASS="arabic">5</SPAN> Frequently asked questions (FAQs)
+</H1>
+
+<P>
+Please see also the FAQs in
+<A NAME="tex2html58"
+  HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>. 
+
+<P>
+
+<UL>
+<LI>What's the performance gain of v2?
+
+<P>
+After evolving parts of the original code base, and fixing some bugs (see CHANGES.txt), both 
+<SPAN  CLASS="textit">get_homologues.pl</SPAN> and <SPAN  CLASS="textit">get_homologues-est.pl</SPAN> have significantly improved their performance, as can be seen 
+in the figure, which combines data from the original benchmark and new data generated after v2 was in place. 
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:RAMtimev2"></A><A NAME="366"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 9:</STRONG>
+Computing time and RAM requirements of the original algorithm (OMCL, measured on 6 sequence sets) 
+as compared to the updated v2 code (measured on 3 three sets).</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="807" HEIGHT="970" ALIGN="BOTTOM" BORDER="0"
+ SRC="./performance_v2.png"
+ ALT="Image performance_v2">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+</LI>
+<LI>What are the main caveats when clustering transcripts/CDS sequences?
+
+<P>
+<SPAN  CLASS="textit">get_homologues-est.pl</SPAN> has been mainly tested with plant sequences, using both CDS sets from whole-genome annotations and also 
+transcripts from expression experiments. The main problems we have found so far are split genes, frequent artifacts in genome assemblies,
+incomplete genes which lack exons, for the same previous reasons, and retained introns, which are common among plant transcripts.
+These three common situations are illustrated on Figure <A HREF="#fig:ESTcaveats">10</A>. 
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:ESTcaveats"></A><A NAME="376"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 10:</STRONG>
+Common problems faced when clustering transcripts/CDS sequences.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="413" HEIGHT="467" ALIGN="BOTTOM" BORDER="0"
+ SRC="./get_homs-est_cdhit.png"
+ ALT="Image get_homs-est_cdhit">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+</LI>
+<LI>Why have you not implemented the COG algorithm in the <SPAN  CLASS="textit">get_homologues-est.pl</SPAN>?
+
+<P>
+We have left the COG algorithm out of <SPAN  CLASS="textit">get_homologues-est.pl</SPAN> as it will take some more work to integrate it
+with redundant isoform calling, which we think is important for EST datasets. However, it should be possible
+to do it and perhaps it might be added later.
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<P>
+
+<H1><A NAME="SECTION00070000000000000000">
+<SPAN CLASS="arabic">6</SPAN> Credits and references</A>
+</H1>
+
+<P>
+<SPAN  CLASS="textit">get_homologues-est.pl</SPAN> is designed, created and maintained at the 
+<A NAME="tex2html59"
+  HREF="http://www.eead.csic.es/compbio">Laboratory of Computational Biology</A>
+at 
+Estaci&#243;n Experimental de Aula Dei/CSIC in Zaragoza (Spain) and at the 
+<A NAME="tex2html60"
+  HREF="http://www.ccg.unam.mx/~vinuesa">Center for Genomic Sciences</A>
+of 
+Universidad Nacional Aut&#243;noma de M&#233;xico (CCG/UNAM).
+
+<P>
+The code was written mostly by Bruno Contreras-Moreira and Pablo Vinuesa, but it also includes 
+code and binaries from <A NAME="tex2html61"
+  HREF="http://www.orthomcl.org">OrthoMCL v1.4</A>
+(algorithm OMCL, <code>-M</code>),
+<A NAME="tex2html62"
+  HREF="http://blast.ncbi.nlm.nih.gov">NCBI Blast+</A>, <A NAME="tex2html63"
+  HREF="https://github.com/desmid/mview">MVIEW</A>
+and <A NAME="tex2html64"
+  HREF="http://www.bioperl.org">BioPerl 1.5.2</A>.
+
+<P>
+Other contributors: Carlos P Cantalapiedra, Roland Wilhelm.
+
+<BR>
+<BR>
+We ask the reader to cite the main reference describing the <SPAN  CLASS="textit">get_homologues</SPAN> software,
+
+<P>
+
+<UL>
+<LI>Contreras-Moreira,B. and Vinuesa,P. (2013) GET_HOMOLOGUES, a versatile software package 
+for scalable and robust microbial pangenome analysis. Appl.Environ.Microbiol. 79:7696-7701.
+</LI>
+</UL>
+
+<P>
+and also the original papers describing the included algorithms and databases, accordingly:
+
+<P>
+
+<UL>
+<LI>Li L, Stoeckert CJ Jr, Roos DS (2003) OrthoMCL: identification of ortholog 
+groups for eukaryotic genomes. Genome Res. 13(9):2178-89.
+
+<P>
+</LI>
+<LI>Altschul SF, Madden TL, Schaffer AA, Zhang J, Zhang Z, Miller W and Lipman DJ (1997)
+Gapped BLAST and PSI-BLAST: a new generation of protein database search programs.
+Nucl. Acids Res. 25(17): 3389-3402.
+
+<P>
+</LI>
+<LI>Stajich JE, Block D, Boulez K, Brenner SE, Chervitz SA, Dagdigian C, Fuellen G, 
+Gilbert JG, Korf I, Lapp H, Lehväslaiho H, Matsalla C, Mungall CJ, Osborne BI, 
+Pocock MR, Schattner P, Senger M, Stein LD, Stupka E, Wilkinson MD, Birney E. (2002)
+The Bioperl toolkit: Perl modules for the life sciences. Genome Res. 12(10):1611-8.
+
+<P>
+</LI>
+<LI>hmmscan :: search sequence(s) against a profile database HMMER 3.1b2 (Feb 2015) http://hmmer.org
+Copyright (C) 2015 Howard Hughes Medical Institute.
+Freely distributed under the GNU General Public License (GPLv3).
+
+<P>
+</LI>
+<LI>Finn RD, Bateman A, Clements J, Coggill P, Eberhardt RY, Eddy SR, Heger A, 
+Hetherington K, Holm L, Mistry J, Sonnhammer EL, Tate J, Punta M. (2014)
+Pfam: the protein families database. Nucleic Acids Res. 42:D222-30. 
+
+<P>
+</LI>
+<LI>Haas BJ, Papanicolaou A, Yassour M et al. (2013) De novo transcript sequence 
+reconstruction from RNA-seq using the Trinity platform for reference generation 
+and analysis. Nat Protoc. 8(8):1494-512.
+
+<P>
+</LI>
+<LI>Brown NP, Leroy C, Sander C (1998) MView: A Web compatible database search or 
+multiple alignment viewer. Bioinformatics. 14 (4):380-381. 
+
+<P>
+</LI>
+</UL>
+
+<P>
+If you use the accompanying scripts the following references should also be cited:
+
+<UL>
+<LI>R Core Team (2013) R: A Language and Environment for Statistical Computing. http://www.R-project.org
+R Foundation for Statistical Computing, Vienna, Austria, ISBN3-900051-07-0 
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H1><A NAME="SECTION00080000000000000000">
+About this document ...</A>
+</H1>
+ <STRONG>get_homologues-est manual</STRONG><P>
+This document was generated using the
+<A HREF="http://www.latex2html.org/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 2008 (1.71)
+<P>
+Copyright &#169; 1993, 1994, 1995, 1996,
+Nikos Drakos, 
+Computer Based Learning Unit, University of Leeds.
+<BR>
+Copyright &#169; 1997, 1998, 1999,
+<A HREF="http://www.maths.mq.edu.au/~ross/">Ross Moore</A>, 
+Mathematics Department, Macquarie University, Sydney.
+<P>
+The command line arguments were: <BR>
+ <STRONG>latex2html</STRONG> <TT>manual-est -no_antialias_text -split 0 -dir manual-est -no_navigation -show_section_numbers</TT>
+<P>
+The translation was initiated by Bruno Contreras Moreira on 2016-04-29
+<BR><HR>
+<ADDRESS>
+Bruno Contreras Moreira
+2016-04-29
+</ADDRESS>
+</BODY>
+</HTML>
