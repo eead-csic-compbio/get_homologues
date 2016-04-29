@@ -23,7 +23,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <P>
-<H1 ALIGN=CENTER><SPAN  CLASS="textit">get_homologues-est</SPAN> manual</H1>
+<H1 ALIGN=CENTER>get_homologues-est manual</H1>
 <P ALIGN=CENTER><STRONG>Bruno Contreras-Moreira (1,2) and Pablo Vinuesa (3)</STRONG>
 <BR><I><A NAME="tex2html2"
   HREF="http://www.araid.es">1. Fundaci&#243;n ARAID</A>
@@ -43,48 +43,48 @@ Contents</A>
 <!--Table of Contents-->
 
 <UL CLASS="TofC">
-<LI><A NAME="tex2html76"
+<LI><A NAME="tex2html84"
   HREF="manual-est.html#SECTION00020000000000000000">1 Description</A>
-<LI><A NAME="tex2html77"
+<LI><A NAME="tex2html85"
   HREF="manual-est.html#SECTION00030000000000000000">2 Requirements and installation</A>
 <UL>
-<LI><A NAME="tex2html78"
+<LI><A NAME="tex2html86"
   HREF="manual-est.html#SECTION00031000000000000000">2.1 Perl modules</A>
-<LI><A NAME="tex2html79"
+<LI><A NAME="tex2html87"
   HREF="manual-est.html#SECTION00032000000000000000">2.2 Required binaries</A>
-<LI><A NAME="tex2html80"
+<LI><A NAME="tex2html88"
   HREF="manual-est.html#SECTION00033000000000000000">2.3 Optional software dependencies</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html81"
+<LI><A NAME="tex2html89"
   HREF="manual-est.html#SECTION00040000000000000000">3 User manual</A>
 <UL>
-<LI><A NAME="tex2html82"
+<LI><A NAME="tex2html90"
   HREF="manual-est.html#SECTION00041000000000000000">3.1 Input data</A>
-<LI><A NAME="tex2html83"
+<LI><A NAME="tex2html91"
   HREF="manual-est.html#SECTION00042000000000000000">3.2 Program options</A>
-<LI><A NAME="tex2html84"
+<LI><A NAME="tex2html92"
   HREF="manual-est.html#SECTION00043000000000000000">3.3 Accompanying scripts</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html85"
+<LI><A NAME="tex2html93"
   HREF="manual-est.html#SECTION00050000000000000000">4 A few examples</A>
 <UL>
-<LI><A NAME="tex2html86"
+<LI><A NAME="tex2html94"
   HREF="manual-est.html#SECTION00051000000000000000">4.1 Extracting coding sequences (CDS) from transcripts</A>
-<LI><A NAME="tex2html87"
+<LI><A NAME="tex2html95"
   HREF="manual-est.html#SECTION00052000000000000000">4.2 Clustering orthologous transcripts from FASTA files, one per strain</A>
-<LI><A NAME="tex2html88"
+<LI><A NAME="tex2html96"
   HREF="manual-est.html#SECTION00053000000000000000">4.3 Producing a nucleotide-based pangenome matrix</A>
-<LI><A NAME="tex2html89"
+<LI><A NAME="tex2html97"
   HREF="manual-est.html#SECTION00054000000000000000">4.4 Making and annotating a non-redundant pangenome matrix</A>
-<LI><A NAME="tex2html90"
+<LI><A NAME="tex2html98"
   HREF="manual-est.html#SECTION00055000000000000000">4.5 Annotating a sequence cluster</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html91"
+<LI><A NAME="tex2html99"
   HREF="manual-est.html#SECTION00060000000000000000">5 Frequently asked questions (FAQs)</A>
-<LI><A NAME="tex2html92"
+<LI><A NAME="tex2html100"
   HREF="manual-est.html#SECTION00070000000000000000">6 Credits and references</A>
 </UL>
 <!--End of Table of Contents-->
@@ -111,7 +111,9 @@ plant transcripts and CDS sequences, and uses BLASTN to compare DNA sequences. T
 
 <P>
 The core algorithms of <SPAN  CLASS="textit">get_homologues-est</SPAN> have been adapted from <SPAN  CLASS="textit">get_homologues</SPAN>, and are therefore explained 
-in <SPAN  CLASS="textit">manual_get_homologues.pdf</SPAN>. This document focuses mostly on EST-specific options.
+in <A NAME="tex2html5"
+  HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>. 
+This document focuses mostly on EST-specific options.
 
 <P>
 
@@ -181,11 +183,11 @@ Getopt::Std, Benchmark and Storable.
 
 <P>
 In addition, the <SPAN  CLASS="textit">Bio::Seq</SPAN>, <SPAN  CLASS="textit">Bio::SeqIO</SPAN>, <SPAN  CLASS="textit">Bio::Graphics</SPAN> and <SPAN  CLASS="textit">Bio::SeqFeature::Generic</SPAN> 
-modules from the <A NAME="tex2html5"
+modules from the <A NAME="tex2html6"
   HREF="http://www.bioperl.org">Bioperl</A>
 collection, 
-and module <A NAME="tex2html6"
-  HREF="<"><</A>412>>http://search.cpan.org/perldoc?Parallelare also required, and have been included in the <SPAN  CLASS="textit">get_homologues-est</SPAN> bundle for your convenience.
+and module <A NAME="tex2html7"
+  HREF="<"><</A>421>>http://search.cpan.org/perldoc?Parallelare also required, and have been included in the <SPAN  CLASS="textit">get_homologues-est</SPAN> bundle for your convenience.
 
 <P>
 Should this version of BioPerl fail in your system (as diagnosed by <SPAN  CLASS="textit">install.pl</SPAN>) 
@@ -207,7 +209,7 @@ in Ubuntu, <SPAN  CLASS="textit">yum</SPAN> in Fedora or <SPAN  CLASS="textit">Y
 This form should be also valid:
 <BR><code>$ perl -MCPAN -e 'install C/CJ/CJFIELDS/BioPerl-1.6.1.tar.gz'</code>
 <BR>
-Please check this <A NAME="tex2html7"
+Please check this <A NAME="tex2html8"
   HREF="http://bioperl.open-bio.org/wiki/Installing_Bioperl_for_Unix">tutorial</A>
 if you need further help.
 <BR>
@@ -224,14 +226,15 @@ In order to properly read (optionally) compressed input files, <SPAN  CLASS="tex
 
 <P>
 The Perl script <SPAN  CLASS="textit">install.pl</SPAN>, already mentioned in section <A HREF="#install">2</A>, checks whether the included 
-precompiled binaries for <A NAME="tex2html8"
-  HREF="http://sourceforge.net/projects/cogtriangles/files/">COGtriangles</A>, 
-<A NAME="tex2html9"
+precompiled binaries for <A NAME="tex2html9"
   HREF="http://hmmer.janelia.org/">hmmer</A>, <A NAME="tex2html10"
   HREF="http://www.micans.org/mcl">MCL</A>
 and <A NAME="tex2html11"
   HREF="ftp://ftp.ncbi.nlm.nih.gov/blast/executables/">BLAST</A>
-are in place and ready to be used by <SPAN  CLASS="textit">get_homologues-est</SPAN>. However, if any of these binaries fails to work in
+are in place and ready to be used by <SPAN  CLASS="textit">get_homologues-est</SPAN>. 
+This includes also <A NAME="tex2html12"
+  HREF="http://sourceforge.net/projects/cogtriangles/files/">COGtriangles</A>, which is used only by 
+prokaryotic <SPAN  CLASS="textit">get_homologues</SPAN>. However, if any of these binaries fails to work in
 your system, perhaps due a different architecture or due to missing libraries, it will be necessary to obtain 
 an appropriate version for your system or to compile them with your own compiler.
 
@@ -259,7 +262,7 @@ $cd ../COGtriangles;make
 
 <P>
 Regarding BLAST, <SPAN  CLASS="textit">get_homologues-est</SPAN> uses BLAST+ binaries, which
-can be easily downloaded from the <A NAME="tex2html12"
+can be easily downloaded from the <A NAME="tex2html13"
   HREF="ftp://ftp.ncbi.nlm.nih.gov/blast/executables/">NCBI FTP</A>
 site.
 The packed binaries are <SPAN  CLASS="textit">blastp</SPAN> and <SPAN  CLASS="textit">makeblastdb</SPAN> from version <SPAN  CLASS="textit">ncbi-blast-2.2.27+</SPAN>. If these do
@@ -279,7 +282,7 @@ BLAST binaries, which are respectively <SPAN  CLASS="textit">blastall</SPAN> and
 
 <P>
 It is possible to make use of <SPAN  CLASS="textit">get_homologues-est</SPAN> on a computer farm or high-performance computing cluster
-managed by <A NAME="tex2html13"
+managed by <A NAME="tex2html14"
   HREF="http://gridscheduler.sourceforge.net/">gridengine</A>. In particular we have tested this feature with 
 versions GE 6.0u8, 6.2u4, 2011.11p1 
 invoking the program with option <code>-m cluster</code>.
@@ -288,7 +291,7 @@ path to set global variable <code>$SGEPATH</code>. To find out the installation 
 you might try the next terminal command: <code>$ which qsub</code>
 <BR>
 In case you have access to a multi-core computer you can follow the steps at
-<BR><A NAME="tex2html14"
+<BR><A NAME="tex2html15"
   HREF="http://bioinfoperl.blogspot.com.es/2015/04/howto-install-grid-engine-on-multi-core-box-gethomologues.html">blog post</A>
 to set up your own Grid Engine cluster and speed up your calculations.
 
@@ -298,7 +301,7 @@ For cluster-based operations three bundled Perl scripts are invoked:
 
 <P>
 It is also possible to invoke Pfam domain scanning from <SPAN  CLASS="textit">get_homologues-est</SPAN>. This option 
-requires the bundled binary <SPAN  CLASS="textit">hmmscan</SPAN>, which is part of the <A NAME="tex2html15"
+requires the bundled binary <SPAN  CLASS="textit">hmmscan</SPAN>, which is part of the <A NAME="tex2html16"
   HREF="http://hmmer.janelia.org">HMMER3</A>
 package,
 whose path is set in file <SPAN  CLASS="textit">lib/phyTools.pm</SPAN> (variable <code>$ENV{'EXE_HMMPFAM'}</code>). 
@@ -312,7 +315,7 @@ if( ! defined($ENV{'EXE_HMMPFAM'}) )
 </PRE>
 The Pfam HMM library is also required and the <SPAN  CLASS="textit">install.pl</SPAN> script should take care of it.
 However, you can manually download it from the appropriate
-<A NAME="tex2html16"
+<A NAME="tex2html17"
   HREF="ftp://ftp.sanger.ac.uk/pub/databases/Pfam/current_release/Pfam-A.hmm.gz">Pfam FTP site</A>.
 This file needs to be decompressed, either in the default <SPAN  CLASS="textit">db</SPAN> folder or in any other location, 
 and then it should be formatted with the program <SPAN  CLASS="textit">hmmpress</SPAN>, which is also part of the 
@@ -330,17 +333,17 @@ if( ! defined($ENV{"PFAMDB"}) ){ $ENV{"PFAMDB"} = "db/Pfam-A.hmm"; }
 
 <P>
 In order to reduce the memory footprint of <SPAN  CLASS="textit">get_homologues-est</SPAN> it is possible to take advantage of the
-<A NAME="tex2html17"
+<A NAME="tex2html18"
   HREF="http://en.wikipedia.org/wiki/Berkeley_DB">Berkeley_DB</A>
 database engine, which requires Perl core module
-<A NAME="tex2html18"
+<A NAME="tex2html19"
   HREF="http://search.cpan.org/perldoc?DB_File">DB_File</A>, which should be installed on all major Linux distributions.
 
 <P>
 The accompanying script <SPAN  CLASS="textit">transcripts2cds.pl</SPAN> should work out of the box, but the more efficient
-<SPAN  CLASS="textit">transcripts2cdsCPP.pl</SPAN> requires the installation of module <A NAME="tex2html19"
-  HREF="<"><</A>413>>http://search.cpan.org/perldoc?Inlinewhich in turn requires <A NAME="tex2html20"
-  HREF="<"><</A>414>>http://search.cpan.org/perldoc?InlineThe installation of these modules is known to be troublesome in some systems, but the standard way should work in most cases:
+<SPAN  CLASS="textit">transcripts2cdsCPP.pl</SPAN> requires the installation of module <A NAME="tex2html20"
+  HREF="<"><</A>422>>http://search.cpan.org/perldoc?Inlinewhich in turn requires <A NAME="tex2html21"
+  HREF="<"><</A>423>>http://search.cpan.org/perldoc?InlineThe installation of these modules is known to be troublesome in some systems, but the standard way should work in most cases:
 
 <P>
 <PRE>
@@ -353,7 +356,7 @@ $ cpan -i Inline::C Inline::CPP           # will require administrator privilege
 
 <P>
 Similarly, in order to take full advantage of the accompanying script <SPAN  CLASS="textit">parse_pangenome_matrix.pl</SPAN>, 
-particularly for option <code>-p</code>, the installation of module <A NAME="tex2html21"
+particularly for option <code>-p</code>, the installation of module <A NAME="tex2html22"
   HREF="http://search.cpan.org/perldoc?GD">GD</A>
 is recommended.
 An easy way to install them, provided that you have administrator privileges,  
@@ -375,7 +378,7 @@ $ perl -MCPAN -e 'install GD'             # will require administrator privilege
 </PRE>
 
 <P>
-The installation of perl-GD on macOSX systems is known to be <A NAME="tex2html22"
+The installation of perl-GD on macOSX systems is known to be <A NAME="tex2html23"
   HREF="http://www.bugzilla.org/docs/2.16/html/osx.html">troublesome</A>.
 <BR>
 <BR>
@@ -383,13 +386,13 @@ The installation of perl-GD on macOSX systems is known to be <A NAME="tex2html22
 The accompanying scripts <SPAN  CLASS="textit">compare_clusters.pl</SPAN>, <SPAN  CLASS="textit">plot_pancore_matrix.pl</SPAN>, <SPAN  CLASS="textit">parse_pangenome_matrix.pl</SPAN>,
 <BR>
 <BR><SPAN  CLASS="textit">plot_matrix_heatmap.sh</SPAN>, <SPAN  CLASS="textit">hcluster_matrix.sh</SPAN> require the installation of the statistical software 
-<A NAME="tex2html23"
+<A NAME="tex2html24"
   HREF="http://www.r-project.org">R</A>, 
 which usually is listed by software managers in all major Linux distributions.
-In some cases (some <A NAME="tex2html24"
+In some cases (some <A NAME="tex2html25"
   HREF="http://cran.r-project.org/bin/linux/suse/README.html">SuSE versions</A>
 and 
-some <A NAME="tex2html25"
+some <A NAME="tex2html26"
   HREF="http://fedoraproject.org/wiki/EPEL/FAQ#How_can_I_install_the_packages_from_the_EPEL_software_repository.3F">Redhat-like distros</A>)
 it will be necessary to add a repository to your package manager.
 R can be installed  from the terminal:
@@ -402,7 +405,7 @@ $ zypper --assume-yes R-patched R-patched-devel  # Suse
 </PRE>
 
 <P>
-Please visit <A NAME="tex2html26"
+Please visit <A NAME="tex2html27"
   HREF="http://cran.r-project.org/bin/macosx/">CRAN</A>
 to download and install R on macOSX systems, which is straightforward.
 <BR>
@@ -416,7 +419,7 @@ which can be easily installed from the R command line with:
 
 <P>
 Finally, the script <SPAN  CLASS="textit">compare_clusters.pl</SPAN> might require the installation of program PARS from the 
-<A NAME="tex2html27"
+<A NAME="tex2html28"
   HREF="http://evolution.genetics.washington.edu/phylip/doc/pars.html">PHYLIP suite</A>, which should be already bundled 
 with your copy of <SPAN  CLASS="textit">get_homologues</SPAN>.
 
@@ -505,7 +508,7 @@ Options that control clustering:
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:flow"></A><A NAME="172"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:flow"></A><A NAME="174"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 1:</STRONG>
 Flowchart of get_homologues-est.</CAPTION>
@@ -542,7 +545,7 @@ relying on BLASTN searches.
 <P>
 Perhaps the most important optional parameter would be the choice of clustering algorithm (Table <A HREF="#tab:algs">1</A>):
 <BR><P></P>
-<DIV ALIGN="CENTER"><A NAME="186"></A>
+<DIV ALIGN="CENTER"><A NAME="188"></A>
 <TABLE>
 <CAPTION><STRONG>Table 1:</STRONG>
 List of available clustering algorithms. Note that the COG triangles algorithm is not supported.</CAPTION>
@@ -562,7 +565,7 @@ that result of merging the latest bidirectional best hits.</TD>
 <TD ALIGN="LEFT"><code>-M</code></TD>
 <TD ALIGN="LEFT" VALIGN="TOP" WIDTH=360>OrthoMCL v1.4, uses the Markov Cluster Algorithm to group sequences,
 with inflation (<code>-F</code>) controlling cluster granularity, as described in 
-PubMed=<A NAME="tex2html29"
+PubMed=<A NAME="tex2html30"
   HREF="http://www.ncbi.nlm.nih.gov/sites/ppmc/articles/PMC403725/">12952885</A>.</TD>
 </TR>
 </TABLE>
@@ -590,13 +593,13 @@ analysis on a single computer.
 <P>
 </LI>
 <LI><code>-i</code> can be used to filter out short, redundant isoforms which overlap, with no overhangs, for a minimun length. 
-By default this is set to <code>$MINREDOVERLAP=40</code> as in PubMed=<A NAME="tex2html33"
+By default this is set to <code>$MINREDOVERLAP=40</code> as in PubMed=<A NAME="tex2html34"
   HREF="http://www.ncbi.nlm.nih.gov/pubmed/12651724">12651724</A>.
 This EST-specific feature can be turned off by setting <code>-i 0</code>. Redundant isoforms will not be output unless <code>-L</code> is set. 
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="195"></A>
+<DIV ALIGN="CENTER"><A NAME="197"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 2:</STRONG>
 Redundant isoforms (dashed) are optionally removed from an input sequence set if they overlap a longer 
@@ -627,7 +630,7 @@ the study of transcripts/CDSs of the same species, it uses appropriate threshold
  WIDTH="50" HEIGHT="30" ALIGN="MIDDLE" BORDER="0"
  SRC="img2.png"
  ALT="$ &lt;95\%$"></SPAN> identical in sequence
-to any previous sequence (as in PubMed=<A NAME="tex2html34"
+to any previous sequence (as in PubMed=<A NAME="tex2html35"
   HREF="http://www.ncbi.nlm.nih.gov/pubmed/21572440">21572440</A>)) with cover <SPAN CLASS="MATH"><IMG
  WIDTH="50" HEIGHT="30" ALIGN="MIDDLE" BORDER="0"
  SRC="img3.png"
@@ -644,7 +647,7 @@ same seed in different <code>-c</code> runs the user ensures that genomes are sa
 <P>
 </LI>
 <LI><code>-s</code> can be used to reduce the memory footprint, provided that the Perl module 
-<A NAME="tex2html35"
+<A NAME="tex2html36"
   HREF="http://search.cpan.org/perldoc?BerkeleyDB">BerkeleyDB</A>
 is in place. 
 This option usually makes <SPAN  CLASS="textit">get_homologues-est</SPAN> slower, but for very large datasets or in machines with little memory resources 
@@ -654,7 +657,9 @@ this might be the only way to complete a job.
 </LI>
 <LI><code>-m</code> allows the choice of runmode, which can be either <code>-m local</code> (the default) or 
 <code>-m cluster</code>. In the second case global variable <code>$SGEPATH</code> might need to be appropriately set, 
-as explained in <SPAN  CLASS="textit">manual_get_homologues.pdf</SPAN>,
+as explained in 
+<A NAME="tex2html37"
+  HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>,
 as well as <code>$QUEUESETTINGS</code>, that specificies for instance a particular queue name for your cluster jobs.
 
 <P>
@@ -679,7 +684,7 @@ unless both of them come from a full-length collection (see <A HREF="#input">3.1
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="214"></A>
+<DIV ALIGN="CENTER"><A NAME="217"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 3:</STRONG>
 Coverage illustrated with the alignment of sequence 'query' to two aligned fragments of sequence 'subject'.
@@ -746,7 +751,7 @@ interest for users employing these clusters for primer design, for instance.
 <P>
 </LI>
 <LI><code>-F</code> is the inflation value that governs Markov Clustering in OMCL runs, as explained in 
-PubMed=<A NAME="tex2html36"
+PubMed=<A NAME="tex2html38"
   HREF="http://www.ncbi.nlm.nih.gov/sites/ppmc/articles/PMC403725/">12952885</A>. As a rule of thumb,
 low inflation values (<code>-F 1</code>)result in the inclusion of more sequences in fewer groups, whilst large values 
 produce more, smaller clusters (<code>-F 4</code>).
@@ -777,7 +782,9 @@ with a default value of 0.95. This choice produces a composition report more rob
 
 <P>
 The following Perl and shell scripts are included in each release to assist in the interpretation of results generated
-by <SPAN  CLASS="textit">get_homologues-est.pl</SPAN>. See examples of use in <SPAN  CLASS="textit">manual_get_homologues.pdf</SPAN>:
+by <SPAN  CLASS="textit">get_homologues-est.pl</SPAN>. See examples of use in <SPAN  CLASS="textit">manual_get_homologues.pdf</SPAN>
+<A NAME="tex2html39"
+  HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>:
 
 <P>
 
@@ -800,7 +807,7 @@ to remove redundant clusters, using either nucleotide or protein sequence identi
 <P>
 </LI>
 <LI><SPAN  CLASS="textit">plot_pancore_matrix.pl</SPAN>, a Perl script to plot pan/soft/core-genome sampling results and to fit regression 
-curves with help from <A NAME="tex2html37"
+curves with help from <A NAME="tex2html40"
   HREF="http://www.r-project.org">R</A>
 functions. 
 
@@ -834,7 +841,7 @@ R functions <code>hclust()</code> and <code>heatmap.2()</code> in order to produ
 <P>
 </LI>
 <LI><SPAN  CLASS="textit">pfam_enrich.pl</SPAN> calculates the enrichment of a set of sequence clusters in terms of Pfam domains,
-by using <A NAME="tex2html38"
+by using <A NAME="tex2html41"
   HREF="https://stat.ethz.ch/R-manual/R-patched/library/stats/html/fisher.test.html">Fisher's exact test</A>.
 
 <P>
@@ -844,7 +851,7 @@ by using <A NAME="tex2html38"
 <P>
 Apart from these, auxiliar <SPAN  CLASS="textit">transcripts2cds.pl</SPAN> script is bundled to assist in the
 analysis of transcripts. In particular, this script can be used to annotate potential Open Reading Frames (ORFs) contained within raw transcripts, 
-which might be truncated or contain introns. This script uses <A NAME="tex2html39"
+which might be truncated or contain introns. This script uses <A NAME="tex2html42"
   HREF="https://transdecoder.github.io">TransDecoder</A>, BLASTX and SWISSPROT, which should 
 be installed by running: <!-- MATH
  $./install.pl$
@@ -879,7 +886,10 @@ usage: ./transcripts2cds.pl [options] &lt;input FASTA file(s) with transcript nu
 <P>
 This section presents typical ways of running <SPAN  CLASS="textit">get_homologues-est.pl</SPAN> 
 and the accompanying scripts with provided sample input data. 
-Please check file <SPAN  CLASS="textit">manual_get_homologues.pdf</SPAN> for more examples, particularly for the auxiliary scripts,
+Please check file 
+<A NAME="tex2html43"
+  HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>
+for more examples, particularly for the auxiliary scripts,
 which are not explained in this document.
 
 <P>
@@ -944,7 +954,9 @@ which of course can be removed, but will be re-used if the same job is re-run la
 Note that CDS sequences can be deduced for a collection of transcriptomes and put in the same folder, 
 so that they can all be analyzed together with <SPAN  CLASS="textit">get_homologues-est.pl</SPAN>. 
 Such files support calling option <code>-D</code>, which will annotate Pfam domains contained in those sequences,
-and can then also be used to calculate enrichment as explained in <SPAN  CLASS="textit">manual_get_homologues.pdf</SPAN>.
+and can then also be used to calculate enrichment as explained in 
+<A NAME="tex2html44"
+  HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>.
 
 <P>
 
@@ -954,7 +966,7 @@ and can then also be used to calculate enrichment as explained in <SPAN  CLASS="
 
 <P>
 This example takes the sample input folder <code>sample_transcripts_fasta</code>,
-which contains automatically assembled transcripts (<A NAME="tex2html43"
+which contains automatically assembled transcripts (<A NAME="tex2html48"
   HREF="https://github.com/trinityrnaseq/trinityrnaseq/wiki">Trinity</A>) 
 of three <SPAN  CLASS="textit">Hordeum vulgare</SPAN> strains (barley), plus a set of full-length cDNA collection of cultivar <SPAN  CLASS="textit">Haruna Nijo</SPAN>,
 to show to produce clusters of transcripts.
@@ -1075,13 +1087,15 @@ The produced Average Nucleotide Identity matrix looks like this:
 <BR>
 
 <P>
-Provided that optional R modules described in <SPAN  CLASS="textit">manual_get_homologues.pdf</SPAN> are installed, 
-This matrix can be plotted with:
+Provided that optional R modules described in 
+<A NAME="tex2html49"
+  HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>
+are installed, this matrix can be plotted with:
 <BR><code>./plot_matrix_heatmap.sh -i sample_[...]/Esterel_alltaxa_algOMCL_e0_Avg_identity.tab</code>
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:ANImat"></A><A NAME="279"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:ANImat"></A><A NAME="287"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 4:</STRONG>
 Plot of Average Nucleotide Identity matrix</CAPTION>
@@ -1133,7 +1147,7 @@ Both matrices can be plotted with script <SPAN  CLASS="textit">plot_pancore_matr
 <BR>
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:pant0"></A><A NAME="fig:pant2"></A><A NAME="300"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:pant0"></A><A NAME="fig:pant2"></A><A NAME="308"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 5:</STRONG>
 Pan-genome (-t 0, left) and pan-genome (-t 2,  right) estimates based on random samples of 4 strains. 
@@ -1164,7 +1178,7 @@ As the left example illustrates, four strains are usually not enough to fit a Te
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:pangenomet"></A><A NAME="305"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:pangenomet"></A><A NAME="313"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 6:</STRONG>
 Core-genome, soft-core-genome and pan-genome composition analysis of 17 barley transcript sets. 
@@ -1210,13 +1224,15 @@ without singletons with this command:
 </PRE>
 
 <P>
-If the optional R modules described in <SPAN  CLASS="textit">manual_get_homologues.pdf</SPAN> are installed, such a pangenome 
-matrix can be used to hierarchically cluster strains with this command:
+If the optional R modules described in 
+<A NAME="tex2html51"
+  HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>
+are installed, such a pangenome matrix can be used to hierarchically cluster strains with this command:
 <BR><code>./hcluster_matrix.sh -i outdir/pangenome_matrix_t0.tab</code>
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:hclustpange"></A><A NAME="316"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:hclustpange"></A><A NAME="325"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 7:</STRONG>
 Hierarchical grouping of strains based on pangenome matrix.</CAPTION>
@@ -1273,7 +1289,7 @@ that sequences might be truncated (option <code>-e</code>) and using 10 processo
 
 <P>
 Note that the previous command can be modified to match external reference sequences, 
-for instance from <A NAME="tex2html45"
+for instance from <A NAME="tex2html52"
   HREF="http://www.ebi.ac.uk/uniprot">Swissprot</A>,
 or pre-computed clusters, such as groups of orthologous sequences, 
 so that the resulting matrix contains cross-references to those external clusters, and their annotations.
@@ -1371,11 +1387,11 @@ CCTGCTGGTGCATTTTTTTACAAACAGTTGGCACAGAGTATTTGTTGCTAATTGTGTTCGTTTTCTTGAA...
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:annotcluster"></A><A NAME="407"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:annotcluster"></A><A NAME="416"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 8:</STRONG>
 Fragment of alignment produced by <SPAN  CLASS="textit">annotate_cluster.pl</SPAN>, 
-created with <A NAME="tex2html46"
+created with <A NAME="tex2html53"
   HREF="http://www.mbio.ncsu.edu/bioedit/bioedit.html">BioEdit</A>.</CAPTION>
 <TR><TD>
 <DIV ALIGN="CENTER">
@@ -1396,7 +1412,9 @@ created with <A NAME="tex2html46"
 </H1>
 
 <P>
-Please see also the FAQs on emphmanual_get_homologues.pdf. 
+Please see also the FAQs in
+<A NAME="tex2html58"
+  HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>. 
 
 <P>
 
@@ -1410,7 +1428,7 @@ in the figure, which combines data from the original benchmark and new data gene
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:RAMtimev2"></A><A NAME="356"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:RAMtimev2"></A><A NAME="366"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 9:</STRONG>
 Computing time and RAM requirements of the original algorithm (OMCL, measured on 6 sequence sets) 
@@ -1438,7 +1456,7 @@ These three common situations are illustrated on Figure <A HREF="#fig:ESTcaveats
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:ESTcaveats"></A><A NAME="366"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:ESTcaveats"></A><A NAME="376"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 10:</STRONG>
 Common problems faced when clustering transcripts/CDS sequences.</CAPTION>
@@ -1458,9 +1476,9 @@ Common problems faced when clustering transcripts/CDS sequences.</CAPTION>
 <LI>Why have you not implemented the COG algorithm in the <SPAN  CLASS="textit">get_homologues-est.pl</SPAN>?
 
 <P>
-We left the COG algorithm out of <SPAN  CLASS="textit">get_homologues-est.pl</SPAN> as it seemed too difficult to integrate
+We have left the COG algorithm out of <SPAN  CLASS="textit">get_homologues-est.pl</SPAN> as it will take some more work to integrate it
 with redundant isoform calling, which we think is important for EST datasets. However, it should be possible
-to do it and perhaps, if there is enough evidence to support it, it might be added later.
+to do it and perhaps it might be added later.
 
 <P>
 </LI>
@@ -1476,24 +1494,24 @@ to do it and perhaps, if there is enough evidence to support it, it might be add
 
 <P>
 <SPAN  CLASS="textit">get_homologues-est.pl</SPAN> is designed, created and maintained at the 
-<A NAME="tex2html51"
+<A NAME="tex2html59"
   HREF="http://www.eead.csic.es/compbio">Laboratory of Computational Biology</A>
 at 
 Estaci&#243;n Experimental de Aula Dei/CSIC in Zaragoza (Spain) and at the 
-<A NAME="tex2html52"
+<A NAME="tex2html60"
   HREF="http://www.ccg.unam.mx/~vinuesa">Center for Genomic Sciences</A>
 of 
 Universidad Nacional Aut&#243;noma de M&#233;xico (CCG/UNAM).
 
 <P>
 The code was written mostly by Bruno Contreras-Moreira and Pablo Vinuesa, but it also includes 
-code and binaries from <A NAME="tex2html53"
+code and binaries from <A NAME="tex2html61"
   HREF="http://www.orthomcl.org">OrthoMCL v1.4</A>
 (algorithm OMCL, <code>-M</code>),
-<A NAME="tex2html54"
-  HREF="http://blast.ncbi.nlm.nih.gov">NCBI Blast+</A>, <A NAME="tex2html55"
+<A NAME="tex2html62"
+  HREF="http://blast.ncbi.nlm.nih.gov">NCBI Blast+</A>, <A NAME="tex2html63"
   HREF="https://github.com/desmid/mview">MVIEW</A>
-and <A NAME="tex2html56"
+and <A NAME="tex2html64"
   HREF="http://www.bioperl.org">BioPerl 1.5.2</A>.
 
 <P>
@@ -1576,7 +1594,7 @@ R Foundation for Statistical Computing, Vienna, Austria, ISBN3-900051-07-0
 <H1><A NAME="SECTION00080000000000000000">
 About this document ...</A>
 </H1>
- <STRONG><SPAN  CLASS="textit">get_homologues-est</SPAN> manual</STRONG><P>
+ <STRONG>get_homologues-est manual</STRONG><P>
 This document was generated using the
 <A HREF="http://www.latex2html.org/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 2008 (1.71)
 <P>
@@ -1591,11 +1609,11 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>manual-est -no_antialias_text -split 0 -dir manual-est -no_navigation -show_section_numbers</TT>
 <P>
-The translation was initiated by Bruno Contreras Moreira on 2016-04-28
+The translation was initiated by Bruno Contreras Moreira on 2016-04-29
 <BR><HR>
 <ADDRESS>
 Bruno Contreras Moreira
-2016-04-28
+2016-04-29
 </ADDRESS>
 </BODY>
 </HTML>
