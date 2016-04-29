@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Perl modules</TITLE>
+<META NAME="description" CONTENT="Perl modules">
+<META NAME="keywords" CONTENT="manual">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="manual.css">
+
+<LINK REL="next" HREF="node5.html">
+<LINK REL="previous" HREF="node3.html">
+<LINK REL="up" HREF="node3.html">
+<LINK REL="next" HREF="node5.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html138"
+  HREF="node5.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/usr/share/latex2html/icons/next.png"></A> 
+<A NAME="tex2html134"
+  HREF="node3.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/usr/share/latex2html/icons/up.png"></A> 
+<A NAME="tex2html128"
+  HREF="node3.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/usr/share/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html136"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="/usr/share/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html139"
+  HREF="node5.html">Required binaries</A>
+<B> Up:</B> <A NAME="tex2html135"
+  HREF="node3.html">Requirements and installation</A>
+<B> Previous:</B> <A NAME="tex2html129"
+  HREF="node3.html">Requirements and installation</A>
+ &nbsp; <B>  <A NAME="tex2html137"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00031000000000000000"></A> <A NAME="perlmods"></A>
+<BR>
+Perl modules
+</H2>
+
+<P>
+A few Perl core modules are required by the <SPAN  CLASS="textit">get_homologues.pl</SPAN> script, which should be 
+already installed on your system: Cwd, FindBin, File::Basename, File::Spec, File::Temp, FileHandle, List::Util,
+Getopt::Std, Benchmark and Storable. 
+
+<P>
+In addition, the <SPAN  CLASS="textit">Bio::Seq</SPAN>, <SPAN  CLASS="textit">Bio::SeqIO</SPAN>, <SPAN  CLASS="textit">Bio::Graphics</SPAN> and <SPAN  CLASS="textit">Bio::SeqFeature::Generic</SPAN> 
+modules from the http://www.bioperl.orgBioperl collection, 
+and module http://search.cpan.org/perldoc?Parallelare also required, and have been included in the <SPAN  CLASS="textit">get_homologues</SPAN> bundle for your convenience.
+
+<P>
+Should this version of BioPerl fail in your system (as diagnosed by <SPAN  CLASS="textit">install.pl</SPAN>) 
+it might be necessary to install it from scratch. 
+However, before trying to download it, you might want to check whether 
+it is already living on your system, by typing on the terminal:
+<BR><code>$ perl -MBio::Root::Version -e 'print $Bio::Root::Version::VERSION'</code>
+
+<P>
+If you get a message <code>Can't locate Bio/Root/Version...</code> then you need to actually install it, which 
+can sometimes become troublesome due to failed dependencies. For this reason usually the easiest way of
+installing it, provided that you have root privileges, 
+it is to use the software manager of your Linux distribution (such as <SPAN  CLASS="textit">synaptic/apt-get</SPAN> 
+in Ubuntu, <SPAN  CLASS="textit">yum</SPAN> in Fedora or <SPAN  CLASS="textit">YaST</SPAN> in openSUSE). If you prefer the terminal please use the 
+<SPAN  CLASS="textit">cpan</SPAN> program with administrator privileges (<code>sudo</code> in Ubuntu): 
+<BR><code>$ cpan -i C/CJ/CJFIELDS/BioPerl-1.6.1.tar.gz</code>
+
+<P>
+This form should be also valid:
+<BR><code>$ perl -MCPAN -e 'install C/CJ/CJFIELDS/BioPerl-1.6.1.tar.gz'</code>
+<BR>
+Please check this http://bioperl.open-bio.org/wiki/Installing_Bioperl_for_Unixtutorial 
+if you need further help.
+<BR>
+<P>
+The accompanying script <SPAN  CLASS="textit">download_genomes_ncbi.pl</SPAN> imports <SPAN  CLASS="textit">File::Fetch</SPAN>, which
+should be bundled by default as well. In case it is missing on your Fedora systems, it can be installed 
+as root with: <code>$ yum install perl-File-Fetch</code>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html138"
+  HREF="node5.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/usr/share/latex2html/icons/next.png"></A> 
+<A NAME="tex2html134"
+  HREF="node3.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/usr/share/latex2html/icons/up.png"></A> 
+<A NAME="tex2html128"
+  HREF="node3.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/usr/share/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html136"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="/usr/share/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html139"
+  HREF="node5.html">Required binaries</A>
+<B> Up:</B> <A NAME="tex2html135"
+  HREF="node3.html">Requirements and installation</A>
+<B> Previous:</B> <A NAME="tex2html129"
+  HREF="node3.html">Requirements and installation</A>
+ &nbsp; <B>  <A NAME="tex2html137"
+  HREF="node1.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Bruno Contreras Moreira
+2016-04-28
+</ADDRESS>
+</BODY>
+</HTML>

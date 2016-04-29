@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Requirements and installation</TITLE>
+<META NAME="description" CONTENT="Requirements and installation">
+<META NAME="keywords" CONTENT="manual">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="manual.css">
+
+<LINK REL="next" HREF="node7.html">
+<LINK REL="previous" HREF="node2.html">
+<LINK REL="up" HREF="manual.html">
+<LINK REL="next" HREF="node4.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html123"
+  HREF="node4.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/usr/share/latex2html/icons/next.png"></A> 
+<A NAME="tex2html119"
+  HREF="manual.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/usr/share/latex2html/icons/up.png"></A> 
+<A NAME="tex2html113"
+  HREF="node2.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/usr/share/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html121"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="/usr/share/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html124"
+  HREF="node4.html">Perl modules</A>
+<B> Up:</B> <A NAME="tex2html120"
+  HREF="manual.html">get_homologues manual</A>
+<B> Previous:</B> <A NAME="tex2html114"
+  HREF="node2.html">Description</A>
+ &nbsp; <B>  <A NAME="tex2html122"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION00030000000000000000"></A> <A NAME="install"></A>
+<BR>
+Requirements and installation
+</H1>
+
+<P>
+<SPAN  CLASS="textit">get_homologues.pl</SPAN> is a Perl5 program bundled with a few binary files. 
+The software has been tested on 64-bit Linux boxes, and on Intel MacOSX 10.11.1 systems.
+Therefore, a Perl5 interpreter is needed to run this software, which 
+is usually installed by default on these operating systems. In addition, the package includes a few extra scripts 
+which can be useful for downloading GenBank files and for the analysis of the results.
+
+<P>
+In order to install and test this software please follow these steps:
+
+<OL>
+<LI>Unpack the software with: <code>$ tar xvfz get_homologues_X.Y.tgz</code> 
+</LI>
+<LI><code>$ cd get_homologues_X.Y</code>
+</LI>
+<LI><code>$ ./install.pl</code> 
+<BR>
+Please follow the indications in case some required part is missing. 
+
+<P>
+</LI>
+<LI>Type <code>$ ./get_homologues.pl -v</code> which will tell exactly which features are available.
+</LI>
+<LI>Test the main Perl script, named <code>get_homologues.pl</code>, with the included sample input folder <code>sample_buch_fasta</code>
+by means of the instruction:
+<BR><code>$ ./get_homologues.pl -d sample_buch_fasta</code> . 
+You should get an output similar to the contents of file <code>sample_output.txt</code>. 
+
+<P>
+</LI>
+<LI>Optionally modify your <code>$PATH</code> environment variable to include <SPAN  CLASS="textit">get_homologues.pl</SPAN>.
+Please copy the following lines to the <code>.bash_profile</code> or 
+<code>.bashrc</code> files, found in your home directory, replacing <code>[INSTALL_PATH]</code> by the full path of the installation folder:
+<PRE>
+export GETHOMS=[INSTALL_PATH]/get_homologues_X.Y
+export PATH=${GETHOMS}/:${PATH}
+</PRE>
+This change will be effective in a new terminal or after running: <code>$ source ~/.bash_profile</code>
+</LI>
+</OL>
+
+<P>
+The rest of this section might be safely skipped if installation went fine, 
+it was written to help solve installation problems.
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html125"
+  HREF="node4.html">Perl modules</A>
+<LI><A NAME="tex2html126"
+  HREF="node5.html">Required binaries</A>
+<LI><A NAME="tex2html127"
+  HREF="node6.html">Optional software dependencies</A>
+</UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html123"
+  HREF="node4.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/usr/share/latex2html/icons/next.png"></A> 
+<A NAME="tex2html119"
+  HREF="manual.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/usr/share/latex2html/icons/up.png"></A> 
+<A NAME="tex2html113"
+  HREF="node2.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/usr/share/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html121"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="/usr/share/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html124"
+  HREF="node4.html">Perl modules</A>
+<B> Up:</B> <A NAME="tex2html120"
+  HREF="manual.html">get_homologues manual</A>
+<B> Previous:</B> <A NAME="tex2html114"
+  HREF="node2.html">Description</A>
+ &nbsp; <B>  <A NAME="tex2html122"
+  HREF="node1.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Bruno Contreras Moreira
+2016-04-28
+</ADDRESS>
+</BODY>
+</HTML>

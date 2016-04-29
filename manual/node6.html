@@ -1,0 +1,213 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Optional software dependencies</TITLE>
+<META NAME="description" CONTENT="Optional software dependencies">
+<META NAME="keywords" CONTENT="manual">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="manual.css">
+
+<LINK REL="previous" HREF="node5.html">
+<LINK REL="up" HREF="node3.html">
+<LINK REL="next" HREF="node7.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html160"
+  HREF="node7.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/usr/share/latex2html/icons/next.png"></A> 
+<A NAME="tex2html156"
+  HREF="node3.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/usr/share/latex2html/icons/up.png"></A> 
+<A NAME="tex2html152"
+  HREF="node5.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/usr/share/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html158"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="/usr/share/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html161"
+  HREF="node7.html">User manual</A>
+<B> Up:</B> <A NAME="tex2html157"
+  HREF="node3.html">Requirements and installation</A>
+<B> Previous:</B> <A NAME="tex2html153"
+  HREF="node5.html">Required binaries</A>
+ &nbsp; <B>  <A NAME="tex2html159"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00033000000000000000"></A> <A NAME="dependencies"></A>
+<BR>
+Optional software dependencies
+</H2>
+
+<P>
+It is possible to make use of <SPAN  CLASS="textit">get_homologues</SPAN> on a computer farm or high-performance computing cluster
+managed by http://gridscheduler.sourceforge.net/gridengine. In particular we have tested this feature with 
+versions GE 6.0u8, 6.2u4, 2011.11p1 
+invoking the program with option <code>-m cluster</code>.
+For this command to work it might be necessary to edit the <SPAN  CLASS="textit">get_homologues.pl</SPAN> file and add the right 
+path to set global variable <code>$SGEPATH</code>. To find out the installation path of your SGE installation
+you might try the next terminal command: <code>$ which qsub</code>
+<BR>
+In case you have access to a multi-core computer you can follow the steps at
+<BR>
+http://bioinfoperl.blogspot.com.es/2015/04/howto-install-grid-engine-on-multi-core-box-gethomologues.htmlhttp://bioinfoperl.blogspot.com.es/2015/04/howto-install-grid-engine-on-multi-core-box-gethomologues.html
+to set up your own Grid Engine cluster and speed up your calculations.
+
+<P>
+For cluster-based operations three bundled Perl scripts are invoked:
+<BR><code>_cluster_makeHomolog.pl</code>, <code>_cluster_makeInparalog.pl</code> and <code>_cluster_makeOrtholog.pl</code> .
+
+<P>
+It is also possible to invoke Pfam domain scanning from <SPAN  CLASS="textit">get_homologues</SPAN>. This option 
+requires the bundled binary <SPAN  CLASS="textit">hmmscan</SPAN>, which is part of the http://hmmer.janelia.orgHMMER3 package,
+whose path is set in file <SPAN  CLASS="textit">lib/phyTools.pm</SPAN> (variable <code>$ENV{'EXE_HMMPFAM'}</code>). 
+Should this binary not work in your system, a fresh install might be the solution, say in <code>/your/path/hmmer-3.1b2/</code>.
+In this case you'll have to edit file <SPAN  CLASS="textit">lib/phyTools.pm</SPAN> and modify the relevant:
+<PRE>
+if( ! defined($ENV{'EXE_HMMPFAM'}) )
+{ 
+	$ENV{'EXE_HMMPFAM'} = '/your/path/hmmer-3.1b2/src/hmmscan --noali --acc --cut_ga '; 
+}
+</PRE>
+The Pfam HMM library is also required and the <SPAN  CLASS="textit">install.pl</SPAN> script should take care of it.
+However, you can manually download it from the appropriate
+ftp://ftp.sanger.ac.uk/pub/databases/Pfam/current_release/Pfam-A.hmm.gzPfam FTP site.
+This file needs to be decompressed, either in the default <SPAN  CLASS="textit">db</SPAN> folder or in any other location, 
+and then it should be formatted with the program <SPAN  CLASS="textit">hmmpress</SPAN>, which is also part of the 
+<SPAN  CLASS="textit">HMMER3</SPAN> package. A valid command sequence could be:
+<PRE>
+$ cd db;
+$ wget ftp://ftp.sanger.ac.uk/pub/databases/Pfam/current_release/Pfam-A.hmm.gz .;
+$ gunzip Pfam-A.hmm.gz;
+$ /your/path/hmmer-3.1b2/src/hmmpress Pfam-A.hmm
+</PRE>
+Finally, you'll need to edit file <SPAN  CLASS="textit">lib/phyTools.pm</SPAN> and modify the relevant line to:
+<PRE>
+if( ! defined($ENV{"PFAMDB"}) ){ $ENV{"PFAMDB"} = "db/Pfam-A.hmm"; }
+</PRE>
+
+<P>
+In order to reduce the memory footprint of <SPAN  CLASS="textit">get_homologues</SPAN> it is possible to take advantage of the
+http://en.wikipedia.org/wiki/Berkeley_DBBerkeley_DB database engine, which requires Perl core module
+http://search.cpan.org/perldoc?DB_FileDB_File, which should be installed on all major Linux distributions.
+
+<P>
+Similarly, in order to take full advantage of the accompanying script <SPAN  CLASS="textit">parse_pangenome_matrix.pl</SPAN>, 
+particularly for option <code>-p</code>, the installation of module http://search.cpan.org/perldoc?GDGD 
+is recommended.
+An easy way to install them, provided that you have administrator privileges,  
+is with help from the software manager of your Linux distribution (such as <SPAN  CLASS="textit">synaptic/apt-get</SPAN> 
+in Ubuntu, <SPAN  CLASS="textit">yum</SPAN> in Fedora or <SPAN  CLASS="textit">YaST</SPAN> in openSUSE). 
+
+<P>
+This can usually be done on the terminal as well, in different forms:
+<PRE>
+$ sudo apt-get -y install libgd-gd2-perl  # Ubuntu/Debian-based distros
+
+$ yum -y install perl-GD                  # Redhat and derived distros
+
+$ zypper --assume-yes install perl-GD     # SuSE
+
+$ cpan -i GD                              # will require administrator privileges (sudo)
+
+$ perl -MCPAN -e 'install GD'             # will require administrator privileges (sudo)
+</PRE>
+
+<P>
+The installation of perl-GD on macOSX systems is known to be http://www.bugzilla.org/docs/2.16/html/osx.htmltroublesome.
+<BR>
+<BR>
+<P>
+The accompanying scripts <SPAN  CLASS="textit">compare_clusters.pl</SPAN>, <SPAN  CLASS="textit">plot_pancore_matrix.pl</SPAN>, <SPAN  CLASS="textit">parse_pangenome_matrix.pl</SPAN>,
+<BR><SPAN  CLASS="textit">plot_matrix_heatmap.sh</SPAN>, <SPAN  CLASS="textit">hcluster_matrix.sh</SPAN> require the installation of the statistical software 
+http://www.r-project.orgR, 
+which usually is listed by software managers in all major Linux distributions.
+In some cases (some http://cran.r-project.org/bin/linux/suse/README.htmlSuSE versions and 
+some http://fedoraproject.org/wiki/EPEL/FAQ#How_can_I_install_the_packages_from_the_EPEL_software_repository.3FRedhat-like distros)
+it will be necessary to add a repository to your package manager.
+R can be installed  from the terminal:
+<PRE>
+$ sudo apt-get -y install r-base r-base-dev      # Ubuntu/Debian-based distros
+
+$ yum -y install R                               # RedHat and derived distros
+
+$ zypper --assume-yes R-patched R-patched-devel  # Suse
+</PRE>
+
+<P>
+Please visit http://cran.r-project.org/bin/macosx/CRAN to download and install R on macOSX systems, which is straightforward.
+<BR>
+<BR>
+<P>
+In addition to R itself, <SPAN  CLASS="textit">plot_matrix_heatmap.sh</SPAN> and <SPAN  CLASS="textit">hcluster_matrix.sh</SPAN> require some R packages to run, 
+which can be easily installed from the R command line with: 
+<PRE>
+&gt; install.packages(c("ape", "gplots", "cluster"), dependencies=TRUE)
+</PRE>
+
+<P>
+The script <SPAN  CLASS="textit">compare_clusters.pl</SPAN> might require the installation of program PARS from the 
+http://evolution.genetics.washington.edu/phylip/doc/pars.htmlPHYLIP suite, which should be already bundled 
+with your copy of <SPAN  CLASS="textit">get_homologues</SPAN>.
+<BR>
+<P>
+Finally, <SPAN  CLASS="textit">download_genomes_ncbi.pl</SPAN> might require <code>wget</code> in order to download WGS genomes, 
+but should be installed on most systems.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html160"
+  HREF="node7.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/usr/share/latex2html/icons/next.png"></A> 
+<A NAME="tex2html156"
+  HREF="node3.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/usr/share/latex2html/icons/up.png"></A> 
+<A NAME="tex2html152"
+  HREF="node5.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/usr/share/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html158"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="/usr/share/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html161"
+  HREF="node7.html">User manual</A>
+<B> Up:</B> <A NAME="tex2html157"
+  HREF="node3.html">Requirements and installation</A>
+<B> Previous:</B> <A NAME="tex2html153"
+  HREF="node5.html">Required binaries</A>
+ &nbsp; <B>  <A NAME="tex2html159"
+  HREF="node1.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Bruno Contreras Moreira
+2016-04-28
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Finding out best hits of a particular sequence</TITLE>
+<META NAME="description" CONTENT="Finding out best hits of a particular sequence">
+<META NAME="keywords" CONTENT="manual">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="manual.css">
+
+<LINK REL="previous" HREF="node27.html">
+<LINK REL="up" HREF="node21.html">
+<LINK REL="next" HREF="node29.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html448"
+  HREF="node29.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/usr/share/latex2html/icons/next.png"></A> 
+<A NAME="tex2html444"
+  HREF="node21.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/usr/share/latex2html/icons/up.png"></A> 
+<A NAME="tex2html440"
+  HREF="node27.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/usr/share/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html446"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="/usr/share/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html449"
+  HREF="node29.html">A script to test</A>
+<B> Up:</B> <A NAME="tex2html445"
+  HREF="node21.html">Performing genome composition analyses</A>
+<B> Previous:</B> <A NAME="tex2html441"
+  HREF="node27.html">Estimating average identity matrices</A>
+ &nbsp; <B>  <A NAME="tex2html447"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00058700000000000000"></A><A NAME="checkBDBH"></A>
+<BR>
+Finding out best hits of a particular sequence
+</H3>
+
+<P>
+After running <SPAN  CLASS="textit">get_homologues</SPAN> with almost any set of parameters, you will always end up with a lot of BLAST files
+of all-against-all involved taxa. The accompanying script <SPAN  CLASS="textit">check_BDBHs.pl</SPAN> can help you find out which are the best BLAST
+hits of any sequence that might interest you.
+First, as cluster names are not always informative, you'll need to find out the internal identifier used by the software to handle your 
+target sequence. For instance, we might want to investigate protein CspE among our 4 <SPAN  CLASS="textit">Buchnera</SPAN> taxa. The command to achieve this would be:
+<code>$ ./check_BDBHs.pl -d sample_buch_fasta_homologues -g -i CspE</code>:
+<BR>
+<P>
+And we obtain:
+<PRE>
+# Sequences containing label CspE:
+
+1360,Buch_aph_Cc.faa,gi|116515229|ref|YP_802858.1| CspE [Buchnera aphidicola str. Cc (Cinara cedri)]
+</PRE>
+
+<P>
+Now that we know the identifier (1360), we can check its best hits:
+
+<P>
+<code>$ ./check_BDBHs.pl -d sample_buch_fasta_homologues -i 1360</code>
+<BR>
+<P>
+Output contains the identifiers of best hits in both directions, their bit-scores, E-values, 
+alignment %coverages and annotated Pfam protein domains when available:
+
+<P>
+<PRE>
+# query = 1360
+# query fullname = gi|116515229|ref|YP_802858.1| CspE [Buchnera aphidicola str. Cc (Cinara cedri)] 
+
+# list of bidirectional best-hits:
+dir	query	  sbjct	  bits	  Eval	  %ident	cover	  Pfam	   annotation
+:						                                             [Buch_aph_APS.faa]
+&gt;	   1360	    467	   136	 4e-42	    97.1	100.0	  NA	     gi|15617086|..cold shock protein E
+
+&lt;	    467	   1360	   136	 4e-42	    97.1	100.0	  NA
+:						                                             [Buch_aph_Bp.faa]
+&gt;	   1360	    972	   135	 1e-41	    95.7	100.0	  NA	     gi|27904911|..cold shock protein E
+
+&lt;	    972	   1360	   135	 1e-41	    95.7	100.0	  NA
+:						                                             [Buch_aphid_Sg.faa]
+&gt;	   1360	   1883	   136	 4e-42	    97.1	100.0	  NA	     gi|21672738|..cold shock protein E
+
+&lt;	   1883	   1360	   136	 4e-42	    97.1	100.0	  NA
+</PRE>
+
+<P>
+If previous <SPAN  CLASS="textit">get_homologues</SPAN> jobs included the calculation of Pfam domains, then option <code>-D</code> can be added to
+produce a richer report, that now includes the identifiers of Pfam domains such as 
+http://pfam.sanger.ac.uk/family/PF00313PF00313, sorted on their position along the sequence:
+
+<P>
+<PRE>
+dir	query	  sbjct	  bits	  Eval	  %ident	cover	  Pfam	   annotation
+:						                                             [Buch_aph_APS.faa]
+&gt;	   1360	    467	   136	 4e-42	    97.1	100.0	  PF00313,	     gi|15617086|..cold shock protein E
+
+&lt;	    467	   1360	   136	 4e-42	    97.1	100.0	  PF00313,
+...
+</PRE>
+
+<P>
+Note that this script works by parsing files <code>all.p2o.csv</code> and <code>all.bpo</code>, which are created at run-time by
+<SPAN  CLASS="textit">get_homologues</SPAN> in folder <code>tmp/</code> within the results directory. 
+These are text files that can be inspected with help from any text editor.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html448"
+  HREF="node29.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/usr/share/latex2html/icons/next.png"></A> 
+<A NAME="tex2html444"
+  HREF="node21.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/usr/share/latex2html/icons/up.png"></A> 
+<A NAME="tex2html440"
+  HREF="node27.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/usr/share/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html446"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="/usr/share/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html449"
+  HREF="node29.html">A script to test</A>
+<B> Up:</B> <A NAME="tex2html445"
+  HREF="node21.html">Performing genome composition analyses</A>
+<B> Previous:</B> <A NAME="tex2html441"
+  HREF="node27.html">Estimating average identity matrices</A>
+ &nbsp; <B>  <A NAME="tex2html447"
+  HREF="node1.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Bruno Contreras Moreira
+2016-04-28
+</ADDRESS>
+</BODY>
+</HTML>

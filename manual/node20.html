@@ -1,0 +1,197 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Clustering intergenic segments from GenBank files</TITLE>
+<META NAME="description" CONTENT="Clustering intergenic segments from GenBank files">
+<META NAME="keywords" CONTENT="manual">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="manual.css">
+
+<LINK REL="next" HREF="node21.html">
+<LINK REL="previous" HREF="node19.html">
+<LINK REL="up" HREF="node13.html">
+<LINK REL="next" HREF="node21.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html347"
+  HREF="node21.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/usr/share/latex2html/icons/next.png"></A> 
+<A NAME="tex2html343"
+  HREF="node13.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/usr/share/latex2html/icons/up.png"></A> 
+<A NAME="tex2html337"
+  HREF="node19.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/usr/share/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html345"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="/usr/share/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html348"
+  HREF="node21.html">Performing genome composition analyses</A>
+<B> Up:</B> <A NAME="tex2html344"
+  HREF="node13.html">A few examples of</A>
+<B> Previous:</B> <A NAME="tex2html338"
+  HREF="node19.html">Comparing clusters with external</A>
+ &nbsp; <B>  <A NAME="tex2html346"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00057000000000000000"></A> <A NAME="intergen"></A>
+<BR>
+Clustering intergenic segments from GenBank files
+</H2>
+
+<P>
+The use of input files in GenBank format also allows the extraction of clusters
+of flanked orthologous intergenic regions, which might be of interest as these are expected to 
+mutate at higher rates compared to coding sequences. In this example this feature is
+illustrated by processing folder <code>sample_plasmids_gbk</code> with options 
+<code>-g -I sample_plasmids_gbk/include_list.txt</code> 
+<BR>
+The restraints that apply to the parsed
+intergenic regions are defined by three global variables variables within <code>get_homologues.pl</code>,
+as explained in section <A HREF="node11.html#intergdefs">3.4</A>. These default values might be edited for specific taks;
+for instance, chloroplast intergenic regions are usually much smaller than 200 bases, the default size, 
+and therefore variable <code>$MININTERGENESIZE</code> should be set to a smaller value.
+Moreover, in this example we restrict the search for conserved intergenic segments to  
+<SPAN  CLASS="textit">Klebsiella pneumoniae</SPAN> plasmids, 
+by creating a file <code>sample_plasmids_gbk/include_list.txt</code> with these contents:
+<PRE>
+K_pneumoniae_12_plasmid_12.gb
+K_pneumoniae_9_plasmid_9.gb
+K_pneumoniae_KP96_plasmid_pKP96.gb
+</PRE>
+
+<P>
+We can now execute 
+<BR><code>$ ./get_homologues.pl -d sample_plasmids_gbk -g -I sample_plasmids_gbk/include_list.txt</code>:
+
+<P>
+<PRE>
+# results_directory=sample_plasmids_gbk_homologues
+# parameters: MAXEVALUEBLASTSEARCH=0.01 MAXPFAMSEQS=250
+
+# checking input files...
+# E_coli_ST131_plasmid_pKC394.gb 55 (intergenes=7)
+# E_coli_plasmid_pMUR050.gb 60 (intergenes=12)
+# IncN_plasmid_R46.gb 63 (intergenes=11)
+# K_oxytoca_plasmid_pKOX105.gb 69 (intergenes=13)
+# K_pneumoniae_12_plasmid_12.gb 92 (intergenes=11)
+# K_pneumoniae_9_plasmid_9.gb 87 (intergenes=12)
+# K_pneumoniae_KP96_plasmid_pKP96.gb 64 (intergenes=18)
+# S_enterica_subsp_enterica_serovar_Dublin_plasmid_pMAK2.gb 52 (intergenes=9)
+# Uncultured_bacterium_plasmid_pRSB201.gb 58 (intergenes=9)
+# Uncultured_bacterium_plasmid_pRSB203.gb 49 (intergenes=7)
+# Uncultured_bacterium_plasmid_pRSB205.gb 52 (intergenes=8)
+# Uncultured_bacterium_plasmid_pRSB206.gb 55 (intergenes=10)
+
+# 12 genomes, 756 sequences
+
+# included input files (3):
+: K_pneumoniae_12_plasmid_12.gb K_pneumoniae_12_plasmid_12.gb 92
+: K_pneumoniae_9_plasmid_9.gb K_pneumoniae_9_plasmid_9.gb 87
+: K_pneumoniae_KP96_plasmid_pKP96.gb K_pneumoniae_KP96_plasmid_pKP96.gb 64
+
+[...]
+
+# looking for valid ORF clusters (n_of_taxa=3)...
+
+
+# number_of_clusters = 31
+# cluster_list = sample_plasmids_gbk_homologues/[...]include_list.txt_algBDBH_e0_.cluster_list
+# cluster_directory = sample_plasmids_gbk_homologues/[...]include_list.txt_algBDBH_e0_
+
+# looking for valid clusters of intergenic regions (n_of_taxa=3)...
+# parameters: MININTERGENESIZE=200 MAXINTERGENESIZE=700 INTERGENEFLANKORF=180
+
+
+# number_of_intergenic_clusters = 1
+# intergenic_cluster_list = [...]/[...]_intergenic200_700_180_.cluster_list
+# intergenic_cluster_directory = sample_plasmids_gbk_homologues/[...]_intergenic200_700_180_
+
+# runtime:  1 wallclock secs ( 0.10 usr  0.01 sys +  0.05 cusr  0.01 csys =  0.17 CPU)
+# RAM use: 67.8 MB
+</PRE>
+
+<P>
+Intergenic clusters, illustrated by Figure <A HREF="node11.html#fig:flanks">3.4</A>, include upper-case nucleotides 
+to mark up the sequence of flanking ORFs, with the intergenic region itself in lower-case, 
+and the names of the flanking ORFs in the FASTA header, with their strand in parentheses:
+<PRE>
+&gt;1 | intergenic18|coords:63706..64479|length:774|neighbours:GI:165928631(-1),GI:165928630(1)...
+CGCGCCATTGCTGGCCTGAAGGTATTCCCAATACCCTCCCTGGTAGTCTTTAGCGTAACGATTCAGAAAGGACTGAATGAAGTGATCTGCGCTGAAGAAAGCG
+CCACGAAATGCCGCAGGCATGAAGTTCATGCGGGCGTTTTCAGAAATGTAGCGGGCGGTGATTTCGATAGTTTCCATgatacttcctctttaagccgataccg
+gcgatggttaagcggcaggcacatcacctgccactttttaattatcgtacaatggggcgttaaagtcaatacaagtacggattatatttacctaattttatgc
+ccgtcagagcatggaaggcgacctcgccggactccaccggacaccgggggcaaatcgccggaaactgcgggactgaccggagcgacaggccacccccctccct
+gctagcccgccgccacgcggccggttacaggggacactgagaaagcagaaagccaacaaacactatatatagcgttcgttggcagctgaagcagcactacata
+tagtagagtacctgtaaaacttgccaacctgaccataacagcgatactgtataagtaaacagtgatttggaagatcgctATGAAGGTCGATATTTTTGAAAGC
+TCCGGCGCCAGCCGGGTACACAGCATCCCTTTTTATCTGCAAAGAATTTCTGCGGGGTTCCCCAGCCCGGCCCAGGGCTATGAAAAGCAGGAGTTAAACCTGC
+ATGAGTATTGTGTTCGTCACCCTTCAGCAACTTACTTCCTGCGGGTTTCTGGC
+&gt;2 | intergenic3|coords:9538..10293|length:756|neighbours:GI:209574108(-1),GI:209574109(1)...
+CGCGCCATTGCTGGCCTGAAGGTATTCCCAATACCCTCCCTGGTAGTCTTTAGCGTAACGATTCAGAAAGGACTGAATGAAGTGATCTGCGCTGAAGAAAGCG
+CCACGAAATGCCGCAGGCATGAAGTTCATGCGGGCGTTTTCAGAAATGTAGCGGGCGGTGATTTCGATAGTTTCCATgatacttcctctttaagccgataccg
+gcgatggttaagcggcaggcacatcacctgccactttttaattatcgtacaatggggcgttaaagtcaatacaagtacggattatatttacctaattttatgc
+ccgtcagagcatggaaggcgacctcgccggactccaccggacaccgggggcaaatcgccggaaactgcgggactgaccggagcgacaggccacccccctccct
+gctagcccgccgccacgcggccggttacaggggacactgagaaagcagaaagccaacaaacactatatatagcgttcgttggcagctgaagcagcactacata
+tagtagagtacctgtaaaacttgccaacctgaccataacagcgatactgtataagtaaacaGTGATTTGGAAGATCGCTATGAAGGTCGATATTTTTGAAAGC
+TCCGGCGCCAGCCGGGTACACAGCATCCCTTTTTATCTGCAAAGAATTTCTGCGGGGTTCCCCAGCCCGGCCCAGGGCTATGAAAAGCAGGAGTTAAACCTGC
+ATGAGTATTGTGTTCGTCACCCTTCAGCAACTTAC
+...
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html347"
+  HREF="node21.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/usr/share/latex2html/icons/next.png"></A> 
+<A NAME="tex2html343"
+  HREF="node13.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/usr/share/latex2html/icons/up.png"></A> 
+<A NAME="tex2html337"
+  HREF="node19.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/usr/share/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html345"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="/usr/share/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html348"
+  HREF="node21.html">Performing genome composition analyses</A>
+<B> Up:</B> <A NAME="tex2html344"
+  HREF="node13.html">A few examples of</A>
+<B> Previous:</B> <A NAME="tex2html338"
+  HREF="node19.html">Comparing clusters with external</A>
+ &nbsp; <B>  <A NAME="tex2html346"
+  HREF="node1.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Bruno Contreras Moreira
+2016-04-28
+</ADDRESS>
+</BODY>
+</HTML>
