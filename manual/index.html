@@ -976,12 +976,12 @@ standard OMCL and COGS algorithms have completed, to preserve each algorithm fea
 </LI>
 <LI><code>-b</code> reduces the number of pairwise BLAST searches performed while compiling core-genomes with algorithm BDBH,
 reducing considerably memory and run-time requirements (for <SPAN CLASS="MATH"><IMG
- WIDTH="17" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ WIDTH="16" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
  SRC="img1.png"
- ALT="$G$"></SPAN> genomes, 3G searches are launched instead of the default <SPAN CLASS="MATH"><IMG
- WIDTH="24" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ ALT="$ G$"></SPAN> genomes, 3G searches are launched instead of the default <SPAN CLASS="MATH"><IMG
+ WIDTH="22" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
  SRC="img2.png"
- ALT="$G^{2}$"></SPAN>).
+ ALT="$ G^{2}$"></SPAN>).
 It comes at the cost of being less exhaustive in finding inparalogues, but in our bacterial benchmarks this potential, undesired 
 effect was negligible.
 
@@ -991,12 +991,12 @@ effect was negligible.
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 5:</STRONG>
 For  <SPAN CLASS="MATH"><IMG
- WIDTH="17" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ WIDTH="16" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
  SRC="img1.png"
- ALT="$G$"></SPAN> genomes, a typical get_homologues job requires running <SPAN CLASS="MATH"><IMG
- WIDTH="24" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ ALT="$ G$"></SPAN> genomes, a typical get_homologues job requires running <SPAN CLASS="MATH"><IMG
+ WIDTH="22" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
  SRC="img2.png"
- ALT="$G^{2}$"></SPAN> BLAST searches in order to compare all against all sequences,
+ ALT="$ G^{2}$"></SPAN> BLAST searches in order to compare all against all sequences,
 including against itself to help infer inparalogues. Therefore, the resources required for calculating BLAST jobs grow quadratically. 
 Instead, the BDBH algorithm with option -b requires only 3G BLAST searches (in grey) for any reference genome.</CAPTION>
 <TR><TD>
@@ -3029,9 +3029,9 @@ provided that <!-- MATH
  $Evalue < max(Evalue)$
  -->
 <SPAN CLASS="MATH"><IMG
- WIDTH="171" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ WIDTH="155" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
  SRC="img3.png"
- ALT="$Evalue &lt; max(Evalue)$"></SPAN> and alignment coverage is sufficient (<code>-C</code>). This can be useful when
+ ALT="$ Evalue &lt; max(Evalue)$"></SPAN> and alignment coverage is sufficient (<code>-C</code>). This can be useful when
 comparing very divergent genomes/proteomes, where orthologues can be distant in terms of sequence. 
 If a reciprocal hit between genomes A and B is, say 30% identical, still it is a likely orthologue. 
 It could of course be a false positive, and that's why you need to know, perhaps by using <code>-A</code>, the average identity
@@ -3569,8 +3569,7 @@ The command line arguments were: <BR>
 The translation was initiated by Bruno Contreras Moreira on 2016-04-29
 <BR><HR>
 <ADDRESS>
-Bruno Contreras Moreira
-2016-04-29
+<a href="http://hdl.handle.net/10261/21892">PDF</a><br>Bruno Contreras-Moreira<br><a href="http://www.eead.csic.es/compbio">http://www.eead.csic.es/compbio</a>
 </ADDRESS>
 </BODY>
 </HTML>

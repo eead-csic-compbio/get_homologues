@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2013.12.19)  28 APR 2016 12:50
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2013.12.19)  29 APR 2016 09:51
 entering extended mode
  %&-line parsing enabled.
 **./images.tex
@@ -360,6 +360,7 @@ Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
 )
 LaTeX Info: Redefining \ref on input line 155.
 LaTeX Info: Redefining \pageref on input line 155.
+(./images.out) (./images.out)
 \@outlinefile=\write5
 \openout5 = `images.out'.
 
@@ -413,41 +414,41 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7.4> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 179.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 179.
-l2hSize :tex2html_wrap_inline1431:7.24997pt::7.24997pt::20.4921pt.
+l2hSize :tex2html_wrap_inline1456:7.24997pt::7.24997pt::20.4921pt.
 [1
 
 
 
 ]
-l2hSize :tex2html_wrap_inline1738:7.32988pt::7.32988pt::28.82205pt.
+l2hSize :tex2html_wrap_inline1757:7.32988pt::7.32988pt::28.82205pt.
 [2
 
 
 ]
-l2hSize :tex2html_wrap_inline1740:7.32988pt::7.32988pt::28.82205pt.
+l2hSize :tex2html_wrap_inline1759:7.32988pt::7.32988pt::28.82205pt.
 [3
 
 
 ]
-l2hSize :tex2html_wrap_inline1745:7.24997pt::7.24997pt::7.72pt.
+l2hSize :tex2html_wrap_inline1764:7.24997pt::7.24997pt::7.72pt.
 [4
 
 
 ]
-l2hSize :tex2html_wrap_inline1747:9.08043pt::9.08043pt::11.92pt.
+l2hSize :tex2html_wrap_inline1766:9.08043pt::9.08043pt::11.92pt.
 [5
 
 
 ]
-l2hSize :tex2html_wrap_inline1750:7.94495pt::7.94495pt::46.53876pt.
+l2hSize :tex2html_wrap_inline1769:7.94495pt::7.94495pt::46.53876pt.
 [6
 
 
 ] (./images.aux) ) 
 Here is how much of TeX's memory you used:
- 5731 strings out of 495062
- 80567 string characters out of 1182643
- 151037 words of memory out of 3000000
+ 5735 strings out of 495062
+ 80611 string characters out of 1182643
+ 151034 words of memory out of 3000000
  8821 multiletter control sequences out of 15000+50000
  13501 words of font info for 39 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
