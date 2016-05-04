@@ -122,3 +122,8 @@
 14042016: added option -c to plot_matrix_heatmap.sh to filter out excessive redundancy by imposing a max identity cut-off value
 28042016: updated manuals for the web
 29042016: updated manuals 
+04052016: set $MIN_PERSEQID_HOM_EST=70 and $MIN_COVERAGE_HOM_EST=50 in lib/marfil_homology.pm 
+04052016: added figure 3 to manual_get_homologues-est.pdf
+04052016: commented out debug print in marfil_homology::makeHomolog
+04052016: fixed bug in get_homologues-est.pl -c so that redundant isoforms are not added to pan/core sets
+04052016: fixed bug in get_homologues.pl -c so that inparalogues are substracted while adding up novel BDBH pan-genome genes

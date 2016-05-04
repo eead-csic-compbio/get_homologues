@@ -384,7 +384,6 @@ EOF
   }
   else
   {
-
     open(RSHELL,"|R --no-save $Rparams ") || die "# plot_core_genome : cannot call R: $!\n";
     print RSHELL<<EOF;
 
