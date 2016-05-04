@@ -26,7 +26,15 @@ $key = q/fig:ESTcaveats/;
 $ref_files{$key} = "$dir".q|manual-est.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/fig:snapshot/;
+$ref_files{$key} = "$dir".q|manual-est.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/fig:RAMtimev2/;
+$ref_files{$key} = "$dir".q|manual-est.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/fig:histid/;
 $ref_files{$key} = "$dir".q|manual-est.html|; 
 $noresave{$key} = "$nosave";
 
@@ -54,11 +62,11 @@ $key = q/perlmods/;
 $ref_files{$key} = "$dir".q|manual-est.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/FAQs/;
+$key = q/fig:flow/;
 $ref_files{$key} = "$dir".q|manual-est.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/fig:flow/;
+$key = q/FAQs/;
 $ref_files{$key} = "$dir".q|manual-est.html|; 
 $noresave{$key} = "$nosave";
 

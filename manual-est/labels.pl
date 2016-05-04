@@ -26,7 +26,15 @@ $key = q/fig:ESTcaveats/;
 $external_labels{$key} = "$URL/" . q|manual-est.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/fig:snapshot/;
+$external_labels{$key} = "$URL/" . q|manual-est.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/fig:RAMtimev2/;
+$external_labels{$key} = "$URL/" . q|manual-est.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/fig:histid/;
 $external_labels{$key} = "$URL/" . q|manual-est.html|; 
 $noresave{$key} = "$nosave";
 
@@ -54,11 +62,11 @@ $key = q/perlmods/;
 $external_labels{$key} = "$URL/" . q|manual-est.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/FAQs/;
+$key = q/fig:flow/;
 $external_labels{$key} = "$URL/" . q|manual-est.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/fig:flow/;
+$key = q/FAQs/;
 $external_labels{$key} = "$URL/" . q|manual-est.html|; 
 $noresave{$key} = "$nosave";
 
@@ -110,11 +118,15 @@ $external_latex_labels{$key} = q|4.2|;
 $noresave{$key} = "$nosave";
 
 $key = q/fig:ESTcaveats/;
-$external_latex_labels{$key} = q|10|; 
+$external_latex_labels{$key} = q|12|; 
+$noresave{$key} = "$nosave";
+
+$key = q/fig:snapshot/;
+$external_latex_labels{$key} = q|4.2|; 
 $noresave{$key} = "$nosave";
 
 $key = q/fig:RAMtimev2/;
-$external_latex_labels{$key} = q|9|; 
+$external_latex_labels{$key} = q|11|; 
 $noresave{$key} = "$nosave";
 
 $key = q/transcripts2cds/;

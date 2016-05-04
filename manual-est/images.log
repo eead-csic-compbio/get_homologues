@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2013.12.19)  29 APR 2016 09:51
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2013.12.19)  4 MAY 2016 16:27
 entering extended mode
  %&-line parsing enabled.
 **./images.tex
@@ -388,60 +388,35 @@ latex2htmlLength oddsidemargin=-15.36449pt
 
 latex2htmlLength evensidemargin=-15.36449pt
 
-LaTeX Font Info:    Try loading font information for OT1+ztmcm on input line 17
-9.
+LaTeX Font Info:    Try loading font information for OT1+ztmcm on input line 18
+7.
 (/usr/share/texmf-texlive/tex/latex/psnfss/ot1ztmcm.fd
 File: ot1ztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OT1/ztmcm.
 )
-LaTeX Font Info:    Try loading font information for OML+ztmcm on input line 17
-9.
+LaTeX Font Info:    Try loading font information for OML+ztmcm on input line 18
+7.
 (/usr/share/texmf-texlive/tex/latex/psnfss/omlztmcm.fd
 File: omlztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OML/ztmcm.
 )
-LaTeX Font Info:    Try loading font information for OMS+ztmcm on input line 17
-9.
+LaTeX Font Info:    Try loading font information for OMS+ztmcm on input line 18
+7.
 (/usr/share/texmf-texlive/tex/latex/psnfss/omsztmcm.fd
 File: omsztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OMS/ztmcm.
 )
-LaTeX Font Info:    Try loading font information for OMX+ztmcm on input line 17
-9.
+LaTeX Font Info:    Try loading font information for OMX+ztmcm on input line 18
+7.
 (/usr/share/texmf-texlive/tex/latex/psnfss/omxztmcm.fd
 File: omxztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OMX/ztmcm.
 )
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 179.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 187.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7.4> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 179.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 187.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 179.
-l2hSize :tex2html_wrap_inline1456:7.24997pt::7.24997pt::20.4921pt.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 187.
+l2hSize :tex2html_wrap_inline1795:7.32988pt::7.32988pt::28.82205pt.
 [1
 
-
-
-]
-l2hSize :tex2html_wrap_inline1757:7.32988pt::7.32988pt::28.82205pt.
-[2
-
-
-]
-l2hSize :tex2html_wrap_inline1759:7.32988pt::7.32988pt::28.82205pt.
-[3
-
-
-]
-l2hSize :tex2html_wrap_inline1764:7.24997pt::7.24997pt::7.72pt.
-[4
-
-
-]
-l2hSize :tex2html_wrap_inline1766:9.08043pt::9.08043pt::11.92pt.
-[5
-
-
-]
-l2hSize :tex2html_wrap_inline1769:7.94495pt::7.94495pt::46.53876pt.
-[6
 
 
 ] (./images.aux) ) 
@@ -454,4 +429,4 @@ Here is how much of TeX's memory you used:
  28 hyphenation exceptions out of 8191
  38i,5n,24p,452b,336s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on images.dvi (6 pages, 5788 bytes).
+Output written on images.dvi (1 page, 2384 bytes).

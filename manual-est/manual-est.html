@@ -43,48 +43,48 @@ Contents</A>
 <!--Table of Contents-->
 
 <UL CLASS="TofC">
-<LI><A NAME="tex2html84"
+<LI><A NAME="tex2html88"
   HREF="manual-est.html#SECTION00020000000000000000">1 Description</A>
-<LI><A NAME="tex2html85"
+<LI><A NAME="tex2html89"
   HREF="manual-est.html#SECTION00030000000000000000">2 Requirements and installation</A>
 <UL>
-<LI><A NAME="tex2html86"
+<LI><A NAME="tex2html90"
   HREF="manual-est.html#SECTION00031000000000000000">2.1 Perl modules</A>
-<LI><A NAME="tex2html87"
+<LI><A NAME="tex2html91"
   HREF="manual-est.html#SECTION00032000000000000000">2.2 Required binaries</A>
-<LI><A NAME="tex2html88"
+<LI><A NAME="tex2html92"
   HREF="manual-est.html#SECTION00033000000000000000">2.3 Optional software dependencies</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html89"
+<LI><A NAME="tex2html93"
   HREF="manual-est.html#SECTION00040000000000000000">3 User manual</A>
 <UL>
-<LI><A NAME="tex2html90"
+<LI><A NAME="tex2html94"
   HREF="manual-est.html#SECTION00041000000000000000">3.1 Input data</A>
-<LI><A NAME="tex2html91"
+<LI><A NAME="tex2html95"
   HREF="manual-est.html#SECTION00042000000000000000">3.2 Program options</A>
-<LI><A NAME="tex2html92"
+<LI><A NAME="tex2html96"
   HREF="manual-est.html#SECTION00043000000000000000">3.3 Accompanying scripts</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html93"
+<LI><A NAME="tex2html97"
   HREF="manual-est.html#SECTION00050000000000000000">4 A few examples</A>
 <UL>
-<LI><A NAME="tex2html94"
-  HREF="manual-est.html#SECTION00051000000000000000">4.1 Extracting coding sequences (CDS) from transcripts</A>
-<LI><A NAME="tex2html95"
-  HREF="manual-est.html#SECTION00052000000000000000">4.2 Clustering orthologous transcripts from FASTA files, one per strain</A>
-<LI><A NAME="tex2html96"
-  HREF="manual-est.html#SECTION00053000000000000000">4.3 Producing a nucleotide-based pangenome matrix</A>
-<LI><A NAME="tex2html97"
-  HREF="manual-est.html#SECTION00054000000000000000">4.4 Making and annotating a non-redundant pangenome matrix</A>
 <LI><A NAME="tex2html98"
+  HREF="manual-est.html#SECTION00051000000000000000">4.1 Extracting coding sequences (CDS) from transcripts</A>
+<LI><A NAME="tex2html99"
+  HREF="manual-est.html#SECTION00052000000000000000">4.2 Clustering orthologous transcripts from FASTA files, one per strain</A>
+<LI><A NAME="tex2html100"
+  HREF="manual-est.html#SECTION00053000000000000000">4.3 Producing a nucleotide-based pangenome matrix</A>
+<LI><A NAME="tex2html101"
+  HREF="manual-est.html#SECTION00054000000000000000">4.4 Making and annotating a non-redundant pangenome matrix</A>
+<LI><A NAME="tex2html102"
   HREF="manual-est.html#SECTION00055000000000000000">4.5 Annotating a sequence cluster</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html99"
+<LI><A NAME="tex2html103"
   HREF="manual-est.html#SECTION00060000000000000000">5 Frequently asked questions (FAQs)</A>
-<LI><A NAME="tex2html100"
+<LI><A NAME="tex2html104"
   HREF="manual-est.html#SECTION00070000000000000000">6 Credits and references</A>
 </UL>
 <!--End of Table of Contents-->
@@ -150,7 +150,7 @@ Please follow the indications in case some required part is missing.
 <code>sample_transcripts_fasta</code>
 by means of the instruction:
 <BR><code>$ ./get_homologues-est.pl -d sample_transcripts_fasta</code> . 
-You should get an output similar to the contents of file <code>sample_output_est.txt</code>. 
+You should get an output similar to the contents of file <code>sample_transcripts_output.txt</code>. 
 
 <P>
 </LI>
@@ -187,7 +187,7 @@ modules from the <A NAME="tex2html6"
   HREF="http://www.bioperl.org">Bioperl</A>
 collection, 
 and module <A NAME="tex2html7"
-  HREF="<"><</A>421>>http://search.cpan.org/perldoc?Parallelare also required, and have been included in the <SPAN  CLASS="textit">get_homologues-est</SPAN> bundle for your convenience.
+  HREF="<"><</A>444>>http://search.cpan.org/perldoc?Parallelare also required, and have been included in the <SPAN  CLASS="textit">get_homologues-est</SPAN> bundle for your convenience.
 
 <P>
 Should this version of BioPerl fail in your system (as diagnosed by <SPAN  CLASS="textit">install.pl</SPAN>) 
@@ -342,8 +342,8 @@ database engine, which requires Perl core module
 <P>
 The accompanying script <SPAN  CLASS="textit">transcripts2cds.pl</SPAN> should work out of the box, but the more efficient
 <SPAN  CLASS="textit">transcripts2cdsCPP.pl</SPAN> requires the installation of module <A NAME="tex2html20"
-  HREF="<"><</A>422>>http://search.cpan.org/perldoc?Inlinewhich in turn requires <A NAME="tex2html21"
-  HREF="<"><</A>423>>http://search.cpan.org/perldoc?InlineThe installation of these modules is known to be troublesome in some systems, but the standard way should work in most cases:
+  HREF="<"><</A>445>>http://search.cpan.org/perldoc?Inlinewhich in turn requires <A NAME="tex2html21"
+  HREF="<"><</A>446>>http://search.cpan.org/perldoc?InlineThe installation of these modules is known to be troublesome in some systems, but the standard way should work in most cases:
 
 <P>
 <PRE>
@@ -467,11 +467,12 @@ Typing <code>$ ./get_homologues-est.pl -h</code> on the terminal will show the b
    Creates output folder named 'directory_est_homologues'
 
 Optional parameters:
--o only run BLAST/Pfam searches and exit                       (useful to pre-compute searches)
+-o only run BLASTN/Pfam searches and exit                      (useful to pre-compute searches)
 -i cluster redundant isoforms, including those that can be     (min overlap, default: -i 40,
    concatenated with no overhangs, and perform                  use -i 0 to disable)
    calculations with longest
 -c report transcriptome composition analysis                   (follows order in -I file if enforced,
+                                                                with -t N skips clusters occup&lt;N [OMCL],
                                                                 ignores -r,-e)
 -R set random seed for genome composition analysis             (optional, requires -c, example -R 1234)
 -s save memory by using BerkeleyDB; default parsing stores
@@ -593,7 +594,7 @@ analysis on a single computer.
 <P>
 </LI>
 <LI><code>-i</code> can be used to filter out short, redundant isoforms which overlap, with no overhangs, for a minimun length. 
-By default this is set to <code>$MINREDOVERLAP=40</code> as in PubMed=<A NAME="tex2html34"
+By default this is set to <code>$MINREDOVERLAP=40</code> as in PubMed=<A NAME="tex2html35"
   HREF="http://www.ncbi.nlm.nih.gov/pubmed/12651724">12651724</A>.
 This EST-specific feature can be turned off by setting <code>-i 0</code>. Redundant isoforms will not be output unless <code>-L</code> is set. 
 
@@ -626,18 +627,40 @@ By calling option -L all redundant isoforms are included in the output.</CAPTION
 The number of samples for the genome composition analysis is set to 20 by default, but this can be edited at the header of 
 <code>get_homologues-est.pl</code> (check the <code>$NOFSAMPLESREPORT</code> variable). As <SPAN  CLASS="textit">get_homologues-est</SPAN> is meant to be used primarily for 
 the study of transcripts/CDSs of the same species, it uses appropriate thresholds to define new accessory genes 
-(<code>$MIN_PERSEQID_HOM=95</code>, <code>$MIN_COVERAGE_HOM=75</code>), which mean that genes/transcripts added to the pool must be <SPAN CLASS="MATH"><IMG
- WIDTH="49" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
- SRC="img2.png"
- ALT="$ &lt;95\%$"></SPAN> identical in sequence
-to any previous sequence (as in PubMed=<A NAME="tex2html35"
-  HREF="http://www.ncbi.nlm.nih.gov/pubmed/21572440">21572440</A>)) with cover <SPAN CLASS="MATH"><IMG
+(<code>$MIN_PERSEQID_HOM_EST=70</code>, <code>$MIN_COVERAGE_HOM_EST=50</code>), which mean that genes/transcripts added to the pool must be <SPAN CLASS="MATH"><IMG
  WIDTH="49" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
  SRC="img3.png"
- ALT="$ &gt;75\%$"></SPAN>. Note that these 
-default values are different to those in <SPAN  CLASS="textit">get_homologues</SPAN>. 
-When combined with flag <code>-t</code> (see below), the composition analysis will disregard clusters reported in an arbitrary number of strains.
+ ALT="$ \geq 70\%$"></SPAN> 
+identical in sequence to any previous sequence with cover <SPAN CLASS="MATH"><IMG
+ WIDTH="49" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img4.png"
+ ALT="$ \geq 50\%$"></SPAN> in order to be called homologous; otherwise they are handled as novel sequences. 
+This low coverage is set in order to allow transcripts with retained/unprocessed introns to be matched.
+Note that these default values are different to those in <SPAN  CLASS="textit">get_homologues</SPAN>, which are adequate for peptide sequences. 
+When combined with flag <code>-t</code> (see below), the composition analysis will disregard clusters reported in a selected number of strains.
 This feature can be used to filter out singletons or artifacts which might arise from <SPAN  CLASS="textit">de novo</SPAN> assembled transcriptomes.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="206"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 3:</STRONG>
+Histograms of % identity reported by BLASTN among Arabidopsis thaliana CDS sequences (left) and Hordeum vulgare (right) transcripts. 
+Note that the default BLASTN algorithm (megablast) hardly reports alignments with identities <SPAN CLASS="MATH"><IMG
+ WIDTH="49" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img2.png"
+ ALT="$ &lt;70\%$"></SPAN>. 
+Plots were computed from 51,110,547 and 70,653,179 alignments, respectively.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="904" HEIGHT="467" ALIGN="BOTTOM" BORDER="0"
+ SRC="./histogram_BLASTN_id.png"
+ ALT="Image histogram_BLASTN_id">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
 
 <P>
 </LI>
@@ -684,9 +707,9 @@ unless both of them come from a full-length collection (see <A HREF="#input">3.1
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="217"></A>
+<DIV ALIGN="CENTER"><A NAME="221"></A>
 <TABLE>
-<CAPTION ALIGN="BOTTOM"><STRONG>Figure 3:</STRONG>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 4:</STRONG>
 Coverage illustrated with the alignment of sequence 'query' to two aligned fragments of sequence 'subject'.
 Lq and Ls are the lengths of both sequences, and s1,e1,s2,e2 and Lq are alignment coordinates.</CAPTION>
 <TR><TD>
@@ -715,17 +738,18 @@ standard OMCL algorithms have completed, to preserve the algorithm features.
 <P>
 </LI>
 <LI><code>-S</code> can be passed to require a minimum % sequence identity for two sequences to be called best hits. 
-The default value is set to 1. 
+The default value is set to 95%, as in PubMed=<A NAME="tex2html38"
+  HREF="http://www.ncbi.nlm.nih.gov/pubmed/21572440">21572440</A>. 
 
 <P>
 </LI>
 <LI><code>-b</code> reduces the number of pairwise BLAST searches performed while compiling core-genomes with algorithm BDBH,
 reducing considerably memory and run-time requirements (for <SPAN CLASS="MATH"><IMG
  WIDTH="16" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
- SRC="img4.png"
+ SRC="img5.png"
  ALT="$ G$"></SPAN> genomes, 3G searches are launched instead of the default <SPAN CLASS="MATH"><IMG
  WIDTH="22" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
- SRC="img5.png"
+ SRC="img6.png"
  ALT="$ G^{2}$"></SPAN>).
 It comes at the cost of being less exhaustive in finding inparalogues, but in our bacterial benchmarks this potential, undesired 
 effect was negligible.
@@ -751,7 +775,7 @@ interest for users employing these clusters for primer design, for instance.
 <P>
 </LI>
 <LI><code>-F</code> is the inflation value that governs Markov Clustering in OMCL runs, as explained in 
-PubMed=<A NAME="tex2html38"
+PubMed=<A NAME="tex2html39"
   HREF="http://www.ncbi.nlm.nih.gov/sites/ppmc/articles/PMC403725/">12952885</A>. As a rule of thumb,
 low inflation values (<code>-F 1</code>)result in the inclusion of more sequences in fewer groups, whilst large values 
 produce more, smaller clusters (<code>-F 4</code>).
@@ -783,7 +807,7 @@ with a default value of 0.95. This choice produces a composition report more rob
 <P>
 The following Perl and shell scripts are included in each release to assist in the interpretation of results generated
 by <SPAN  CLASS="textit">get_homologues-est.pl</SPAN>. See examples of use in <SPAN  CLASS="textit">manual_get_homologues.pdf</SPAN>
-<A NAME="tex2html39"
+<A NAME="tex2html40"
   HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>:
 
 <P>
@@ -807,7 +831,7 @@ to remove redundant clusters, using either nucleotide or protein sequence identi
 <P>
 </LI>
 <LI><SPAN  CLASS="textit">plot_pancore_matrix.pl</SPAN>, a Perl script to plot pan/soft/core-genome sampling results and to fit regression 
-curves with help from <A NAME="tex2html40"
+curves with help from <A NAME="tex2html41"
   HREF="http://www.r-project.org">R</A>
 functions. 
 
@@ -841,7 +865,7 @@ R functions <code>hclust()</code> and <code>heatmap.2()</code> in order to produ
 <P>
 </LI>
 <LI><SPAN  CLASS="textit">pfam_enrich.pl</SPAN> calculates the enrichment of a set of sequence clusters in terms of Pfam domains,
-by using <A NAME="tex2html41"
+by using <A NAME="tex2html42"
   HREF="https://stat.ethz.ch/R-manual/R-patched/library/stats/html/fisher.test.html">Fisher's exact test</A>.
 
 <P>
@@ -851,14 +875,14 @@ by using <A NAME="tex2html41"
 <P>
 Apart from these, auxiliar <SPAN  CLASS="textit">transcripts2cds.pl</SPAN> script is bundled to assist in the
 analysis of transcripts. In particular, this script can be used to annotate potential Open Reading Frames (ORFs) contained within raw transcripts, 
-which might be truncated or contain introns. This script uses <A NAME="tex2html42"
+which might be truncated or contain introns. This script uses <A NAME="tex2html43"
   HREF="https://transdecoder.github.io">TransDecoder</A>, BLASTX and SWISSPROT, which should 
 be installed by running: <!-- MATH
  $./install.pl$
  -->
 <SPAN CLASS="MATH"><IMG
  WIDTH="77" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
- SRC="img6.png"
+ SRC="img7.png"
  ALT="$ ./install.pl$"></SPAN>
 
 <P>
@@ -887,7 +911,7 @@ usage: ./transcripts2cds.pl [options] &lt;input FASTA file(s) with transcript nu
 This section presents typical ways of running <SPAN  CLASS="textit">get_homologues-est.pl</SPAN> 
 and the accompanying scripts with provided sample input data. 
 Please check file 
-<A NAME="tex2html43"
+<A NAME="tex2html44"
   HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>
 for more examples, particularly for the auxiliary scripts,
 which are not explained in this document.
@@ -944,8 +968,8 @@ The resulting CDS files can be then analyzed with <SPAN  CLASS="textit">get_homo
 
 <P>
 Apart from the listed output files, which include translated protein sequences, temporary files are stored in the working directory,
-which of course can be removed, but will be re-used if the same job is re-run later, such as 
-<code>_sample_transcripts.fna_eval1e-05.blastx.gz</code>, 
+which of course can be removed, but will be re-used if the same job is re-run later, such as
+<BR><code>_sample_transcripts.fna_eval1e-05.blastx.gz</code>, 
 <BR><code>_sample_transcripts.fna_minl50.transdecoder.cds.gz</code> or
 <BR><code>_sample_transcripts.fna_minl50.transdecoder.pep.gz</code>.
 <BR>
@@ -955,7 +979,7 @@ Note that CDS sequences can be deduced for a collection of transcriptomes and pu
 so that they can all be analyzed together with <SPAN  CLASS="textit">get_homologues-est.pl</SPAN>. 
 Such files support calling option <code>-D</code>, which will annotate Pfam domains contained in those sequences,
 and can then also be used to calculate enrichment as explained in 
-<A NAME="tex2html44"
+<A NAME="tex2html45"
   HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>.
 
 <P>
@@ -966,7 +990,7 @@ and can then also be used to calculate enrichment as explained in
 
 <P>
 This example takes the sample input folder <code>sample_transcripts_fasta</code>,
-which contains automatically assembled transcripts (<A NAME="tex2html48"
+which contains automatically assembled transcripts (<A NAME="tex2html50"
   HREF="https://github.com/trinityrnaseq/trinityrnaseq/wiki">Trinity</A>) 
 of three <SPAN  CLASS="textit">Hordeum vulgare</SPAN> strains (barley), plus a set of full-length cDNA collection of cultivar <SPAN  CLASS="textit">Haruna Nijo</SPAN>,
 to show to produce clusters of transcripts.
@@ -977,10 +1001,10 @@ and finally computes an Average Nucleotide Identity matrix on the produced clust
 keeping only the longest one (you can turn this feature off with <code>-i 0</code>):
 <BR>
 <P>
-<code>$ ./get_homologues-est.pl -d sample_transcripts_fasta -M -c -z -A </code> . 
+<code>$ ./get_homologues-est.pl -d sample_transcripts_fasta -M -c -z -A </code> 
 
 <P>
-The output should look like this (contained in file <code>sample_output_est.txt</code>):
+The output should look like this (contained in file <code>sample_transcripts_output.txt</code>):
 
 <P>
 <PRE> 
@@ -1012,28 +1036,29 @@ The output should look like this (contained in file <code>sample_output_est.txt<
 # number of file addresses/BLAST queries = 4.4e+04
 
 # genome composition report (samples=20,permutations=24,seed=0)
-# genomic composition parameters: MIN_PERSEQID_HOM=95 MIN_COVERAGE_HOM=75 SOFTCOREFRACTION=0.95 
+# genomic composition parameters: MIN_PERSEQID_HOM=70 MIN_COVERAGE_HOM=50 SOFTCOREFRACTION=0.95
 [...]
 
 # file=sample_transcripts_fasta_est_homologues/core_genome_algOMCL.tab
 genomes	mean	stddev	|	samples
-0	8744	7017	|	4610	4610	4610	...
-1	1157	734	|	540	475	2042	...
-2	296	109	|	109	354	387	...
-3	91	0	|	91	91	91	...
+0	8559	6614	|	4665	4665	4665	...
+1	1113	737	|	496	432	2007	...
+2	255	101	|	84	308	347	...
+3	66	0	|	66	66	66	...
+
 
 # file=sample_transcripts_fasta_est_homologues/soft-core_genome_algOMCL.tab
 genomes	mean	stddev	|	samples
-0	8744	7017	|	4610	4610	4610	...
-1	3538	2335	|	2462	2247	8205	...
-2	2219	1005	|	837	3505	2182	...
-3	716	109	|	903	658	625	...
+0	8559	6614	|	4665	4665	4665	...
+1	3491	2311	|	2428	2195	8108	...
+2	2170	1017	|	765	3460	2145	...
+3	645	101	|	816	592	553	...
 
 # clustering orthologous sequences
 
 # looking for valid sequence clusters (n_of_taxa=4)...
 
-# number_of_clusters = 91
+# number_of_clusters = 66
 # cluster_list = sample_transcripts_fasta_est_homologues/Esterel_alltaxa_algOMCL_e0_.cluster_list
 # cluster_directory = sample_transcripts_fasta_est_homologues/Esterel_alltaxa_algOMCL_e0_
 
@@ -1042,7 +1067,8 @@ genomes	mean	stddev	|	samples
 </PRE>
 
 <P>
-Notice that both core and soft-core sampling experiments are reported, considering genes found in all strains and also in 95% strains, respectively.
+Notice that both core and soft-core sampling experiments are reported, 
+considering genes found in all strains and in 95% strains, respectively.
 
 <P>
 The produced Average Nucleotide Identity matrix looks like this:
@@ -1059,26 +1085,26 @@ The produced Average Nucleotide Identity matrix looks like this:
 </TR>
 <TR><TD ALIGN="LEFT">Esterel</TD>
 <TD ALIGN="CENTER">100</TD>
-<TD ALIGN="CENTER">96.96</TD>
-<TD ALIGN="CENTER">95.88</TD>
-<TD ALIGN="CENTER">95.87</TD>
+<TD ALIGN="CENTER">98.29</TD>
+<TD ALIGN="CENTER">98.04</TD>
+<TD ALIGN="CENTER">99.33</TD>
 </TR>
 <TR><TD ALIGN="LEFT">Franka</TD>
-<TD ALIGN="CENTER">96.96</TD>
+<TD ALIGN="CENTER">98.29</TD>
 <TD ALIGN="CENTER">100</TD>
-<TD ALIGN="CENTER">96.01</TD>
-<TD ALIGN="CENTER">96.31</TD>
+<TD ALIGN="CENTER">98.25</TD>
+<TD ALIGN="CENTER">98.90</TD>
 </TR>
 <TR><TD ALIGN="LEFT">HsTurkey</TD>
-<TD ALIGN="CENTER">95.88</TD>
-<TD ALIGN="CENTER">96.01</TD>
+<TD ALIGN="CENTER">98.04</TD>
+<TD ALIGN="CENTER">98.25</TD>
 <TD ALIGN="CENTER">100</TD>
-<TD ALIGN="CENTER">93.25</TD>
+<TD ALIGN="CENTER">98.41</TD>
 </TR>
 <TR><TD ALIGN="LEFT">flcdnasHnijo</TD>
-<TD ALIGN="CENTER">95.87</TD>
-<TD ALIGN="CENTER">96.31</TD>
-<TD ALIGN="CENTER">93.25</TD>
+<TD ALIGN="CENTER">98.33</TD>
+<TD ALIGN="CENTER">98.90</TD>
+<TD ALIGN="CENTER">98.41</TD>
 <TD ALIGN="CENTER">100</TD>
 </TR>
 </TABLE>
@@ -1088,21 +1114,21 @@ The produced Average Nucleotide Identity matrix looks like this:
 
 <P>
 Provided that optional R modules described in 
-<A NAME="tex2html49"
+<A NAME="tex2html51"
   HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>
 are installed, this matrix can be plotted with:
 <BR><code>./plot_matrix_heatmap.sh -i sample_[...]/Esterel_alltaxa_algOMCL_e0_Avg_identity.tab</code>
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:ANImat"></A><A NAME="287"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:ANImat"></A><A NAME="293"></A>
 <TABLE>
-<CAPTION ALIGN="BOTTOM"><STRONG>Figure 4:</STRONG>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 5:</STRONG>
 Plot of Average Nucleotide Identity matrix</CAPTION>
 <TR><TD>
 <DIV ALIGN="CENTER">
 <IMG
-  WIDTH="905" HEIGHT="430" ALIGN="BOTTOM" BORDER="0"
+  WIDTH="905" HEIGHT="429" ALIGN="BOTTOM" BORDER="0"
  SRC="./Esterel_Avg_identity_heatmap.png"
  ALT="Image Esterel_Avg_identity_heatmap">
 
@@ -1122,10 +1148,10 @@ This second command produces a significantly different pan-genome composition ma
 <PRE>
 # file=sample_transcripts_fasta_est_homologues/pan_genome_algOMCL.tab
 genomes	mean	stddev	|	samples
-0	8744	7017	|	4610	4610	4610	...
-1	15363	7026	|	8943	8955	22475	...
-2	22607	5513	|	13106	25909	24897	...	
-3	28392	539	|	29155	28210	27562	...
+0	8559	6614	|	4665	4665	4665	...
+1	14830	6425	|	8937	9002	21292	...
+2	21384	4866	|	13004	24283	23358	...
+3	26380	468	|	27019	26209	25652	...
 </PRE>
 
 <P>
@@ -1135,10 +1161,10 @@ to
 <PRE>
 # file=sample_transcripts_fasta_est_homologues/pan_genome_2taxa_algOMCL.tab
 genomes	mean	stddev	|	samples
-0	9145	7695	|	4617	4617	4617	...
-1	10646	7019	|	6550	6245	6643	...
-2	11444	6689	|	8003	7308	6862	...
-3	11549	6687	|	8123	7410	6959	...
+0	2860	1172	|	2262	2262	2262	...
+1	4270	490	|	4110	3828	4196	...
+2	4953	424	|	5475	4767	4294	...
+3	4954	424	|	5475	4768	4296	...
 </PRE>
 
 <P>
@@ -1147,10 +1173,10 @@ Both matrices can be plotted with script <SPAN  CLASS="textit">plot_pancore_matr
 <BR>
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:pant0"></A><A NAME="fig:pant2"></A><A NAME="308"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:pant0"></A><A NAME="fig:pant2"></A><A NAME="314"></A>
 <TABLE>
-<CAPTION ALIGN="BOTTOM"><STRONG>Figure 5:</STRONG>
-Pan-genome (-t 0, left) and pan-genome (-t 2,  right) estimates based on random samples of 4 strains. 
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 6:</STRONG>
+Pan-transcriptome size estimates (-t 0, left) and (-t 2,  right) based on random samples of 4 transcriptome sets. 
 As the left example illustrates, four strains are usually not enough to fit a Tettelin-like function.</CAPTION>
 <TR><TD><TABLE  WIDTH="50%">
 <TR><TD>
@@ -1177,19 +1203,63 @@ As the left example illustrates, four strains are usually not enough to fit a Te
 </DIV>
 
 <P>
+The next figure shows a similar analysis but now using genomic data instead of transcript sets. The example shows pan-genome
+size estimates of Whole Genome Sequence assemblies of 19  <i> Arabidopsis thaliana  </i> ecotypes, downloaded from
+<A NAME="tex2html52"
+  HREF="http://mus.well.ox.ac.uk/19genomes/sequences/CDS">http://mus.well.ox.ac.uk/19genomes/sequences/CDS</A>
+and described  
+in PubMed=<A NAME="tex2html53"
+  HREF="http://www.ncbi.nlm.nih.gov/pubmed/21874022">21874022</A>.
 
-<DIV ALIGN="CENTER"><A NAME="fig:pangenomet"></A><A NAME="313"></A>
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:pangenomet"></A><A NAME="437"></A>
 <TABLE>
-<CAPTION ALIGN="BOTTOM"><STRONG>Figure 6:</STRONG>
-Core-genome, soft-core-genome and pan-genome composition analysis of 17 barley transcript sets. 
-Note that the pan-genome simulation was done with all clusters (left) and with all clusters found in at least three transcriptomes (right),
-illustrating the effect of option -t 3, which might be useful to remove low confidence sequences.</CAPTION>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 7:</STRONG>
+
+Core-genome, soft-core-genome and pan-genome CDS composition analysis of WGS assemblies of 19 A.thaliana ecotypes.
+Note that the pan-genome simulation was done with all clusters (left) and with all clusters found in at least three genomes (right),
+illustrating the effect of option -t 3, which might be useful to remove low confidence sequences.
+Red numbers correspond to fitted values generated by <SPAN  CLASS="textit">plot_pancore_matrix.pl</SPAN>.
+</CAPTION>
 <TR><TD>
 <DIV ALIGN="CENTER">
 <IMG
-  WIDTH="888" HEIGHT="805" ALIGN="BOTTOM" BORDER="0"
+  WIDTH="908" HEIGHT="853" ALIGN="BOTTOM" BORDER="0"
  SRC="./pangenomet.png"
  ALT="Image pangenomet">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Script <SPAN  CLASS="textit">plot_pancore_matrix.pl</SPAN> can also be called with flag -a:
+
+<P>
+<PRE>
+./plot_pancore_matrix.pl -i sample_transcripts_fasta_est_homologues/pan_genome_algOMCL.tab \
+  -f pan -a snapshots+
+</PRE>
+
+<P>
+This will create and store a in folder <code>snapshots/</code> a series of GIF images that can be used to animate pan-genome simulations.
+The next Figure show some of this snapshots:
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:snapshot"></A><A NAME="438"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 8:</STRONG>
+
+Four snapshots of the pan-genome simulation carried out in the previous figure, generated by <SPAN  CLASS="textit">plot_pancore_matrix.pl</SPAN>.
+</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="907" HEIGHT="860" ALIGN="BOTTOM" BORDER="0"
+ SRC="./snapshot.png"
+ ALT="Image snapshot">
 
 </DIV></TD></TR>
 </TABLE>
@@ -1211,11 +1281,11 @@ without singletons with this command:
 
 # parsing clusters in sample_transcripts_fasta_est_homologues/Esterel_2taxa_algOMCL_e0_ ...
 # cluster_list in place, will parse it (sample_[...]/Esterel_2taxa_algOMCL_e0_.cluster_list)
-# number of clusters = 5259
+# number of clusters = 5243
 
 # intersection output directory: outdir
 
-# intersection size = 5259 clusters
+# intersection size = 5243 clusters
 
 # intersection list = outdir/intersection_t0.cluster_list
 
@@ -1225,21 +1295,21 @@ without singletons with this command:
 
 <P>
 If the optional R modules described in 
-<A NAME="tex2html51"
+<A NAME="tex2html55"
   HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>
 are installed, such a pangenome matrix can be used to hierarchically cluster strains with this command:
 <BR><code>./hcluster_matrix.sh -i outdir/pangenome_matrix_t0.tab</code>
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:hclustpange"></A><A NAME="325"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:hclustpange"></A><A NAME="346"></A>
 <TABLE>
-<CAPTION ALIGN="BOTTOM"><STRONG>Figure 7:</STRONG>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 9:</STRONG>
 Hierarchical grouping of strains based on pangenome matrix.</CAPTION>
 <TR><TD>
 <DIV ALIGN="CENTER">
 <IMG
-  WIDTH="905" HEIGHT="399" ALIGN="BOTTOM" BORDER="0"
+  WIDTH="905" HEIGHT="403" ALIGN="BOTTOM" BORDER="0"
  SRC="./pangenome_matrix_t0_heatmap-est.png"
  ALT="Image pangenome_matrix_t0_heatmap-est">
 
@@ -1268,10 +1338,10 @@ that sequences might be truncated (option <code>-e</code>) and using 10 processo
 
 <P>
 <PRE>
-# input matrix contains 5259 clusters and 4 taxa
+# input matrix contains 5243 clusters and 4 taxa
 
 # filtering clusters ...
-# 5259 clusters with taxa &gt;= 1 and sequence length &gt;= 0
+# 5243 clusters with taxa &gt;= 1 and sequence length &gt;= 0
 
 # sorting clusters and extracting median sequence ...
 
@@ -1280,7 +1350,7 @@ that sequences might be truncated (option <code>-e</code>) and using 10 processo
 # parsing blast result! (outdir/pangenome_matrix_t0_nr_t1_l0_e1_C50_S90.blast , 0.34MB)
 # parsing file finished
 
-# 5226 non-redundant clusters
+# 5210 non-redundant clusters
 # created: outdir/pangenome_matrix_t0_nr_t1_l0_e1_C50_S90.fna
 
 # printing nr pangenome matrix ...
@@ -1289,7 +1359,7 @@ that sequences might be truncated (option <code>-e</code>) and using 10 processo
 
 <P>
 Note that the previous command can be modified to match external reference sequences, 
-for instance from <A NAME="tex2html52"
+for instance from <A NAME="tex2html56"
   HREF="http://www.ebi.ac.uk/uniprot">Swissprot</A>,
 or pre-computed clusters, such as groups of orthologous sequences, 
 so that the resulting matrix contains cross-references to those external clusters, and their annotations.
@@ -1305,10 +1375,10 @@ reference sequences, in this case annotated rice cDNAs:
 <P>
 This is the produced output:
 <PRE>
-# input matrix contains 5259 clusters and 4 taxa
+# input matrix contains 5243 clusters and 4 taxa
 
 # filtering clusters ...
-# 5259 clusters with taxa &gt;= 1 and sequence length &gt;= 0
+# 5243 clusters with taxa &gt;= 1 and sequence length &gt;= 0
 
 # sorting clusters and extracting median sequence ...
 # re-using previous BLAST output outdir/pangenome_matrix_t0_nr_t1_l0_e1_C50_S90.blast
@@ -1316,7 +1386,7 @@ This is the produced output:
 # parsing blast result! (outdir/pangenome_matrix_t0_nr_t1_l0_e1_C50_S90.blast , 0.34MB)
 # parsing file finished
 
-# 5226 non-redundant clusters
+# 5210 non-redundant clusters
 # created: outdir/pangenome_matrix_t0_nr_t1_l0_e1_C50_S90.fna
 
 # 66339 reference sequences parsed in oryza.fna
@@ -1387,11 +1457,11 @@ CCTGCTGGTGCATTTTTTTACAAACAGTTGGCACAGAGTATTTGTTGCTAATTGTGTTCGTTTTCTTGAA...
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:annotcluster"></A><A NAME="416"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:annotcluster"></A><A NAME="439"></A>
 <TABLE>
-<CAPTION ALIGN="BOTTOM"><STRONG>Figure 8:</STRONG>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 10:</STRONG>
 Fragment of alignment produced by <SPAN  CLASS="textit">annotate_cluster.pl</SPAN>, 
-created with <A NAME="tex2html53"
+rendered with <A NAME="tex2html57"
   HREF="http://www.mbio.ncsu.edu/bioedit/bioedit.html">BioEdit</A>.</CAPTION>
 <TR><TD>
 <DIV ALIGN="CENTER">
@@ -1413,7 +1483,7 @@ created with <A NAME="tex2html53"
 
 <P>
 Please see also the FAQs in
-<A NAME="tex2html58"
+<A NAME="tex2html62"
   HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>. 
 
 <P>
@@ -1428,9 +1498,9 @@ in the figure, which combines data from the original benchmark and new data gene
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:RAMtimev2"></A><A NAME="366"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:RAMtimev2"></A><A NAME="387"></A>
 <TABLE>
-<CAPTION ALIGN="BOTTOM"><STRONG>Figure 9:</STRONG>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 11:</STRONG>
 Computing time and RAM requirements of the original algorithm (OMCL, measured on 6 sequence sets) 
 as compared to the updated v2 code (measured on 3 three sets).</CAPTION>
 <TR><TD>
@@ -1452,13 +1522,13 @@ as compared to the updated v2 code (measured on 3 three sets).</CAPTION>
 <SPAN  CLASS="textit">get_homologues-est.pl</SPAN> has been mainly tested with plant sequences, using both CDS sets from whole-genome annotations and also 
 transcripts from expression experiments. The main problems we have found so far are split genes, frequent artifacts in genome assemblies,
 incomplete genes which lack exons, for the same previous reasons, and retained introns, which are common among plant transcripts.
-These three common situations are illustrated on Figure <A HREF="#fig:ESTcaveats">10</A>. 
+These three common situations are illustrated on Figure <A HREF="#fig:ESTcaveats">12</A>. 
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:ESTcaveats"></A><A NAME="376"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:ESTcaveats"></A><A NAME="397"></A>
 <TABLE>
-<CAPTION ALIGN="BOTTOM"><STRONG>Figure 10:</STRONG>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 12:</STRONG>
 Common problems faced when clustering transcripts/CDS sequences.</CAPTION>
 <TR><TD>
 <DIV ALIGN="CENTER">
@@ -1494,24 +1564,24 @@ to do it and perhaps it might be added later.
 
 <P>
 <SPAN  CLASS="textit">get_homologues-est.pl</SPAN> is designed, created and maintained at the 
-<A NAME="tex2html59"
+<A NAME="tex2html63"
   HREF="http://www.eead.csic.es/compbio">Laboratory of Computational Biology</A>
 at 
 Estaci&#243;n Experimental de Aula Dei/CSIC in Zaragoza (Spain) and at the 
-<A NAME="tex2html60"
+<A NAME="tex2html64"
   HREF="http://www.ccg.unam.mx/~vinuesa">Center for Genomic Sciences</A>
 of 
 Universidad Nacional Aut&#243;noma de M&#233;xico (CCG/UNAM).
 
 <P>
 The code was written mostly by Bruno Contreras-Moreira and Pablo Vinuesa, but it also includes 
-code and binaries from <A NAME="tex2html61"
+code and binaries from <A NAME="tex2html65"
   HREF="http://www.orthomcl.org">OrthoMCL v1.4</A>
 (algorithm OMCL, <code>-M</code>),
-<A NAME="tex2html62"
-  HREF="http://blast.ncbi.nlm.nih.gov">NCBI Blast+</A>, <A NAME="tex2html63"
+<A NAME="tex2html66"
+  HREF="http://blast.ncbi.nlm.nih.gov">NCBI Blast+</A>, <A NAME="tex2html67"
   HREF="https://github.com/desmid/mview">MVIEW</A>
-and <A NAME="tex2html64"
+and <A NAME="tex2html68"
   HREF="http://www.bioperl.org">BioPerl 1.5.2</A>.
 
 <P>
@@ -1609,7 +1679,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>manual-est -no_antialias_text -split 0 -dir manual-est -no_navigation -show_section_numbers</TT>
 <P>
-The translation was initiated by Bruno Contreras Moreira on 2016-04-29
+The translation was initiated by Bruno Contreras Moreira on 2016-05-04
 <BR><HR>
 <ADDRESS>
 <a href="http://hdl.handle.net/10261/21892">PDF</a><br>Bruno Contreras-Moreira<br><a href="http://www.eead.csic.es/compbio">http://www.eead.csic.es/compbio</a>
