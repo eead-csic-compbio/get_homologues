@@ -1701,9 +1701,6 @@ if($do_genome_composition)
     }
     else # BDBH
     {
-      $coregenome[$s][0] = $pangenome[$s][0] = $gindex{$tmptaxa[0]}[2];
-      print "# adding $tmptaxa[0]: core=$coregenome[$s][0] pan=$pangenome[$s][0]\n";
-
       if(!$LSE_registry{$tmptaxa[0]} &&
         ($runmode eq 'cluster' && !-e get_makeInparalog_outfilename($tmptaxa[0])))
       {
@@ -1720,6 +1717,22 @@ if($do_genome_composition)
       my($ref_inparalogues) = makeInparalog($saveRAM,$tmptaxa[0],$evalue_cutoff,
         $pi_cutoff,$pmatch_cutoff,$neighbor_corr_cutoff,1,$redo_inp);
       $LSE_reference = cluster_lineage_expansions($ref_inparalogues);
+      
+      # calculate initial core & pan size
+      my $initial_core_size = 0; 
+      foreach $gene ($gindex{$tmptaxa[0]}[0] .. $gindex{$tmptaxa[0]}[1])
+      {
+        next if( $LSE_reference->{$gene} ); # inparalogues
+ 
+        $initial_core_size++;
+      }
+           
+      $coregenome[$s][0] = $initial_core_size;
+      
+      if($coregenome[$s][0] < 0){ $coregenome[$s][0] = 0 }
+      
+      $pangenome[$s][0]  = $coregenome[$s][0];
+      print "# adding $tmptaxa[0]: core=$coregenome[$s][0] pan=$pangenome[$s][0]\n";
     }
 
     for($t=1;$t<$n_of_taxa;$t++)
@@ -1759,7 +1772,7 @@ if($do_genome_composition)
               }
                      
               next CLUSTER;
-            }#else{ print "$taxon ne $tmptaxa[$t]\n"; }
+            }
           }
         }
         #print "# adding $tmptaxa[$t]: core=$coregenome[$s][$t] pan=$pangenome[$s][$t]\n";
@@ -1798,6 +1811,7 @@ if($do_genome_composition)
         my($ref_inparalogues) = makeInparalog($saveRAM,$tmptaxa[$t],$evalue_cutoff,$pi_cutoff,
           $pmatch_cutoff,$neighbor_corr_cutoff,1,$redo_inp);
         $LSE_t = cluster_lineage_expansions($ref_inparalogues);
+        %inparalogues = %$LSE_t;
 
         print "# finding BDBHs between $tmptaxa[0] and $tmptaxa[$t]\n";
         @{$ref_orths} = makeOrtholog($saveRAM,$tmptaxa[0],$tmptaxa[$t],
@@ -1849,8 +1863,10 @@ if($do_genome_composition)
         %inparalogues = ();
         foreach $cluster (@clusters)
         {
+          # skip clusters with <2 $t sequences
           next if(!$orth_taxa{$cluster}{$tmptaxa[$t]} ||
             $orth_taxa{$cluster}{$tmptaxa[$t]} < 2);
+            
           foreach $gene (@{$orthologues{$cluster}})
           {
             next if($gindex2[$gene] ne $tmptaxa[$t]);
@@ -1863,6 +1879,7 @@ if($do_genome_composition)
       foreach $gene ($gindex{$tmptaxa[$t]}[0] .. $gindex{$tmptaxa[$t]}[1])
       {
         next if($n_of_homs_in_genomes{$gene} || $inparalogues{$gene});
+        
         $pangenome[$s][$t]++;
       }
 
