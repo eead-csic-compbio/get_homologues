@@ -124,12 +124,20 @@ our $BLAST_DB_SIZE                       = 100000000; # as in COGs, to ensure co
 our $FASTAEXTENSION                      = 'fasta';
 our $PERCENT_IDENTITY_CUTOFF_DEFAULT     = 1;         # Both PercentIdentity and PercentMatch cutoff are
 our $PERCENT_MATCH_CUTOFF_DEFAULT        = 75.0;      # as in COGS, 70.0 for prok set to 0 by default in OrthoMCL, 0-100%, 50 used in INPARANOID
-our $PERCENT_IDENTITY_CUTOFF_EST_DEFAULT = 95;        # adequate for clustering transcripts of same species, same as used in trinity  
-our $MIN_PERSEQID_HOM                    = 0;         # 50=>Tettelin et al (2005): minimum %sequence identity required for homology
-our $MIN_COVERAGE_HOM                    = 20.0;      # Tettelin et al (2005): minimum %sequence coverage required for homology
-our $MIN_PERSEQID_HOM_EST                = 95.0;      # as in Trinity http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3571712
-our $MIN_COVERAGE_HOM_EST                = 75.0;      
-our $MIN_PERCENT_LENGTH_DIFFERENCE       = 80.0;      # 70.0 for prok short/long 0-100% , not used in INPARANOID, not tested!
+our $PERCENT_IDENTITY_CUTOFF_EST_DEFAULT = 95;        # for transcripts of same species, as in Trinity 
+                                                      # http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3571712
+
+our $MIN_PERSEQID_HOM                    = 0.0;       # by default there's no identity cutoff, as long as BLAST returns a hit
+our $MIN_COVERAGE_HOM                    = 20.0;      # by default a coverage of 20% of the longest sequence is enough to call homology
+                                                      # Tettelin et al (2005): minimum %sequence identity required for homology = 50%
+                                                      # Tettelin et al (2005): minimum %sequence coverage required for homology = 50%
+
+our $MIN_PERSEQID_HOM_EST                = 70.0;      # The following figures correspond to BLASTN::megablast alignments: 
+                                                      # 5th-percentil of barley transcripts = 84.62
+                                                      # 5th-percentil of A.thaliana CDS = 78.77
+our $MIN_COVERAGE_HOM_EST                = 50.0;      # This coverage allows matching sequences with retained/unprocessed introns
+
+our $MIN_PERCENT_LENGTH_DIFFERENCE       = 80.0;      # 70.0 for prok short/long 0-100% [not benchmarked]; not used in INPARANOID 
 our $MCL_INFLATION_DEFAULT               = 1.5;       # papers mention values from 1 to 4
 our $MAX_WEIGHT_DEFAULT                  = 316;       # minimum e-value of your blast; ie if 9e-99 you should use -log(9e-99)=100.
 our $MIN_BITSCORE_SIM_DEFAULT            = 28;        # Song,Joseph,Davis,Durand(2008)PlOS PMID:18475320
@@ -1395,12 +1403,12 @@ sub construct_indexes
           if($doGindex)
           {       
             # useful for cluster jobs, for which constructAllFasta was not invoked
-				if(!defined($gindex{$taxon2name{$taxon}})){ $gindex{$taxon2name{$taxon}}[0] = $q }
-				else
-				{
-					$gindex{$taxon2name{$taxon}}[1] = $q;
-					$gindex{$taxon2name{$taxon}}[2]++;
-				}
+            if(!defined($gindex{$taxon2name{$taxon}})){ $gindex{$taxon2name{$taxon}}[0] = $q }
+            else
+				    {
+					    $gindex{$taxon2name{$taxon}}[1] = $q;
+					    $gindex{$taxon2name{$taxon}}[2]++;
+				    }
             $gindex2[$q] = $taxon2name{$taxon}; #print "$taxon $taxon2name{$taxon} $q\n";
           } 
         }
@@ -1797,13 +1805,13 @@ sub makeInparalog
 
     foreach $line (@$ref_lines)
     {
-		#$pQid\t$pSid\t$pEvalue\t$ppercID\t$Qcov\t$Scov\t$pQlength\t$pSlength\t$simspan\t$pbits
+		  #$pQid\t$pSid\t$pEvalue\t$ppercID\t$Qcov\t$Scov\t$pQlength\t$pSlength\t$simspan\t$pbits
       ($sid,$ev,$pi,$qcov,$scov) = @$line[1,2,3,4,5];
 
       next if($sid eq $qid); # ignore autohits
       last if(!defined($gindex2[$sid]) || $gindex2[$sid] ne $taxon); # best hit from other species
       last if($ev > $evalue_cutoff || $pi < $pi_cutoff);
-		next if($pmatch_cutoff && ( 
+		  next if($pmatch_cutoff && ( 
 			($use_short_sequence && $qcov < $pmatch_cutoff && $scov < $pmatch_cutoff) ||
 			(!$use_short_sequence && ($qcov < $pmatch_cutoff || $scov < $pmatch_cutoff)) ));
       
@@ -2236,7 +2244,6 @@ sub makeHomolog
     {
       #$pQid\t$pSid\t$pEvalue\t$ppercID\t$Qcov\t$Scov\t$pQlength\t$pSlength\t$simspan\t$pbits
       ($sid,$ev,$pi,$qcov,$scov) = @$line[1,2,3,4,5];
-      print "$line\n";
       next if(!defined($gindex2[$sid]) || $gindex2[$sid] ne $tb);
       last if($ev > $evalue_cutoff);
       next if($pi < $pi_cutoff);
@@ -2293,7 +2300,6 @@ sub cluster_lineage_expansions
   my (%inparalog_seed);
   foreach my $gene (keys(%{$ref_hash_inparalogues}))
   {
-
     # take as seed or representative inparalog with smallest id
     my $seed = (sort {$a<=>$b} (@{$ref_hash_inparalogues->{$gene}}))[0];
     next if($seed > $gene); #print "# $gene $rep\n";
