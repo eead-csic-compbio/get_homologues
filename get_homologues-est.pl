@@ -82,7 +82,7 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   print   "   Allows for files to be added later.\n";
   print   "   Creates output folder named 'directory_est_homologues'\n";
   print   "\nOptional parameters:\n";
-  print   "-o only run BLAST/Pfam searches and exit                       ".
+  print   "-o only run BLASTN/Pfam searches and exit                      ".
     "(useful to pre-compute searches)\n";
   print   "-i cluster redundant isoforms, including those that can be     ".
     "(min overlap, default: -i $isoform_overlap,\n";
@@ -94,7 +94,9 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   print   "-c report transcriptome composition analysis                   ".
     "(follows order in -I file if enforced,\n".
     "                                                               ".
-    " ignores -r,-e)\n";
+    " with -t N skips clusters occup<N [OMCL],\n".
+    "                                                               ".
+    " ignores -r,-e)\n"; 
   print   "-R set random seed for genome composition analysis             ".
     "(optional, requires -c, example -R 1234)\n";
   if(eval{ require DB_File } ) # show only if DB_File is available (it should as it is core)
@@ -248,6 +250,12 @@ else{ $reference_proteome_string = 0; }
 
 if(defined($opts{'t'}) && $opts{'t'} >= 0)
 {
+  if(!defined($opts{'M'}))
+  {
+    die "\n# WARNING: use of the default BDBH algorithm with options -c -t is not supported ".
+      "(please check the manual)\n\n";
+  }
+
   $min_cluster_size = $opts{'t'};
   $output_mask .= $min_cluster_size."taxa_";
   $pancore_mask .= '_'.$min_cluster_size."taxa";
@@ -1189,7 +1197,7 @@ else
       # filter $blast_file leaving only results of longest, non-redundant isoforms
       nr_blast_report($blast_file,$blast_file_nr,\%redundant);
 
-      if(!$add_rd_isoforms && !$isoform_overlap && !$doMCL){ undef(%redundant) }
+      if(!$add_rd_isoforms && !$isoform_overlap){ undef(%redundant) }
 
       # parse nr blast file
       $n_of_parsed_lines = blast_parse($blast_file_nr,$bpo_file_nr,1,$TRIMULTIHSP);
@@ -1209,7 +1217,7 @@ else
       $bpo_file   = $bpo_file_nr;
 
       # keep track of redundant isoforms for future use if requested
-      if($add_rd_isoforms || ($isoform_overlap && $doMCL) )
+      if($add_rd_isoforms || $isoform_overlap)
       {
         print "\n# re-using previous isoform clusters\n";
         for(my $j=0;$j<$n_of_taxa;$j++)
@@ -1286,7 +1294,7 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
   if($include_file)
   {
     $NOFSAMPLESREPORT = 1;
-    print "\n# transcriptome composition report (samples=1, using sequence order implicit in -I file: $include_file)\n";
+    print "\n# genome composition report (samples=1, using sequence order implicit in -I file: $include_file)\n";
   }
   else
   {
@@ -1546,9 +1554,11 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
     # 3.0.2) calculate pan/core-genome size adding genomes one-by-one
     if($doMCL)
     {
+      # sum inparalogues
       my $n_of_inparalogues = 0;
       foreach $cluster (@clusters)
       {
+        next if($NOCLOUDINCORE && $ref_hash_cloud_genes->{$cluster});
         foreach $taxon (keys(%{$orth_taxa{$cluster}}))
         {
           next if($taxon ne $tmptaxa[0]);
@@ -1558,33 +1568,25 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
       }
       
       # calculate initial core & pan size
-      if($NOCLOUDINCORE && $min_cluster_size && $min_cluster_size <scalar(@taxa))
+      my $initial_core_size = 0; 
+      foreach $gene ($gindex{$tmptaxa[0]}[0] .. $gindex{$tmptaxa[0]}[1])
       {
-         my $initial_core_size = 0; 
-         foreach $gene ($gindex{$tmptaxa[0]}[0] .. $gindex{$tmptaxa[0]}[1])
-         {
-            next if($ref_hash_cloud_genes->{$gene}); # singleton clusters
-            $initial_core_size++;
-         }
-          
-         $coregenome[$s][0] = $initial_core_size - $n_of_inparalogues;
+        next if( $redundant{$gene} || $NOCLOUDINCORE && $ref_hash_cloud_genes->{$gene} );
+        
+        $initial_core_size++;
       }
-      else
-      {
-         $coregenome[$s][0] = $gindex{$tmptaxa[0]}[2] - $n_of_inparalogues;
-      }
+      
+      $coregenome[$s][0] = $initial_core_size - $n_of_inparalogues;
       
       if($coregenome[$s][0] < 0){ $coregenome[$s][0] = 0 }
       
       if($do_soft){ $softcore[$s][0] = $coregenome[$s][0] }
+      
       $pangenome[$s][0]  = $coregenome[$s][0];
-      print "# adding $tmptaxa[0]: core=$coregenome[$s][0] pan=$pangenome[$s][0]\n";
+      print "# adding $tmptaxa[0]: core=$coregenome[$s][0] pan=$pangenome[$s][0]\n"; 
     }
     else # BDBH
     {
-      $coregenome[$s][0] = $pangenome[$s][0] = $gindex{$tmptaxa[0]}[2];
-      print "# adding $tmptaxa[0]: core=$coregenome[$s][0] pan=$pangenome[$s][0]\n";
-
       if(!$LSE_registry{$tmptaxa[0]} &&
         ($runmode eq 'cluster' && !-e get_makeInparalog_outfilename($tmptaxa[0])))
       {
@@ -1604,6 +1606,23 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
       my($ref_inparalogues) = makeInparalog($saveRAM,$tmptaxa[0],$evalue_cutoff,
         $pi_cutoff,$pmatch_cutoff,0,1,$redo_inp,$partial_sequences);
       $LSE_reference = cluster_lineage_expansions($ref_inparalogues);
+      
+      # calculate initial core & pan size
+      my $initial_core_size = 0; 
+      foreach $gene ($gindex{$tmptaxa[0]}[0] .. $gindex{$tmptaxa[0]}[1])
+      {
+        next if( $redundant{$gene} || $LSE_reference->{$gene} || # inparalogues
+          ($NOCLOUDINCORE && $ref_hash_cloud_genes->{$gene}) );# singleton clusters
+        
+        $initial_core_size++;
+      }
+      
+      $coregenome[$s][0] = $initial_core_size;
+      
+      if($coregenome[$s][0] < 0){ $coregenome[$s][0] = 0 }
+      
+      $pangenome[$s][0]  = $coregenome[$s][0];
+      print "# adding $tmptaxa[0]: core=$coregenome[$s][0] pan=$pangenome[$s][0]\n";
     }
 
     for($t=1;$t<$n_of_taxa;$t++)
@@ -1643,7 +1662,7 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
               }
               
               next CLUSTER;
-            }#else{ print "$taxon ne $tmptaxa[$t]\n"; }
+            }
           }
         }
       }
@@ -1684,6 +1703,7 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
         my($ref_inparalogues) = makeInparalog($saveRAM,$tmptaxa[$t],$evalue_cutoff,$pi_cutoff,
           $pmatch_cutoff,0,1,$redo_inp,$partial_sequences);
         $LSE_t = cluster_lineage_expansions($ref_inparalogues);
+        %inparalogues = %$LSE_t;
 
         $partial_sequences = 0;
         if(!$full_length_file{$tmptaxa[0]} || !$full_length_file{$tmptaxa[$t]}){ $partial_sequences = 1 }
@@ -1741,7 +1761,7 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
         %inparalogues = ();
         foreach $cluster (keys(%orthologues))
         {
-          # skip clusters with occupancy > 1, we're interested only on singletons
+          # skip clusters with <2 $t sequences
           next if(!$orth_taxa{$cluster}{$tmptaxa[$t]} ||
             $orth_taxa{$cluster}{$tmptaxa[$t]} < 2); 
                         
@@ -1757,8 +1777,11 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
       foreach $gene ($gindex{$tmptaxa[$t]}[0] .. $gindex{$tmptaxa[$t]}[1])
       {
         next if($n_of_homs_in_genomes{$gene} || 
-          $inparalogues{$gene} ||
-          $ref_hash_cloud_genes->{$gene}); # singletor clusters < min_taxa 
+          $inparalogues{$gene} || 
+          $redundant{$gene} ||
+          $ref_hash_cloud_genes->{$gene} # singleton clusters < min_taxa 
+        );
+          
         $pangenome[$s][$t]++;
       }
 
@@ -1919,7 +1942,6 @@ if($doMCL)
 {
   if(!$orthoMCLdone)
   {
-
     # find out which previous results, if any, can be recyled
     if(!-s $parameter_OMCL_log || check_different_params('OMCL',('EVALUE'=>$evalue_cutoff,'FILES'=>$current_files,
           'PI'=>$pi_cutoff,'COVER'=>$pmatch_cutoff,'INFLATION'=>$MCLinflation)))
@@ -2108,7 +2130,6 @@ else # BDBH
 
     foreach $gene (keys(%$orth_table_ref_j)) # each seed $gene in the reference genome
     {
-
      #next if($exclude_inparalogues && grep(/^$gene$/,values(%$LSE_reference)));
       foreach $orth (@{$orth_table_ref_j->{$gene}})
       {
