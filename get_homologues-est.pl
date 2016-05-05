@@ -48,6 +48,7 @@ my $MINREDOVERLAP = 40;           # as in tgicl, min overlap to handle possibly 
 my $TRIMULTIHSP   = 1;            # correct overlaps when calculating cover of multi-hsp hits (alternative = 0)
 my $MINSEQLENGTH  = 20;           # min length for input sequences to be considered (~ primer or miRNA) 
 my $NOCLOUDINCORE = 1;            # when calling -M -c -t X initial core/pan size excludes cloud genes, those with occup < X 8alternative 0)
+my $INCLUDEORDER  = 1;            # use implicit -I taxon order for -c composition analyses
 
 ## list of features/binaries required by this program (do not edit)
 my @FEATURES2CHECK = ('EXE_BLASTN','EXE_FORMATDB','EXE_MCL','EXE_HMMPFAM',
@@ -1291,7 +1292,7 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
   my @tmptaxa = @taxa;
   my $n_of_taxa = scalar(@tmptaxa);
 
-  if($include_file)
+  if($INCLUDEORDER && $include_file)
   {
     $NOFSAMPLESREPORT = 1;
     print "\n# genome composition report (samples=1, using sequence order implicit in -I file: $include_file)\n";
@@ -1305,7 +1306,7 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
 
   for($s=0;$s<$NOFSAMPLESREPORT;$s++) # random-sort the list of taxa $NOFSAMPLESREPORT times
   {
-    if(!$include_file && $s) # reshuffle until a new permutation is obtained, conserve input order in first sample
+    if((!$include_file || !$INCLUDEORDER) && $s) # reshuffle until a new permutation is obtained, conserve input order in first sample
     {
       $sort = fisher_yates_shuffle( \@tmptaxa );
       while($previous_sorts{$sort}){ $sort = fisher_yates_shuffle( \@tmptaxa ); }
@@ -1571,7 +1572,7 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
       my $initial_core_size = 0; 
       foreach $gene ($gindex{$tmptaxa[0]}[0] .. $gindex{$tmptaxa[0]}[1])
       {
-        next if( $redundant{$gene} || $NOCLOUDINCORE && $ref_hash_cloud_genes->{$gene} );
+        next if( $redundant{$gene} || ($NOCLOUDINCORE && $ref_hash_cloud_genes->{$gene} ));
         
         $initial_core_size++;
       }
