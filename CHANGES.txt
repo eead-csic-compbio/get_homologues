@@ -127,3 +127,4 @@
 04052016: commented out debug print in marfil_homology::makeHomolog
 04052016: fixed bug in get_homologues-est.pl -c so that redundant isoforms are not added to pan/core sets
 04052016: fixed bug in get_homologues.pl -c so that inparalogues are substracted while adding up novel BDBH pan-genome genes
+05052016: added global $INCLUDEORDER to get_homologues-est.pl to control wheter -c analyses should follow -I include order 
