@@ -192,6 +192,7 @@ foreach $input_FASTA_file (@input_files)
     print "# cannot read $input_FASTA_file, skip it\n";
     next;
   }
+  push(@trash,$short_header_file);
   
   # from now on use short temp file
   $input_FASTA_file = $short_header_file;
