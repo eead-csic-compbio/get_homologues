@@ -527,7 +527,7 @@ Flowchart of get_homologues-est.</CAPTION>
 <P>
 The only required option is <code>-d</code>, which indicates 
 an input folder, as seen in section <A HREF="#input">3.1</A>. It is important to remark that in principle only files 
-with extensions <code>.fna / .fa</code> and optionally <code>.faa</code> are considered when parsing the <code>-d</code> directory. 
+with extensions <code>.fna / .fa / .fasta</code> and optionally <code>.faa</code> are considered when parsing the <code>-d</code> directory. 
 By using <code>.faa</code> input files protein sequences can be used to scan Pfam domains and included in output clusters.
 
 <P>
@@ -535,7 +535,7 @@ The use of an input folder or directory (<code>-d</code>)
 is recommended as it allows for new files to be added there in the future, reducing the computing required
 for updated analyses. For instance, if a user does a first analysis with 5 input genomes today, it is possible
 to check how the resulting clusters would change when adding an extra 10 genomes tomorrow, by copying these new 10 
-<code>.faa</code> / <code>.gbk</code> input files to the pre-existing <code>-d</code> folder, so that all previous BLAST searches are re-used.
+<code>.fna</code> input files to the pre-existing <code>-d</code> folder, so that all previous BLASTN searches are re-used.
 
 <P>
 All remaining flags are options that can modify the default behavior of the program, which is to use the 
@@ -1679,7 +1679,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>manual-est -no_antialias_text -split 0 -dir manual-est -no_navigation -show_section_numbers</TT>
 <P>
-The translation was initiated by Bruno Contreras Moreira on 2016-05-06
+The translation was initiated by Bruno Contreras Moreira on 2016-05-09
 <BR><HR>
 <ADDRESS>
 <a href="http://hdl.handle.net/10261/21892">PDF</a><br>Bruno Contreras-Moreira<br><a href="http://www.eead.csic.es/compbio">http://www.eead.csic.es/compbio</a>
