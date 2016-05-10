@@ -21,10 +21,11 @@ use phyTools;
 my $VERBOSE = 0;  # set to 1 to see R messages, helping explain why fitting fails
 my @FEATURES2CHECK = ('EXE_R');
 
-my ($INP_tabfile,$INP_fittype,$INP_anim_dir,%opts) = ('','core_Tettelin','');
+my ($INP_tabfile,$INP_fittype,$INP_anim_dir,$INP_y,$INP_x,%opts) = ('','core_Tettelin','','','');
 my ($Rparams,$FontScale,$pancore_output_png,$pancore_output_pdf,$pancore_output_txt) = ('',0.8);
+#my ($yfirst,$ylast) = ('','');
 
-getopts('hi:f:F:a:', \%opts);
+getopts('hi:f:F:a:y:x:', \%opts);
 
 if(($opts{'h'})||(scalar(keys(%opts))==0))
 {
@@ -34,7 +35,9 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   print   "-f \t type of fit [pan|core_Tettelin|core_Willenbrock|core_both]\n".
     "   \t                                        (default: core_Tettelin, PubMed:16172379,18088402)\n";
   print   "-F \t font scale for fitted formulas         (optional, default=$FontScale)\n";
-  print   "-a \t save snapshots for animations in dir   (optional, example -a animation)\n";
+  print   "-a \t save snapshots for animations in dir   (optional, example: -a animation)\n";
+  #print   "-y \r ylim for R plot                        (optional, example: -y 1:10000)\n";
+  #print   "-x \r xlim for R plot                        (optional, example: -x 1:20)\n";
   exit(-1);
 }
 
