@@ -10,6 +10,8 @@
 # in order to analyze clusters present/absent in one with respect to the other.
 # Can also be used to plot shell genome distribution (PDF and PNG, requires R http://www.r-project.org)
 
+# Please edit %RGBCOLORS variable below if you wish to change the default colors of pangenome compartments
+
 $|=1;
 
 use strict;
@@ -28,6 +30,19 @@ my $CUTOFF = 100; # percentage of genomes to be used as cutoff for presence/abse
 # globals used while producing R plots
 my $VERBOSE   = 0;    # set to 1 to see R messages
 my $YLIMRATIO = 1.2;  # controls the length of (rounded) Y-axis marks with respect to max value in barplots
+
+my %COLORS = ('cloud'=>'"red"','shell'=>'"orange"','soft_core'=>'"yellow"','core'=>'"white"'); # default plot colors
+
+# optional RGB colors in 0-255 range 
+# guide to prepare friendly figures for colorblind people [http://jfly.iam.u-tokyo.ac.jp/color/index.html]
+# uncomment and edit colors below to use RGB colors
+my %RGBCOLORS = ( 
+  #'cloud'    =>'rgb(0,0,0,maxColorValue=255)',
+  #'shell'    =>'rgb(230,159,0,maxColorValue=255)',
+  #'soft_core'=>'rgb(86,180,233,maxColorValue=255)',
+  #'core'     =>'rgb(0,158,115,maxColorValue=255)'
+);
+
 
 # globals used only with -p flag
 my $DEFAULTGBKFEATURES = 'CDS,tRNA,rRNA'; # defines GenBank features to be parsed 
@@ -170,6 +185,9 @@ while(<MAT>)
   next if(/^#/ || /^$/);
   chomp;
   my @data = split(/\t/,$_);
+  
+  next if($data[0] =~ /^reference/ || $data[0] =~ /^redundant/); # nr matrices
+  
   if($data[0] =~ /^source:(\S+)/) #source:path/to/clusters/t101964_thrB.fna/t101965_thrC.fna/t...
   {
     $cluster_dir = $1;
@@ -196,8 +214,28 @@ while(<MAT>)
       $n_of_clusters = $#data;
     }
   }
-  else #_Escherichia_coli_ETEC_H10407_uid42749.gbk     1       1	...
+  elsif($data[0] =~ /^non-redundant/) #non-redundant	24_Brdisv1ABR21043430m.faa+1	297_Brdisv1ABR21026756m.faa	
   {
+    if($INP_list_taxa)
+    {
+      print "# EXIT: cannot list taxa present in clusters of non-redundant matrix\n";
+      exit;
+    }
+    
+    my $cl_name;
+    foreach $col (1 .. $#data)
+    {
+      $cl_name = $data[$col];
+      $cl_name = (split(/\+\d/,$cl_name))[0]; 
+      $cluster_names{$col} = $cl_name;
+      $n_of_clusters = $col;
+    }
+  }
+  else 
+  {
+    #_Escherichia_coli_ETEC_H10407_uid42749.gbk     1       1	...
+    #Bd3-1_r.1.cds.fna.nucl	1	2 ...
+ 
     foreach $col (1 .. $#data)
     {
       $pangemat{$data[0]}[$col] = $data[$col];
@@ -451,13 +489,10 @@ if($INP_refgenome)
         if($feat && $feat =~ /(\S+)?\((\d+)\):(\d+)-(\d+):(-*1)/)
         {
           $contig{$1}{'size'} = $2;
-          push(@{$contig{$1}{'clusters'}},[$3,$4,$5,$pancluster]);
-
-          #print "# $1 $2 $3 $4 $5\n";
+          push(@{$contig{$1}{'clusters'}},[$3,$4,$5,$pancluster]);#print "# $1 $2 $3 $4 $5\n";
         }
       }
     }
-
   }
 
   if(!$taxonOK)
@@ -537,6 +572,11 @@ if($INP_plotshell)
   my $n_of_taxa = scalar(keys(%pangemat));
   my ($cloudpos,$cloudmax,$cluster,$s,%stats,%total) = (-1,-1);
   my $softcorepos = int($SOFTCOREFRACTION*$n_of_taxa); 
+  
+  if($n_of_taxa < 5)
+  {
+    die "# EXIT : need at least 5 taxa to perform -s analysis\n";
+  }  
 
   # calculate shell sums and fill gaps
   foreach $cluster (1 .. $#shell){ $stats{$shell[$cluster]}++; }
@@ -553,7 +593,8 @@ if($INP_plotshell)
     }
   }
   close(SINP);
-
+    
+  
   # print lists of genomic compartments
   open(CLOUDF,">$cloudlistfile") || die "# EXIT : cannot create $cloudlistfile\n";
   open(SHELLF,">$shelllistfile") || die "# EXIT : cannot create $shelllistfile\n";
@@ -597,9 +638,21 @@ if($INP_plotshell)
   # create graphs and fit mix models if possible
   if(feature_is_installed('R'))
   {
-    # calculate circle radii
+    # set colors
+    my %colors;
+    if(keys(%RGBCOLORS))
+    { 
+      %colors = %RGBCOLORS;
+      print "\n# using RGB colors, defined in \%RGBCOLORS\n"; 
+    }
+    else
+    { 
+      %colors = %COLORS;
+      print "\n# using default colors, defined in \%COLORS\n"; 
+    }
+  
+    # calculate circle radii and sort colors accordingly
     my (@radius,@color,$max);
-    my %colors = ('cloud'=>'red','shell'=>'orange','soft_core'=>'yellow','core'=>'white');
     for $s (sort {$total{$b}<=>$total{$a}} keys(%total))
     {
       push(@color,$colors{$s});
@@ -614,25 +667,30 @@ if($INP_plotshell)
     open(RSHELL,"|R --no-save $Rparams ") || die "# cannot call R: $!\n";
     print RSHELL<<EOR;
 		shell = read.table("$shell_input",header=F);
-		colors = c( rep('red',each=$cloudpos), rep('orange',each=$softcorepos-$cloudpos-1), 
-		rep('yellow',each=$n_of_taxa-$softcorepos), 'white');
+		colors = c( rep($colors{'cloud'},each=$cloudpos), 
+      rep($colors{'shell'},each=$softcorepos-$cloudpos-1), 
+		  rep($colors{'soft_core'},each=$n_of_taxa-$softcorepos), 
+      $colors{'core'}
+    );
 	
     pdf(file="$shell_output_pdf");
-	  bars = barplot(shell\$V1,xlab='number of genomes in clusters',ylab='number of gene clusters',
+	  bars = barplot(shell\$V1,xlab='number of genomes in clusters (occupancy)',ylab='number of gene clusters',
       main='',names.arg=1:$n_of_taxa,col=colors,ylim=c(0,$YLIMRATIO*max(shell\$V1)));
       
-		mtext(sprintf("total clusters = %d",$n_of_clusters),side=3,cex=0.8,line=0.5);
+		mtext(sprintf("total clusters = %s",format($n_of_clusters,big.mark=",",scientific=FALSE)),side=3,cex=0.8,line=0.5);
 		#text(x=bars[$n_of_taxa],y=$stats{$n_of_taxa}/2,labels=sprintf("%d",$stats{$n_of_taxa}),cex=0.8); # core size
-		legend('top', c('cloud','shell','soft core','core'), cex=0.6, fill=c('red','orange','yellow','white'));
+		legend('top', c('cloud','shell','soft core','core'), cex=1.0, 
+      fill=c($colors{'cloud'},$colors{'shell'},$colors{'soft_core'},$colors{'core'}) );
 	
     png(file="$shell_output_png");
-		bars = barplot(shell\$V1,xlab='number of genomes in clusters',ylab='number of gene clusters',
+		bars = barplot(shell\$V1,xlab='number of genomes in clusters (occupancy)',ylab='number of gene clusters',
 		  main='',names.arg=1:$n_of_taxa,col=colors,ylim=c(0,$YLIMRATIO*max(shell\$V1))); 
-    mtext(sprintf("total clusters = %d",$n_of_clusters),side=3,cex=0.8,line=0.5);
+    mtext(sprintf("total clusters = %s",format($n_of_clusters,big.mark=",",scientific=FALSE)),side=3,cex=0.8,line=0.5);
     #text(x=bars[$n_of_taxa],y=$stats{$n_of_taxa}/2,labels=sprintf("%d",$stats{$n_of_taxa}),cex=0.8);        
-		legend('top', c('cloud','shell','soft core','core'), cex=0.6, fill=c('red','orange','yellow','white'));
+		legend('top', c('cloud','shell','soft core','core'), cex=1.0, 
+      fill=c($colors{'cloud'},$colors{'shell'},$colors{'soft_core'},$colors{'core'}) );
 
-		# now make circle plots
+		## now make circle plots
 		circle <- function(x, y, r, ...)
 		{
 			ang <- seq(0, 2*pi, length = 100)
@@ -644,32 +702,34 @@ if($INP_plotshell)
 		pdf(file="$shell_circle_pdf");
 		par(mar=c(0,0,0,0));
 		plot(-3,-3,ylim=c(0,3), xlim=c(0,3),axes=F);
-		circle(x=1.5,y=1.5,r=$radius[0],col="$color[0]", border=NA);
-		circle(x=1.5,y=1.5,r=$radius[1],col="$color[1]", border=NA);
-		circle(x=1.5,y=1.5,r=$radius[2],col="$color[2]", border=NA);
-		circle(x=1.5,y=1.5,r=$radius[3],col="$color[3]", border=NA);
-		text(1.5,0.25,sprintf("total gene clusters = %d   taxa = %d",$n_of_clusters,$n_of_taxa),cex=0.8);	
+		circle(x=1.5,y=1.5,r=$radius[0],col=$color[0], border=NA);
+		circle(x=1.5,y=1.5,r=$radius[1],col=$color[1], border=NA);
+		circle(x=1.5,y=1.5,r=$radius[2],col=$color[2], border=NA);
+		circle(x=1.5,y=1.5,r=$radius[3],col=$color[3], border=NA);
+		text(1.5,0.25,sprintf("total gene clusters = %s   taxa = %d",
+      format($n_of_clusters,big.mark=",",scientific=FALSE),$n_of_taxa),cex=0.8);	
 		legend('topright', c(
 			"cloud  ($total{'cloud'} , genomes<=$cloudpos)",
 			"shell  ($total{'shell'})",
 			"soft core  ($total{'soft_core'} , genomes>=$softcorepos)",
 			"core  ($total{'core'} , genomes=$n_of_taxa)"),
-			cex=1.0, fill=c('red','orange','yellow','white'));
+			cex=1.0, fill=c($colors{'cloud'},$colors{'shell'},$colors{'soft_core'},$colors{'core'}));
 
 		png(file="$shell_circle_png");
 		par(mar=c(0,0,0,0));
     plot(-3,-3,ylim=c(0,3), xlim=c(0,3),axes=F);
-    circle(x=1.5,y=1.5,r=$radius[0],col="$color[0]", border=NA);
-    circle(x=1.5,y=1.5,r=$radius[1],col="$color[1]", border=NA);
-    circle(x=1.5,y=1.5,r=$radius[2],col="$color[2]", border=NA);
-    circle(x=1.5,y=1.5,r=$radius[3],col="$color[3]", border=NA);
-		text(1.5,0.25,sprintf("total gene clusters = %d   taxa = %d",$n_of_clusters,$n_of_taxa),cex=0.8);
+    circle(x=1.5,y=1.5,r=$radius[0],col=$color[0], border=NA);
+    circle(x=1.5,y=1.5,r=$radius[1],col=$color[1], border=NA);
+    circle(x=1.5,y=1.5,r=$radius[2],col=$color[2], border=NA);
+    circle(x=1.5,y=1.5,r=$radius[3],col=$color[3], border=NA);
+		text(1.5,0.25,sprintf("total gene clusters = %s   taxa = %d",
+      format($n_of_clusters,big.mark=",",scientific=FALSE),$n_of_taxa),cex=0.8);
     legend('topright', c(
       "cloud  ($total{'cloud'} , genomes<=$cloudpos)",
       "shell  ($total{'shell'})",
       "soft core  ($total{'soft_core'} , genomes>=$softcorepos)",
       "core  ($total{'core'} , genomes=$n_of_taxa)"),
-      cex=1.0, fill=c('red','orange','yellow','white'));
+      cex=1.0, fill=c($colors{'cloud'},$colors{'shell'},$colors{'soft_core'},$colors{'core'}));
 	
 		negTruncLogLike <- function( p, y, core.p )
 		{
@@ -696,7 +756,7 @@ if($INP_plotshell)
 
 		binomix <- function( y, ncomp=(2:5), core.detect.prob=1.0 )
 		{   
-			#   Function that estimate pan- and core-genome size using the zero-truncated
+			#   Function that estimates pan- and core-genome size using the zero-truncated
 			#   binomial mixture model.
 			#   
 			#   y must be the number of genes found in 1,...,G genomes. ncomp must be a 
