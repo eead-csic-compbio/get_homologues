@@ -128,3 +128,5 @@
 04052016: fixed bug in get_homologues-est.pl -c so that redundant isoforms are not added to pan/core sets
 04052016: fixed bug in get_homologues.pl -c so that inparalogues are substracted while adding up novel BDBH pan-genome genes
 05052016: added global $INCLUDEORDER to get_homologues-est.pl to control wheter -c analyses should follow -I include order 
+10052016: parse_pangenome_matrix.pl now can parse non-redundant pangenome matrices made with make_nr_pangenome_matrix.pl 
+10052016: parse_pangenome_matrix.pl barplot colors can now be encoded in RGB scale in variable %RGBCOLORS
