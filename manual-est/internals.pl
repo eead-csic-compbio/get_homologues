@@ -10,6 +10,10 @@ $key = q/options/;
 $ref_files{$key} = "$dir".q|manual-est.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/tab:evcodes/;
+$ref_files{$key} = "$dir".q|manual-est.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/dependencies/;
 $ref_files{$key} = "$dir".q|manual-est.html|; 
 $noresave{$key} = "$nosave";

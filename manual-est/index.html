@@ -187,7 +187,7 @@ modules from the <A NAME="tex2html6"
   HREF="http://www.bioperl.org">Bioperl</A>
 collection, 
 and module <A NAME="tex2html7"
-  HREF="<"><</A>447>>http://search.cpan.org/perldoc?Parallelare also required, and have been included in the <SPAN  CLASS="textit">get_homologues-est</SPAN> bundle for your convenience.
+  HREF="<"><</A>454>>http://search.cpan.org/perldoc?Parallelare also required, and have been included in the <SPAN  CLASS="textit">get_homologues-est</SPAN> bundle for your convenience.
 
 <P>
 Should this version of BioPerl fail in your system (as diagnosed by <SPAN  CLASS="textit">install.pl</SPAN>) 
@@ -342,8 +342,8 @@ database engine, which requires Perl core module
 <P>
 The accompanying script <SPAN  CLASS="textit">transcripts2cds.pl</SPAN> should work out of the box, but the more efficient
 <SPAN  CLASS="textit">transcripts2cdsCPP.pl</SPAN> requires the installation of module <A NAME="tex2html20"
-  HREF="<"><</A>448>>http://search.cpan.org/perldoc?Inlinewhich in turn requires <A NAME="tex2html21"
-  HREF="<"><</A>449>>http://search.cpan.org/perldoc?InlineThe installation of these modules is known to be troublesome in some systems, but the standard way should work in most cases:
+  HREF="<"><</A>455>>http://search.cpan.org/perldoc?Inlinewhich in turn requires <A NAME="tex2html21"
+  HREF="<"><</A>456>>http://search.cpan.org/perldoc?InlineThe installation of these modules is known to be troublesome in some systems, but the standard way should work in most cases:
 
 <P>
 <PRE>
@@ -636,13 +636,15 @@ identical in sequence to any previous sequence with cover <SPAN CLASS="MATH"><IM
  SRC="img4.png"
  ALT="$ \geq 50\%$"></SPAN> in order to be called homologous; otherwise they are handled as novel sequences. 
 This low coverage is set in order to allow transcripts with retained/unprocessed introns to be matched.
-Note that these default values are different to those in <SPAN  CLASS="textit">get_homologues</SPAN>, which are adequate for peptide sequences. 
+The default identity value was chosen to match the fact that BLASTN::megablast hardly reports hits with lower identities in our tests 
+with barley transcripts and <SPAN  CLASS="textit">A.thaliana</SPAN> CDS sequences.
+Note that these default values are different to those set in <SPAN  CLASS="textit">get_homologues</SPAN> for peptide sequences. 
 When combined with flag <code>-t</code> (see below), the composition analysis will disregard clusters reported in a selected number of strains.
 This feature can be used to filter out singletons or artifacts which might arise from <SPAN  CLASS="textit">de novo</SPAN> assembled transcriptomes.
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="206"></A>
+<DIV ALIGN="CENTER"><A NAME="207"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 3:</STRONG>
 Histograms of % identity reported by BLASTN among Arabidopsis thaliana CDS sequences (left) and Hordeum vulgare (right) transcripts. 
@@ -707,7 +709,7 @@ unless both of them come from a full-length collection (see <A HREF="#input">3.1
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="221"></A>
+<DIV ALIGN="CENTER"><A NAME="222"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 4:</STRONG>
 Coverage illustrated with the alignment of sequence 'query' to two aligned fragments of sequence 'subject'.
@@ -886,6 +888,7 @@ be installed by running: <!-- MATH
  ALT="$ ./install.pl$"></SPAN>
 
 <P>
+Ths program supports the following options:
 <PRE> 
 usage: ./transcripts2cds.pl [options] &lt;input FASTA file(s) with transcript nucleotide sequences&gt;
 
@@ -898,6 +901,35 @@ usage: ./transcripts2cds.pl [options] &lt;input FASTA file(s) with transcript nu
 -n number of threads for BLASTX jobs                         (default=2)
 
 -G show available genetic codes and exit
+</PRE> 
+
+<P>
+The main output of this script are two files, as shown in section <A HREF="#transcripts2cds">4.1</A>, which contain inferred nucleotide and peptide CDS sequences.
+These FASTA files contain in each header the evidence supporting each called CDS, which can be <code>blastx</code>, <code>transdecoder</code> or 
+a <code>combination of both</code>, giving precedence to <code>blastx</code> in case of conflict. The next table shows all possible CDS evidence codes, 
+where 1 stands for the BLASTX prediction and 2 for that of TransDecoder:
+
+<P>
+<PRE> 
+graphical summary         evidence             description
+
+1----------          blastx.transdecoder       inferred CDS overlap with no 
+     2-----------                              mismatches and are concatenated
+     
+     1----------     transdecoder.blastx       inferred CDS overlap with no 
+2-----------                                   mismatches and are concatenated
+
+1-----------------   blastx&lt;transdecoder       blastx CDS includes transdecoder CDS
+   2-----------
+   
+     1----------     transdecoder&lt;blastx       transdecoder CDS includes blastx CDS
+2------------------ 
+
+1--------C--         blastx-mismatches         blastx CDS is returned as transdecoder 
+     2---T------                               CDS contains mismatches
+
+1-----               blastx-noover             blastx CDS is returned as transdecoder 
+        2---                                   CDS does not overlap
 </PRE> 
 
 <P>
@@ -964,7 +996,7 @@ The output should look like this (contained in file <code>sample_transcripts_out
 </PRE>
 
 <P>
-The resulting CDS files can be then analyzed with <SPAN  CLASS="textit">get_homologues-est.pl</SPAN>.
+The resulting CDS files can then be analyzed with <SPAN  CLASS="textit">get_homologues-est.pl</SPAN>.
 
 <P>
 Apart from the listed output files, which include translated protein sequences, temporary files are stored in the working directory,
@@ -1121,7 +1153,7 @@ are installed, this matrix can be plotted with:
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:ANImat"></A><A NAME="293"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:ANImat"></A><A NAME="297"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 5:</STRONG>
 Plot of Average Nucleotide Identity matrix</CAPTION>
@@ -1173,7 +1205,7 @@ Both matrices can be plotted with script <SPAN  CLASS="textit">plot_pancore_matr
 <BR>
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:pant0"></A><A NAME="fig:pant2"></A><A NAME="314"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:pant0"></A><A NAME="fig:pant2"></A><A NAME="318"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 6:</STRONG>
 Pan-transcriptome size estimates (-t 0, left) and (-t 2,  right) based on random samples of 4 transcriptome sets. 
@@ -1213,7 +1245,7 @@ in PubMed=<A NAME="tex2html53"
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:pangenomet"></A><A NAME="440"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:pangenomet"></A><A NAME="447"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 7:</STRONG>
 
@@ -1248,7 +1280,7 @@ The next Figure show some of this snapshots:
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:snapshot"></A><A NAME="441"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:snapshot"></A><A NAME="448"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 8:</STRONG>
 
@@ -1302,7 +1334,7 @@ are installed, such a pangenome matrix can be used to hierarchically cluster str
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:hclustpange"></A><A NAME="346"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:hclustpange"></A><A NAME="350"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 9:</STRONG>
 Hierarchical grouping of strains based on pangenome matrix.</CAPTION>
@@ -1462,7 +1494,7 @@ CCTGCTGGTGCATTTTTTTACAAACAGTTGGCACAGAGTATTTGTTGCTAATTGTGTTCGTTTTCTTGAA...
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:annotcluster"></A><A NAME="442"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:annotcluster"></A><A NAME="449"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 10:</STRONG>
 Fragment of alignment produced by <SPAN  CLASS="textit">annotate_cluster.pl</SPAN>, 
@@ -1503,7 +1535,7 @@ in the figure, which combines data from the original benchmark and new data gene
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:RAMtimev2"></A><A NAME="390"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:RAMtimev2"></A><A NAME="394"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 11:</STRONG>
 Computing time and RAM requirements of the original algorithm (OMCL, measured on 6 sequence sets) 
@@ -1531,7 +1563,7 @@ These three common situations are illustrated on Figure <A HREF="#fig:ESTcaveats
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:ESTcaveats"></A><A NAME="400"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:ESTcaveats"></A><A NAME="404"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 12:</STRONG>
 Common problems faced when clustering transcripts/CDS sequences.</CAPTION>
@@ -1554,6 +1586,39 @@ Common problems faced when clustering transcripts/CDS sequences.</CAPTION>
 We have left the COG algorithm out of <SPAN  CLASS="textit">get_homologues-est.pl</SPAN> as it will take some more work to integrate it
 with redundant isoform calling, which we think is important for EST datasets. However, it should be possible
 to do it and perhaps it might be added later.
+
+<P>
+</LI>
+<LI>The number of clusters produced with <code>-C 75 -S 85</code> does not match the pangenome/pantranscriptome size estimated with option <code>-c</code>
+
+<P>
+The reason for these discrepancies is that these are fundamentally different analyses. 
+While the default runmode simply groups sequences trying to put in the same cluster isoforms of orthologues and very close inparalogues, 
+a genome composition analysis performs a simulation in order to estimate how many novel sequences are added by 
+genomes/transcriptomes sampled in random order. In terms of code, there are a couple of key global variables set in
+<code>lib/marfil_homology.pm</code>, lines 135-138, which control how a gene/transcript is compared to previously processed sequences 
+in order to call it novel:
+<PRE>
+$MIN_PERSEQID_HOM_EST = 70.0;      
+$MIN_COVERAGE_HOM_EST = 50.0;
+</PRE>
+
+<P>
+These values are equivalent to say that any sequence with <!-- MATH
+ $coverage \ge 50\%$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="105" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img8.png"
+ ALT="$ coverage ge 50\%$"></SPAN> and <!-- MATH
+ $identity \ge 70\%$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="103" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img9.png"
+ ALT="$ identity \ge 70\%$"></SPAN> to previous genes/transcripts 
+will be considered simple a homologue and won't be accumulated to the growing pangenome/pantranscriptome. 
+You might want to change these values to increase or relax the stringency and to match the parameters set to produce your clusters.
 
 <P>
 </LI>
@@ -1684,7 +1749,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>manual-est -no_antialias_text -split 0 -dir manual-est -no_navigation -show_section_numbers</TT>
 <P>
-The translation was initiated by Bruno Contreras Moreira on 2016-05-10
+The translation was initiated by Bruno Contreras Moreira on 2016-05-27
 <BR><HR>
 <ADDRESS>
 <a href="http://hdl.handle.net/10261/21892">PDF</a><br>Bruno Contreras-Moreira<br><a href="http://www.eead.csic.es/compbio">http://www.eead.csic.es/compbio</a>

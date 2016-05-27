@@ -10,6 +10,10 @@ $key = q/options/;
 $external_labels{$key} = "$URL/" . q|manual-est.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/tab:evcodes/;
+$external_labels{$key} = "$URL/" . q|manual-est.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/dependencies/;
 $external_labels{$key} = "$URL/" . q|manual-est.html|; 
 $noresave{$key} = "$nosave";
