@@ -130,3 +130,11 @@
 05052016: added global $INCLUDEORDER to get_homologues-est.pl to control wheter -c analyses should follow -I include order 
 10052016: parse_pangenome_matrix.pl now can parse non-redundant pangenome matrices made with make_nr_pangenome_matrix.pl 
 10052016: parse_pangenome_matrix.pl barplot colors can now be encoded in RGB scale in variable %RGBCOLORS
+14052016: removed warnings when options -f/-P not invoked in make_nr_pangenome_matrix.pl
+14052016: added -e to reference matching in make_nr_pangenome_matrix.pl
+16052016: updated manual-est with transcript2CDS description
+17052016: added degenerate DNA bases [WSRYKM] to make_nr_pangenome_matrix.pl 
+20052016: increased hit number while matching reference sequences in make_nr_pangenome_matrix.pl
+20052016: make_nr_pangenome_matrix.pl can now take all references matching nr clusters (see var $ONLYBESTREFHIT)
+27052016: improved the description of $MIN_PERSEQID_HOM_EST and $MIN_COVERAGE_HOM_EST and added a FAQ
+27052016: improved the description of $MIN_PERSEQID_HOM and $MIN_COVERAGE_HOM and added a FAQ

@@ -942,8 +942,8 @@ sub blast_parse_COG
 # 2. String Variable: blast parse out file
 # 3. (optional) Flag: skip sort step if requested
 # 4. (optional) Flag: trim BLAST multi-hsp overlaps, else over-estimate coverage occasionally
-# Q=query,S=subject
-# Updated Oct2015
+# Q=query,S=subject, assumes Qids are integers
+# Updated May2016
 sub blast_parse
 {
   my ($blastfile,$parseoutfile,$skipsort,$trim) = @_;
@@ -1028,7 +1028,7 @@ sub blast_parse
       $bits += $pbits;
       $percID += $ppercID;
       $Qaln_len += $pQaln_len;
-		$Saln_len += $pSaln_len;
+		  $Saln_len += $pSaln_len;
       push(@hsps,[$Qstart,$Qend,$Sstart,$Send]);
       $simspan .= "$n_of_hsp:$pQstart-$pQend:$pSstart-$pSend.";
       $n_of_hsp++;
@@ -1038,15 +1038,15 @@ sub blast_parse
       if($n_of_hsp>1){ $ppercID = sprintf("%1.2f",$ppercID/$n_of_hsp) }
 
       $simspan .= "$n_of_hsp:$pQstart-$pQend:$pSstart-$pSend.";
-		$Qcov = sprintf("%1.0f",100 * $pQaln_len / $pQlength);
-		$Scov = sprintf("%1.0f",100 * $pSaln_len / $pSlength);
+		  $Qcov = sprintf("%1.0f",100 * $pQaln_len / $pQlength);
+		  $Scov = sprintf("%1.0f",100 * $pSaln_len / $pSlength);
 
-		# move length, span, bits to the end as they are rarely needed
+		  # move length, span, bits to the end as they are rarely needed
       print PARSEOUT "$pQid\t$pSid\t$pEvalue\t$ppercID\t$Qcov\t$Scov\t$pQlength\t$pSlength\t$simspan\t$pbits\n";
       $n_of_bpo_lines++;
       
-		# initialize
-		($n_of_hsp,$simspan,$redhsp) = (1,'',0);
+		  # initialize
+		  ($n_of_hsp,$simspan,$redhsp) = (1,'',0);
       @hsps = ([$Qstart,$Qend,$Sstart,$Send]);
       $Qaln_len = ($Qend-$Qstart)+1;
       $Saln_len = ($Send-$Sstart)+1;

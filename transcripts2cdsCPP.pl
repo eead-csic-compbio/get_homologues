@@ -427,7 +427,7 @@ foreach $input_FASTA_file (@input_files)
         $seq_transcod = substr($seq_transcod,0,-3);
       }
 
-#($seq_cds,$evidence) = sequence_consensus($seq_transcod,$seq_blastx,'transdecoder','blastx',2); # Perl
+      #($seq_cds,$evidence) = sequence_consensus($seq_transcod,$seq_blastx,'transdecoder','blastx',2); # Perl
 
       $consensus->set_sequences($seqname,$seq_transcod,$seq_blastx); #CPP
       $consensus->calc_consensus();                                  #CPP
