@@ -26,10 +26,11 @@ my @FEATURES2CHECK = ('EXE_BLASTP','EXE_BLASTN','EXE_FORMATDB','EXE_SPLITBLAST')
 
 ## settings for local batch blast jobs
 my $BATCHSIZE = 100;
+my $ONLYBESTREFHIT = 0; # take only best hit among reference hits
 
 my ($INP_matrix,$INP_taxa,$INP_length,$INP_nucleotides,%opts) = ('',1,0,1);
 my ($INP_identity,$INP_cover,$INP_reference_cover,$INP_reference_identity) = (90,75,50,50);
-my ($INP_reference_cluster_dir,$INP_reference_file,$INP_use_short_sequence,) = ('','',0);
+my ($INP_reference_cluster_dir,$INP_reference_file,$INP_use_short_sequence) = ('','',0);
 my ($n_of_cpus) = ($BLAST_NOCPU);
 
 getopts('hPes:c:f:r:n:t:m:l:C:S:', \%opts);
@@ -94,7 +95,7 @@ if(defined($opts{'n'}) && $opts{'n'} > 0)
 
 if(defined($opts{'f'}) || defined($opts{'r'}))
 {
-  if(-s $opts{'f'}){ $INP_reference_file = $opts{'f'} }
+  if($opts{'f'} && -s $opts{'f'}){ $INP_reference_file = $opts{'f'} }
   elsif(defined($opts{'r'}) && -d $opts{'r'}){ $INP_reference_cluster_dir = $opts{'r'} }
   else
   {
@@ -116,8 +117,9 @@ if(defined($opts{'e'}))
   $INP_use_short_sequence = 1;
 }
 
+print "\n# ONLYBESTREFHIT=$ONLYBESTREFHIT\n";
 printf("\n# %s -m %s -t %d -l %d -C %d -S %d -P %s -f %s -r %s -c %d -s %d -e %d -n %d\n\n",
-	$0,$INP_matrix,$INP_taxa,$INP_length,$INP_cover,$INP_identity,$INP_nucleotides,
+	$0,$INP_matrix,$INP_taxa,$INP_length,$INP_cover,$INP_identity,!$INP_nucleotides,
   $INP_reference_file,$INP_reference_cluster_dir,
   $INP_reference_cover,$INP_reference_identity,
   $INP_use_short_sequence,$n_of_cpus);
@@ -213,7 +215,7 @@ foreach $col (1 .. $n_of_clusters)
  
   foreach $seq ( 0 .. $#{$fasta_ref} )
   {
-    if($INP_nucleotides && $fasta_ref->[$seq][SEQ] =~ /^[^ACGTXN\-\s]+$/i)
+    if($INP_nucleotides && $fasta_ref->[$seq][SEQ] =~ /^[^ACGTWSRYKMXN\-\s]+$/i)
     {
       print "# ERROR: cluster $cluster_dir/$cluster_name contains protein sequences, exit\n";
       exit;
@@ -261,7 +263,7 @@ foreach $col (sort {$length[$b] <=> $length[$a]} @filtered)
   print FASTA ">$filtered_clusters $col $cluster_names[$col]\n$median_seq[$col]\n";
   $median_length{$filtered_clusters} = $length[$col];
 }  
-close(FASTA);
+close(FASTA); 
 
 
 
@@ -277,7 +279,7 @@ if(!-s $nr_pangenome_blast_file)
     }
     
     $command = format_BLASTN_command($nr_pangenome_fasta_file,$nr_pangenome_blast_file,
-      $nr_pangenome_fasta_file,$BLAST_PVALUE_CUTOFF_DEFAULT,2,1);
+      $nr_pangenome_fasta_file,$BLAST_PVALUE_CUTOFF_DEFAULT,2,1,'megablast');
   }
   else
   { 
@@ -399,8 +401,8 @@ if($INP_reference_file || $INP_reference_cluster_dir)
       print REF ">$id $fasta_ref->[$seq][NAME]\n$fasta_ref->[$seq][SEQ]\n";
       
       # check nr sequences and reference sequences are compatible
-      if( ($INP_nucleotides && $fasta_ref->[$seq][SEQ] =~ m/[PDEQHKMILVF]/) ||
-        (!$INP_nucleotides && $fasta_ref->[$seq][SEQ] !~ m/[PDEQHKMILVF]/) )
+      if( ($INP_nucleotides && $fasta_ref->[$seq][SEQ] =~ m/[PDEQHILVF]/) ||
+        (!$INP_nucleotides && $fasta_ref->[$seq][SEQ] !~ m/[PDEQHILVF]/) )
       {
         print "# both input clusters and references must be either nucleotides or peptides\n";
         print "# offending sequence: \n$fasta_ref->[$seq][SEQ]\n";
@@ -430,7 +432,7 @@ if($INP_reference_file || $INP_reference_cluster_dir)
     foreach $col (@filtered)
     {
       next if($redundant{$col}); 
-      print NR ">$col $cluster_names[$col]\n$median_seq[$col]\n";
+      print NR ">$col\_$cluster_names[$col]\n$median_seq[$col]\n";
     }  
     close(NR);	
   }
@@ -477,11 +479,12 @@ if($INP_reference_file || $INP_reference_cluster_dir)
       foreach $seq ( 0 .. $#{$fasta_ref} )
       {
         $id = $ref_cluster_id.'_'.$n_of_ref_sequences;
-        print REF ">$id $clusterfile $fasta_ref->[$seq][NAME]\n$fasta_ref->[$seq][SEQ]\n";
+        print REF ">$id $clusterfile $fasta_ref->[$seq][NAME]\n$fasta_ref->[$seq][SEQ]\n"; # might cause trouble with BLAST
+        print REF ">$id $clusterfile\n$fasta_ref->[$seq][SEQ]\n";
         
         # check nr sequences and reference sequences are compatible
-        if( ($INP_nucleotides && $fasta_ref->[$seq][SEQ] =~ m/[PDEQHKMILVF]/) ||
-          (!$INP_nucleotides && $fasta_ref->[$seq][SEQ] !~ m/[PDEQHKMILVF]/) )
+        if( ($INP_nucleotides && $fasta_ref->[$seq][SEQ] =~ m/[PDEQHILVF]/) ||
+          (!$INP_nucleotides && $fasta_ref->[$seq][SEQ] !~ m/[PDEQHILVF]/) )
         {
           print "# both input clusters and references must be either nucleotides or peptides\n";
           print "# offending sequence: \n$fasta_ref->[$seq][SEQ]\n";
@@ -497,7 +500,7 @@ if($INP_reference_file || $INP_reference_cluster_dir)
     }    
     close(REF);
     
-    # create a temporary FASTA file with the previosuly computed nr cluster sequences
+    # create a temporary FASTA file with the previously computed nr cluster sequences
     open(NR,">$nr_pangenome_tmp_fasta_file") || die "# ERROR : cannot create $nr_pangenome_tmp_fasta_file\n";
     foreach $col (@filtered)
     {
@@ -505,7 +508,7 @@ if($INP_reference_file || $INP_reference_cluster_dir)
       print NR ">$col $cluster_names[$col]\n$median_seq[$col]\n";
     }  
     close(NR);	
-  }    
+  }   
       
   # run BLAST
   if(!-s $nr_pangenome_reference_blast_file)
@@ -519,7 +522,7 @@ if($INP_reference_file || $INP_reference_cluster_dir)
       }
     
       $command = format_BLASTN_command($nr_pangenome_tmp_fasta_file,$nr_pangenome_reference_blast_file,
-        $nr_pangenome_reference_fasta_file,$BLAST_PVALUE_CUTOFF_DEFAULT,2,1);
+        $nr_pangenome_reference_fasta_file,$BLAST_PVALUE_CUTOFF_DEFAULT,500,1,'megablast');
     }
     else # prot to prot
     { 
@@ -530,7 +533,7 @@ if($INP_reference_file || $INP_reference_cluster_dir)
       }
     
       $command = format_BLASTP_command($nr_pangenome_tmp_fasta_file,$nr_pangenome_reference_blast_file,
-        $nr_pangenome_reference_fasta_file,$BLAST_PVALUE_CUTOFF_DEFAULT,2,1);
+        $nr_pangenome_reference_fasta_file,$BLAST_PVALUE_CUTOFF_DEFAULT,500,1);
     }  
   
     $command = format_SPLITBLAST_command()."$BATCHSIZE $command > /dev/null"; #die $command;
@@ -555,23 +558,39 @@ if($INP_reference_file || $INP_reference_cluster_dir)
     # pSid -> reference sequence
     # 1,49439_49439
     ($col,$pSid,$pEvalue,$ppercID,$pQcov,$pScov,$querylen,$subjectlen,$simspan,$pbits) = split(/\t/,$_);
+    #print if($col eq '890'); # debugging
+
+    next if($ref_match{$col} && $ONLYBESTREFHIT); 
   
-    next if($ref_match{$col}); # take only best hit among reference hits
-  
-    #$cover = simspan_hsps($querylen,$subjectlen,$simspan,0);
-    if($querylen > $subjectlen){ $cover = $pQcov }
-    else{ $cover = $pScov }
+    #$cover = simspan_hsps($querylen,$subjectlen,$simspan,0);    
+    if($INP_use_short_sequence)
+    {
+      if($querylen < $subjectlen){ $cover = $pQcov }
+      else{ $cover = $pScov }
+    }
+    else
+    {
+      if($querylen > $subjectlen){ $cover = $pQcov }
+      else{ $cover = $pScov }
+    }
+    
     if($cover >= $INP_reference_cover && $ppercID >= $INP_reference_identity) 
     {
       $ref_cluster_id = (split(/_/,$pSid))[0]; #print "$pQid $pSid $ref_cluster_id $cover\n";
-      $ref_match{$col} = $ref_cluster_id; 
-      push(@{$ref_seen{$ref_cluster_id}},$col);
+
+      next if($ref_seen{$ref_cluster_id}{$col});
+
+      $ref_match{$col} .= "$ref_cluster_id,"; 
+      $ref_seen{$ref_cluster_id}{$col}=1;
       
       # add this cluster sequences' to the right pangenome matrix column
-      $matched_clusters{$col} = $ref_cluster_size[$ref_cluster_id];
+      $matched_clusters{$col} += $ref_cluster_size[$ref_cluster_id];
     }
   }
   close(BPO);
+
+  printf("# %d nr clusters matched by %d reference sequences/clusters\n\n",
+    scalar(keys(%matched_clusters)),scalar(keys(%ref_seen)));
 }
 
 ## 7) print nr pangenome matrix
@@ -636,11 +655,15 @@ if($INP_reference_file || $INP_reference_cluster_dir)
   foreach $col (@filtered)
   {
     next if($redundant{$col});
+    $cluster_name = '';
     if($matched_clusters{$col})
     {
-      $cluster_name = $id2name[$ref_match{$col}];
-    }  
-    else{ $cluster_name = 'NA' }
+      foreach my $cl (split(/,/,$ref_match{$col}))
+      {    
+        $cluster_name .= "$id2name[$cl],";
+      }  
+    }
+    else{ $cluster_name = 'NA' }  
    
     print NRMAT "\t$cluster_name";
   } print NRMAT "\t\n";
