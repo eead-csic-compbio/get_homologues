@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2013.12.19)  27 MAY 2016 12:34
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2013.12.19)  8 JUN 2016 09:57
 entering extended mode
  %&-line parsing enabled.
 **./images.tex
@@ -414,17 +414,17 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7.4> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 195.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 195.
-l2hSize :tex2html_wrap_inline1980:7.38493pt::7.38493pt::62.42343pt.
+l2hSize :tex2html_wrap_inline2030:7.32988pt::7.32988pt::67.47397pt.
 [1
 
 
 
 ] (./images.aux) ) 
 Here is how much of TeX's memory you used:
- 5736 strings out of 495062
- 80625 string characters out of 1182643
+ 5737 strings out of 495062
+ 80634 string characters out of 1182643
  151034 words of memory out of 3000000
- 8822 multiletter control sequences out of 15000+50000
+ 8823 multiletter control sequences out of 15000+50000
  13501 words of font info for 39 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
  38i,5n,24p,554b,336s stack positions out of 5000i,500n,10000p,200000b,50000s

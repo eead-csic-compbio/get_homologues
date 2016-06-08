@@ -4,9 +4,9 @@
 
 $key = q/coveragege50%;MSF=1.6/;
 $cached_env_img{$key} = q|<IMG
- WIDTH="105" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ WIDTH="111" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
  SRC="|."$dir".q|img8.png"
- ALT="$ coverage ge 50\%$">|; 
+ ALT="$ coverage \ge 50\%$">|; 
 
 $key = q/G^{2};MSF=1.6/;
 $cached_env_img{$key} = q|<IMG

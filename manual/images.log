@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2013.12.19)  27 MAY 2016 12:28
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2013.12.19)  8 JUN 2016 09:55
 entering extended mode
  %&-line parsing enabled.
 **./images.tex
@@ -418,7 +418,17 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7.4> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 211.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 211.
-l2hSize :tex2html_wrap_inline3693:7.24997pt::7.24997pt::64.19977pt.
+! Misplaced alignment tab character &.
+l.211 $ coverage \ge 50\% &
+                            $%
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+l2hSize :tex2html_wrap_inline3695:7.32988pt::7.32988pt::67.47397pt.
 [1
 
 
@@ -437,4 +447,4 @@ Here is how much of TeX's memory you used:
  28 hyphenation exceptions out of 8191
  38i,5n,24p,497b,336s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on images.dvi (1 page, 2400 bytes).
+Output written on images.dvi (1 page, 2452 bytes).
