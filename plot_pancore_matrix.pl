@@ -687,7 +687,7 @@ sub plot_pan_genome
 	}
   
 	png(file="$PNGfile");
-	plot(pan\$genomes,pan\$genes,xaxt='n',xlab='genomes (g)',ylab='pan genome size (genes)',pch=20);
+	plot(pan\$genomes,pan\$genes,xaxt='n',xlab='genomes (g)',ylab='pan genome size (genes)',pch=20); #,ylim=c(25000,35000));
 	axis(side=1,at=xaxis_labels);	
 	if(converged == TRUE) 
         {

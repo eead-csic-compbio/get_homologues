@@ -620,14 +620,15 @@ sub add_labels2newick_tree
   return join(";\n",split(/;/,$fully_labelled_tree));
 }
 
+# Updated Jun2016
 sub extract_intergenic_from_genbank
 {
-
-# takes a genbank input file and creates a FNA file containing all intergenic sequences found
-# inspired by http://bioperl.org/pipermail/bioperl-l/2006-March/021065.html
-# use $min_intergenic_size = 0 to skip minimal length tests
-# use $max_intergenic_size = 0 to skip maximum length test
-# use $length_flanking_ORFs > 0 if you want to cut oligonucleotides from both flanking ORFs to be used as PCR anchors
+  # takes a genbank input file and creates a FNA file containing all intergenic sequences found
+  # inspired by http://bioperl.org/pipermail/bioperl-l/2006-March/021065.html
+  # use $min_intergenic_size = 0 to skip minimal length tests
+  # use $max_intergenic_size = 0 to skip maximum length test
+  # use $length_flanking_ORFs > 0 if you want to cut oligonucleotides from both flanking ORFs to be used as PCR anchors
+  
   my ($infile,$out_intergenic_file,$min_intergenic_size,$max_intergenic_size,$length_flanking_ORFs) = @_;
   if(!defined($length_flanking_ORFs) || $length_flanking_ORFs < 0){ $length_flanking_ORFs = 0 }
   my ($n_of_intergenic,$gi,$start,$end,$length,$strand,$genename,$taxon) = (0);
@@ -643,17 +644,24 @@ sub extract_intergenic_from_genbank
     $taxon = '';
     for my $f ($seq->get_SeqFeatures)
     {
-      if($f->primary_tag =~ /CDS|rRNA|tRNA/) # campos de 'genes'
+      if($f->primary_tag =~ /CDS|rRNA|tRNA/) # ~genes
       {
+        #GI deprecated on Sept2016 https://www.ncbi.nlm.nih.gov/news/03-02-2016-phase-out-of-GI-numbers/
         $gi = $genename = ''; # compatible con subrutina extract_CDS_from_genbank
-        if($f->has_tag('db_xref'))
+        #if($f->has_tag('db_xref'))
+        #{
+        #  my $crossrefs = join(',',sort $f->each_tag_value('db_xref'));
+        #  if($crossrefs =~ /(GI\:\d+)/){ $gi = $1 }
+        #}
+        
+        if($f->has_tag('protein_id'))
         {
-          my $crossrefs = join(',',sort $f->each_tag_value('db_xref'));
-          if($crossrefs =~ /(GI\:\d+)/){ $gi = $1 }
-        }
-        elsif($f->has_tag('locus_tag'))
+          $gi = "ID:".join(',',sort $f->each_tag_value('protein_id')); #print "$gi\n";
+        } 
+  
+        if($f->has_tag('locus_tag') && $gi eq '')
         {
-          if($gi eq '' && $f->has_tag('locus_tag')){ $gi = "ID:".join(',',sort $f->each_tag_value('locus_tag')); }
+          $gi = "ID:".join(',',sort $f->each_tag_value('locus_tag'));
         }
 
         if($f->has_tag('gene'))
@@ -834,7 +842,7 @@ sub extract_features_from_genbank
         }
         elsif($f->has_tag('db_xref') && $gi eq '')
         {
-          $gi = "ID:".join(',',sort $f->each_tag_value('locus_tag'));
+          $gi = "ID:".join(',',sort $f->each_tag_value('db_xref'));
         }
 
         if($f->has_tag('gene'))
@@ -880,9 +888,9 @@ sub extract_features_from_genbank
   return \%already_seen;
 }
 
+# Updated Jun2016
 sub extract_CDSs_from_genbank
 {
-
  # takes a genbank input file and creates two FASTA files containing all CDSs in
  # aminoacid and dna sequences, respectively
  # returns number of CDSs found
@@ -920,12 +928,12 @@ sub extract_CDSs_from_genbank
       }
       elsif($f->primary_tag() =~ /CDS/)
       {
+        #GI deprecated on Sept2016 https://www.ncbi.nlm.nih.gov/news/03-02-2016-phase-out-of-GI-numbers/
         $gene=$gi=$crossrefs=$genelength=$protsequence=$CDSseq=$rev=''; 
         $CDScoords = $f->spliced_seq();
 
         if($f->location->isa('Bio::Location::SplitLocationI'))
         {
-          # Bruno Jul2014
           #LOCUS       NC_002505            2961149 bp    DNA     circular BCT 24-MAY-2010
           #ACCESSION   NC_002505
           #VERSION     NC_002505.1  GI:1564003
@@ -950,13 +958,18 @@ sub extract_CDSs_from_genbank
         {
           $CDSseq = $CDScoords->{'seq'};
         }
-
+        
         if($f->has_tag('db_xref'))
         {
           $crossrefs = join(',',sort $f->each_tag_value('db_xref'));
-          if($crossrefs =~ /(GI\:\d+)/){ $gi = $1; $crossrefs =~ s/$gi// }
+          #if($crossrefs =~ /(GI\:\d+)/){ $gi = $1; $crossrefs =~ s/$gi// }
           next if($crossrefs =~ /PSEUDO:/); # no sabemos si es universal, funciona con Bradyrizobium_ORS278.gb
         }
+        
+        if($f->has_tag('protein_id'))
+        {
+          $gi = "ID:".join(',',sort $f->each_tag_value('protein_id')); #print "$gi\n";
+        }        
         if($f->has_tag('translation'))
         {
           $protsequence = join('',sort $f->each_tag_value('translation'));

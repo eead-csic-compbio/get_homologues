@@ -3219,7 +3219,7 @@ sub find_OMCL_clusters
 }
 
 # returns: adds all orthologies found by orth all against all comparisons
-# uses globals. %graph,%weight,$bpofile,$last_graph_item
+# uses globals: %graph,%weight,$bpofile,$last_graph_item
 # modified from original orthomcl.pl, last change in May2012
 # jan2015 added $ref_full_sequence_taxa
 sub findAllOrthologiesORTHMCL
