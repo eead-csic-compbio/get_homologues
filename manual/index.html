@@ -1647,9 +1647,6 @@ which we analyze by running <code>$ ./get_homologues.pl -d sample_plasmids_gbk <
 # number_of_clusters = 24
 # cluster_list = [...]_homologues/EcoliplasmidpMUR050_f0_alltaxa_algBDBH_e0_.cluster_list
 # cluster_directory = sample_plasmids_gbk_homologues/EcoliplasmidpMUR050_f0_alltaxa_algBDBH_e0_
-
-# runtime: 28 wallclock secs ( 1.62 usr  0.33 sys + 24.31 cusr  1.57 csys = 27.83 CPU)
-# RAM use: 19.5 MB
 </PRE>
 
 <P>
@@ -1689,7 +1686,7 @@ operon context) strongly suggests orthology among prokaryots:
 <BR>
 <P>
 <PRE>
-&gt;GI:109390522 |[Escherichia coli]||traJ|1530|AY522431(56634):44726-46255:-1 [...]|neighbour_genes:traI,traK|
+ID:ABG33824.1 |[Escherichia coli]||traJ|1530|AY522431(56634):44726-46255:-1 [...]|neighbour_genes:traI,traK|
 ATGGACGATAGAGAAAGAGGCTTAGCATTTTTATTTGCAATTACTTTGCCTCCAGTGATGGTATGGTTTCTAGTT...
 [...]
 </PRE>
@@ -1698,7 +1695,7 @@ ATGGACGATAGAGAAAGAGGCTTAGCATTTTTATTTGCAATTACTTTGCCTCCAGTGATGGTATGGTTTCTAGTT...
 </SMALL>
 <P>
 <PRE>
-&gt;GI:109390522 |[Escherichia coli]||traJ|1530|AY522431(56634):44726-46255:-1 [...] | aligned:1-509 (509)
+&gt;ID:ABG33824.1 |[Escherichia coli]||traJ|1530|AY522431(56634):44726-46255:-1 [...] | aligned:1-509 (509)
 MDDRERGLAFLFAITLPPVMVWFLV...
 </PRE>
 
@@ -1964,7 +1961,7 @@ We can now execute
 # looking for valid ORF clusters (n_of_taxa=3)...
 
 
-# number_of_clusters = 31
+# number_of_clusters = 32
 # cluster_list = sample_plasmids_gbk_homologues/[...]include_list.txt_algBDBH_e0_.cluster_list
 # cluster_directory = sample_plasmids_gbk_homologues/[...]include_list.txt_algBDBH_e0_
 
@@ -1977,7 +1974,7 @@ We can now execute
 # intergenic_cluster_directory = sample_plasmids_gbk_homologues/[...]_intergenic200_700_180_
 
 # runtime:  1 wallclock secs ( 0.10 usr  0.01 sys +  0.05 cusr  0.01 csys =  0.17 CPU)
-# RAM use: 67.8 MB
+# RAM use: 27.6 MB
 </PRE>
 
 <P>
@@ -1985,7 +1982,7 @@ Intergenic clusters, illustrated by Figure <A HREF="#fig:flanks">3.4</A>, includ
 to mark up the sequence of flanking ORFs, with the intergenic region itself in lower-case, 
 and the names of the flanking ORFs in the FASTA header, with their strand in parentheses:
 <PRE>
-&gt;1 | intergenic18|coords:63706..64479|length:774|neighbours:GI:165928631(-1),GI:165928630(1)...
+&gt;1 | intergenic18|coords:63706..64479|length:774|neighbours:ID:ABY74399.1(-1),ID:ABY74398.1(1)...
 CGCGCCATTGCTGGCCTGAAGGTATTCCCAATACCCTCCCTGGTAGTCTTTAGCGTAACGATTCAGAAAGGACTGAATGAAGTGATCTGCGCTGAAGAAAGCG
 CCACGAAATGCCGCAGGCATGAAGTTCATGCGGGCGTTTTCAGAAATGTAGCGGGCGGTGATTTCGATAGTTTCCATgatacttcctctttaagccgataccg
 gcgatggttaagcggcaggcacatcacctgccactttttaattatcgtacaatggggcgttaaagtcaatacaagtacggattatatttacctaattttatgc
@@ -1994,7 +1991,7 @@ gctagcccgccgccacgcggccggttacaggggacactgagaaagcagaaagccaacaaacactatatatagcgttcgtt
 tagtagagtacctgtaaaacttgccaacctgaccataacagcgatactgtataagtaaacagtgatttggaagatcgctATGAAGGTCGATATTTTTGAAAGC
 TCCGGCGCCAGCCGGGTACACAGCATCCCTTTTTATCTGCAAAGAATTTCTGCGGGGTTCCCCAGCCCGGCCCAGGGCTATGAAAAGCAGGAGTTAAACCTGC
 ATGAGTATTGTGTTCGTCACCCTTCAGCAACTTACTTCCTGCGGGTTTCTGGC
-&gt;2 | intergenic3|coords:9538..10293|length:756|neighbours:GI:209574108(-1),GI:209574109(1)...
+&gt;2 | intergenic3|coords:9538..10293|length:756|neighbours:ID:ACI62996.1(-1),ID:ACI62997.1(1)...
 CGCGCCATTGCTGGCCTGAAGGTATTCCCAATACCCTCCCTGGTAGTCTTTAGCGTAACGATTCAGAAAGGACTGAATGAAGTGATCTGCGCTGAAGAAAGCG
 CCACGAAATGCCGCAGGCATGAAGTTCATGCGGGCGTTTTCAGAAATGTAGCGGGCGGTGATTTCGATAGTTTCCATgatacttcctctttaagccgataccg
 gcgatggttaagcggcaggcacatcacctgccactttttaattatcgtacaatggggcgttaaagtcaatacaagtacggattatatttacctaattttatgc
@@ -3620,7 +3617,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>manual -no_antialias_text -split 0 -dir manual -no_navigation -show_section_numbers</TT>
 <P>
-The translation was initiated by Bruno Contreras Moreira on 2016-06-08
+The translation was initiated by Bruno Contreras Moreira on 2016-06-23
 <BR><HR>
 <ADDRESS>
 Bruno Contreras-Moreira and Pablo Vinuesa<br><a href="https://github.com/eead-csic-compbio/get_homologues">https://github.com/eead-csic-compbio/get_homologues</a>

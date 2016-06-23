@@ -20,11 +20,11 @@ $cached_env_img{$key} = q|<IMG
  SRC="|."$dir".q|img1.png"
  ALT="$ G$">|; 
 
-$key = q/identityge50%;MSF=1.6/;
+$key = q/Evalue<max(Evalue);MSF=1.6/;
 $cached_env_img{$key} = q|<IMG
- WIDTH="103" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
- SRC="|."$dir".q|img6.png"
- ALT="$ identity \ge 50\%$">|; 
+ WIDTH="155" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="|."$dir".q|img3.png"
+ ALT="$ Evalue &lt; max(Evalue)$">|; 
 
 $key = q/G^{2};MSF=1.6/;
 $cached_env_img{$key} = q|<IMG
@@ -32,11 +32,11 @@ $cached_env_img{$key} = q|<IMG
  SRC="|."$dir".q|img2.png"
  ALT="$ G^{2}$">|; 
 
-$key = q/Evalue<max(Evalue);MSF=1.6/;
+$key = q/identityge50%;MSF=1.6/;
 $cached_env_img{$key} = q|<IMG
- WIDTH="155" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
- SRC="|."$dir".q|img3.png"
- ALT="$ Evalue &lt; max(Evalue)$">|; 
+ WIDTH="103" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="|."$dir".q|img6.png"
+ ALT="$ identity \ge 50\%$">|; 
 
 1;
 
