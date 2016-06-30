@@ -18,7 +18,7 @@ We kindly ask you to report errors or bugs in the program to the authors and to 
 
 Installation instructions are summarized on [README.txt](./README.txt) and full documentation is available in two flavours:
 
-|version|HTML|PDF|
-|-------|---|---|
-|original, for the analysis of bacterial pangenomes|[manual](http://eead-csic-compbio.github.io/get_homologues/manual/)|[manual_get_homologues.pdf](./manual_get_homologues.pdf)|
-|EST, for the analysis of intra-species eukaryotic pangenomes, tested on plants|[manual-est](http://eead-csic-compbio.github.io/get_homologues/manual-est/)|[manual_get_homologues-est.pdf](./manual_get_homologues-est.pdf)|
+|version|HTML|
+|-------|---|
+|original, for the analysis of bacterial pangenomes|[manual](http://eead-csic-compbio.github.io/get_homologues/manual/)|
+|EST, for the analysis of intra-species eukaryotic pangenomes, tested on plants|[manual-est](http://eead-csic-compbio.github.io/get_homologues/manual-est/)|
