@@ -926,28 +926,10 @@ Buch_aph_Cc.faa
 </LI>
 <LI>option <code>-C</code> sets the minimum percentage of coverage required to call two sequences best hits, 
 as illustrated in the figure. The larger these values get, the smaller the chance that two sequences are 
-found to be reciprocal  best hits. The default coverage value is set to 75%. 
+found to be reciprocal  best hits. The default coverage value is set to 75%. When using the COGS algorithm
+the maximum accepted coverage is 99%.
 This parameter has a large impact on the results obtained and its optimal values will depend on the input 
-data and the anticipated use of the produced clusters:
-
-<P>
-
-<DIV ALIGN="CENTER"><A NAME="281"></A>
-<TABLE>
-<CAPTION ALIGN="BOTTOM"><STRONG>Figure 4:</STRONG>
-Coverage [BDBH,OMCL] and overall segment coverage [COGS] illustrated with the
-alignment of sequence 'query' to two aligned fragments of sequence 'subject', where 1,s1,e1,s2,e2 and L 
-are alignment coordinates.</CAPTION>
-<TR><TD>
-<DIV ALIGN="CENTER">
-<IMG
-  WIDTH="263" HEIGHT="143" ALIGN="BOTTOM" BORDER="0"
- SRC="./match_cover.png"
- ALT="Image match_cover">
-
-</DIV></TD></TR>
-</TABLE>
-</DIV>
+data and the anticipated use of the produced clusters.
 
 <P>
 </LI>
@@ -974,6 +956,27 @@ option requires scanning all input sequences for Pfam domains, and this task req
 and extra computing time, ideally on a computer cluster (<code>-m cluster</code>). 
 While for BDBH domain filtering is done at the time bidirectional best hits are called, this processing step is performed only after the 
 standard OMCL and COGS algorithms have completed, to preserve each algorithm features.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="284"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 4:</STRONG>
+Coverage [BDBH,OMCL] and overall segment coverage [COGS] illustrated with the
+alignment of sequence 'query' to two aligned fragments of sequence 'subject', where 1,s1,e1,s2,e2 and L 
+are alignment coordinates.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="263" HEIGHT="143" ALIGN="BOTTOM" BORDER="0"
+ SRC="./match_cover.png"
+ ALT="Image match_cover">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
 
 <P>
 </LI>
@@ -1212,7 +1215,6 @@ R functions <code>hclust()</code> and <code>heatmap.2()</code> in order to produ
 </LI>
 </UL>
 
-<P>
 To check the options of any of these scripts please invoke them from the terminal with flag <code>-h</code>. 
 For instance, typing <code>$ ./compare_clusters.pl -h</code> in the terminal will produce the following:
 <PRE> 
@@ -3636,7 +3638,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>manual -no_antialias_text -split 0 -dir manual -no_navigation -show_section_numbers</TT>
 <P>
-The translation was initiated by Bruno Contreras Moreira on 2016-06-30
+The translation was initiated by Bruno Contreras Moreira on 2016-07-12
 <BR><HR>
 <ADDRESS>
 Bruno Contreras-Moreira and Pablo Vinuesa<br><a href="https://github.com/eead-csic-compbio/get_homologues">https://github.com/eead-csic-compbio/get_homologues</a>
