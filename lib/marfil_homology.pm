@@ -2642,7 +2642,7 @@ sub same_length
 } ## same_length
 
 # requires previous call to blast_parse_COG, which will put necessary data in $TMP_DIR
-# Updated Mar2016
+# Updated Jul2016
 sub find_COGs
 {
   my ($coverage_cutoff,$evalue_cutoff,$multicluster,$saveRAM,$pwd,$force_parsing,@taxa_used) = @_;
@@ -2650,6 +2650,11 @@ sub find_COGs
   my (%COGs,%orths,%orth_taxa,@LSEclusters,%LSEmembers,%LSEgenome,%singletons,%valid_taxa);
 
   $coverage_cutoff = sprintf("%1.2f",$coverage_cutoff/100); # re-scale
+  if($coverage_cutoff > 0.99)
+  { 
+    $coverage_cutoff = 0.99; 
+    print "\n# find_COGs: coverage limited to -C 99\n\n" ;
+  } 
 
   foreach $genome (@taxa_used){ $valid_taxa{$genome}=1 }
 
