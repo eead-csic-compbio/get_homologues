@@ -25,7 +25,7 @@ use lib "$Bin/lib/bioperl-1.5.2_102/";
 use phyTools; #also imports constants SEQ,NAME used as array subindices
 use marfil_homology; # includes $FASTAEXTENSION and other global variables set there such as @taxa
 
-my $VERSION = '2.0';
+my $VERSION = '2.x'; 
 
 ## sun grid engine (computer cluster) variables, might require edition to fit your system (ignored with -m local)
 my $SGEPATH = "";
@@ -182,9 +182,17 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   exit;
 }
 
+# read version bumber from CHANGES.txt
+open(CHANGES,"$Bin/CHANGES.txt");
+while(<CHANGES>)
+{
+  if(eof && /^(\d+):/){ $VERSION = $1 } 
+}
+close(CHANGES);
+
 if(defined($opts{'v'}))
 {
-  print "\n$0 version $VERSION (2015)\n";
+  print "\n$0 version $VERSION\n";
   print "\nProgram written by Bruno Contreras-Moreira (1) and Pablo Vinuesa (2).\n";
   print "\n 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)\n";
   print " 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)\n";
@@ -199,7 +207,7 @@ if(defined($opts{'v'}))
   print " INPARANOID v3.0 (inparanoid.sbc.su.se , PubMed:16873526)\n" if(!$DISSABLEPRND);
   print " COGtriangles v2.1 (sourceforge.net/projects/cogtriangles , PubMed=20439257)\n";
   print " NCBI Blast-2.2 (blast.ncbi.nlm.nih.gov , PubMed=9254694,20003500)\n";
-  print " Bioperl v 1.5.2 (www.bioperl.org , PubMed=12368254)\n";
+  print " Bioperl v1.5.2 (www.bioperl.org , PubMed=12368254)\n";
   print " HMMER 3.1b2 (hmmer.org)\n";
   print " Pfam (pfam.sanger.ac.uk , PubMed=24288371)\n";
 
@@ -461,7 +469,7 @@ print "# $0 -i $input_FASTA_file -d $inputDIR -o $onlyblast -e $exclude_inparalo
   "-t $min_cluster_size -c $do_genome_composition -z $do_soft -I $include_file -m $runmode -n $n_of_cpus -M $doMCL -G $doCOG -P $doPARANOID ".
   "-C $pmatch_cutoff -S $pi_cutoff -E $evalue_cutoff -F $MCLinflation -N $neighbor_corr_cutoff -B $bitscore_cutoff -b $do_minimal_BDBHs ".
   "-s $saveRAM -D $do_PFAM -g $do_intergenic -a '$do_features' -x $COGmulticluster -R $random_number_generator_seed -A $do_ANIb_matrix\n\n";
-
+  
 if($runmode eq 'cluster')
 {
   print "# computer cluster settings: $SGEPATH , $QUEUESETTINGS , $QUEUEWAIT , $WAITTIME\n\n";
@@ -518,6 +526,7 @@ unlink($sequence_data_filename,$sequence_prot_filename,$sequence_dna_filename,$p
 my $input_order_file = $newDIR."/input_order.txt";
 my $paranoidDIR = $newDIR."/paranoid_sql_C$pmatch_cutoff\_B$bitscore_cutoff\_O$segment_cover_cutoff/";
 
+print "# version $VERSION\n";
 print "# results_directory=$newDIR\n";
 print "# parameters: MAXEVALUEBLASTSEARCH=$MAXEVALUEBLASTSEARCH MAXPFAMSEQS=$MAXPFAMSEQS ".
   "BATCHSIZE=$BATCHSIZE KEEPSCNDHSPS=$KEEPSCNDHSPS\n";

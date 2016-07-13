@@ -25,7 +25,7 @@ use lib "$Bin/lib/bioperl-1.5.2_102/";
 use phyTools; #also imports constants SEQ,NAME used as array subindices
 use marfil_homology; # includes $FASTAEXTENSION and other global variables set there such as @taxa
 
-my $VERSION = '2.0';
+my $VERSION = '2.x';
 
 ## sun grid engine (computer cluster) variables, might require edition to fit your system (ignored with -m local)
 my $SGEPATH = "";
@@ -74,8 +74,6 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   print   "\nusage: $0 [options]\n\n";
   print   "-h this message\n";
   print   "-v print version, credits and checks installation\n";
-  
-  
   print   "-d directory with input FASTA files (.fna , optionally .faa),  (use of pre-clustered sequences\n";
   print   "   1 per sample, or subdirectories (subdir.clusters/subdir_)    ignores -c)\n";
   print   "   with pre-clustered sequences (.faa/.fna ). Files matching\n";
@@ -161,9 +159,17 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   exit;
 }
 
+# read version bumber from CHANGES.txt
+open(CHANGES,"$Bin/CHANGES.txt");
+while(<CHANGES>)
+{
+  if(eof && /^(\d+):/){ $VERSION = $1 } 
+}
+close(CHANGES);
+
 if(defined($opts{'v'}))
 {
-  print "\n$0 version $VERSION (2015)\n";
+  print "\n$0 version $VERSION\n";
   print "\nProgram written by Bruno Contreras-Moreira (1) and Pablo Vinuesa (2).\n";
   print "\n 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)\n";
   print " 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)\n\n";
@@ -173,7 +179,7 @@ if(defined($opts{'v'}))
   print "\nThis software employs code, binaries and data from different authors, please cite them accordingly:\n";
   print " OrthoMCL v1.4 (www.orthomcl.org , PubMed:12952885)\n";
   print " NCBI Blast-2.2 (blast.ncbi.nlm.nih.gov , PubMed=9254694,20003500)\n";
-  print " Bioperl v 1.5.2 (www.bioperl.org , PubMed=12368254)\n";
+  print " Bioperl v1.5.2 (www.bioperl.org , PubMed=12368254)\n";
   print " HMMER 3.1b2 (hmmer.org)\n";
   print " Pfam (pfam.sanger.ac.uk , PubMed=24288371)\n";
 
@@ -441,6 +447,7 @@ my $pfam_data_filename = $newDIR."/pfam.db";# %pfam_hash is global, imported fro
 unlink($sequence_data_filename,$sequence_prot_filename,$sequence_dna_filename,$pfam_data_filename);
 my $input_order_file = $newDIR."/input_order.txt";
 
+print "# version $VERSION\n";
 print "# results_directory=$newDIR\n";
 print "# parameters: MAXEVALUEBLASTSEARCH=$MAXEVALUEBLASTSEARCH MAXPFAMSEQS=$MAXPFAMSEQS BATCHSIZE=$BATCHSIZE MINSEQLENGTH=$MINSEQLENGTH\n";
 
