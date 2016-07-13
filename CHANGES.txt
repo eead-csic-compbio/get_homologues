@@ -142,3 +142,4 @@
 23062016: updated manuals
 30062016: added FAQ to manual
 12072016: maximum accepted -C coverage when using -G is limited to 99% (thanks Sandro Valenzuela)
+13072016: version is now retrieved from last line of CHANGES.txt
