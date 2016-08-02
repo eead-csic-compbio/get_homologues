@@ -648,11 +648,12 @@ sub extract_intergenic_from_genbank
       {
         #GI deprecated on Sept2016 https://www.ncbi.nlm.nih.gov/news/03-02-2016-phase-out-of-GI-numbers/
         $gi = $genename = ''; # compatible con subrutina extract_CDS_from_genbank
-        #if($f->has_tag('db_xref'))
-        #{
-        #  my $crossrefs = join(',',sort $f->each_tag_value('db_xref'));
-        #  if($crossrefs =~ /(GI\:\d+)/){ $gi = $1 }
-        #}
+        if($f->has_tag('db_xref'))
+        {
+          my $crossrefs = join(',',sort $f->each_tag_value('db_xref'));
+          #if($crossrefs =~ /(GI\:\d+)/){ $gi = $1 }
+          if($crossrefs =~ /SEED:fig\|([\w\.]+)/){ $gi = $1; } # Rast support Jul2016
+        }
         
         if($f->has_tag('protein_id'))
         {
@@ -888,7 +889,7 @@ sub extract_features_from_genbank
   return \%already_seen;
 }
 
-# Updated Jun2016
+# Updated Jul2016
 sub extract_CDSs_from_genbank
 {
  # takes a genbank input file and creates two FASTA files containing all CDSs in
@@ -963,6 +964,7 @@ sub extract_CDSs_from_genbank
         {
           $crossrefs = join(',',sort $f->each_tag_value('db_xref'));
           #if($crossrefs =~ /(GI\:\d+)/){ $gi = $1; $crossrefs =~ s/$gi// }
+          if($crossrefs =~ /SEED:fig\|([\w\.]+)/){ $gi = $1; } # Rast support Jul2016
           next if($crossrefs =~ /PSEUDO:/); # no sabemos si es universal, funciona con Bradyrizobium_ORS278.gb
         }
         
