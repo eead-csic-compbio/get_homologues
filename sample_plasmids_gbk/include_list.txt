@@ -1,0 +1,3 @@
+K_pneumoniae_12_plasmid_12.gb
+K_pneumoniae_9_plasmid_9.gb
+K_pneumoniae_KP96_plasmid_pKP96.gb
