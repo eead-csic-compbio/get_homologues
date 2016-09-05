@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# 2013-5 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2013-6 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Laboratory of Computational Biology, EEAD/CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -51,7 +51,7 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   print   "-r \t take first cluster dir as reference set, which might contain  (optional, by default cluster dirs are expected\n";
   print   "   \t a single representative sequence per cluster                   to be derived from the same taxa; overrides -t,-I)\n";
   print   "-s \t use only clusters with syntenic genes                         (optional, parses neighbours in FASTA headers)\n";
-  print   "-t \t use only clusters with single-copy orthologues from -t taxa   (optional, default takes all intersection clusters; example -t 10)\n";
+  print   "-t \t use only clusters with single-copy orthologues from taxa >= t (optional, default takes all intersection clusters; example -t 10)\n";
   print   "-I \t produce clusters with single-copy seqs from ALL taxa in file  (optional, example -I include_list; overrides -t)\n";
   print   "-m \t produce intersection pangenome matrices                       (optional, ideally expects cluster directories generated\n";
   print   "   \t                                                                with get_homologues.pl -t 0)\n";
@@ -268,7 +268,8 @@ foreach my $d (0 .. $#cluster_dirs)
       die "# $0 : cannot apply option -I when cluster sequences lack [taxon names]\n";
     }
 
-    next if($INP_taxa && ($n_of_taxa != $INP_taxa || $#{$cluster_ref} != $INP_taxa-1));
+    # if requested consider only single-copy clusters with taxa >= $INP_taxa
+    next if($INP_taxa && ($n_of_taxa < $INP_taxa || $#{$cluster_ref} != $n_of_taxa-1));
 
     foreach $seq (0 .. $#{$cluster_ref})
     {

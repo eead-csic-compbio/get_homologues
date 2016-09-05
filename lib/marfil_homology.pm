@@ -2642,7 +2642,7 @@ sub same_length
 } ## same_length
 
 # requires previous call to blast_parse_COG, which will put necessary data in $TMP_DIR
-# Updated Jul2016
+# Updated Aug2016
 sub find_COGs
 {
   my ($coverage_cutoff,$evalue_cutoff,$multicluster,$saveRAM,$pwd,$force_parsing,@taxa_used) = @_;
@@ -2704,7 +2704,8 @@ sub find_COGs
 #	system("$COGTRIANGLESEXE -r -s -i=$TMP_DIR -q=$p2ofilename -l=$lseoutfilename -o=$coglogfilename " .
 #                "-n='cluster' -t=$coverage_cutoff -e=$evalue_cutoff &> /dev/null") }
 
-    # it puts in current directory (pwd) two files: all-edges.txt , cog-edges.txt
+    # it puts in current directory (pwd) two files (all-edges.txt , cog-edges.txt)
+    # Aug2016: confirm that all-edges.txt cannot be empty
     if(-e $pwd.'/cog-edges.txt' && -s $pwd.'/all-edges.txt' && -s $coglogfilename && $? == 0)
     {
       # cog-edges.txt might be actually empty if no COGs are found

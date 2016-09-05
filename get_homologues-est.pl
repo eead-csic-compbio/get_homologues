@@ -48,7 +48,7 @@ my $MINREDOVERLAP = 40;           # as in tgicl, min overlap to handle possibly 
 my $TRIMULTIHSP   = 1;            # correct overlaps when calculating cover of multi-hsp hits (alternative = 0)
 my $MINSEQLENGTH  = 20;           # min length for input sequences to be considered (~ primer or miRNA) 
 my $NOCLOUDINCORE = 1;            # when calling -M -c -t X initial core/pan size excludes cloud genes, those with occup < X 8alternative 0)
-my $INCLUDEORDER  = 1;            # use implicit -I taxon order for -c composition analyses
+my $INCLUDEORDER  = 0;            # use implicit -I taxon order for -c composition analyses
 
 ## list of features/binaries required by this program (do not edit)
 my @FEATURES2CHECK = ('EXE_BLASTN','EXE_FORMATDB','EXE_MCL','EXE_HMMPFAM',
@@ -159,7 +159,7 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   exit;
 }
 
-# read version bumber from CHANGES.txt
+# read version number from CHANGES.txt
 open(CHANGES,"$Bin/CHANGES.txt");
 while(<CHANGES>)
 {

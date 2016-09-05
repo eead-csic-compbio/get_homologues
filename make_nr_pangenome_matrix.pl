@@ -401,11 +401,11 @@ if($INP_reference_file || $INP_reference_cluster_dir)
       print REF ">$id $fasta_ref->[$seq][NAME]\n$fasta_ref->[$seq][SEQ]\n";
       
       # check nr sequences and reference sequences are compatible
-      if( ($INP_nucleotides && $fasta_ref->[$seq][SEQ] =~ m/[PDEQHILVF]/) ||
-        (!$INP_nucleotides && $fasta_ref->[$seq][SEQ] !~ m/[PDEQHILVF]/) )
+      if( ($INP_nucleotides && $fasta_ref->[$seq][SEQ] =~ m/([PEQILF])/) ||
+        (!$INP_nucleotides && $fasta_ref->[$seq][SEQ] !~ m/[PEQILF]/) )
       {
         print "# both input clusters and references must be either nucleotides or peptides\n";
-        print "# offending sequence: \n$fasta_ref->[$seq][SEQ]\n";
+        print "# offending sequence ($1): \n$fasta_ref->[$seq][SEQ]\n";
         exit;
       }
       
@@ -483,8 +483,8 @@ if($INP_reference_file || $INP_reference_cluster_dir)
         print REF ">$id $clusterfile\n$fasta_ref->[$seq][SEQ]\n";
         
         # check nr sequences and reference sequences are compatible
-        if( ($INP_nucleotides && $fasta_ref->[$seq][SEQ] =~ m/[PDEQHILVF]/) ||
-          (!$INP_nucleotides && $fasta_ref->[$seq][SEQ] !~ m/[PDEQHILVF]/) )
+        if( ($INP_nucleotides && $fasta_ref->[$seq][SEQ] =~ m/[PEQILF]/) ||
+          (!$INP_nucleotides && $fasta_ref->[$seq][SEQ] !~ m/[PEQILF]/) )
         {
           print "# both input clusters and references must be either nucleotides or peptides\n";
           print "# offending sequence: \n$fasta_ref->[$seq][SEQ]\n";
