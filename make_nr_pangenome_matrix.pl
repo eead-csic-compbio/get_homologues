@@ -267,7 +267,7 @@ close(FASTA);
 
 
 
-## 4) format cluster sequences and run BLAST if required
+## 4) format cluster sequences and run BLAST 
 if(!-s $nr_pangenome_blast_file)
 {
   if($INP_nucleotides)
@@ -393,28 +393,27 @@ if($INP_reference_file || $INP_reference_cluster_dir)
     
     # save reference sequences in a single FASTA file to be scanned by BLAST  
     open(REF,">$nr_pangenome_reference_fasta_file") || die "# ERROR : cannot create $nr_pangenome_reference_fasta_file\n";
-    $ref_cluster_id = $n_of_ref_sequences = 0;
+    $n_of_ref_sequences = 0;
     my $fasta_ref = read_FASTA_file_array($INP_reference_file);
     foreach $seq ( 0 .. $#{$fasta_ref} )
     {
-      $id = $ref_cluster_id.'_'.$n_of_ref_sequences;
-      print REF ">$id $fasta_ref->[$seq][NAME]\n$fasta_ref->[$seq][SEQ]\n";
+      $id = $n_of_ref_sequences.'_'.$n_of_ref_sequences;
+      print REF ">$id $fasta_ref->[$seq][NAME]\n$fasta_ref->[$seq][SEQ]\n";    
       
       # check nr sequences and reference sequences are compatible
       if( ($INP_nucleotides && $fasta_ref->[$seq][SEQ] =~ m/([PEQILF])/) ||
         (!$INP_nucleotides && $fasta_ref->[$seq][SEQ] !~ m/[PEQILF]/) )
       {
         print "# both input clusters and references must be either nucleotides or peptides\n";
-        print "# offending sequence ($1): \n$fasta_ref->[$seq][SEQ]\n";
+        print "# offending sequence ($1): \n".substr($fasta_ref->[$seq][SEQ],0,10)."...\n";
         exit;
       }
       
       $ref_length{$id} = length($fasta_ref->[$seq][SEQ]);
-      $ref_cluster_size[$ref_cluster_id] = 1;
-      $id2name[$ref_cluster_id] = $fasta_ref->[$seq][NAME]; 
+      $ref_cluster_size[$n_of_ref_sequences] = 1;
+      $id2name[$n_of_ref_sequences] = $fasta_ref->[$seq][NAME]; 
       #print "$ref_cluster_id $fasta_ref->[$seq][NAME]\n"; 66321 ChrSy.fgenesh.mRNA.73 cDNA|expressed protein
       $n_of_ref_sequences++;
-      $ref_cluster_id++;
     }  
     close(REF); 
     
@@ -432,7 +431,7 @@ if($INP_reference_file || $INP_reference_cluster_dir)
     foreach $col (@filtered)
     {
       next if($redundant{$col}); 
-      print NR ">$col\_$cluster_names[$col]\n$median_seq[$col]\n";
+      print NR ">$col $cluster_names[$col]\n$median_seq[$col]\n";
     }  
     close(NR);	
   }
@@ -479,7 +478,7 @@ if($INP_reference_file || $INP_reference_cluster_dir)
       foreach $seq ( 0 .. $#{$fasta_ref} )
       {
         $id = $ref_cluster_id.'_'.$n_of_ref_sequences;
-        print REF ">$id $clusterfile $fasta_ref->[$seq][NAME]\n$fasta_ref->[$seq][SEQ]\n"; # might cause trouble with BLAST
+        #print REF ">$id $clusterfile $fasta_ref->[$seq][NAME]\n$fasta_ref->[$seq][SEQ]\n"; # might cause trouble with BLAST
         print REF ">$id $clusterfile\n$fasta_ref->[$seq][SEQ]\n";
         
         # check nr sequences and reference sequences are compatible

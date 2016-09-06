@@ -996,14 +996,14 @@ sub blast_parse
 		$midpointS = $Sstart + (($Send-$Sstart)/2);
 		for($h=0;$h<$n_of_hsp;$h++)
 		{ 
-        #make sure redundant hsps are ignored and otherwise trim ovelapping ends 
-        #to avoid over-estimating cover (bitscore and $ID might still be over-estimated)
+      #make sure redundant hsps are ignored and otherwise trim ovelapping ends 
+      #to avoid over-estimating cover (bitscore and $ID might still be over-estimated)
 		  if( ($midpointQ >= $hsps[$h][0] && $midpointQ <= $hsps[$h][1]) 
 			 || ($midpointS >= $hsps[$h][2] && $midpointS <= $hsps[$h][3])
 		  ){ $redhsp = 1; last }
 
 		  if($trim)
-        {
+      {
           #trim overlapping Q coords
           if($Qstart < $hsps[$h][1] && $Qend > $hsps[$h][1]){ $Qstart = $hsps[$h][1]+1 }
           elsif($Qend > $hsps[$h][0] && $Qstart < $hsps[$h][0]){ $Qend = $hsps[$h][0]-1 }
