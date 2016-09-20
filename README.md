@@ -22,3 +22,6 @@ Installation instructions are summarized on [README.txt](./README.txt) and full 
 |-------|---|
 |original, for the analysis of bacterial pangenomes|[manual](http://eead-csic-compbio.github.io/get_homologues/manual/)|
 |EST, for the analysis of intra-species eukaryotic pangenomes, tested on plants|[manual-est](http://eead-csic-compbio.github.io/get_homologues/manual-est/)|
+
+Datasets used in the Arabidopsis thaliana and Hordeum vulgare benchmarks are available at:
+[http://floresta.eead.csic.es/plant-pan-genomes](http://floresta.eead.csic.es/plant-pan-genomes)
