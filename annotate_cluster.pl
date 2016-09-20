@@ -30,6 +30,7 @@ my @FEATURES2CHECK = ('EXE_BLASTP','EXE_BLASTN','EXE_FORMATDB','EXE_MVIEW','EXE_
 my $DEFBLASTNTASK  = 'megablast';
 my $DEFEVALUE      = 10; # default BLAST E-value
 my $MINBLUNTBLOCK  = 100; # min alignment width with blunt ends
+my $MAXSEQNAMELEN  = 30;
 
 my ($INP_nucleotides,$INP_blunt,$do_PFAM,$INP_clusterfile,$INP_outfile,%opts) = (1,0,0,'','');
 
@@ -92,6 +93,10 @@ foreach $seq (0 .. $#{$cluster_ref})
   {
     $seqname = (split(/\s+/,$cluster_ref->[$seq][NAME]))[0];
   }
+  
+  # shorten name, otherwise it might break mview downstream
+  if(length($seqname) > $MAXSEQNAMELEN ){ $seqname = substr($seqname,0,$MAXSEQNAMELEN ) } 
+  
   $short_names{$seq} = $seqname;
 
   # in case of missing sequences

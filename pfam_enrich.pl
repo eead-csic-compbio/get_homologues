@@ -27,13 +27,13 @@ my @valid_tests = qw( greater two.sided less );
 my $ADJUST = 'fdr'; # 'bonferroni' also supported
 
 my (%opts,$INP_dir,$INP_clusterdir,$INP_clusterlist,$reference_proteome_string);
-my ($INP_prot,$INP_test,$INP_pcutoff,$INP_est,$INP_seqs) = (1,'greater',0.05,0,0);
+my ($INP_prot,$INP_test,$INP_pcutoff,$INP_est,$INP_seqs,$INP_fasta) = (1,'greater',0.05,0,0,0);
 
 my ($id,$full_id,$cluster,$taxon,$pvalue,$adj,$pfam,$ref_pfam1,$ref_pfam2,$ref_full_text);
 my (@clusters,%exp_clusters,%cluster_full_ids,@control_ids,@experiment_ids);
-my (%cluster,%id2cluster);
+my (%cluster,%id2cluster,%fullid2id,%fasta,%fasta_annot);
 
-getopts('hnsed:c:x:r:t:p:', \%opts);
+getopts('hnsed:c:x:r:t:p:f:', \%opts);
 
 if(($opts{'h'})||(scalar(keys(%opts))==0))
 {
@@ -47,6 +47,7 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   print "-t type of test                                   (optional, default: -t greater, [".join(',',@valid_tests)."]\n";
   print "-p $ADJUST adjusted p-value threshold                 (optional, default: -p $INP_pcutoff\n";
   print "-e cluster sequences are ESTs                     (optional, use with pre-computed Pfam mappings of deduced CDSs)\n";
+  print "-f make FASTA file with experiment sequences      (optional, example: -f experiment.fasta)\n";
   print "-s take individual sequences as annotation units  (optional, by default Pfam domains are counted once per cluster)\n\n"; 
   exit(0); 
 }
@@ -87,7 +88,7 @@ if(defined($opts{'c'}) && defined($opts{'x'}))
   while(<CLUSTERLIST>)
   {
     next if(/^#/);
-    $exp_clusters{(split)[0]} = 1;
+    $exp_clusters{(split)[0]} = 1; #9006_TR29928-c0_g1_i1.fna
   }
   closedir(CLUSTERLIST);
   
@@ -116,9 +117,11 @@ if($opts{'e'}){ $INP_est = 1 }
 
 if($opts{'s'}){ $INP_seqs = 1 }
 
-printf("# %s -d %s -c %s -x %s -n %d -s %d -e %d -t %s -p %1.2f -r %s\n\n",
+if($opts{'f'}){ $INP_fasta = $opts{'f'} }
+
+printf("# %s -d %s -c %s -x %s -n %d -s %d -e %d -t %s -p %1.2f -r %s -f %s\n\n",
   $0,$INP_dir,$INP_clusterdir,$INP_clusterlist,!$INP_prot,$INP_seqs,$INP_est,
-  $INP_test,$INP_pcutoff,$reference_proteome_string);
+  $INP_test,$INP_pcutoff,$reference_proteome_string,$INP_fasta);
 
 ##########################################################################
 
@@ -147,18 +150,24 @@ foreach my $cluster (@clusters)
   if($INP_est) # Takes first non-blank tag + [taxon] in FASTA header to identify sequences
   {
     open(CLUSTER,"$INP_clusterdir/$cluster") || 
-      die "# $0 : cannot read list $INP_clusterdir/$cluster\n";
+      die "# $0 : cannot read list $INP_clusterdir/$cluster\n"; 
     while(<CLUSTER>)
     {
-      next if not(/^>/);
-      next if($reference_proteome_string && $_ !~ /$reference_proteome_string/);
       chomp;
-      if(/>(\S+).*?\[(\S+?)\.fna/)
+      if(/^>(\S+).*?\[(\S+?)\.fna/)
       { 
         #>TR15703|c0_g1_i1 evidence:transdecoder   [Alexis.trinity.fna_minl50_eval1e-05.cds.fna.bz2] | aligned:13-498 (498)
         #>TR32976|c0_g1_i2 len=3138 path=[6380:0-378...] [Alexis.trinity.fna.bz2]
+        #evidence:transdecoder.blastx match:sp|Q65XV7|RFA1C_ORYSJ
         ($full_id,$taxon) = ($1,$2); 
-        $full_id = $full_id.$taxon; 
+        
+        if($reference_proteome_string && $taxon !~ /$reference_proteome_string/)
+        {
+          $full_id = '';
+          next;
+        }  
+        
+        $full_id = $full_id." [$taxon]"; #TR30768|c0_g1_i1SBCC073_fLF.Trinity
       
         if($cluster_full_ids{$full_id})
         {
@@ -168,8 +177,20 @@ foreach my $cluster (@clusters)
         { 
           $cluster_full_ids{$full_id} = $_; 
           $cluster{$full_id} = $cluster; 
+          
+          if($INP_fasta && /(evidence:\S+ match:\S+)/ || /(evidence:\S+)/)
+          {
+            $fasta_annot{$full_id} = $1;
+          }
         }  
-      }  
+      } 
+      else
+      {
+        if($INP_fasta && $full_id ne '')
+        {
+          $fasta{$full_id} .= $_; 
+        }
+      } 
     }
     close(CLUSTER);
   }
@@ -179,13 +200,17 @@ foreach my $cluster (@clusters)
       die "# $0 : cannot read list $INP_clusterdir/$cluster\n";
     while(<CLUSTER>)
     {
-      next if not(/^>/);
-      next if($reference_proteome_string && $_ !~ /$reference_proteome_string/); 
       chomp;
-    
-      if(/>(.*)?\|neighbours/ || />(.*)? \| aligned/ || />(.*)/)
+      if(/^>(.*)?\|neighbours/ || /^>(.*)? \| aligned/ || /^>(.*)/)
       { 
         #>gi|116515001|ref|YP_802630.1| DapE [Buchnera aphidicola str. Cc (Cinara cedri)] | aligned:1-375 (376)
+        
+        if($reference_proteome_string && $_ !~ /$reference_proteome_string/)
+        {
+          $full_id = '';
+          next;
+        }
+        
         $full_id = $1;
         
         if($cluster_full_ids{$full_id})
@@ -198,6 +223,13 @@ foreach my $cluster (@clusters)
           $cluster{$full_id} = $cluster; 
         }   
       }
+      else
+      {
+        if($INP_fasta && $full_id ne '')
+        {
+          $fasta{$full_id} .= $_; 
+        }
+      } 
     }
     close(CLUSTER);
   }
@@ -232,7 +264,7 @@ while(<P2O>)
   if($INP_est)
   {
     if($taxon =~ m/(\S+?)\.fna/){ $taxon = $1 } 
-    $full_id = (split(/\s+/,$full_id))[0].$taxon; #print "$full_id\n";
+    $full_id = (split(/\s+/,$full_id))[0]." [$taxon]"; #print "$full_id\n";
   }   
   else
   {
@@ -248,10 +280,15 @@ while(<P2O>)
   else{ next } # skip unclustered sequences to avoid biass
   
   # store 'experiment' sequence ids
-  
   if($exp_clusters{$cluster})
   {
     push(@experiment_ids,$id);
+    
+    # save equivalences between ids of experiment sequences
+    if($INP_fasta)
+    {
+      $fullid2id{$full_id} = $id; 
+    }  
   }
   
   # store 'control' ids 
@@ -292,6 +329,37 @@ if(scalar(keys(%$ref_pfam1)) != scalar(keys(%$ref_pfam2)))
   printf("# ERROR : experiment (%d) and control (%d) Pfam annotation tables differ in length, exit\n",
     scalar(keys(%$ref_pfam1)),scalar(keys(%$ref_pfam2)));
   exit;
+}
+
+if($INP_fasta)
+{
+  # fill $marfil_homology::pfam_hash
+  construct_Pfam_hash($pfam_file);
+  
+  # print experiment sequences cluster by cluster
+  my ($mean_length,$seqs_per_cluster,$total,%clusters) = (0,0,0);
+  open(OUTFASTA,">",$INP_fasta) || die "# ERROR : cannot create file $INP_fasta\n";
+  foreach $full_id (sort {$cluster{$a} cmp $cluster{$b}} keys(%fasta))
+  { 
+    next if(!$exp_clusters{$cluster{$full_id}});
+    
+    printf( OUTFASTA ">%s cluster=%s %s %s\n%s\n",
+      $full_id,$cluster{$full_id},
+      $fasta_annot{$full_id} || '', 
+      $pfam_hash{$fullid2id{$full_id}},
+      $fasta{$full_id});
+      
+    $mean_length += length($fasta{$full_id});
+    $clusters{$cluster{$full_id}}++;
+    $total++;
+  } 
+  close(OUTFASTA);
+  
+  $mean_length = sprintf("%1.1f",$mean_length/$total);
+  $seqs_per_cluster = sprintf("%1.2f",$total/scalar(keys(%clusters)));
+  
+  print "\n# created FASTA file: $INP_fasta\n\n";
+  print "# sequences=$total mean length=$mean_length , seqs/cluster=$seqs_per_cluster\n\n"; 
 }
 
 my ($fh1,$filename1) = tempfile(SUFFIX => '.dat', UNLINK => 1); # experiment (query in R)

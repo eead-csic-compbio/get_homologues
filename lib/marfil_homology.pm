@@ -1180,7 +1180,7 @@ sub construct_Pfam_hash
 # indicated in arrays $ref_ids1 and $ref_ids2. Usually 1 will be a subset of 2, but it is not required.
 # Only the fist occurrence of a domain in a sequence is counted.
 # If optional $ref_clusters is passed, domain occurrences are counted once per cluster
-# Bruno Mar2016
+# Bruno Mar-Sept2016
 sub parse_Pfam_freqs
 {
   my ($infile,$ref_ids1,$ref_ids2,$ref_clusters) = @_;
@@ -1271,8 +1271,8 @@ sub parse_Pfam_freqs
     $counts1{$pfam}=0;
   }
   
-  # detect errors foreach 
-  #$pfam (keys(%counts1)){ print "$pfam\n"  if(!$counts2{$pfam}) }
+  # detect errors
+  #foreach $pfam (sort {$counts1{$b}<=>$counts1{$a}} keys(%counts1)){ print "$pfam $counts1{$pfam} $counts2{$pfam}\n" }
   
   return (\%counts1,\%counts2,\%full_text);
 }

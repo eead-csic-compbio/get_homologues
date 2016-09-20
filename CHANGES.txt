@@ -147,3 +147,7 @@
 04082016: modified compare_clusters.pl -t so that all single-copy clusters with taxa >= t are taken
 05092016: fixed regular expression in make_nr_pangenome_matrix.pl that checks for nucleotide/peptide sequences, removing IUPAC accepted D,H &V degeneracies
 06092016: fixed handling of reference file in FASTA format in make_nr_pangenome_matrix
+16092016: fixed bug with long names in annotate_cluster.pl
+19092016: added flag -f to pfam_enrich.pl
+20092016: added pfam_enrich.pl example to EST manual 
+20092016: linked plant benchmark datasets to online README
