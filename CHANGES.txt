@@ -146,4 +146,4 @@
 02082016: updated phyTools extract_intergenic_from_genbank & extract_CDSs_from_genbank tu support Rast-produced gbk files, thanks Alex Greenspan
 04082016: modified compare_clusters.pl -t so that all single-copy clusters with taxa >= t are taken
 05092016: fixed regular expression in make_nr_pangenome_matrix.pl that checks for nucleotide/peptide sequences, removing IUPAC accepted D,H &V degeneracies
-06092016: fixed handling of reference file in FASTA foramt in make_nr_pangenome_matrix
+06092016: fixed handling of reference file in FASTA format in make_nr_pangenome_matrix
