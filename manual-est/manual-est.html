@@ -43,48 +43,50 @@ Contents</A>
 <!--Table of Contents-->
 
 <UL CLASS="TofC">
-<LI><A NAME="tex2html90"
+<LI><A NAME="tex2html92"
   HREF="manual-est.html#SECTION00020000000000000000">1 Description</A>
-<LI><A NAME="tex2html91"
+<LI><A NAME="tex2html93"
   HREF="manual-est.html#SECTION00030000000000000000">2 Requirements and installation</A>
 <UL>
-<LI><A NAME="tex2html92"
-  HREF="manual-est.html#SECTION00031000000000000000">2.1 Perl modules</A>
-<LI><A NAME="tex2html93"
-  HREF="manual-est.html#SECTION00032000000000000000">2.2 Required binaries</A>
 <LI><A NAME="tex2html94"
+  HREF="manual-est.html#SECTION00031000000000000000">2.1 Perl modules</A>
+<LI><A NAME="tex2html95"
+  HREF="manual-est.html#SECTION00032000000000000000">2.2 Required binaries</A>
+<LI><A NAME="tex2html96"
   HREF="manual-est.html#SECTION00033000000000000000">2.3 Optional software dependencies</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html95"
+<LI><A NAME="tex2html97"
   HREF="manual-est.html#SECTION00040000000000000000">3 User manual</A>
 <UL>
-<LI><A NAME="tex2html96"
-  HREF="manual-est.html#SECTION00041000000000000000">3.1 Input data</A>
-<LI><A NAME="tex2html97"
-  HREF="manual-est.html#SECTION00042000000000000000">3.2 Program options</A>
 <LI><A NAME="tex2html98"
+  HREF="manual-est.html#SECTION00041000000000000000">3.1 Input data</A>
+<LI><A NAME="tex2html99"
+  HREF="manual-est.html#SECTION00042000000000000000">3.2 Program options</A>
+<LI><A NAME="tex2html100"
   HREF="manual-est.html#SECTION00043000000000000000">3.3 Accompanying scripts</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html99"
+<LI><A NAME="tex2html101"
   HREF="manual-est.html#SECTION00050000000000000000">4 A few examples</A>
 <UL>
-<LI><A NAME="tex2html100"
-  HREF="manual-est.html#SECTION00051000000000000000">4.1 Extracting coding sequences (CDS) from transcripts</A>
-<LI><A NAME="tex2html101"
-  HREF="manual-est.html#SECTION00052000000000000000">4.2 Clustering orthologous transcripts from FASTA files, one per strain</A>
 <LI><A NAME="tex2html102"
-  HREF="manual-est.html#SECTION00053000000000000000">4.3 Producing a nucleotide-based pangenome matrix</A>
+  HREF="manual-est.html#SECTION00051000000000000000">4.1 Extracting coding sequences (CDS) from transcripts</A>
 <LI><A NAME="tex2html103"
-  HREF="manual-est.html#SECTION00054000000000000000">4.4 Making and annotating a non-redundant pangenome matrix</A>
+  HREF="manual-est.html#SECTION00052000000000000000">4.2 Clustering orthologous transcripts from FASTA files, one per strain</A>
 <LI><A NAME="tex2html104"
-  HREF="manual-est.html#SECTION00055000000000000000">4.5 Annotating a sequence cluster</A>
+  HREF="manual-est.html#SECTION00053000000000000000">4.3 Producing a nucleotide-based pangenome matrix</A>
+<LI><A NAME="tex2html105"
+  HREF="manual-est.html#SECTION00054000000000000000">4.4 Estimating protein domain enrichment of some sequence clusters</A>
+<LI><A NAME="tex2html106"
+  HREF="manual-est.html#SECTION00055000000000000000">4.5 Making and annotating a non-redundant pangenome matrix</A>
+<LI><A NAME="tex2html107"
+  HREF="manual-est.html#SECTION00056000000000000000">4.6 Annotating a sequence cluster</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html105"
+<LI><A NAME="tex2html108"
   HREF="manual-est.html#SECTION00060000000000000000">5 Frequently asked questions (FAQs)</A>
-<LI><A NAME="tex2html106"
+<LI><A NAME="tex2html109"
   HREF="manual-est.html#SECTION00070000000000000000">6 Credits and references</A>
 </UL>
 <!--End of Table of Contents-->
@@ -187,7 +189,7 @@ modules from the <A NAME="tex2html6"
   HREF="http://www.bioperl.org">Bioperl</A>
 collection, 
 and module <A NAME="tex2html7"
-  HREF="<"><</A>465>>http://search.cpan.org/perldoc?Parallelare also required, and have been included in the <SPAN  CLASS="textit">get_homologues-est</SPAN> bundle for your convenience.
+  HREF="<"><</A>482>>http://search.cpan.org/perldoc?Parallelare also required, and have been included in the <SPAN  CLASS="textit">get_homologues-est</SPAN> bundle for your convenience.
 
 <P>
 Should this version of BioPerl fail in your system (as diagnosed by <SPAN  CLASS="textit">install.pl</SPAN>) 
@@ -342,8 +344,8 @@ database engine, which requires Perl core module
 <P>
 The accompanying script <SPAN  CLASS="textit">transcripts2cds.pl</SPAN> should work out of the box, but the more efficient
 <SPAN  CLASS="textit">transcripts2cdsCPP.pl</SPAN> requires the installation of module <A NAME="tex2html20"
-  HREF="<"><</A>466>>http://search.cpan.org/perldoc?Inlinewhich in turn requires <A NAME="tex2html21"
-  HREF="<"><</A>467>>http://search.cpan.org/perldoc?InlineThe installation of these modules is known to be troublesome in some systems, but the standard way should work in most cases:
+  HREF="<"><</A>483>>http://search.cpan.org/perldoc?Inlinewhich in turn requires <A NAME="tex2html21"
+  HREF="<"><</A>484>>http://search.cpan.org/perldoc?InlineThe installation of these modules is known to be troublesome in some systems, but the standard way should work in most cases:
 
 <P>
 <PRE>
@@ -1245,7 +1247,7 @@ in PubMed=<A NAME="tex2html53"
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:pangenomet"></A><A NAME="456"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:pangenomet"></A><A NAME="473"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 7:</STRONG>
 
@@ -1280,7 +1282,7 @@ The next Figure show some of this snapshots:
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:snapshot"></A><A NAME="457"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:snapshot"></A><A NAME="474"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 8:</STRONG>
 
@@ -1352,7 +1354,138 @@ Hierarchical grouping of strains based on pangenome matrix.</CAPTION>
 <P>
 
 <H2><A NAME="SECTION00054000000000000000">
-<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">4</SPAN> Making and annotating a non-redundant pangenome matrix</A>
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">4</SPAN> Estimating protein domain enrichment of some sequence clusters</A>
+</H2>
+
+<P>
+This example uses data from the barley benchmark, the <code>barley_cds/</code> folder, which can be downloaded from:
+<BR><A NAME="tex2html56"
+  HREF="http://floresta.eead.csic.es/plant-pan-genomes">http://floresta.eead.csic.es/plant-pan-genomes</A>
+<P>
+This folder contains CDS sequences inferred from a set of 16 barley transcript sets, both as nucleotide and peptide
+FASTA files. After downloading these files, Pfam domains can be annotated as follows:
+
+<P>
+<code>$ ./get_homologues-est.pl -d barley_cds -D -o -m cluster </code> 
+
+<P>
+
+<BR>
+These annotations will serve to calculate background domain frequencies.
+
+<P>
+Once this is completed, we can compute "control" non-cloud (<!-- MATH
+ $occupancy > 2$
+ -->
+<SPAN CLASS="MATH"><IMG
+ WIDTH="101" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img8.png"
+ ALT="$ occupancy &gt; 2$"></SPAN>) clusters with this command:
+<BR><code>$ ./get_homologues-est.pl -d barley_cds -M -t 3 -m cluster </code> 
+
+<P>
+The output should include the next lines:
+
+<P>
+<PRE> 
+# number_of_clusters = 33384
+# cluster_list = barley_cds_est_homologues/Alexis_3taxa_algOMCL_e0_.cluster_list
+# cluster_directory = barley_cds_est_homologues/Alexis_3taxa_algOMCL_e0_
+</PRE>
+
+<P>
+We should be now in position to compile the pan-genome matrix corresponding to these clusters:
+
+<P>
+<PRE> 
+./compare_clusters.pl -d barley_cds_est_homologues/Alexis_3taxa_algOMCL_e0_ \
+  -o clusters_cds_t3 -m -n
+</PRE>
+
+<P>
+
+<BR>
+which should produce:
+
+<P>
+<PRE> 
+# number of clusters = 33384
+
+# intersection output directory: clusters_cds_t3
+# intersection size = 33384 clusters
+
+# intersection list = clusters_cds_t3/intersection_t0.cluster_list
+
+# pangenome_file = clusters_cds_t3/pangenome_matrix_t0.tab
+</PRE>
+
+<P>
+We should now interrogate the pan-genome matrix, for instance looking for clusters found in one genotype (A) but not in others (B):
+
+<P>
+<PRE> 
+./parse_pangenome_matrix.pl -m clusters_cds_t3/pangenome_matrix_t0.tab \
+  -A barley_cds/SBCC073.list -B barley_cds/ref.list -g
+</PRE> 
+
+<P>
+You should obtain a list of 3456 accessory clusters:
+
+<P>
+<PRE> 
+# matrix contains 33384 clusters and 16 taxa
+# taxa included in group A = 1
+# taxa included in group B = 2
+# finding genes present in A which are absent in B ...
+# file with genes present in set A and absent in B (3456): 
+   clusters_cds_t3/pangenome_matrix_t0__pangenes_list.txt
+</PRE> 
+
+<P>
+Finally, we will now estimate whether Pfam these clusters are enriched in any Pfam domain, producing also a single FASTA 
+file with the tested sequences:
+
+<P>
+<PRE> 
+./pfam_enrich.pl -d barley_cds_est_homologues -c clusters_cds -n -t greater \
+  -x clusters_cds_t3/pangenome_matrix_t0__pangenes_list.txt -e -p 0.05 \
+  -r SBCC073 -f SBCC073_accessory.fna
+</PRE>
+
+<P>
+The output should be:
+<PRE> 
+# parsing clusters...
+# 38153 sequences extracted from 115370 clusters
+
+# total experiment sequence ids = 3739
+# total control    sequence ids = 38153
+
+# parse_Pfam_freqs: set1 = 355 Pfams set2 = 3651 Pfams
+
+
+# created FASTA file: SBCC073_accessory.fna
+
+# sequences=3739 mean length=308.1 , seqs/cluster=1.08
+
+# fisher exact test type: 'greater'
+# multi-testing p-value adjustment: fdr
+# adjusted p-value threshold: 0.05
+
+# total annotated domains: experiment=623 control=17914
+
+#PfamID	counts(exp)	counts(ctr)	freq(exp)	freq(ctr)	p-value	p-value(adj)	description
+PF00931	24	189	3.852e-02	1.055e-02	3.723e-07	3.398e-04	NB-ARC domain
+PF14223	9	24	1.445e-02	1.340e-03	1.073e-06	7.836e-04	gag-polypeptide of LTR copia-type
+PF13963	6	11	9.631e-03	6.140e-04	1.333e-05	8.108e-03	Transposase-associated domain
+PF00078	10	46	1.605e-02	2.568e-03	1.687e-05	8.797e-03	Reverse transcriptase 
+PF00098	9	42	1.445e-02	2.345e-03	4.863e-05	2.220e-02	Zinc knuckle
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION00055000000000000000">
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">5</SPAN> Making and annotating a non-redundant pangenome matrix</A>
 </H2>
 
 <P>
@@ -1391,7 +1524,7 @@ that sequences might be truncated (option <code>-e</code>) and using 10 processo
 
 <P>
 Note that the previous command can be modified to match external reference sequences, 
-for instance from <A NAME="tex2html56"
+for instance from <A NAME="tex2html57"
   HREF="http://www.ebi.ac.uk/uniprot">Swissprot</A>,
 or pre-computed clusters, such as groups of orthologous sequences, 
 so that the resulting matrix contains cross-references to those external clusters, and their annotations.
@@ -1450,13 +1583,13 @@ non-redundant	Franka.bz2.nucl	Esterel.bz2.nucl	flcdnas_Hnijo.gz.nucl	...	redunda
 
 <P>
 Pangenome matrices with more than 4 taxa can be plotted with help from script <SPAN  CLASS="textit">parse_pangenome_matrix.pl</SPAN>,
-as explained in <A NAME="tex2html57"
+as explained in <A NAME="tex2html58"
   HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>. 
 
 <P>
 
-<H2><A NAME="SECTION00055000000000000000">
-<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">5</SPAN> Annotating a sequence cluster</A>
+<H2><A NAME="SECTION00056000000000000000">
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">6</SPAN> Annotating a sequence cluster</A>
 </H2>
 
 <P>
@@ -1494,11 +1627,11 @@ CCTGCTGGTGCATTTTTTTACAAACAGTTGGCACAGAGTATTTGTTGCTAATTGTGTTCGTTTTCTTGAA...
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:annotcluster"></A><A NAME="458"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:annotcluster"></A><A NAME="475"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 10:</STRONG>
 Fragment of alignment produced by <SPAN  CLASS="textit">annotate_cluster.pl</SPAN>, 
-rendered with <A NAME="tex2html58"
+rendered with <A NAME="tex2html59"
   HREF="http://www.mbio.ncsu.edu/bioedit/bioedit.html">BioEdit</A>.</CAPTION>
 <TR><TD>
 <DIV ALIGN="CENTER">
@@ -1520,7 +1653,7 @@ rendered with <A NAME="tex2html58"
 
 <P>
 Please see also the FAQs in
-<A NAME="tex2html64"
+<A NAME="tex2html65"
   HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>. 
 
 <P>
@@ -1535,7 +1668,7 @@ in the figure, which combines data from the original benchmark and new data gene
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:RAMtimev2"></A><A NAME="394"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:RAMtimev2"></A><A NAME="411"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 11:</STRONG>
 Computing time and RAM requirements of the original algorithm (OMCL, measured on 6 sequence sets) 
@@ -1563,7 +1696,7 @@ These three common situations are illustrated on Figure <A HREF="#fig:ESTcaveats
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:ESTcaveats"></A><A NAME="404"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:ESTcaveats"></A><A NAME="421"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 12:</STRONG>
 Common problems faced when clustering transcripts/CDS sequences.</CAPTION>
@@ -1609,14 +1742,14 @@ These values are equivalent to say that any sequence with <!-- MATH
  -->
 <SPAN CLASS="MATH"><IMG
  WIDTH="111" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
- SRC="img8.png"
+ SRC="img9.png"
  ALT="$ coverage \ge 50\%$"></SPAN> 
 and <!-- MATH
  $identity \ge 70\%$
  -->
 <SPAN CLASS="MATH"><IMG
  WIDTH="103" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
- SRC="img9.png"
+ SRC="img10.png"
  ALT="$ identity \ge 70\%$"></SPAN> to previous genes/transcripts 
 will be considered simply a homologue and won't be accumulated to the growing pangenome/pantranscriptome. 
 You might want to change these values to increase or relax the stringency and to match the parameters set to produce your clusters.
@@ -1631,7 +1764,7 @@ to analyze conserved non-coding sequences among <SPAN  CLASS="textit">Brachypodi
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:CNS"></A><A NAME="461"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:CNS"></A><A NAME="478"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 13:</STRONG>
 Core-genome composition analysis of conserved non-coding sequences (CNS) from 56 <SPAN  CLASS="textit">Brachypodium distachyon</SPAN> 
@@ -1661,24 +1794,24 @@ ecotypes and rice.</CAPTION>
 
 <P>
 <SPAN  CLASS="textit">get_homologues-est.pl</SPAN> is designed, created and maintained at the 
-<A NAME="tex2html65"
+<A NAME="tex2html66"
   HREF="http://www.eead.csic.es/compbio">Laboratory of Computational Biology</A>
 at 
 Estaci&#243;n Experimental de Aula Dei/CSIC in Zaragoza (Spain) and at the 
-<A NAME="tex2html66"
+<A NAME="tex2html67"
   HREF="http://www.ccg.unam.mx/~vinuesa">Center for Genomic Sciences</A>
 of 
 Universidad Nacional Aut&#243;noma de M&#233;xico (CCG/UNAM).
 
 <P>
 The code was written mostly by Bruno Contreras-Moreira and Pablo Vinuesa, but it also includes 
-code and binaries from <A NAME="tex2html67"
+code and binaries from <A NAME="tex2html68"
   HREF="http://www.orthomcl.org">OrthoMCL v1.4</A>
 (algorithm OMCL, <code>-M</code>),
-<A NAME="tex2html68"
-  HREF="http://blast.ncbi.nlm.nih.gov">NCBI Blast+</A>, <A NAME="tex2html69"
+<A NAME="tex2html69"
+  HREF="http://blast.ncbi.nlm.nih.gov">NCBI Blast+</A>, <A NAME="tex2html70"
   HREF="https://github.com/desmid/mview">MVIEW</A>
-and <A NAME="tex2html70"
+and <A NAME="tex2html71"
   HREF="http://www.bioperl.org">BioPerl 1.5.2</A>.
 
 <P>
@@ -1776,7 +1909,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>manual-est -no_antialias_text -split 0 -dir manual-est -no_navigation -show_section_numbers</TT>
 <P>
-The translation was initiated by Bruno Contreras Moreira on 2016-06-23
+The translation was initiated by Bruno Contreras Moreira on 2016-09-20
 <BR><HR>
 <ADDRESS>
 Bruno Contreras-Moreira and Pablo Vinuesa<br><a href="https://github.com/eead-csic-compbio/get_homologues">https://github.com/eead-csic-compbio/get_homologues</a>
