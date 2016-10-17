@@ -184,7 +184,7 @@ foreach my $file (@tmpfiles)
 
     #close(OUTBLAST);# comment if using cat
     unlink($output_file) if(-e $output_file);
-    die "# ERROR : did not produced BLAST file $blast_file ,".
+    die "# ERROR : did not produce BLAST file $blast_file ,".
       " probably job failed: $batch_command\n";
   }
   else

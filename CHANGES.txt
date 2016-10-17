@@ -151,3 +151,5 @@
 19092016: added flag -f to pfam_enrich.pl
 20092016: added pfam_enrich.pl example to EST manual 
 20092016: linked plant benchmark datasets to online README
+06102016: added extra check to extract_CDSs_from_genbank & extract_genes_from_genbank to skip pseudogenes
+17102016: updated manual with FAQ about ANI calculation on soft-core clusters (thanks Raffael Inglin)
