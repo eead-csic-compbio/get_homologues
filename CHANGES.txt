@@ -153,3 +153,4 @@
 20092016: linked plant benchmark datasets to online README
 06102016: added extra check to extract_CDSs_from_genbank & extract_genes_from_genbank to skip pseudogenes
 17102016: updated manual with FAQ about ANI calculation on soft-core clusters (thanks Raffael Inglin)
+18102016: added FAQ explaining the meaning of branch numbers in compare_clusters.pl -T trees
