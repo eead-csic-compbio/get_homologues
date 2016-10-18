@@ -171,7 +171,7 @@ foreach my $cluster (@clusters)
       
         if($cluster_full_ids{$full_id})
         {
-          die "# WARNING: skipping sequence: $full_id , seems to be duplicated:\n$cluster_full_ids{$full_id}\n";
+          warn "# WARNING: skipping sequence: $full_id , seems to be duplicated:\n$cluster{$full_id},$cluster\n";
         }
         else
         { 
@@ -215,7 +215,7 @@ foreach my $cluster (@clusters)
         
         if($cluster_full_ids{$full_id})
         {
-          print "# WARNING: skipping sequence $full_id , seems to be duplicated:\n$cluster_full_ids{$full_id}\n";
+          warn "# WARNING: skipping sequence $full_id , seems to be duplicated:\n$cluster{$full_id},$cluster\n";
         }
         else
         { 
@@ -458,6 +458,11 @@ close RSHELL;
 my $total_exp = sum(values(%$ref_pfam1));
 my $total_ctr = sum(values(%$ref_pfam2));
 
+if($total_exp==0)
+{
+  die "# ERROR : zero parsed Pfam domains (experiment), please check -x list\n";
+}
+
 print "# fisher exact test type: '$INP_test'\n";
 print "# multi-testing p-value adjustment: $ADJUST\n";
 print "# adjusted p-value threshold: $INP_pcutoff\n\n";
@@ -470,7 +475,12 @@ while(<ENRICH>)
 {
   chomp;
   ($pfam,$pvalue,$adj) = split(/\s+/,$_);
+
   last if($adj > $INP_pcutoff);
+
+  $ref_pfam1->{$pfam} |= 0;
+  $ref_pfam2->{$pfam} |= 0;
+
   printf("%s\t%d\t%d\t%1.3e\t%1.3e\t%1.3e\t%1.3e\t%s\n",
     $pfam,
     $ref_pfam1->{$pfam},$ref_pfam2->{$pfam},
