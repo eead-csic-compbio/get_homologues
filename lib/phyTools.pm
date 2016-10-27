@@ -281,7 +281,7 @@ sub read_FASTA_sequence
     if(!open(FASTA,"gzip -dc $infile |"))
     {
       die "# read_FASTA_sequence: cannot read GZIP compressed $infile $!\n"
-        ."# please check gzip in installed\n";
+        ."# please check gzip is installed\n";
     }
   }
   elsif($infile =~ /\.bz2$/ || $magic eq "BZ") # BZIP2 compressed input
@@ -289,7 +289,7 @@ sub read_FASTA_sequence
     if(!open(FASTA,"bzip2 -dc $infile |"))
     {
       die "# read_FASTA_sequence: cannot read BZIP2 compressed $infile $!\n"
-        ."# please check bzip2 in installed\n";
+        ."# please check bzip2 is installed\n";
     }
   }
   else{ open(FASTA,"<$infile") || die "# read_FASTA_sequence: cannot read $infile $!\n"; }
@@ -428,7 +428,7 @@ sub read_FASTA_file_array
     if(!open(FASTA,"gzip -dc $infile |"))
     {
       die "# read_FASTA_sequence_array: cannot read GZIP compressed $infile $!\n"
-        ."# please check gzip in installed\n";
+        ."# please check gzip is installed\n";
     }
   }
   elsif($infile =~ /\.bz2$/ || $magic eq "BZ") # BZIP2 compressed input
@@ -436,7 +436,7 @@ sub read_FASTA_file_array
     if(!open(FASTA,"bzip2 -dc $infile |"))
     {
       die "# read_FASTA_sequence_array: cannot read BZIP2 compressed $infile $!\n"
-        ."# please check bzip2 in installed\n";
+        ."# please check bzip2 is installed\n";
     }
   }
   else{ open(FASTA,"<$infile") || die "# read_FASTA_sequence_array: cannot read $infile $!\n"; }

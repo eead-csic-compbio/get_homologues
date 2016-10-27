@@ -155,3 +155,4 @@
 17102016: updated manual with FAQ about ANI calculation on soft-core clusters (thanks Raffael Inglin)
 18102016: added FAQ explaining the meaning of branch numbers in compare_clusters.pl -T trees
 18102016: added extra check to pfam_enrich.pl
+27102016: fixed bug in plot_matrix_heatmap.sh -c X ; now only rows with values < X are retained, as expected (thanks Valerie!)

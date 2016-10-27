@@ -253,12 +253,12 @@ if [ $sim_cutoff_int -ne 100 ]
 then
    heatmap_outfile="${tab_file%.*}_sim_cutoff_${sim_cutoff}_heatmap.$outformat"
    echo "# Plotting file $heatmap_outfile"
+   nj_tree="${tab_file%.*}_sim_cutoff_${sim_cutoff}_BioNJ.ph"
 else
    heatmap_outfile="${tab_file%.*}_heatmap.$outformat"
    echo "# Plotting file $heatmap_outfile"
+   nj_tree="${tab_file%.*}_BioNJ.ph"
 fi
-
-nj_tree="${tab_file%.*}_BioNJ.ph"
 
 # 2) call R using a heredoc and write the resulting script to file 
 R --no-save -q <<RCMD > ${progname%.*}_script_run_at_${start_time}.R
@@ -272,8 +272,10 @@ rownames(mat_dat) <- rnames
 
 if($sim_cutoff < 100)
 {
-   rows <- (apply( mat_dat , 1 , function(x) any( x < $sim_cutoff) ) )
-   mat_dat <-  mat_dat[rows, rows]
+   tmp_mat = mat_dat
+   diag(tmp_mat) = NA
+   rows <- (!apply( tmp_mat , 1 , function(x) any( x > $sim_cutoff , na.rm=T) ) )
+   mat_dat <- mat_dat[rows, rows]
 }
 
 if($reorder_clusters > 0){
