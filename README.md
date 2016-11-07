@@ -9,7 +9,7 @@ and
 [Vinuesa P and Contreras-Moreira B (2015) Methods in Molecular Biology Volume 1231, 203-232](http://link.springer.com/protocol/10.1007%2F978-1-4939-1720-4_14)
 
 The code is regularly patched (see [CHANGES.txt](./CHANGES.txt) in each release), and has been used in a variety of studies 
-(see citing papers [here](https://scholar.google.es/scholar?start=0&hl=en&as_sdt=2005&cites=5259912818944685430).
+(see citing papers [here](https://scholar.google.es/scholar?start=0&hl=en&as_sdt=2005&cites=5259912818944685430)).
 
 Moreover, the software has also been adapted to the study of **intra-specific eukaryotic pan-genomes**, which we have tested with genomes and transcriptomes of *Arabidopsis thaliana* and *Hordeum vulgare*, available at [http://floresta.eead.csic.es/plant-pan-genomes](http://floresta.eead.csic.es/plant-pan-genomes).
 
