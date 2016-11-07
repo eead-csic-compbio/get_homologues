@@ -8,7 +8,10 @@ and
 
 [Vinuesa P and Contreras-Moreira B (2015) Methods in Molecular Biology Volume 1231, 203-232](http://link.springer.com/protocol/10.1007%2F978-1-4939-1720-4_14)
 
-That code has been and is regularly patched (see [CHANGES.txt](./CHANGES.txt) in each release), and has recently been adapted to the study of **intra-specific eukaryotic pangenomes**, which we have tested with whole-genome data and transcripts of plants.
+The code is regularly patched (see [CHANGES.txt](./CHANGES.txt) in each release), and has been used in a variety of studies 
+(see citing papers [here](https://scholar.google.es/scholar?start=0&hl=en&as_sdt=2005&cites=5259912818944685430).
+
+Moreover, the software has also been adapted to the study of **intra-specific eukaryotic pan-genomes**, which we have tested with genomes and transcriptomes of *Arabidopsis thaliana* and *Hordeum vulgare*, available at [http://floresta.eead.csic.es/plant-pan-genomes](http://floresta.eead.csic.es/plant-pan-genomes).
 
 We kindly ask you to report errors or bugs in the program to the authors and to acknowledge the use of the program in scientific publications.
 
@@ -19,10 +22,7 @@ We kindly ask you to report errors or bugs in the program to the authors and to 
 Installation instructions are summarized on [README.txt](./README.txt) and full documentation is available in two flavours:
 
 |version|HTML|
-|-------|---|
-|original, for the analysis of bacterial pangenomes|[manual](http://eead-csic-compbio.github.io/get_homologues/manual/)|
-|EST, for the analysis of intra-species eukaryotic pangenomes, tested on plants|[manual-est](http://eead-csic-compbio.github.io/get_homologues/manual-est/)|
+|-------|----|
+|original, for the analysis of bacterial pan-genomes|[manual](http://eead-csic-compbio.github.io/get_homologues/manual/)|
+|EST, for the analysis of intra-species eukaryotic pan-genomes, tested on plants|[manual-est](http://eead-csic-compbio.github.io/get_homologues/manual-est/)|
 
-*Arabidopsis thaliana* and *Hordeum vulgare* datasets used in benchmarks are available at:
-
-[http://floresta.eead.csic.es/plant-pan-genomes](http://floresta.eead.csic.es/plant-pan-genomes)

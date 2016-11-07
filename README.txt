@@ -18,6 +18,7 @@ but includes code and binaries from other authors:
  PHYLIP 3.695 (http://evolution.genetics.washington.edu/phylip) 
  Transdecoder r20140704 (http://transdecoder.sf.net , PubMed=23845962)
  MVIEW 1.60.1 (https://github.com/desmid/mview, PubMed=9632837)
+ diamond 0.8.25 (https://github.com/bbuchfink/diamond, PubMed=25402007)
  
 License
 ===============================================================================
@@ -67,6 +68,9 @@ and analysis. Nat Protoc. 8(8):1494-512.
 
 11) Brown NP, Leroy C, Sander C (1998) MView: A Web compatible database search or 
 multiple alignment viewer. Bioinformatics. 14 (4):380-381. 
+
+12) Buchfink B, Xie C, Huson DH (2015) Fast and sensitive protein alignment using 
+DIAMOND. Nat Methods. 12(1):59-60
 
 System requirements and installation:
 ================================================================================

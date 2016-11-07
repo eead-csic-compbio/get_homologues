@@ -156,3 +156,8 @@
 18102016: added FAQ explaining the meaning of branch numbers in compare_clusters.pl -T trees
 18102016: added extra check to pfam_enrich.pl
 27102016: fixed bug in plot_matrix_heatmap.sh -c X ; now only rows with values < X are retained, as expected (thanks Valerie!)
+07112016: added diamond (PubMed=25402007) to phyTools, setting %ENV keys DMND_PATH_EST, EXE_DMNDX_EST & EXE_DMNFT_EST
+07112016: updated install.pl to retrieve and format uniprot_sprot.fasta.gz from ftp.uniprot.org
+07112016: added executeMAKEDB & format_DIAMOND_command to lib/transcripts.pm
+07112016: added option -X to transcripts2cdsCPP.pl & transcripts2cdsCPP.pl to invoke diamond instead of blastx
+07112016: updated EST manual
