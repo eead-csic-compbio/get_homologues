@@ -52,7 +52,7 @@ my %feature_output = (
   'EXE_INPARA'=>'usage','EXE_ORTHO'=>'usage','EXE_HOMOL'=>'usage','EXE_ISOFORM'=>'usage','EXE_SPLITBLAST'=>'Usage',
   'EXE_SPLITHMMPFAM'=>'Usage','EXE_MVIEW'=>'usage',
   'EXE_BLASTX_EST'=>'BLAST','EXE_FORMATDB'=>'database','EXE_TRANSDECOD_EST'=>'transcript',
-  
+  'EXE_DMNDX_EST'=>'diamond'
   );
 
 ################################################################
@@ -94,7 +94,12 @@ sub set_phyTools_env
   if( ! defined($ENV{'BLAST_PATH_EST'}) ){ $ENV{'BLAST_PATH_EST'} = $ENV{'BLAST_PATH'}; }
   if( ! defined($ENV{'EXE_BLASTX_EST'}) ){ $ENV{'EXE_BLASTX_EST'} = $ENV{'BLAST_PATH_EST'}.'blastx'; }
   if( ! defined($ENV{'EXE_FORMATDB_EST'}) ){ $ENV{'EXE_FORMATDB_EST'} = $ENV{'BLAST_PATH_EST'}.'makeblastdb'; }
-  if( ! defined($ENV{'BLASTXDB'}) ){ $ENV{'BLASTXDB'} = $ENV{'MARFIL'}."db/swissprot"; }
+  # diamond software
+  if( ! defined($ENV{'DMND_PATH_EST'}) ){ $ENV{'DMND_PATH_EST'} = $ENV{'MARFIL'}.'bin/diamond-0.8.25/'; }
+  if( ! defined($ENV{'EXE_DMNDX_EST'}) ){ $ENV{'EXE_DMNDX_EST'} = $ENV{'DMND_PATH_EST'}.'diamond blastx'; }
+  if( ! defined($ENV{'EXE_DMNFT_EST'}) ){ $ENV{'EXE_DMNFT_EST'} = $ENV{'DMND_PATH_EST'}.'diamond makedb'; }
+  if( ! defined($ENV{'BLASTXDB'}) ){ $ENV{'BLASTXDB'} = $ENV{'MARFIL'}."db/uniprot_sprot.fasta"; }
+  
   #if( ! defined($ENV{"EXE_GMAP"}) ){ $ENV{"EXE_GMAP"} = $ENV{'MARFIL'}."/bin/est/gmap-2014-02-20/src/gmap "; }
   #if( ! defined($ENV{"EXE_GMAPBUILD"}) ){ $ENV{"EXE_GMAPBUILD"} = $ENV{'MARFIL'}."/bin/est/gmap-2014-02-20/util/gmap_build "; }
 
