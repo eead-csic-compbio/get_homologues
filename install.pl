@@ -2,23 +2,25 @@
 
 # script that checks/compiles software required by get_homologues[-est] and checks dependencies
 # for first-time users
-# last checked Feb2016
+# last checked Nov2016
 
 use strict;
 use Cwd;
 use FindBin '$Bin';
 use lib "$Bin/lib";
+use lib "$Bin/lib/est";
 use lib "$Bin/lib/bioperl-1.5.2_102/";
 require phyTools;
-
+use transcripts;
 
 my $PFAMSERVERURL   = 'ftp.ebi.ac.uk';
 my $PFAMFOLDER      = 'pub/databases/Pfam/current_release/';
 my $PFAMHMMFILE     = 'Pfam-A.hmm.gz';
 my $BLASTSERVERPATH = 'ftp.ncbi.nih.gov';
 my $BLASTEXEPATH    = $BLASTSERVERPATH.'/blast/executables/blast+/LATEST/';
-my $SWISSPROTFOLDER = '/blast/db/';
-my $SWISSPROTFILE   = 'swissprot.tar.gz';
+my $SWISSPROTSERVER = 'ftp.uniprot.org';
+my $SWISSPROTFOLDER = '/pub/databases/uniprot/current_release/knowledgebase/complete/';
+my $SWISSPROTFILE   = $ENV{'BLASTXDB'}.'.gz';
 
 my @supportedOS = ('debian','redhat','suse','macOSX');
 my %manager = ('debian'=>'apt-get -y ','redhat'=>'yum -y ','suse'=>'zypper --assume-yes ','macOSX'=>'fink ');
@@ -199,7 +201,7 @@ else{ print ">> OK\n"; }
 # check swissprot DB
 print "## checking optional SWISSPROT library (lib/phyTools: \$ENV{'BLASTXDB'})\n";
 print "# required by transcripts2cds.pl and transcripts2cdsCPP.pl\n";
-if(-s $ENV{'BLASTXDB'}.'.pal')
+if(-s $ENV{'BLASTXDB'}.'.phr' && -s $ENV{'BLASTXDB'}.'.dmnd')
 {
   print ">> OK\n";
 }
@@ -210,50 +212,77 @@ else
   if($userword =~ m/Y/i)
   {
     chdir($ENV{'MARFIL'}.'/db/');
-    
-    print "# connecting to $BLASTSERVERPATH ...\n";
-    eval{ require Net::FTP; };
 
-    if(my $ftp = Net::FTP->new($BLASTSERVERPATH,Passive=>1,Debug =>0,Timeout=>60))
+    my $FLATSWISSPROTFILE = $SWISSPROTFILE;
+    $FLATSWISSPROTFILE =~ s/\.gz//;
+    
+    if(!-s $FLATSWISSPROTFILE)
     {
-      $ftp->login("anonymous",'-anonymous@') || die "# cannot login ". $ftp->message();
-      $ftp->cwd($SWISSPROTFOLDER) || warn "# cannot change working directory to $SWISSPROTFOLDER ". $ftp->message();
-      $ftp->binary();
-      my $downsize = $ftp->size($SWISSPROTFILE);
-      $ftp->hash(\*STDOUT,$downsize/20) if($downsize);
-      printf("# downloading ftp://%s/%s/%s (%1.1fMb) ...\n",$BLASTSERVERPATH,$SWISSPROTFOLDER,$SWISSPROTFILE,$downsize/(1024*1024));
-      print "# [        50%       ]\n# ";
-      if(!$ftp->get($SWISSPROTFILE))
+      print "# connecting to $SWISSPROTSERVER ...\n";
+      eval{ require Net::FTP; };
+
+      if(my $ftp = Net::FTP->new($SWISSPROTSERVER,Passive=>1,Debug =>0,Timeout=>60))
       {
-        warn "# cannot download file $SWISSPROTFILE ". $ftp->message() ."\n\n";
-        warn "<< You might manually download $SWISSPROTFILE from $BLASTSERVERPATH/$SWISSPROTFOLDER to any location\n".
+        $ftp->login("anonymous",'-anonymous@') || die "# cannot login ". $ftp->message();
+        $ftp->cwd($SWISSPROTFOLDER) || warn "# cannot change working directory to $SWISSPROTFOLDER ". $ftp->message();
+        $ftp->binary();
+        my $downsize = $ftp->size($SWISSPROTFILE);
+        $ftp->hash(\*STDOUT,$downsize/20) if($downsize);
+        printf("# downloading ftp://%s/%s/%s (%1.1fMb) ...\n",$SWISSPROTSERVER,$SWISSPROTFOLDER,$SWISSPROTFILE,$downsize/(1024*1024));
+        print "# [        50%       ]\n# ";
+      
+        if(!$ftp->get($SWISSPROTFILE))
+        {
+          warn "# cannot download file $SWISSPROTFILE ". $ftp->message() ."\n\n";
+          warn "<< You might manually download $SWISSPROTFILE from $SWISSPROTSERVER/$SWISSPROTFOLDER to any location\n".
+            "<< and edit variable BLASTXDB as to point to that location, as explained in the manual.\n".
+            "<< Then re-run\n";
+        }
+
+        print "\n";
+        $ftp->quit();
+      }
+      else
+      {
+        warn "# cannot connect to $BLASTSERVERPATH: $@\n\n";
+        warn "<< You might manually download $SWISSPROTFILE from $SWISSPROTSERVER/$SWISSPROTFOLDER to any location\n".
           "<< and edit variable BLASTXDB as to point to that location, as explained in the manual.\n".
+          #"inside set_phyTools_env in file lib/phyTools.pm pointing to the destination folder.\n".
           "<< Then re-run\n";
       }
-
-      print "\n";
-      $ftp->quit();
-      if(-s $SWISSPROTFILE)
+    }      
+    
+    if(-s $SWISSPROTFILE)
+    {
+      print "# gunzip $SWISSPROTFILE ...\n"; 
+      system("gunzip $SWISSPROTFILE"); 
+    }
+    
+    if(-s $FLATSWISSPROTFILE)
+    {
+      executeFORMATDB_EST($FLATSWISSPROTFILE);
+      executeMAKEDB($FLATSWISSPROTFILE);
+             
+      if(!-s $FLATSWISSPROTFILE.'.phr')
       {
-        print "# untar $SWISSPROTFILE ...\n"; 
-        system("tar xfz $SWISSPROTFILE"); 
-        unlink($SWISSPROTFILE);
-        chdir($cwd);
-        print ">> OK\n";
+        warn "# failed formatting $SWISSPROTFILE (blastx)\n";
+      }
+      elsif(!-s $FLATSWISSPROTFILE.'.dmnd')
+      {
+        warn "# failed formatting $SWISSPROTFILE (diamond)\n";
+      }
+      else
+      {    
+        system("gzip $FLATSWISSPROTFILE"); 
+        print ">> OK\n"; 
       }
     }
-    else
-    {
-      warn "# cannot connect to $BLASTSERVERPATH: $@\n\n";
-      warn "<< You might manually download $SWISSPROTFILE from $BLASTSERVERPATH/$SWISSPROTFOLDER to any location\n".
-        "<< and edit variable BLASTXDB as to point to that location, as explained in the manual.\n".
-        #"inside set_phyTools_env in file lib/phyTools.pm pointing to the destination folder.\n".
-        "<< Then re-run\n";
-    }
+              
+    chdir($cwd);
   }
   else
   {
-    warn "<< You might manually download $SWISSPROTFILE from $BLASTSERVERPATH/$SWISSPROTFOLDER to any location\n".
+    warn "<< You might manually download $SWISSPROTFILE from $SWISSPROTSERVER/$SWISSPROTFOLDER to any location\n".
       "<< and edit variable BLASTXDB as to point to that location, as explained in the manual.\n".
       #"inside set_phyTools_env in file lib/phyTools.pm pointing to the destination folder.\n".
       "<< Then re-run\n";
