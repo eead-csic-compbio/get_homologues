@@ -3,6 +3,7 @@ package transcripts;
 # Code library created by Bruno Contreras-Moreira (2015-6)
 # mainly for transcripts2proteins.pl
 
+
 use strict;
 require Exporter;
 use File::Temp;
@@ -14,6 +15,8 @@ our @ISA = qw( Exporter );
 our @EXPORT = qw(
 
   shorten_headers_FASTA_file
+  executeMAKEDB
+  format_DIAMOND_command
   executeFORMATDB_EST
   format_BLASTX_command
   parse_blastx_cds_sequences
@@ -41,6 +44,8 @@ our $MAXBLASTXEVALUE     = 1e-5; # as in http://proteomics.ysu.edu/tools/OrfPred
 our $BLASTX              = $ENV{"EXE_BLASTX_EST"};
 our $FORMATDB            = $ENV{"EXE_FORMATDB_EST"};
 our $TRANSDECODEXE       = $ENV{"EXE_TRANSDECOD_EST"};
+our $MAKEDB              = $ENV{"EXE_DMNFT_EST"};
+our $DIAMONDEXE          = $ENV{"EXE_DMNDX_EST"};  
 our $BLASTXDB            = $ENV{"BLASTXDB"};
 our $GMAPEXE             = $ENV{"EXE_GMAP"};
 our $GMAPBUILDEXE        = $ENV{"EXE_GMAPBUILD"};
@@ -128,6 +133,39 @@ sub extract_compressed_file
   }
 }
 
+sub executeMAKEDB
+{
+  my ($in) = @_;
+
+  my ($command);
+
+  print("\n# running makedb with $in\n");
+  if(-s $in)
+  {
+    $command = "$MAKEDB --in $in --db $in"; 
+
+    open(EXE,"$command |") || die "# ERROR (executeMAKEDB) : cannot run $command : $!\n";
+    while(<EXE>){}
+    close(EXE);
+  }
+  else{ die "# executeMAKEDB : cannot find input FASTA file $in\n"; }
+}
+
+sub format_DIAMOND_command
+{
+  my ($infile,$outfile,$db,$Evalue,$gencode,$plustStrandOnly,$hits_to_show) = @_;
+  
+  my $command = "$DIAMONDEXE -p $BLASTX_NOCPU -q $infile --evalue $Evalue -d $db -o $outfile " .
+    "--max-target-seqs $MAXBLASTXHITS --quiet ";
+
+  if(defined($gencode) && $gencode > 1){ $command .= " --query-gencode $gencode " }
+  if(defined($plustStrandOnly)){ $command .= ' --forwardonly ' }
+  
+  $command .= '--outfmt 6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen ';
+
+  return $command;
+}
+
 sub executeFORMATDB_EST
 {
   my ($in) = @_;
@@ -150,7 +188,7 @@ sub format_BLASTX_command
 {
   my ($infile,$outfile,$db,$Evalue,$gencode,$plustStrandOnly,$hits_to_show) = @_;
 
-#my $command = "$BLASTX -num_threads $BLASTX_NOCPU -outfmt \"6 std qlen qseq sseq\" " . #debug
+  #my $command = "$BLASTX -num_threads $BLASTX_NOCPU -outfmt \"6 std qlen qseq sseq\" " . #debug
   my $command = "$BLASTX -num_threads $BLASTX_NOCPU -outfmt \"6 std qlen\" " .
     "-query $infile -evalue $Evalue -db $db -out $outfile " .
     "-max_target_seqs $MAXBLASTXHITS ";
