@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# 2015-6 Bruno Contreras-Moreira (1) a
+# 2015-6 Bruno Contreras-Moreira (1)
 # 1: http://www.eead.csic.es/compbio (Laboratory of Computational Biology, EEAD/CSIC, Spain)
 
 # This script can be used to extract coding sequences encoded in input transcripts
@@ -26,22 +26,22 @@ use cppcode; #CPP
 use Bio::Tools::CodonTable;
 use Nuc_translator;
 
-my $VERSION = 1.1;
+my $VERSION = 1.2;
 
-my @FEATURES2CHECK = ('EXE_BLASTX_EST','EXE_FORMATDB_EST','EXE_TRANSDECOD_EST'); #,'EXE_GMAP','EXE_GMAPBUILD');
+my @FEATURES2CHECK = ('EXE_BLASTX_EST','EXE_FORMATDB_EST','EXE_TRANSDECOD_EST','EXE_DMNDX_EST'); #,'EXE_GMAP','EXE_GMAPBUILD');
 
 my ($n_of_cpus,$INP_minORFlength) = ($BLASTX_NOCPU,$MINORFLENGTH);
 my ($evalue_cutoff,$INP_blastdb) = ($MAXBLASTXEVALUE,$BLASTXDB);
-my ($INP_plus_strand,$INP_gencode,$input_FASTA_file,$input_reference_FASTA_file) = (0,1);
+my ($INP_plus_strand,$INP_gencode,$INP_diamond,$input_FASTA_file,$input_reference_FASTA_file) = (0,1,0);
 my ($seq_transcod,$seq_transcod_prot,$seq_blastx,$seq_cds,$seq_prot,$besthit);
 my ($ref_blastxseqs_cds,$ref_blastxhits,$ref_transcodseqs_cds,$ref_transcodseqs_prot);
 my ($ref_gmap_cds,$ref_gmap_besthit,$gmap_besthit,$intronless_infile);
 my ($root,$tmproot,$command,$output_mask,$output_mask2,$output_mask3); #mask2=transdecoder,3=blastx
 my ($n_of_ORFs,$n_of_noORFs,$evidence,$seq,$seqname,@input_files,%opts);
 
-getopts('hvGpn:l:d:E:g:m:', \%opts);
+getopts('hvXGpn:l:d:E:g:m:', \%opts);
 
-if(($opts{'h'})||(!$opts{'G'} && scalar(@ARGV)==0))
+if(($opts{'h'})||((!$opts{'G'} && !$opts{'v'}) && scalar(@ARGV)==0))
 {
   print   "\nusage: $0 [options] <input FASTA file(s) with transcript nucleotide sequences>\n\n";
   print   "-h this message\n";
@@ -51,7 +51,8 @@ if(($opts{'h'})||(!$opts{'G'} && scalar(@ARGV)==0))
   #print   "-m map transcripts against reference FASTA genomic file      (optional, gets common genomic coordinates and splices introns)\n";
   print   "-d run blastx against selected protein FASTA database file   (default=swissprot, example: -d /path/to/sequences.faa)\n";
   print   "-E max E-value during blastx search                          (default=$evalue_cutoff)\n";
-  print   "-n number of threads for BLASTX jobs                         (default=$n_of_cpus)\n\n";
+  print   "-n number of threads for blastx/diamond jobs                 (default=$n_of_cpus)\n";
+  print   "-X use diamond instead of blastx                             (optional, much faster for many sequences)\n\n";
   print   "-G show available genetic codes and exit\n";
   exit(0);
 }
@@ -60,17 +61,19 @@ if(defined($opts{'v'}))
 {
   print "\n$0 version $VERSION (2016)\n";
   print "\nProgram written by Bruno Contreras-Moreira\n";
-  print "\nhttp://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)\n";
+  print "\nhttp://www.eead.csic.es/compbio (Estacion Experimental Aula Dei-CSIC/Fundacion ARAID, Spain)\n";
   print "\nThis software employs binaries from different authors, please cite them accordingly:\n";
   print " NCBI Blast-2.2 (blast.ncbi.nlm.nih.gov , PubMed=9254694,20003500)\n";
   print " TransDecoder (http://transdecoder.sourceforge.net)\n";
   print " Bioperl v1.5.2 (www.bioperl.org , PubMed=12368254)\n";
+  print " Diamond 0.8.25 (https://github.com/bbuchfink/diamond, PubMed=25402007)\n";
 
   # check all binaries and data needed by this program and print diagnostic info
   print check_installed_features(@FEATURES2CHECK);
   exit(0);
 }
 
+# show available genetic codes
 if(defined($opts{'G'}))
 {
   my $codontables = Bio::Tools::CodonTable->tables();
@@ -81,6 +84,11 @@ if(defined($opts{'G'}))
   exit(0);
 }
 
+if(defined($opts{'X'}))
+{
+  $INP_diamond = 1;
+}
+
 # check selected genetic code
 if(defined($opts{'g'}))
 {
@@ -89,7 +97,7 @@ if(defined($opts{'g'}))
   my $codontables = Bio::Tools::CodonTable->tables();
   if(!$codontables->{$INP_gencode})
   {
-    print "# EXIT : need a valid genetic code table, please choose choose one from the list:\n";
+    print "# EXIT : need a valid genetic code table, please choose one from the list:\n";
     foreach my $id (sort {$a<=>$b} keys(%$codontables))
     {
       print "$id\t:\t$codontables->{$id}\n";
@@ -130,9 +138,9 @@ if(defined($opts{'n'}) && $opts{'n'} > 0)
 if(defined($opts{'p'}))
 {
   $INP_plus_strand = 1;
-  $output_mask  .= '_strand1';
-  $output_mask2 .= '_strand1';
-  $output_mask3 .= '_strand2';
+  $output_mask  .= '_str1';
+  $output_mask2 .= '_str1';
+  $output_mask3 .= '_str2';
 }
 
 if(defined($opts{'l'}) && $opts{'l'} > 0)
@@ -140,16 +148,16 @@ if(defined($opts{'l'}) && $opts{'l'} > 0)
   $INP_minORFlength = $opts{'l'};
   $MINORFLENGTH = $INP_minORFlength;
 }
-$output_mask .= "_minl$INP_minORFlength";
-$output_mask2 .= "_minl$INP_minORFlength";
+$output_mask .= "_l$INP_minORFlength";
+$output_mask2 .= "_l$INP_minORFlength";
 
 if(defined($opts{'E'}) && $opts{'E'} > 0)
 {
   $evalue_cutoff = $opts{'E'};
   $MAXBLASTXEVALUE = $evalue_cutoff;
 }
-$output_mask  .= "_eval$evalue_cutoff";
-$output_mask3 .= "_eval$evalue_cutoff";
+$output_mask  .= "_E$evalue_cutoff";
+$output_mask3 .= "_E$evalue_cutoff";
 
 if(defined($opts{'d'}) && glob("$opts{'d'}*"))
 {
@@ -166,7 +174,7 @@ if(defined($opts{'m'}) && -s $opts{'m'})
 }
 
 print "# $0 -p $INP_plus_strand -m $input_reference_FASTA_file -d $INP_blastdb ".
-  "-E $evalue_cutoff -l $INP_minORFlength -g $INP_gencode -n $n_of_cpus\n";
+  "-E $evalue_cutoff -l $INP_minORFlength -g $INP_gencode -n $n_of_cpus -X $INP_diamond\n";
 
 if(@input_files)
 {
@@ -327,8 +335,7 @@ foreach $input_FASTA_file (@input_files)
     print "# parsing re-used transdecoder output ($transdecod_outfile_cds) ...\n";
     $ref_transcodseqs_cds = parse_transcoder_sequences($transdecod_outfile_cds);
     $ref_transcodseqs_prot = parse_transcoder_sequences($transdecod_outfile_prot);
-
-#foreach my $kk (keys(%$ref_transcodseqs_cds)){ print "$kk\n $ref_transcodseqs_cds->{$kk}\n";}exit;
+    #foreach my $kk (keys(%$ref_transcodseqs_cds)){ print "$kk\n $ref_transcodseqs_cds->{$kk}\n";}exit;
   }
 
   ## 2) now run blastx to compare transcripts to a large protein set
@@ -338,50 +345,66 @@ foreach $input_FASTA_file (@input_files)
     my $blastx_outfile_gz = $blastx_outfile.'.gz';
 
     # format sequence database if required
-    if(!-s $INP_blastdb .".pal")
+    if($INP_diamond)
     {
-      executeFORMATDB_EST($INP_blastdb);
-    }
+      if(!-s $INP_blastdb .".dmnd"){ executeMAKEDB($INP_blastdb) }
 
-    if(!-s $INP_blastdb .".pal")
-    {
-      die "# WARNING: cannot format sequence database $INP_blastdb\n";
+      if(!-s $INP_blastdb .".dmnd")
+      {
+        die "# WARNING: cannot format sequence database $INP_blastdb (diamond)\n";
+      }
     }
     else
     {
-      if(!$tmp_FASTA_file)
-      {
-        if($compressOK)
-        {
-          $tmp_FASTA_file = extract_compressed_file($input_FASTA_file,$compressOK);
-          push(@trash,$tmp_FASTA_file);
-        }
-        else{ $tmp_FASTA_file = $input_FASTA_file }
-      }
+      if(!-s $INP_blastdb .".phr"){ executeFORMATDB_EST($INP_blastdb) }
 
-      if(!-s $blastx_outfile_gz)
+      if(!-s $INP_blastdb .".phr")
       {
+        die "# WARNING: cannot format sequence database $INP_blastdb (blastx)\n";
+      }
+    }
+    
+    if(!$tmp_FASTA_file)
+    {
+      if($compressOK)
+      {
+        $tmp_FASTA_file = extract_compressed_file($input_FASTA_file,$compressOK);
+        push(@trash,$tmp_FASTA_file);
+      }
+      else{ $tmp_FASTA_file = $input_FASTA_file }
+    }
+
+    if(!-s $blastx_outfile_gz)
+    {
+      if($INP_diamond)
+      {
+        print "# running diamond...\n";
+        $command = format_DIAMOND_command($tmp_FASTA_file,$blastx_outfile,$INP_blastdb,$evalue_cutoff,$INP_gencode,$INP_plus_strand);
+      } 
+      else
+      { 
         print "# running blastx...\n";
-        $command = format_BLASTX_command($tmp_FASTA_file,$blastx_outfile,$INP_blastdb,$evalue_cutoff,$INP_gencode,$INP_plus_strand);
-        system($command);
-        if($? != 0)
-        {
-          die "# ERROR: failed while running BLASTX ($command)\n";
-        }
-        else
-        {
-          system("gzip $blastx_outfile");
-          print "# parsing blastx output ($blastx_outfile_gz) ...\n";
-          ($ref_blastxseqs_cds,$ref_blastxhits) =
-            parse_blastx_cds_sequences($tmp_FASTA_file,$blastx_outfile_gz);
-        }
+        $command = format_BLASTX_command($tmp_FASTA_file,$blastx_outfile,$INP_blastdb,$evalue_cutoff,$INP_gencode,$INP_plus_strand) 
+      }
+        
+      system($command);
+      if($? != 0)
+      {
+        die "# ERROR: failed while running blastx/diamond ($command)\n";
       }
       else
       {
-        print "# parsing re-used blastx output ($blastx_outfile_gz) ...\n";
+        system("gzip $blastx_outfile");
+        print "# parsing blastx output ($blastx_outfile_gz) ...\n";
         ($ref_blastxseqs_cds,$ref_blastxhits) =
           parse_blastx_cds_sequences($tmp_FASTA_file,$blastx_outfile_gz);
       }
+    }
+    else
+    {
+      print "# parsing re-used blastx output ($blastx_outfile_gz) ...\n";
+      ($ref_blastxseqs_cds,$ref_blastxhits) =
+        parse_blastx_cds_sequences($tmp_FASTA_file,$blastx_outfile_gz);
     }
   }
 
