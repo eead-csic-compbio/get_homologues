@@ -161,3 +161,5 @@
 07112016: added executeMAKEDB & format_DIAMOND_command to lib/transcripts.pm
 07112016: added option -X to transcripts2cdsCPP.pl & transcripts2cdsCPP.pl to invoke diamond instead of blastx
 07112016: updated EST manual
+14122016: added -A support to BDBH (and -b) to produce ANI matrices with large datasets
+14122016: added table with new features to EST manual

@@ -144,7 +144,8 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   print   "-A calculate average identity of clustered sequences,          ".
     "(optional, creates tab-separated matrix,\n";
   print   " uses blastn results                                           ".
-    " recommended with -t 0 [OMCL])\n";
+    " only top row valid with -b)\n";
+    
 	print   "-z add soft-core to genome composition analysis                ".
     "(optional, requires -c [OMCL])\n";
     
@@ -309,11 +310,11 @@ else
     die "\n# WARNING: use of the default BDBH algorithm with option -t 0 is not supported ".
       "(please check the manual)\n\n";
   }
-  elsif($do_ANIb_matrix)
-  {
-    die "\n# WARNING: use of the default BDBH algorithm with option -A is not supported ".
-      "(please check the manual)\n\n";
-  }
+  #elsif($do_ANIb_matrix)
+  #{
+  #  die "\n# WARNING: use of the default BDBH algorithm with option -A is not supported ".
+  #    "(please check the manual)\n\n";
+  #}
 }
 
 if(defined($opts{'D'}))
