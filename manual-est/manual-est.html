@@ -559,7 +559,7 @@ Options that control clustering:
                                                                 included)
 -F orthoMCL inflation value                                    (range [1-5], default: -F 1.5 [OMCL])
 -A calculate average identity of clustered sequences,          (optional, creates tab-separated matrix,
- uses blastn results                                            recommended with -t 0 [OMCL])
+ uses blastn results                                            only top row valid with -b)
 -z add soft-core to genome composition analysis                (optional, requires -c [OMCL])
 </PRE>
 
@@ -1780,8 +1780,8 @@ Common problems faced when clustering transcripts/CDS sequences.</CAPTION>
 
 <P>
 We have left the COG algorithm out of <SPAN  CLASS="textit">get_homologues-est.pl</SPAN> as it will take some more work to integrate it
-with redundant isoform calling, which we think is important for EST datasets. However, it should be possible
-to do it and perhaps it might be added later.
+with redundant isoform calling, which is important for EST datasets. However, it should be possible
+to do it.
 
 <P>
 </LI>
@@ -1979,7 +1979,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>manual-est -no_antialias_text -split 0 -dir manual-est -no_navigation -show_section_numbers</TT>
 <P>
-The translation was initiated by Bruno Contreras Moreira on 2016-12-09
+The translation was initiated by Bruno Contreras Moreira on 2016-12-14
 <BR><HR>
 <ADDRESS>
 Bruno Contreras-Moreira and Pablo Vinuesa<br><a href="https://github.com/eead-csic-compbio/get_homologues">https://github.com/eead-csic-compbio/get_homologues</a>
