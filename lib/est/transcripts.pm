@@ -156,7 +156,7 @@ sub format_DIAMOND_command
   my ($infile,$outfile,$db,$Evalue,$gencode,$plustStrandOnly,$hits_to_show) = @_;
   
   my $command = "$DIAMONDEXE -p $BLASTX_NOCPU -q $infile --evalue $Evalue -d $db -o $outfile " .
-    "--max-target-seqs $MAXBLASTXHITS --quiet ";
+    "--max-target-seqs $MAXBLASTXHITS --quiet --more-sensitive ";
 
   if(defined($gencode) && $gencode > 1){ $command .= " --query-gencode $gencode " }
   if(defined($plustStrandOnly)){ $command .= ' --forwardonly ' }
