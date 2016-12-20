@@ -163,3 +163,5 @@
 07112016: updated EST manual
 14122016: added -A support to BDBH (and -b) to produce ANI matrices with large datasets
 14122016: added table with new features to EST manual
+20122016: added table with transcript2cds benchmark to EST manual
+20122016: added option --more-sensitive to DIAMOND in lib/transcripts.pm
