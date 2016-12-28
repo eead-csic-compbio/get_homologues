@@ -566,7 +566,9 @@ if($inputDIR)
 {
   # 1.1.1) open and read directory, only master .fa/.gb files are considered
   opendir(DIR,$inputDIR) || die "# EXIT : cannot list $inputDIR\n";
-  my @inputfiles = sort grep {/\.fa[a-z]*$/i||/\.gb[a-z]*$/||/_$/||/\.clusters$/} readdir(DIR);
+  #my @inputfiles = sort grep {/\.fa[a-z]*$/i||/\.gb[a-z]*$/||/_$/||/\.clusters$/} readdir(DIR);
+  #in case they are compressed
+  my @inputfiles = sort grep {/\.fa[a-z]*\S*$/i||/\.gb\S*$/||/_$/||/\.clusters$/} readdir(DIR);
   closedir(DIR);
 
   # 1.1.2) sort input files and put new files towards the end of @inputfiles: LILO
@@ -626,7 +628,7 @@ if($inputDIR)
   {
     foreach $infile (@inputfiles)
     {
-      if($infile !~ /\.gb[a-z]*$/i)
+      if($infile !~ /\.gb\S*$/i) #/\.gb[a-z]*$/i)
       {
         die "\n# EXIT : cannot analyze feature/intergenic sequences when input file is not in GenBank format\n\n";
       }
@@ -644,7 +646,7 @@ if($inputDIR)
     ++$n_of_taxa;
 
     # 1.1.5.1) genbank files
-    if($infile =~ /\.gb[a-z]*$/i)
+    if($infile =~ /\.gb\S*$/i) #/\.gb[a-z]*$/i)
     {
       my $prot_tmp_file = $newDIR ."/" .basename($infile) . ".faa";
       my $dna_tmp_file =  $newDIR ."/" .basename($infile) . ".fna";
