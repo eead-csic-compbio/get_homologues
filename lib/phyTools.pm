@@ -643,8 +643,22 @@ sub extract_intergenic_from_genbank
   
   my ($infile,$out_intergenic_file,$min_intergenic_size,$max_intergenic_size,$length_flanking_ORFs) = @_;
   if(!defined($length_flanking_ORFs) || $length_flanking_ORFs < 0){ $length_flanking_ORFs = 0 }
-  my ($n_of_intergenic,$gi,$start,$end,$length,$strand,$genename,$taxon) = (0);
-  my $in = new Bio::SeqIO(-file => $infile, -format => 'genbank' );
+  my ($n_of_intergenic,$gi,$start,$end,$length,$strand,$genename,$taxon,$magic,$in) = (0);
+  
+  # check input file and open it accordingly
+  open(INFILE,$infile) || die "# read_FASTA_sequence_array: cannot read $infile, exit\n";
+  sysread(INFILE,$magic,2);
+  close(INFILE);
+
+  if($infile =~ /\.gz$/ || $magic eq "\x1f\x8b") # GZIP compressed input
+  {
+    $in = new Bio::SeqIO(-file => "gzip -dc $infile |", -format => 'genbank' )
+  }
+  elsif($infile =~ /\.bz2$/ || $magic eq "BZ") # BZIP2 compressed input
+  {
+    $in = new Bio::SeqIO(-file => "bzip2 -dc $infile |", -format => 'genbank' )
+  }
+  else{ $in = new Bio::SeqIO(-file => $infile, -format => 'genbank' ) }
 
   # first create tmp outfile, in case sub does not finish cleanly
   open(FNA,">$out_intergenic_file.tmp") || die "# extract_intergenic_from_genbank : cannot create $out_intergenic_file.tmp\n";
@@ -746,32 +760,47 @@ sub extract_intergenic_from_genbank
 
 sub extract_features_from_genbank
 {
-
-#     gene            230511..230630
-#                     /locus_tag="ECSE_5SrRNA01"
-#     rRNA            230511..230630
-#                     /locus_tag="ECSE_5SrRNA01"
-#                     /product="5S ribosomal RNA"
-#     gene            230683..230759
-#                     /locus_tag="ECSE_tRNA03"
-#     tRNA            230683..230759
-#                     /locus_tag="ECSE_tRNA03"
-#                     /product="tRNA-Asp"
-#     gene            230922..231725
-#                     /locus_tag="ECSE_0203"
-#     CDS             230922..231725
-#                     /locus_tag="ECSE_0203"
-#                     /product="2,5-diketo-D-gluconate reductase"
-# takes a genbank input file and creates a single FASTA nucleotide file containing all features
-# defined in argument $features_to_parse or $ENV{'GBKFEATURES'}
-# if $out_feature_file == 0 does not create any outfile
-# returns reference to features parsed
+  # takes a genbank input file and creates a single FASTA nucleotide file containing all features
+  # defined in argument $features_to_parse or $ENV{'GBKFEATURES'}
+  # if $out_feature_file == 0 does not create any outfile
+  # returns reference to features parsed
+  
+  #     gene            230511..230630
+  #                     /locus_tag="ECSE_5SrRNA01"
+  #     rRNA            230511..230630
+  #                     /locus_tag="ECSE_5SrRNA01"
+  #                     /product="5S ribosomal RNA"
+  #     gene            230683..230759
+  #                     /locus_tag="ECSE_tRNA03"
+  #     tRNA            230683..230759
+  #                     /locus_tag="ECSE_tRNA03"
+  #                     /product="tRNA-Asp"
+  #     gene            230922..231725
+  #                     /locus_tag="ECSE_0203"
+  #     CDS             230922..231725
+  #                     /locus_tag="ECSE_0203"
+  #                     /product="2,5-diketo-D-gluconate reductase"
+  
   my ($infile,$out_feature_file,$features_to_parse) = @_;
   if(!$features_to_parse){ $features_to_parse = $ENV{'GBKFEATURES'} }
   my ($gi,$genename,$coords,$gbaccession,$header,$genelength,%already_seen);
-  my ($start,$end,$strand,$source,$featseq,$rev);
+  my ($start,$end,$strand,$source,$featseq,$rev,$magic,$in);
   my ($taxon,$strain)=('','');
-  my $in = new Bio::SeqIO(-file => $infile, -format => 'genbank');
+  
+  # check input file and open it accordingly
+  open(INFILE,$infile) || die "# read_FASTA_sequence_array: cannot read $infile, exit\n";
+  sysread(INFILE,$magic,2);
+  close(INFILE);
+
+  if($infile =~ /\.gz$/ || $magic eq "\x1f\x8b") # GZIP compressed input
+  {
+    $in = new Bio::SeqIO(-file => "gzip -dc $infile |", -format => 'genbank' )
+  }
+  elsif($infile =~ /\.bz2$/ || $magic eq "BZ") # BZIP2 compressed input
+  {
+    $in = new Bio::SeqIO(-file => "bzip2 -dc $infile |", -format => 'genbank' )
+  }
+  else{ $in = new Bio::SeqIO(-file => $infile, -format => 'genbank' ) }
 
   # first create tmp outfile, in case sub does not finish cleanly
   if($out_feature_file)
@@ -909,12 +938,27 @@ sub extract_CDSs_from_genbank
  # returns number of CDSs found
   my ($infile,$out_prot_file,$out_dna_file,$verbose) = @_;
   my ($gene,$gi,$crossrefs,$gbaccession,$header,$genelength,$CDScoords,$CDSseq,$rev);
-  my ($start,$end,$strand,$source,$protsequence,%already_seen,%genes);
+  my ($start,$end,$strand,$source,$protsequence,$magic,$in,%already_seen,%genes);
   my $n_of_CDS = 0;
   my ($taxon,$strain)=('','');
+  
   if($verbose){ print "# extract_CDSs_from_genbank : extracting file $infile...\n" }
-  my $in = new Bio::SeqIO(-file => $infile, -format => 'genbank' );
+  
+  # check input file and open it accordingly
+  open(INFILE,$infile) || die "# read_FASTA_sequence_array: cannot read $infile, exit\n";
+  sysread(INFILE,$magic,2);
+  close(INFILE);
 
+  if($infile =~ /\.gz$/ || $magic eq "\x1f\x8b") # GZIP compressed input
+  {
+    $in = new Bio::SeqIO(-file => "gzip -dc $infile |", -format => 'genbank' )
+  }
+  elsif($infile =~ /\.bz2$/ || $magic eq "BZ") # BZIP2 compressed input
+  {
+    $in = new Bio::SeqIO(-file => "bzip2 -dc $infile |", -format => 'genbank' )
+  }
+  else{ $in = new Bio::SeqIO(-file => $infile, -format => 'genbank' ) }
+  
   # parse all CDS sequences and store their neighbors
   while( my $seq = $in->next_seq) # scan all sequences found in $input
   {
@@ -1081,17 +1125,32 @@ sub extract_CDSs_from_genbank
 # To to be used when extract_CDSs fails, in cases such as FN869568.gbk
 sub extract_genes_from_genbank
 {
-
-# takes a genbank input file and creates two FASTA files containing all genes/CDSs in
-# aminoacid and dna sequences, respectively
-# returns number of genes found
+  # takes a genbank input file and creates two FASTA files containing all genes/CDSs in
+  # aminoacid and dna sequences, respectively
+  # returns number of genes found
   my ($infile,$out_prot_file,$out_dna_file,$verbose) = @_;
   my ($gene,$gi,$gbaccession,$header,$genelength,$CDScoords,$CDSseq,$rev);
-  my ($start,$end,$strand,$source,$protsequence,%already_seen,%genes);
+  my ($start,$end,$strand,$source,$protsequence,$magic,$in,%already_seen,%genes);
   my $n_of_genes = 0;
   my ($taxon,$strain)=('','');
+  
   if($verbose){ print "# extract_genes_from_genbank : extracting file $infile...\n" }
-  my $in = new Bio::SeqIO(-file => $infile, -format => 'genbank' );
+  
+  # check input file and open it accordingly
+  open(INFILE,$infile) || die "# read_FASTA_sequence_array: cannot read $infile, exit\n";
+  sysread(INFILE,$magic,2);
+  close(INFILE);
+
+  if($infile =~ /\.gz$/ || $magic eq "\x1f\x8b") # GZIP compressed input
+  {
+    $in = new Bio::SeqIO(-file => "gzip -dc $infile |", -format => 'genbank' )
+  }
+  elsif($infile =~ /\.bz2$/ || $magic eq "BZ") # BZIP2 compressed input
+  {
+    $in = new Bio::SeqIO(-file => "bzip2 -dc $infile |", -format => 'genbank' )
+  }
+  else{ $in = new Bio::SeqIO(-file => $infile, -format => 'genbank' ) }
+  
   my $seqobj = Bio::Seq->new( -display_id => 'tmp' );
   while( my $seq = $in->next_seq) # scan all sequences found in $input
   {
