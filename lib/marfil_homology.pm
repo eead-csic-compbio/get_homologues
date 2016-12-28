@@ -38,6 +38,7 @@ our @EXPORT = qw(
   get_makeIsoform_outfilename makeIsoform nr_blast_report flag_small_clusters 
   construct_redundant_hash write_redundant_hash parse_Pfam_freqs
   format_BLASTP_command_aligns format_BLASTN_command_aligns 
+  executeDIAMONDMAKEDB format_DIAMONDblastp_command 
 
   $BLAST_PVALUE_CUTOFF_DEFAULT
   $PERCENT_IDENTITY_CUTOFF_DEFAULT
@@ -97,7 +98,7 @@ our @EXPORT = qw(
   $lseoutfilename
   $coglogfilename
   $cogblasthits
-  );
+);
 
 # executable software
 our $SORTLIMITRAM        = "500M"; # buffer size should fit in all computers
@@ -109,6 +110,10 @@ our $BLASTN              = $ENV{"EXE_BLASTN"};
 our $FORMATDB            = $ENV{"EXE_FORMATDB"};
 our $BLAST_NOCPU         = 2; # most current cpus are multicore
 our $SPLITBLAST          = $ENV{"EXE_SPLITBLAST"};
+
+our $DIAMONDMAKEDB       = $ENV{"EXE_DMNFT"};
+our $DIAMONDPEXE         = $ENV{"EXE_DMNDP"};  
+
 our $SPLITHMMPFAM        = $ENV{"EXE_SPLITHMMPFAM"};
 our $HMMPFAM             = $ENV{"EXE_HMMPFAM"};
 our $MCL                 = $ENV{"EXE_MCL"};
@@ -361,6 +366,50 @@ sub constructAllFasta
 
   return \%seq_len;
 } ## constructAllFasta
+
+# One Argument:
+# 1. String Variable: fasta file name
+# Bruno, Dec2016 (copied & changed named from transcripts.pm)
+sub executeDIAMONDMAKEDB 
+{
+  my ($in) = @_;
+
+  my ($command);
+
+  print("\n# running diamond makedb with $in\n");
+  if(-s $in)
+  {
+    $command = "$DIAMONDMAKEDB --in $in --db $in"; 
+
+    open(EXE,"$command |") || die "# ERROR (executeDIAMONDMAKEDB) : cannot run $command : $!\n";
+    while(<EXE>){}
+    close(EXE);
+  }
+  else{ die "# executeDIAMONDMAKEDB : cannot find input FASTA file $in\n"; }
+}
+
+# prepares a string with the right syntax to call DIAMOND blastp  with 1 thread
+# Up to 5 arguments:
+# 1. String Variable: fasta file name
+# 2. String Variable: blast out file name
+# 3. String Variable: database name
+# 4. String Variable: E-value cutoff
+# 5. (Optional) String Variable: hits/query to show in BLAST output
+# Bruno, Dec2016
+sub format_DIAMONDblastp_command 
+{
+  my ($infile,$outfile,$db,$Evalue,$hits_to_show) = @_;
+  
+  my $command = "$DIAMONDPEXE -q $infile --evalue $Evalue -d $db -o $outfile " .
+    "--quiet --more-sensitive --seg yes --dbsize $BLAST_DB_SIZE --threads 1 "; 
+
+  if($hits_to_show){ $command .= "--max-target-seqs $hits_to_show "; }
+  
+  $command .= '--outfmt 6 qseqid sseqid pident length qlen slen qstart qend sstart send evalue bitscore ';
+
+  return $command;
+}
+
 
 # One Argument:
 # 1. String Variable: fasta file name

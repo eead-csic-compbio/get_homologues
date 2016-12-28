@@ -88,16 +88,19 @@ sub set_phyTools_env
   if( ! defined($ENV{"EXE_COGLSE"}) ){ $ENV{"EXE_COGLSE"} = $ENV{'MARFIL'}."/bin/COGsoft/COGlse/COGlse "; }
   if( ! defined($ENV{"EXE_COGTRI"}) ){ $ENV{"EXE_COGTRI"} = $ENV{'MARFIL'}."/bin/COGsoft/COGtriangles/COGtriangles "; }
   if( ! defined($ENV{"EXE_MVIEW"}) ){ $ENV{"EXE_MVIEW"} = $ENV{'MARFIL'}."lib/mview/bin/mview "; }
-
+  
   # transcripts/ETSs
   if( ! defined($ENV{"EXE_TRANSDECOD_EST"}) ){ $ENV{"EXE_TRANSDECOD_EST"} = $ENV{'MARFIL'}."/lib/est/TransDecoder_r20140704/TransDecoder "; }
   if( ! defined($ENV{'BLAST_PATH_EST'}) ){ $ENV{'BLAST_PATH_EST'} = $ENV{'BLAST_PATH'}; }
   if( ! defined($ENV{'EXE_BLASTX_EST'}) ){ $ENV{'EXE_BLASTX_EST'} = $ENV{'BLAST_PATH_EST'}.'blastx'; }
   if( ! defined($ENV{'EXE_FORMATDB_EST'}) ){ $ENV{'EXE_FORMATDB_EST'} = $ENV{'BLAST_PATH_EST'}.'makeblastdb'; }
+  
   # diamond software
-  if( ! defined($ENV{'DMND_PATH_EST'}) ){ $ENV{'DMND_PATH_EST'} = $ENV{'MARFIL'}.'bin/diamond-0.8.25/'; }
-  if( ! defined($ENV{'EXE_DMNDX_EST'}) ){ $ENV{'EXE_DMNDX_EST'} = $ENV{'DMND_PATH_EST'}.'diamond blastx'; }
-  if( ! defined($ENV{'EXE_DMNFT_EST'}) ){ $ENV{'EXE_DMNFT_EST'} = $ENV{'DMND_PATH_EST'}.'diamond makedb'; }
+  if( ! defined($ENV{'DMND_PATH'}) ){ $ENV{'DMND_PATH'} = $ENV{'MARFIL'}.'bin/diamond-0.8.25/'; }
+  if( ! defined($ENV{'EXE_DMNFT'}) ){ $ENV{'EXE_DMNFT'} = $ENV{'DMND_PATH'}.'diamond makedb'; }
+  if( ! defined($ENV{'EXE_DMNDP'}) ){ $ENV{'EXE_DMNDP'} = $ENV{'DMND_PATH'}.'diamond blastp'; }
+  if( ! defined($ENV{'EXE_DMNDX_EST'}) ){ $ENV{'EXE_DMNDX_EST'} = $ENV{'DMND_PATH'}.'diamond blastx'; }
+  
   if( ! defined($ENV{'BLASTXDB'}) ){ $ENV{'BLASTXDB'} = $ENV{'MARFIL'}."db/uniprot_sprot.fasta"; }
   
   #if( ! defined($ENV{"EXE_GMAP"}) ){ $ENV{"EXE_GMAP"} = $ENV{'MARFIL'}."/bin/est/gmap-2014-02-20/src/gmap "; }
@@ -163,6 +166,10 @@ sub feature_is_installed
   {
     if($env_missing =~ /BLASTP/ || $env_missing =~ /BLASTN/ || 
       $env_missing =~ /BLASTX/ || $env_missing =~ /FORMATDB/){ return 0 }
+  }
+  elsif($feature eq 'DIAMOND')
+  {
+    if($env_missing =~ /DMNDP/ || $env_missing =~ /DMNDX/){ return 0 }
   }
   elsif($feature eq 'PFAM')
   {
