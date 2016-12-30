@@ -388,20 +388,21 @@ sub executeDIAMONDMAKEDB
   else{ die "# executeDIAMONDMAKEDB : cannot find input FASTA file $in\n"; }
 }
 
-# prepares a string with the right syntax to call DIAMOND blastp  with 1 thread
+# Prepares a string with the right syntax to call DIAMOND blastp  with 1 thread
 # Up to 5 arguments:
 # 1. String Variable: fasta file name
 # 2. String Variable: blast out file name
 # 3. String Variable: database name
 # 4. String Variable: E-value cutoff
 # 5. (Optional) String Variable: hits/query to show in BLAST output
+# NOTE: segments masked with --seg yes affect returned %identity
 # Bruno, Dec2016
 sub format_DIAMONDblastp_command 
 {
   my ($infile,$outfile,$db,$Evalue,$hits_to_show) = @_;
   
   my $command = "$DIAMONDPEXE -q $infile --evalue $Evalue -d $db -o $outfile " .
-    "--quiet --more-sensitive --seg yes --dbsize $BLAST_DB_SIZE --threads 1 "; 
+    "--quiet --more-sensitive --seg yes --dbsize $BLAST_DB_SIZE --threads 1 --tmpdir $TMP_DIR "; 
 
   if($hits_to_show){ $command .= "--max-target-seqs $hits_to_show "; }
   
@@ -720,12 +721,11 @@ sub pfam_parse
   return $n_of_lines;
 }
 
-# sorts and merges partial blast results using GNU sort
+# sorts and merges partial BLAST/DIAMOND results using GNU sort
 # three arguments:
 # 1. String Variable: blast out file
 # 2. boolean flag stating whether secondary hsps are to be conserved 
 # 3. array of sorted blast output filenames
-
 # uses globals: $TMP_DIR , $SORTLIMITRAM
 # Updated Mar2015
 sub sort_blast_results
@@ -803,9 +803,9 @@ sub sort_blast_results
     # http://www.gnu.org/software/coreutils/faq/coreutils-faq.html #Sort-does-not-sort-in-normal-order_0021
     $ENV{'LC_ALL'} = 'POSIX';
    
-    #hits are sorted bi query ID and E-value
+    #hits are sorted by query ID and E-value
     #hits with same E-value and diff bitscore will be taken care later 
-    system("$SORTBIN --temporary-directory=$TMP_DIR -s -k1g -k11g -m $files > $sortedtmpfile"); # +efficient, uses blast ordered results
+    system("$SORTBIN --temporary-directory=$TMP_DIR -s -k1g -k11g -m $files > $sortedtmpfile"); # uses blast ordered results
     if(!-s $sortedtmpfile) #shell sort failed
     {
       merge_BLAST_files($sortedtmpfile,@{$cluster{$root}});

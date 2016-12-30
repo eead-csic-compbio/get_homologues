@@ -182,7 +182,7 @@ if(defined($opts{'v'}))
   print " NCBI Blast-2.2 (blast.ncbi.nlm.nih.gov , PubMed=9254694,20003500)\n";
   print " Bioperl v1.5.2 (www.bioperl.org , PubMed=12368254)\n";
   print " HMMER 3.1b2 (hmmer.org)\n";
-  print " Pfam (pfam.sanger.ac.uk , PubMed=24288371)\n";
+  print " Pfam (http://pfam.xfam.org , PubMed=26673716)\n";
 
   # check all binaries and data needed by this program and print diagnostic info
   print check_installed_features(@FEATURES2CHECK);
