@@ -737,7 +737,8 @@ if($n_of_dirs <=3 && $n_of_dirs > 1)
 
     if(-s $sectorfile){ unlink($sectorfile) }
 
-    if($shortn =~ /alg([A-Z]+)/){ $shortn = $1; }
+    if($shortn =~ /_dmd.*alg([A-Z]+)/){ $shortn = "dmd_$1"; }
+    elsif($shortn =~ /alg([A-Z]+)/){ $shortn = $1; }
     if(!$VENNCHARTLABELS){ $shortn = '' }
 
     open(VENNDATA,">$dirvennfile") || die "# $0 : cannot write to $dirvennfile\n";
