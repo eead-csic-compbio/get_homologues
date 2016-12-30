@@ -164,4 +164,11 @@
 14122016: added -A support to BDBH (and -b) to produce ANI matrices with large datasets
 14122016: added table with new features to EST manual
 20122016: added table with transcript2cds benchmark to EST manual
-20122016: added option --more-sensitive to DIAMOND in lib/transcripts.pm
+20122016: added option --more-sensitive to DIAMOND in lib/est/transcripts.pm
+22122016: added DIAMOND blastp support in phyTools.pm and marfil_homology.pm
+22122016: updated lib/est/transcripts.pm after adding added DIAMOND blastp
+28122016: extract_*_genbank subs in lib/phyTools.pm now can read GZIP- or BZIP2-compressed input files
+28122016: get_homologues.pl can now take GZIP- or BZIP2-compressed input files
+30122016: note: compressed multi-contig gbk files produce FASTA files with different seq order 
+30122016: added DIAMOND blastp to get_homologues.pl, which can be called with -X
+30122016: compare_clusters.pl now correctly shortens DIAMOND cluster dirs
