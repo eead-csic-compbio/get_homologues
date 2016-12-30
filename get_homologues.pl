@@ -4,7 +4,7 @@
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
-# This program uses BLAST (and HMMER/Pfam) to define clusters of 'orthologous' ORF/intergenic
+# This program uses BLAST (and DIAMOND/HMMER/Pfam) to define clusters of 'orthologous' ORF/intergenic
 # sequences and pan/core-genome gene sets. Several algorithms are available and search parameters
 # are customizable. It is designed to process (in a SGE computer cluster) files contained in a
 # directory (-d), so that new .faa/.gbk files can be added while conserving previous BLAST results.
@@ -25,7 +25,7 @@ use lib "$Bin/lib/bioperl-1.5.2_102/";
 use phyTools; #also imports constants SEQ,NAME used as array subindices
 use marfil_homology; # includes $FASTAEXTENSION and other global variables set there such as @taxa
 
-my $VERSION = '2.x'; 
+my $VERSION = '3.x'; 
 
 ## sun grid engine (computer cluster) variables, might require edition to fit your system (ignored with -m local)
 my $SGEPATH = "";
@@ -52,7 +52,7 @@ my $DISSABLEPRND         = 1;     # dissable paranoid (PRND, -P) options due to 
 
 ## list of features/binaries required by this program (do not edit)
 my @FEATURES2CHECK = ('EXE_BLASTP','EXE_BLASTN','EXE_FORMATDB','EXE_MCL','EXE_MAKEHASH',
-  'EXE_READBLAST','EXE_COGLSE','EXE_COGTRI','EXE_HMMPFAM',
+  'EXE_READBLAST','EXE_COGLSE','EXE_COGTRI','EXE_HMMPFAM','EXE_DMNDP','EXE_DMNFT',
   'EXE_INPARA','EXE_ORTHO','EXE_HOMOL','EXE_SPLITBLAST','EXE_SPLITHMMPFAM');
 if(!$DISSABLEPRND){ push(@FEATURES2CHECK,'EXE_MULTIPARANOID'); }
 
@@ -62,6 +62,7 @@ my ($newDIR,$output_mask,$pancore_mask,$include_file,$onlyblast,%included_input_
 my ($exclude_inparalogues,$doMCL,$doPARANOID,$doCOG,$do_PFAM,$reference_proteome_string) = (0,0,0,0,0,0);
 my ($inputDIR,$input_FASTA_file,$filter_by_length,$cluster_list_file,$do_intergenic,$do_features) = (0,0);
 my ($n_of_cpus,$COGmulticluster,$do_minimal_BDBHs,$do_ANIb_matrix,$do_soft) = ($BLAST_NOCPU,0,0,0,0);
+my ($do_diamond) = (0);
 my ($min_cluster_size,$runmode,$do_genome_composition,$saveRAM,$ANIb_matrix_file);
 my ($evalue_cutoff,$pi_cutoff,$pmatch_cutoff) = ($BLAST_PVALUE_CUTOFF_DEFAULT, # see marfil_homology.pm
   $PERCENT_IDENTITY_CUTOFF_DEFAULT,$PERCENT_MATCH_CUTOFF_DEFAULT);
@@ -71,7 +72,7 @@ my $random_number_generator_seed = 0;
 my $pwd = getcwd(); $pwd .= '/';
 my $start_time = new Benchmark();
 
-getopts('hvbcesgADGPMoxza:f:n:m:d:r:t:i:I:E:S:C:F:N:B:O:R:', \%opts);
+getopts('hvbcesgADGPMXoxza:f:n:m:d:r:t:i:I:E:S:C:F:N:B:O:R:', \%opts);
 
 if(($opts{'h'})||(scalar(keys(%opts))==0))
 {
@@ -113,6 +114,7 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   print   "-M use orthoMCL algorithm (OMCL, PubMed=12952885)\n";
   print   "-P use PARANOID algorithm (PRND, PubMed=16873526)\n" if(!$DISSABLEPRND);
   print   "\nOptions that control sequence similarity searches:\n";
+  print   "-X use diamond instead of blastp                               (optional, set threads with -n)\n";
   print   "-C min \%coverage in BLAST pairwise alignments                  ";
   print "(range [1-100],default=$PERCENT_MATCH_CUTOFF_DEFAULT)\n";
   print   "-E max E-value                                                 ".
@@ -209,7 +211,8 @@ if(defined($opts{'v'}))
   print " NCBI Blast-2.2 (blast.ncbi.nlm.nih.gov , PubMed=9254694,20003500)\n";
   print " Bioperl v1.5.2 (www.bioperl.org , PubMed=12368254)\n";
   print " HMMER 3.1b2 (hmmer.org)\n";
-  print " Pfam (pfam.sanger.ac.uk , PubMed=24288371)\n";
+  print " Pfam (http://pfam.xfam.org , PubMed=26673716)\n";
+  print " Diamond v0.8.25 (https://github.com/bbuchfink/diamond, PubMed=25402007)\n";
 
   # check all binaries and data needed by this program and print diagnostic info
   print check_installed_features(@FEATURES2CHECK);
@@ -267,6 +270,19 @@ if(defined($opts{'o'})){ $onlyblast = 1; }
 if($opts{'r'}){ $reference_proteome_string = $opts{'r'}; }
 else{ $reference_proteome_string = 0; }
 
+check_installed_features(@FEATURES2CHECK);
+
+if(defined($opts{'X'}))
+{ 
+  if(feature_is_installed('DIAMOND'))
+  {
+    $do_diamond = 1;
+    $output_mask .= "dmd_";
+    $pancore_mask .= "_dmd";
+  }
+  else{ warn_missing_soft('DIAMOND') }  
+}
+
 if(defined($opts{'f'}) && $opts{'f'} > 0 && $opts{'f'} <= 100)
 {
   $filter_by_length = $opts{'f'};
@@ -288,10 +304,13 @@ if($opts{'I'} && $inputDIR)
   $pancore_mask = "_".basename($include_file);
 }
 
-check_installed_features(@FEATURES2CHECK);
-
 if($opts{'a'} && defined($opts{'d'}))
 {
+  if($do_diamond)
+  {
+    die "# EXIT : cannot run diamond (-X) with DNA features (-a)\n";
+  }
+
   $do_features = $opts{'a'};
   $do_features =~ s/\s+//g;
 
@@ -352,6 +371,10 @@ else
 {
   if(defined($opts{'b'}))
   {
+    if($do_diamond)
+    {
+      die "# EXIT : cannot run diamond (-X) with -b option\n";
+    }
     $do_minimal_BDBHs = 1;
     $output_mask .= "algBDBHmin_";
     $pancore_mask .= "_algBDBHmin";
@@ -465,7 +488,7 @@ if(defined($opts{'B'}) && !$DISSABLEPRND)
   $output_mask .= "B$bitscore_cutoff\_"; $pancore_mask .= "_B$bitscore_cutoff";
 }
 
-print "# $0 -i $input_FASTA_file -d $inputDIR -o $onlyblast -e $exclude_inparalogues -f $filter_by_length -r $reference_proteome_string ".
+print "# $0 -i $input_FASTA_file -d $inputDIR -o $onlyblast -X $do_diamond -e $exclude_inparalogues -f $filter_by_length -r $reference_proteome_string ".
   "-t $min_cluster_size -c $do_genome_composition -z $do_soft -I $include_file -m $runmode -n $n_of_cpus -M $doMCL -G $doCOG -P $doPARANOID ".
   "-C $pmatch_cutoff -S $pi_cutoff -E $evalue_cutoff -F $MCLinflation -N $neighbor_corr_cutoff -B $bitscore_cutoff -b $do_minimal_BDBHs ".
   "-s $saveRAM -D $do_PFAM -g $do_intergenic -a '$do_features' -x $COGmulticluster -R $random_number_generator_seed -A $do_ANIb_matrix\n\n";
@@ -524,12 +547,50 @@ my $sequence_dna_filename = $newDIR."/sequence_dna.db";
 my $pfam_data_filename = $newDIR."/pfam.db";# %pfam_hash is global, imported from marfil_homology
 unlink($sequence_data_filename,$sequence_prot_filename,$sequence_dna_filename,$pfam_data_filename);
 my $input_order_file = $newDIR."/input_order.txt";
+my $diamond_file = $newDIR."/diamond.txt";
 my $paranoidDIR = $newDIR."/paranoid_sql_C$pmatch_cutoff\_B$bitscore_cutoff\_O$segment_cover_cutoff/";
 
 print "# version $VERSION\n";
 print "# results_directory=$newDIR\n";
 print "# parameters: MAXEVALUEBLASTSEARCH=$MAXEVALUEBLASTSEARCH MAXPFAMSEQS=$MAXPFAMSEQS ".
   "BATCHSIZE=$BATCHSIZE KEEPSCNDHSPS=$KEEPSCNDHSPS\n";
+  
+# make sure that DIAMOND jobs are not mixed with BLASTP jobs
+if(-s $diamond_file)
+{
+  open(DMDFILE,$diamond_file) || die "# EXIT : cannot read $diamond_file\n";
+  while(<DMDFILE>)
+  {
+    if(/^diamond job:(\d)/)
+    {
+      if($1 != $do_diamond)
+      {
+        $do_diamond = $1;
+        print "# diamond job:$do_diamond (forced to match previous jobs)\n";
+      }
+      else{ print "# diamond job:$do_diamond\n" }  
+    }    
+  }
+  close(DMDFILE);
+}    
+else
+{ 
+  if(-s $input_order_file)
+  {
+    # assume this was a BLASTP job to be sure
+    if($do_diamond == 1)
+    {
+      $do_diamond = 0;
+      print "# diamond job:$do_diamond (forced to match previous jobs)\n";
+    }
+    else{ print "# diamond job:$do_diamond\n" }
+  }
+  else{ print "# diamond job:$do_diamond\n" }
+  
+  open(DMDFILE,'>',$diamond_file) || die "# EXIT : cannot create $diamond_file\n";
+  print DMDFILE "diamond job:$do_diamond\n";
+  close(DMDFILE);
+}
 
 ################################################################
 
@@ -558,7 +619,7 @@ if($saveRAM)
       tie(%pfam_hash,'DB_File',$pfam_data_filename,1,0666,$DB_File::DB_HASH)
         || die "# EXIT : cannot create $pfam_data_filename: $! (BerkeleyDB::Error)\n";
     }
-    }
+  }
 }
 
 # 1.1) directory with input files
@@ -566,8 +627,6 @@ if($inputDIR)
 {
   # 1.1.1) open and read directory, only master .fa/.gb files are considered
   opendir(DIR,$inputDIR) || die "# EXIT : cannot list $inputDIR\n";
-  #my @inputfiles = sort grep {/\.fa[a-z]*$/i||/\.gb[a-z]*$/||/_$/||/\.clusters$/} readdir(DIR);
-  #in case they are compressed
   my @inputfiles = sort grep {/\.fa[a-z]*\S*$/i||/\.gb\S*$/||/_$/||/\.clusters$/} readdir(DIR);
   closedir(DIR);
 
@@ -628,7 +687,7 @@ if($inputDIR)
   {
     foreach $infile (@inputfiles)
     {
-      if($infile !~ /\.gb\S*$/i) #/\.gb[a-z]*$/i)
+      if($infile !~ /\.gb\S*$/i)
       {
         die "\n# EXIT : cannot analyze feature/intergenic sequences when input file is not in GenBank format\n\n";
       }
@@ -646,7 +705,7 @@ if($inputDIR)
     ++$n_of_taxa;
 
     # 1.1.5.1) genbank files
-    if($infile =~ /\.gb\S*$/i) #/\.gb[a-z]*$/i)
+    if($infile =~ /\.gb\S*$/i)
     {
       my $prot_tmp_file = $newDIR ."/" .basename($infile) . ".faa";
       my $dna_tmp_file =  $newDIR ."/" .basename($infile) . ".fna";
@@ -962,7 +1021,10 @@ else # 1.2) input single FASTA file with [taxon names] in headers, order not che
 
 # 1.2.5) read taxa labels and concatenate FASTA files ($all_fa_file is put in $newDIR/tmp, global @taxa is filled in here)
 chop($comma_input_files);
-if($inputDIR){ %seq_length = %{ constructAllFasta($comma_input_files,$n_of_sequences,'',$filter_by_length) } }
+if($inputDIR)
+{ 
+  %seq_length = %{ constructAllFasta($comma_input_files,$n_of_sequences,'',$filter_by_length) }; 
+}
 else{ %seq_length = %{ constructAllFasta($comma_input_files,$n_of_sequences,$all_fa_file,$filter_by_length) } }
 
 # 1.4) correct list of included files, must be done after reading them all for correct numbering
@@ -1197,10 +1259,17 @@ if($do_PFAM)
 
 ################################################################
 
-# 2) run BLAST searches in created directory and parse output
+# 2) run BLAST/DIAMOND searches in created directory and parse output
 if(!-s $bpo_file || $current_files ne $previous_files || ($doCOG && !-s $cogblasthits)) # || $include_file
 {
-  if(!feature_is_installed('BLAST')){ warn_missing_soft('blastp/makeblastdb'); } # required by all algorithms
+  if($do_diamond)
+  {
+    if(!feature_is_installed('DIAMOND')){ warn_missing_soft('diamond blastp/diamond makedb') } 
+  }
+  else
+  {
+    if(!feature_is_installed('BLAST')){ warn_missing_soft('blastp/makeblastdb') } 
+  }  
 
   my ($blastout,$clusteroutfile,%cluster_PIDs,@tmp_blast_output_files);
   my ($blastDBfile,$command,@to_be_deleted);
@@ -1208,97 +1277,230 @@ if(!-s $bpo_file || $current_files ne $previous_files || ($doCOG && !-s $cogblas
   # remove previous results to avoid confusion if required (-I,-a,new files)
   if($do_features || $current_files ne $previous_files){ unlink($blast_file,$bpo_file,$cogblasthits); } # $include_file ||
 
-  # format single FASTA files for BLAST
-  foreach $new_infile (@newfiles)
+  if($do_diamond) # format own and rest FASTA files for DIAMOND
   {
-    if(!$do_features)
+    foreach $new_infile (@newfiles)
     {
-      next if(-s $newDIR ."/". $new_infile .".psq");
-      $infile = (split(/\.$FASTAEXTENSION/,$new_infile))[0];
-      next if($include_file && !$included_input_files{$infile});
-      executeFORMATDB($newDIR ."/".$new_infile);
-      if(!-s $newDIR ."/". $new_infile .".psq")
+      # format sequences of each individual accession (to put inparalogues up)
+      if(!-s $newDIR ."/". $new_infile .".dmnd")
       {
-        die "# EXIT: cannot format BLAST protein sequence base $newDIR/$new_infile\n"
+        $infile = (split(/\.$FASTAEXTENSION/,$new_infile))[0];
+        next if($include_file && !$included_input_files{$infile});
+        executeDIAMONDMAKEDB($newDIR ."/". $new_infile);
+        if(!-s $newDIR ."/". $new_infile .".dmnd")
+        {
+          die "# EXIT: cannot format DIAMOND protein sequence base $newDIR/$new_infile\n"
+        }
+      }
+      
+      # now concat the other accessions
+      $blastDBfile = $newDIR ."/". $new_infile .".others";
+      if(!-s $blastDBfile.".dmnd")
+      {
+        open(ALLOTHERS,">",$blastDBfile) || die "# EXIT: cannot create $blastDBfile\n";
+        foreach my $other_infile (@newfiles)
+        {
+          next if($other_infile eq $new_infile);
+          $infile = (split(/\.$FASTAEXTENSION/,$other_infile))[0];
+          next if($include_file && !$included_input_files{$infile});
+          
+          open(OTHER,"$newDIR/$other_infile") ||
+            die "# EXIT: cannot read $newDIR/$other_infile\n";
+          while(<OTHER>){ print ALLOTHERS }
+          close(OTHER);  
+        }  
+        close(ALLOTHERS);  
+          
+        executeDIAMONDMAKEDB($blastDBfile);
+        if(!-s $blastDBfile .".dmnd")
+        {
+          die "# EXIT: cannot format DIAMOND protein sequence base $blastDBfile\n"
+        }
+        else{ unlink($blastDBfile) } # we don't need this anymore
       }
     }
-    else
+  }  
+  else # format FASTA files for BLAST
+  {
+    foreach $new_infile (@newfiles)
     {
-      next if(-s $newDIR ."/". $new_infile .".nsq");
-      $infile = (split(/_features\.$FASTAEXTENSION/,$new_infile))[0];
-      next if($include_file && !$included_input_files{$infile});
-
-      executeFORMATDB($newDIR ."/".$new_infile,1);
-      if(!-s $newDIR ."/". $new_infile .".nsq")
+      if(!$do_features)
       {
-        die "# EXIT: cannot format BLAST nucleotide sequence base $newDIR/$new_infile\n"
+        next if(-s $newDIR ."/". $new_infile .".psq");
+        $infile = (split(/\.$FASTAEXTENSION/,$new_infile))[0];
+        next if($include_file && !$included_input_files{$infile});
+        
+        executeFORMATDB($newDIR ."/".$new_infile);
+        if(!-s $newDIR ."/". $new_infile .".psq")
+        {
+          die "# EXIT: cannot format BLAST protein sequence base $newDIR/$new_infile\n"
+        }    
+      }
+      else
+      {
+        next if(-s $newDIR ."/". $new_infile .".nsq");
+        $infile = (split(/_features\.$FASTAEXTENSION/,$new_infile))[0];
+        next if($include_file && !$included_input_files{$infile});
+
+        executeFORMATDB($newDIR ."/".$new_infile,1);
+        if(!-s $newDIR ."/". $new_infile .".nsq")
+        {
+          die "# EXIT: cannot format BLAST nucleotide sequence base $newDIR/$new_infile\n"
+        }
       }
     }
   }
-
-  # launch blast jobs
-  print "\n# running BLAST searches ...\n";
-  foreach my $bfile1 (0 .. $#newfiles)
+   
+  if($do_diamond) # launch DIAMOND jobs
   {
-    $new_infile = $newfiles[$bfile1];
-    $infile = (split(/\.$FASTAEXTENSION/,$new_infile))[0];
-    if($do_features){ $infile = (split(/_features\.$FASTAEXTENSION/,$new_infile))[0]; }
-    next if($include_file && !$included_input_files{$infile});
-
-    foreach my $bfile2 (0 .. $#newfiles)
+    print "\n# running DIAMOND searches ...\n";
+    
+    # self-scan each input accession
+    foreach my $bfile1 (0 .. $#newfiles)
     {
-      $blastDBfile = $newfiles[$bfile2];
-      $infile = (split(/\.$FASTAEXTENSION/,$blastDBfile))[0];
-      if($do_features){ $infile = (split(/_features\.$FASTAEXTENSION/,$new_infile))[0]; }
+      # self-scan each input accession
+      $new_infile = $newfiles[$bfile1];
+      $infile = (split(/\.$FASTAEXTENSION/,$new_infile))[0];
       next if($include_file && !$included_input_files{$infile});
-
-      $blastout   = $newDIR ."/_". $new_infile ."_". $blastDBfile.".blast";
-      $clusteroutfile = $newDIR ."/_". $new_infile ."_". $blastDBfile.".queue";
+      
+      $blastDBfile = $newDIR ."/". $new_infile;
+      $blastout   = $newDIR ."/_". $new_infile ."_". $new_infile.".blast";
+      $clusteroutfile = $newDIR ."/_". $new_infile ."_". $new_infile.".queue";
       push(@to_be_deleted,$clusteroutfile);
 
-      if($do_minimal_BDBHs) # skip non-minimal searches if required
-      {
-        next if( ($bfile1 != $reference_proteome && $bfile2 != $reference_proteome) &&
-          ($bfile1 != $bfile2) );#print "$bfile1 $bfile2 $new_infile $blastDBfile\n";
-      }
-      if(-s $blastout) # check previous BLAST runs
+      if(-s $blastout) # check previous runs
       {
         if(!-s $blast_file){ push(@tmp_blast_output_files,$blastout); }
         next;
       }
-      if($do_features)
-      {
-        $command = format_BLASTN_command("$newDIR/$new_infile",
-          $blastout,"$newDIR/$blastDBfile",
-          $MAXEVALUEBLASTSEARCH,$psize{$infile},$runmode ne 'cluster');
-      }
-      else
-      {
-        $command = format_BLASTP_command("$newDIR/$new_infile",
-          $blastout,"$newDIR/$blastDBfile",
-          $MAXEVALUEBLASTSEARCH,$psize{$infile},$runmode ne 'cluster');
-      }#print "# $command\n";exit;
-
+        
+      $command = format_DIAMONDblastp_command("$newDIR/$new_infile",
+        $blastout,$blastDBfile,$MAXEVALUEBLASTSEARCH,$psize{$infile});
+            
       if($runmode eq 'cluster')
       {
         submit_cluster_job($new_infile,$command,$clusteroutfile,$newDIR,
           $SGEPATH,$QUEUESETTINGS,$QUEUEWAIT,\%cluster_PIDs);
       }
-      else # 'local' runmode
+      else # 'local' runmode -> ensure multi-core CPU use
       {
-        $command = format_SPLITBLAST_command()."$BATCHSIZE $command > /dev/null"; # ensure multicore CPU use
+        # hack to use allocated number of threads in local mode
+        $command =~ s/--threads 1/--threads $BLAST_NOCPU/;
         system("$command");
         if($? != 0)
         {
-          die "# EXIT: failed while running local BLAST search ($command)\n";
+          die "# EXIT: failed while running local DIAMOND search ($command)\n";
         }
       }
 
-      push(@tmp_blast_output_files,$blastout);
+      push(@tmp_blast_output_files,$blastout);    
+    }
+    
+    # scan each accession against the others
+    foreach my $bfile1 (0 .. $#newfiles)
+    {
+      $new_infile = $newfiles[$bfile1];
+      $infile = (split(/\.$FASTAEXTENSION/,$new_infile))[0];
+      next if($include_file && !$included_input_files{$infile});
+      
+      $blastDBfile = $newDIR ."/". $new_infile .".others";
+      $blastout   = $newDIR ."/_". $new_infile ."_others.blast";
+      $clusteroutfile = $newDIR ."/_". $new_infile ."_others.queue";
+      push(@to_be_deleted,$clusteroutfile);
+
+      if(-s $blastout) # check previous runs
+      {
+        if(!-s $blast_file){ push(@tmp_blast_output_files,$blastout); }
+        next;
+      }
+        
+      $command = format_DIAMONDblastp_command("$newDIR/$new_infile",
+        $blastout,$blastDBfile,$MAXEVALUEBLASTSEARCH,$n_of_sequences);
+            
+      if($runmode eq 'cluster')
+      {
+        submit_cluster_job($new_infile,$command,$clusteroutfile,$newDIR,
+          $SGEPATH,$QUEUESETTINGS,$QUEUEWAIT,\%cluster_PIDs);
+      }
+      else # 'local' runmode -> ensure multi-core CPU use
+      {
+        $command =~ s/--threads 1/--threads $BLAST_NOCPU/;
+        system("$command");
+        if($? != 0)
+        {
+          die "# EXIT: failed while running local DIAMOND search ($command)\n";
+        }
+      }
+
+      push(@tmp_blast_output_files,$blastout);     
+    }         
+  }
+  else  # launch BLAST jobs
+  {
+    print "\n# running BLAST searches ...\n";
+    foreach my $bfile1 (0 .. $#newfiles)
+    {
+      $new_infile = $newfiles[$bfile1];
+      $infile = (split(/\.$FASTAEXTENSION/,$new_infile))[0];
+      if($do_features){ $infile = (split(/_features\.$FASTAEXTENSION/,$new_infile))[0]; }
+      next if($include_file && !$included_input_files{$infile});
+
+      foreach my $bfile2 (0 .. $#newfiles)
+      {
+        $blastDBfile = $newfiles[$bfile2];
+        $infile = (split(/\.$FASTAEXTENSION/,$blastDBfile))[0];
+        if($do_features){ $infile = (split(/_features\.$FASTAEXTENSION/,$new_infile))[0]; }
+        next if($include_file && !$included_input_files{$infile});
+
+        $blastout   = $newDIR ."/_". $new_infile ."_". $blastDBfile.".blast";
+        $clusteroutfile = $newDIR ."/_". $new_infile ."_". $blastDBfile.".queue";
+        push(@to_be_deleted,$clusteroutfile);
+
+        if($do_minimal_BDBHs) # skip non-minimal searches if required
+        {
+          next if( ($bfile1 != $reference_proteome && $bfile2 != $reference_proteome) &&
+            ($bfile1 != $bfile2) );#print "$bfile1 $bfile2 $new_infile $blastDBfile\n";
+        }
+        if(-s $blastout) # check previous BLAST runs
+        {
+          if(!-s $blast_file){ push(@tmp_blast_output_files,$blastout); }
+          next;
+        }
+        
+        if($do_features)
+        {
+          $command = format_BLASTN_command("$newDIR/$new_infile",
+            $blastout,"$newDIR/$blastDBfile",
+            $MAXEVALUEBLASTSEARCH,$psize{$infile},$runmode ne 'cluster');
+        }
+        else
+        {
+          $command = format_BLASTP_command("$newDIR/$new_infile",
+            $blastout,"$newDIR/$blastDBfile",
+            $MAXEVALUEBLASTSEARCH,$psize{$infile},$runmode ne 'cluster');
+        }   
+
+        if($runmode eq 'cluster')
+        {
+          submit_cluster_job($new_infile,$command,$clusteroutfile,$newDIR,
+            $SGEPATH,$QUEUESETTINGS,$QUEUEWAIT,\%cluster_PIDs);
+        }
+        else # 'local' runmode -> ensure multi-core CPU use
+        {
+          $command = format_SPLITBLAST_command()."$BATCHSIZE $command > /dev/null"; 
+          system("$command");
+          if($? != 0)
+          {
+            die "# EXIT: failed while running local BLAST ($command)\n";
+          }
+        }
+
+        push(@tmp_blast_output_files,$blastout);
+      }
     }
   }
 
-  # wait until cluster blast jobs are done
+  # wait until cluster jobs are done
   if($runmode eq 'cluster')
   {
     check_cluster_jobs($newDIR,$SGEPATH,$QUEUEWAIT,$WAITTIME,\%cluster_PIDs);
@@ -1308,7 +1510,7 @@ if(!-s $bpo_file || $current_files ne $previous_files || ($doCOG && !-s $cogblas
   # concatenate blast output files to $blast_file (global var)
   if(@tmp_blast_output_files)
   {
-    print "# concatenating and sorting blast results...\n";
+    print "# concatenating and sorting BLAST/DIAMOND results...\n";
     foreach $blastout (@tmp_blast_output_files)
     {
       if(!-e $blastout)
@@ -1316,12 +1518,15 @@ if(!-s $bpo_file || $current_files ne $previous_files || ($doCOG && !-s $cogblas
         sleep($QUEUEWAIT); # give disk extra time
         if(!-e $blastout)
         {
-          die "# EXIT, $blastout does not exist, BLAST search might failed ".
+          die "# EXIT, $blastout does not exist, BLAST/DIAMOND search might failed ".
             "or hard drive is still writing it (please re-run)\n";
         }
       }
     }
+    
+    # NxN BLAST jobs OR 2xN diamond jobs (for N input  files)
     sort_blast_results($blast_file,$KEEPSCNDHSPS,@tmp_blast_output_files);
+      
     print "# done\n\n";
     unlink(@to_be_deleted); # remove .queue files
   }
@@ -2998,10 +3203,8 @@ sub cluster_is_available
   return 1;
 }
 
-#sub estimate_RAM
-#{
+#sub estimate_RAM{
 #  my ($n_of_sequences) = @_;
-#
 #  my ($use,$physicalRAM) = (0,0);
 #  if(-s "/proc/meminfo") # will work only in linux systems
 #  {
@@ -3009,22 +3212,18 @@ sub cluster_is_available
 #    while(<MEMINFO>){ if(/MemTotal:\s+(\d+)/){ $physicalRAM = sprintf("%1.0f",$1/1024) } }
 #    close(MEMINFO);
 #  }
-#
 #  # bencFeb2012
 #  #$use = sprintf("%1.0f",(0.030 * $n_of_sequences) + 130);
 #  # bench Jun2013
 #  $use = sprintf("%1.0f",(0.060 * $n_of_sequences) - 1700);
-#
 #  #if($isMCL){ $use = sprintf("%1.0f",(0.030 * $n_of_sequences) + 192) }
 #  #else{ $use = sprintf("%1.0f",(0.027 * $n_of_sequences) + 122) }
-#
 #  if($physicalRAM && $use > $physicalRAM)
 #  {
 #    $use = "$use Mb (larger than physical RAM, consider using -s option)";
 #  }
 #  elsif($use > 0){ $use = "$use Mb" }
 #  else{ $use = 0 }
-#
 #  return $use;
 #}
 
