@@ -938,7 +938,7 @@ but the tests summarized in Table <A HREF="#tab:diamondbench">3</A> show that it
 when compared to default BLAST jobs. The gain in computing time increases as more genomes are fed in, 
 allowing the analysis of even larger datasets (see Table <A HREF="#tab:diamondEcoli">4</A>).
 Figure <A HREF="#fig:diamondpangenome">4</A> shows that cloud clusters are where most of the differences arise when DIAMOND is used, 
-with more singletons produced than in BLASTP-based analyses.
+with more singletons produced than in BLASTP-based analysesi (see section <A HREF="#shellplot">4.8.3</A> to learn how these plots can be produced).
 
 <P>
 <BR><P></P>
@@ -981,8 +981,8 @@ Time required to perform BLASTP and DIAMOND (-X) searches among 9 <SPAN  CLASS="
 <BR><P></P>
 <DIV ALIGN="CENTER"><A NAME="868"></A>
 <TABLE>
-<CAPTION><STRONG>Table:</STRONG>
-Resources required to analyze 220  <i> Escherichia coli  </i> genomes with DIAMOND (-X) on a 32-core Linux box running SGE. 
+<CAPTION><STRONG>Table 4:</STRONG>
+Resources required to analyze 220 <SPAN  CLASS="textit">Escherichia coli</SPAN> genomes with DIAMOND (-X) on a 32-core Linux box running SGE. 
 The total number of sequences was 1,104,985. The OMCL (-M) command was run after the BDBH job and thus avoided re-running DIAMOND.</CAPTION>
 <TR><TD>
 <DIV ALIGN="CENTER">
@@ -1014,9 +1014,8 @@ The total number of sequences was 1,104,985. The OMCL (-M) command was run after
 
 <DIV ALIGN="CENTER"><A NAME="fig:diamondpangenome"></A><A NAME="869"></A>
 <TABLE>
-<CAPTION ALIGN="BOTTOM"><STRONG>Figure:</STRONG>
-Comparison of OMCL-based pangenomes of 9 <SPAN  CLASS="textit">Mycobacterium africanum</SPAN> accessions computed with BLASTP (left) and DIAMOND (right). 
-See section <A HREF="#shellplot">4.8.3</A> to learn how these plots can be produced.</CAPTION>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 4:</STRONG>
+Comparison of OMCL-based pangenomes of 9 <SPAN  CLASS="textit">Mycobacterium africanum</SPAN> accessions computed with BLASTP (left) and DIAMOND (right).</CAPTION>
 <TR><TD>
 <DIV ALIGN="CENTER">
 <IMG
