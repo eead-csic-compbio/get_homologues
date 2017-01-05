@@ -17,13 +17,13 @@ Contreras-Moreira,B. and Vinuesa,P. (2013) GET_HOMOLOGUES, a versatile software
 package for scalable and robust microbial pangenome analysis. 
 Appl.Environ.Microbiol. 79:7696-7701
 
-This software is copyright 2013, Bruno Contreras-Moreira and Pablo Vinuesa.
+This software is copyright 2013-17, Bruno Contreras-Moreira and Pablo Vinuesa.
 
 GET_HOMOLOGUES is made freely available for academic research and shall not 
 be used for any tasks related to military purposes. Commercial users 
 interested in GET_HOMOLOGUES should contact the authors.
 
-This package includes BLAST, HMMER, COGtriangles, OrthoMCL, mcl, PHYLIP and
+This package includes BLAST,DIAMOND,HMMER,COGtriangles,OrthoMCL,mcl,PHYLIP and
 Transdecoder source code/executables, which are distributed with their own 
 licenses. The user of GET_HOMOLOGUES agrees to respect those as well. 
 
