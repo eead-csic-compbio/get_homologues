@@ -1,6 +1,6 @@
 #!/usr/bin/env perl 
 
-# 2016 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2017 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -144,8 +144,7 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   print   "-A calculate average identity of clustered sequences,          ".
     "(optional, creates tab-separated matrix,\n";
   print   " uses blastn results                                           ".
-    " only top row valid with -b)\n";
-    
+    " [OMCL])\n";
 	print   "-z add soft-core to genome composition analysis                ".
     "(optional, requires -c [OMCL])\n";
     
@@ -310,11 +309,11 @@ else
     die "\n# WARNING: use of the default BDBH algorithm with option -t 0 is not supported ".
       "(please check the manual)\n\n";
   }
-  #elsif($do_ANIb_matrix)
-  #{
-  #  die "\n# WARNING: use of the default BDBH algorithm with option -A is not supported ".
-  #    "(please check the manual)\n\n";
-  #}
+  elsif($do_ANIb_matrix)
+  {
+    die "\n# WARNING: use of the default BDBH algorithm with option -A is not supported ".
+      "(please check the manual)\n\n";
+  }
 }
 
 if(defined($opts{'D'}))
