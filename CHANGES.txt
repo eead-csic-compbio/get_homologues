@@ -161,7 +161,6 @@
 07112016: added executeMAKEDB & format_DIAMOND_command to lib/transcripts.pm
 07112016: added option -X to transcripts2cdsCPP.pl & transcripts2cdsCPP.pl to invoke diamond instead of blastx
 07112016: updated EST manual
-14122016: added -A support to BDBH (and -b) to produce ANI matrices with large datasets
 14122016: added table with new features to EST manual
 20122016: added table with transcript2cds benchmark to EST manual
 20122016: added option --more-sensitive to DIAMOND in lib/est/transcripts.pm
@@ -172,3 +171,5 @@
 30122016: note: compressed multi-contig gbk files produce FASTA files with different seq order 
 30122016: added DIAMOND blastp to get_homologues.pl, which can be called with -X
 30122016: compare_clusters.pl now correctly shortens DIAMOND cluster dirs
+05012017: updated $BATCHSIZE to 1000 in get_homologues-est.pl
+05012017: updated manuals and added E.coli -X benchmark
