@@ -36,7 +36,7 @@ my $QUEUEWAIT = 1;                # interval in seconds between qsub submissions
 my $WAITTIME  = 30;               # interval in seconds btween qstat commands
 
 ## settings for local batch blast,hmmscan jobs
-my $BATCHSIZE = 1000; 
+my $BATCHSIZE = 1000; # after HS_BLASTN bench 
 
 ## global variables that control some algorithmic choices
 my $NOFSAMPLESREPORT = 20;        # number of genome samples used for the generation of pan/core genomes
