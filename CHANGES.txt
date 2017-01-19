@@ -173,3 +173,4 @@
 30122016: compare_clusters.pl now correctly shortens DIAMOND cluster dirs
 05012017: updated $BATCHSIZE to 1000 in get_homologues-est.pl
 05012017: updated manuals and added E.coli -X benchmark
+19012017: transcripts2cdsCPP.pl & transcripts2cdsCPP.pl now handle correctly reverse strand sequences

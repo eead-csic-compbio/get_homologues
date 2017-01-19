@@ -1,6 +1,6 @@
 package transcripts;
 
-# Code library created by Bruno Contreras-Moreira (2015-6)
+# Code library created by Bruno Contreras-Moreira (2015-7)
 # mainly for transcripts2proteins.pl
 
 
@@ -159,7 +159,7 @@ sub format_DIAMOND_command
     "--max-target-seqs $MAXBLASTXHITS --quiet --more-sensitive ";
 
   if(defined($gencode) && $gencode > 1){ $command .= " --query-gencode $gencode " }
-  if(defined($plustStrandOnly)){ $command .= ' --forwardonly ' }
+  if($plustStrandOnly){ $command .= ' --forwardonly ' }
   
   $command .= '--outfmt 6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen ';
 
@@ -194,7 +194,7 @@ sub format_BLASTX_command
     "-max_target_seqs $MAXBLASTXHITS ";
 
   if(defined($gencode) && $gencode > 1){ $command .= " -query_gencode $gencode " }
-  if(defined($plustStrandOnly)){ $command .= ' -strand plus ' }
+  if($plustStrandOnly){ $command .= ' -strand plus ' }
 
   return $command;
 }
@@ -224,13 +224,14 @@ sub parse_transcoder_sequences
 }
 
 # parses top matches (on the same frame) of each query
+# updated Jan2017
 sub parse_blastx_cds_sequences
 {
   my ($FASTAdnafile,$blastxfile) = @_;
 
   my ($qseqid,$sseqid,$qstart,$qend,$qlen,$qseq,$frame);
   my ($magic,$offset5,$offset3,$pos,$nt,$revcomp,$lastframe,$lastrevcomp);
-  my (%blastxseqs,%blastxhits,%seqs,@alnseq);
+  my (%blastxseqs,%blastxhits,%blastxrev,%seqs,@alnseq);
 
   my $fasta_ref = read_FASTA_file_array($FASTAdnafile);
   my ($seqname,%dnaseqs);
@@ -274,7 +275,6 @@ sub parse_blastx_cds_sequences
     if(/^(\S+)\t(\S+)\t\S+\t\S+\t\S+\t\S+\t(\S+)\t(\S+)\t\S+\t\S+\t\S+\t\s*\S+\t(\S+)/)
     {
       ($qseqid,$sseqid,$qstart,$qend,$qlen) = ($1,$2,$3,$4,$5);
-
       #print "$qseqid,$sseqid,$qstart,$qend,$qlen\n";
 
       if($qstart>$qend)
@@ -287,16 +287,14 @@ sub parse_blastx_cds_sequences
       $frame = $qstart % 3;
       if($revcomp){ $frame = -$frame }
 
-      # 1st hit for this query, initialize array with lower case nucleotides
+      # 1st hit for this query, initialize sequence array with lower case nucleotides
       if(!$blastxseqs{$qseqid})
       {
-        #foreach $pos (0 .. $qlen){ $blastxseqs{$qseqid}[$pos] = 'X' }; # initialize array
-        $qseq = $dnaseqs{$qseqid};
-        if($revcomp){ $qseq =~tr/ACGTacgtyrkmYRKM/TGCAtgcarymkRYMK/; $qseq = reverse($qseq) }
-        @alnseq = split(//,lc($qseq));
+        @alnseq = split(//,lc($dnaseqs{$qseqid}));
         $pos = 0;
         foreach $nt (@alnseq){ $blastxseqs{$qseqid}[$pos++] = $nt };
         $blastxhits{$qseqid} = $sseqid;
+        $blastxrev{$qseqid} = $revcomp;
         $lastframe = $frame;
         $lastrevcomp = $revcomp;
       }
@@ -306,13 +304,13 @@ sub parse_blastx_cds_sequences
         {
           warn "# parse_blastx_cds_sequences: likely chimera: $qseqid\n";
         }
-      
+        
+        # take only additional HSPs in the same frame
         next if($frame != $lastframe);
-      } #print;
+      } 
 
-      # add aligned sequence
-      $qseq = substr($dnaseqs{$qseqid},$qstart-1,$qend-$qstart+1); #print "$qstart,$qend $qseq\n";
-      if($revcomp){ $qseq =~tr/ACGTacgtyrkmYRKM/TGCAtgcarymkRYMK/; $qseq = reverse($qseq) }
+      # add aligned sequence stretch (upper case)
+      $qseq = substr($dnaseqs{$qseqid},$qstart-1,$qend-$qstart+1); 
       @alnseq = split(//,$qseq);
       $pos = $qstart-1;
       foreach $nt (@alnseq){ $blastxseqs{$qseqid}[$pos++] = $nt }
@@ -323,9 +321,15 @@ sub parse_blastx_cds_sequences
   foreach $qseqid (keys(%blastxseqs))
   {
     $qseq = join('',@{$blastxseqs{$qseqid}});
+    
+    # remove non-matched termini
     $qseq =~ s/^[a-z]+//g;
-    $qseq =~ s/[a-z]+$//g; #print ">$qseqid\n$qseq\n";
-    $seqs{$qseqid} = uc($qseq);
+    $qseq =~ s/[a-z]+$//g; 
+    
+    # get reverse complement of negative strand alignments
+    if($blastxrev{$qseqid}){ $qseq =~tr/ACGTacgtyrkmYRKM/TGCAtgcarymkRYMK/; $qseq = reverse($qseq) }
+    
+    $seqs{$qseqid} = uc($qseq); #print ">$qseqid\n$qseq\n";
   }
 
   return (\%seqs,\%blastxhits);
@@ -347,7 +351,6 @@ sub sequence_consensus
   {
     if($align[2] == $align[3] && $align[4] == 1)
     {
-
       # 1----------
       #      2-----------
       #print "# sequence_consensus: 1 ($align[0])\n" if($verbose);
@@ -355,15 +358,14 @@ sub sequence_consensus
     }
     elsif($align[1] == 1 && $align[5] == $align[6])
     {
-
       #     1----------
       # 2-----------
       #print "# sequence_consensus: 2 ($align[0])\n" if($verbose);
+      #print "$seq1\n$seq2\n$align[7]\n";      
       return ( $seq2.substr($seq1,$align[2]) , "$label2.$label1");
     }
     elsif($align[4] == 1 && $align[5] == $align[6])
     {
-
       # 1--------------------
       #      2-----------
       #print "# sequence_consensus: 3 ($align[0])\n" if($verbose);
@@ -371,7 +373,6 @@ sub sequence_consensus
     }
     elsif($align[1] == 1 && $align[2] == $align[3])
     {
-
       #     1----------
       # 2------------------
       #print "# sequence_consensus: 4 ($align[0])\n" if($verbose);
@@ -381,15 +382,14 @@ sub sequence_consensus
     {
       if($priority == 1)
       {
-        return ( $seq1 , "$label1-mismatches" );
-
         #print "# sequence_consensus: 5 ($align[0])\n" if($verbose);
+        return ( $seq1 , "$label1-mismatches" );
       }
       else
       {
-        return ( $seq2 , "$label2-mismatches" );
-
         #print "# sequence_consensus: 6 ($align[0])\n" if($verbose);
+        #print "$seq1\n$seq2\n$align[7]\n";      
+        return ( $seq2 , "$label2-mismatches" );
       }
     }
   }

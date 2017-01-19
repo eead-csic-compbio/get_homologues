@@ -430,7 +430,6 @@ foreach $input_FASTA_file (@input_files)
   $n_of_ORFs = $n_of_noORFs = 0;
   foreach $seq ( 0 .. $#{$fasta_ref} )
   {
-
     #$seqname = $fasta_ref->[$seq][NAME]; #print ">$seqname\n";
     $seqname = (split(/\s+/,$fasta_ref->[$seq][NAME]))[0];
 
@@ -442,7 +441,7 @@ foreach $input_FASTA_file (@input_files)
     if($ref_blastxhits->{$seqname}){ $besthit = 'match:'.$ref_blastxhits->{$seqname} } else { $besthit = '' }
     if($ref_gmap_besthit->{$seqname}){ $gmap_besthit = 'genomic_match:'.$ref_gmap_besthit->{$seqname} } else { $gmap_besthit = '' }
 
-    # reconciliate transdecod $ blastx cds sequences if possible
+    # reconcile transdecod $ blastx cds sequences if possible
     if($seq_transcod ne '' && $seq_blastx ne '')
     {
       if(substr($seq_transcod_prot,-1) eq '*')
