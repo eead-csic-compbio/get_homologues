@@ -317,7 +317,6 @@ foreach $input_FASTA_file (@input_files)
     }
     else
     {
-
       # compress and rename outfiles with mask2
       my $tmpcdsfile = basename($tmp_FASTA_file_trans).'.transdecoder.cds';
       my $tmppepfile = basename($tmp_FASTA_file_trans).'.transdecoder.pep';
@@ -335,13 +334,13 @@ foreach $input_FASTA_file (@input_files)
     print "# parsing re-used transdecoder output ($transdecod_outfile_cds) ...\n";
     $ref_transcodseqs_cds = parse_transcoder_sequences($transdecod_outfile_cds);
     $ref_transcodseqs_prot = parse_transcoder_sequences($transdecod_outfile_prot);
-    #foreach my $kk (keys(%$ref_transcodseqs_cds)){ print "$kk\n $ref_transcodseqs_cds->{$kk}\n";}exit;
   }
 
   ## 2) now run blastx to compare transcripts to a large protein set
   if($INP_blastdb)
   {
     my $blastx_outfile    = $tmproot.$output_mask3.'.blastx';
+    if($INP_diamond){ $blastx_outfile = $tmproot.$output_mask3.'.diamond' }
     my $blastx_outfile_gz = $blastx_outfile.'.gz';
 
     # format sequence database if required

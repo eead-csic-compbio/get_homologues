@@ -174,3 +174,5 @@
 05012017: updated $BATCHSIZE to 1000 in get_homologues-est.pl
 05012017: updated manuals and added E.coli -X benchmark
 19012017: transcripts2cdsCPP.pl & transcripts2cdsCPP.pl now handle correctly reverse strand sequences
+19012017: transcripts2cdsCPP.pl & transcripts2cdsCPP.pl now process correctly lower case sequences
+19012017: transcripts2cdsCPP.pl & transcripts2cdsCPP.pl now save blastx & diamond output in different files

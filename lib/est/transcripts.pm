@@ -1,8 +1,7 @@
 package transcripts;
 
-# Code library created by Bruno Contreras-Moreira (2015-7)
-# mainly for transcripts2proteins.pl
-
+# Code library created by Bruno Contreras-Moreira (2015-17)
+# mainly for transcripts2cds.pl
 
 use strict;
 require Exporter;
@@ -55,8 +54,9 @@ my $MAXBLASTXHITS        = 5;
 my $MINCONOVERLAP        = 90; # number of bases to call an overlap while calculating a consensus (30 aminos)
 my $MAXACCESSIONLENGTH   = 30;
 
-# gets a possibly compressed FASTA file and returns the name of a new one with short FASTA headers
-# as Transdecoder does not like them
+# gets a possibly compressed FASTA file and returns the name of a new one with short FASTA headers,
+# Transdecoder does not like them, and upper case sequences
+# Updated Jan2017
 sub shorten_headers_FASTA_file
 {
   my ($infile,$outfile) = @_;
@@ -75,7 +75,7 @@ sub shorten_headers_FASTA_file
       ($acc,$rest) = split(/[\|\[]/,$fasta_ref->[$seq][NAME],2);
     }
     
-    print SHORT ">$acc $rest\n$fasta_ref->[$seq][SEQ]\n";
+    printf( SHORT ">%s %s\n%s\n",$acc,$rest,uc($fasta_ref->[$seq][SEQ]));
     $n_of_seqs++;
   }
   
@@ -200,6 +200,7 @@ sub format_BLASTX_command
 }
 
 # parses longest ORF detected by transdecoder
+# Updated Jan2017
 sub parse_transcoder_sequences
 {
   my ($infile) = @_;
@@ -209,13 +210,19 @@ sub parse_transcoder_sequences
 
   foreach my $seq ( 0 .. $#{$fasta_ref} )
   {
+    #>AT1G02065.2|m.737 AT1G02065.2|g.737 type:complete len:247 AT1G02065.2:59-799(+)
+    #>AT1G02065.2|m.738 AT1G02065.2|g.738 type:5prime_partial len:168 AT1G02065.2:3-506(+)
+    #>AT1G02065.2|m.739 AT1G02065.2|g.739 type:complete len:78 AT1G02065.2:1474-1241(-)
+    #>AT1G02065.2|m.740 AT1G02065.2|g.740 type:complete len:78 AT1G02065.2:373-140(-)
+    #>AT1G02065.2|m.741 AT1G02065.2|g.741 type:complete len:75 AT1G02065.2:707-483(-)
+    #>AT1G02065.2|m.742 AT1G02065.2|g.742 type:complete len:50 AT1G02065.2:1220-1071(-)
+
     $seqname = (split(/\|[mg]\./,$fasta_ref->[$seq][NAME]))[0];
 
     if(!$seqs{$seqname} || # parse only longest ORF
       length($fasta_ref->[$seq][SEQ]) > length($seqs{$seqname}))
     {
       $seqs{$seqname} = $fasta_ref->[$seq][SEQ];
-
       #print "$seqname $fasta_ref->[$seq][SEQ]\n";
     }
   }
@@ -335,12 +342,15 @@ sub parse_blastx_cds_sequences
   return (\%seqs,\%blastxhits);
 }
 
+# Expects upper case nucleotide sequences
 # returns 1) consensus sequence and 2) attached evidence
+# Updated Jan2017
 sub sequence_consensus
 {
   my ($seq1,$seq2,$label1,$label2,$priority,$verbose) = @_;
 
   my $ref_alignments = local_alignments($seq1,$seq2);
+  
   my @align = @{$ref_alignments->[0]}; # take only first alignment
 
   #print "$align[0] ".
@@ -354,6 +364,7 @@ sub sequence_consensus
       # 1----------
       #      2-----------
       #print "# sequence_consensus: 1 ($align[0])\n" if($verbose);
+      #print "$seq1\n$seq2\n$align[7]\n";      
       return ( substr($seq1,0,$align[1]-1).$seq2 , "$label1.$label2");
     }
     elsif($align[1] == 1 && $align[5] == $align[6])
@@ -412,9 +423,9 @@ sub sequence_consensus
 
 sub local_alignments
 {
-
-# adapted from http://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Longest_common_substring
-# assumes only $str2 can contain undetermined chars 'X'
+  # adapted from http://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Longest_common_substring
+  # assumes only $str2 can contain undetermined chars 'X'
+  
   my ($str1, $str2) = @_;
   my $alignlength = 0; # length of longest common substring
   my $len1 = length $str1;

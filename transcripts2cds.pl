@@ -340,8 +340,9 @@ foreach $input_FASTA_file (@input_files)
   if($INP_blastdb)
   {
     my $blastx_outfile    = $tmproot.$output_mask3.'.blastx';
+    if($INP_diamond){ $blastx_outfile = $tmproot.$output_mask3.'.diamond' }
     my $blastx_outfile_gz = $blastx_outfile.'.gz';
-
+    
     # format sequence database if required
     if($INP_diamond)
     {
@@ -440,7 +441,7 @@ foreach $input_FASTA_file (@input_files)
     if($ref_blastxhits->{$seqname}){ $besthit = 'match:'.$ref_blastxhits->{$seqname} } else { $besthit = '' }
     if($ref_gmap_besthit->{$seqname}){ $gmap_besthit = 'genomic_match:'.$ref_gmap_besthit->{$seqname} } else { $gmap_besthit = '' }
 
-    # reconciliate transdecod $ blastx cds sequences if possible
+    # reconcile transdecod $ blastx cds sequences if possible
     if($seq_transcod ne '' && $seq_blastx ne '')
     {
       if(substr($seq_transcod_prot,-1) eq '*')
