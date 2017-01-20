@@ -6,6 +6,9 @@ use Inline CPP => <<'END_CPP';
 using namespace std;
 #include <string>
 
+/* last checked Jan2017 */
+/* B Contreras-Moreira EEAD-CSIC */
+
 class Consensus
 {
 	public:
@@ -32,7 +35,7 @@ class Consensus
 		void set_sources(char *label1, char *label2)
     	{
         	source1 = label1;
-			source2 = label2;
+			  source2 = label2;
     	}
 	
 		void set_sequences(char *seqname, char *seq1, char *seq2)
@@ -60,8 +63,9 @@ class Consensus
 			int *curr = new int [len2];
 			int *prev = new int [len2];
 			int *swap = NULL;
-	     
-			if(len1==0 || len2==0) return 0;
+      
+			
+      if(len1==0 || len2==0) return 0;
 		     
 			for(int i = 0; i<len1; ++i)
 			{
@@ -91,7 +95,7 @@ class Consensus
 			     
 			delete [] curr;
 			delete [] prev;
-	     
+       
 			// construct consensus based on alignment
 			--len1; // convert to 0-based
 			--len2;

@@ -27,13 +27,12 @@ our @EXPORT = qw(
   format_GMAP_command
   parse_GMAP_results
   format_transdecoder_command
+  get_min_overlap
 
   $BLASTXDB
   $BLASTX_NOCPU
   $MINORFLENGTH
   $MAXBLASTXEVALUE
-  $MINCONOVERLAP
-
   );
 
 # all these defined in phyTools.pm:
@@ -51,8 +50,10 @@ our $GMAPBUILDEXE        = $ENV{"EXE_GMAPBUILD"};
 
 # runtime & cutoff variables
 my $MAXBLASTXHITS        = 5;
-my $MINCONOVERLAP        = 90; # number of bases to call an overlap while calculating a consensus (30 aminos)
+my $MINCONOVERLAP        = 90; # number of bases to call an overlap while calculating a consensus (30 amino acid residues)
 my $MAXACCESSIONLENGTH   = 30;
+
+sub get_min_overlap{ return $MINCONOVERLAP }
 
 # gets a possibly compressed FASTA file and returns the name of a new one with short FASTA headers,
 # Transdecoder does not like them, and upper case sequences
@@ -199,7 +200,7 @@ sub format_BLASTX_command
   return $command;
 }
 
-# parses longest ORF detected by transdecoder
+# Parses longest ORF detected by transdecoder
 # Updated Jan2017
 sub parse_transcoder_sequences
 {
@@ -211,12 +212,7 @@ sub parse_transcoder_sequences
   foreach my $seq ( 0 .. $#{$fasta_ref} )
   {
     #>AT1G02065.2|m.737 AT1G02065.2|g.737 type:complete len:247 AT1G02065.2:59-799(+)
-    #>AT1G02065.2|m.738 AT1G02065.2|g.738 type:5prime_partial len:168 AT1G02065.2:3-506(+)
-    #>AT1G02065.2|m.739 AT1G02065.2|g.739 type:complete len:78 AT1G02065.2:1474-1241(-)
-    #>AT1G02065.2|m.740 AT1G02065.2|g.740 type:complete len:78 AT1G02065.2:373-140(-)
-    #>AT1G02065.2|m.741 AT1G02065.2|g.741 type:complete len:75 AT1G02065.2:707-483(-)
-    #>AT1G02065.2|m.742 AT1G02065.2|g.742 type:complete len:50 AT1G02065.2:1220-1071(-)
-
+    
     $seqname = (split(/\|[mg]\./,$fasta_ref->[$seq][NAME]))[0];
 
     if(!$seqs{$seqname} || # parse only longest ORF
@@ -283,6 +279,8 @@ sub parse_blastx_cds_sequences
     {
       ($qseqid,$sseqid,$qstart,$qend,$qlen) = ($1,$2,$3,$4,$5);
       #print "$qseqid,$sseqid,$qstart,$qend,$qlen\n";
+      
+      #next if($qseqid ne 'AT1G02065.2'); # debugging
 
       if($qstart>$qend)
       {
@@ -344,7 +342,7 @@ sub parse_blastx_cds_sequences
 
 # Expects upper case nucleotide sequences
 # returns 1) consensus sequence and 2) attached evidence
-# Updated Jan2017
+# last checked Jan2017
 sub sequence_consensus
 {
   my ($seq1,$seq2,$label1,$label2,$priority,$verbose) = @_;
@@ -408,15 +406,14 @@ sub sequence_consensus
   {
     if($priority == 1)
     {
-      return ( $seq1 , "$label1-noover" );
-
       #print "# sequence_consensus: 7 ($align[0])\n" if($verbose);
+      return ( $seq1 , "$label1-noover" );
     }
     else
     {
-      return ( $seq2 , "$label2-noover" );
-
       #print "# sequence_consensus: 8 ($align[0])\n" if($verbose);
+      #print "$seq1\n$seq2\n";    
+      return ( $seq2 , "$label2-noover" );
     }
   }
 }

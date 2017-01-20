@@ -38,6 +38,7 @@ my ($ref_blastxseqs_cds,$ref_blastxhits,$ref_transcodseqs_cds,$ref_transcodseqs_
 my ($ref_gmap_cds,$ref_gmap_besthit,$gmap_besthit,$intronless_infile);
 my ($root,$tmproot,$command,$output_mask,$output_mask2,$output_mask3); #mask2=transdecoder,3=blastx
 my ($n_of_ORFs,$n_of_noORFs,$evidence,$seq,$seqname,@input_files,%opts);
+my $min_overlap = transcripts::get_min_overlap();
 
 getopts('hvXGpn:l:d:E:g:m:', \%opts);
 
@@ -412,6 +413,13 @@ foreach $input_FASTA_file (@input_files)
   my $outfile_prot  = $root.$output_mask.'.cds.faa';
   my $outfile_rna   = $root.$output_mask.'.transcript.fna';
   my $outfile_noORF = $root.$output_mask.'.noORF.fna';
+  if($INP_diamond)
+  {
+    $outfile_cds   = $root.$output_mask.'.diamond.cds.fna';
+    $outfile_prot  = $root.$output_mask.'.diamond.cds.faa';
+    $outfile_rna   = $root.$output_mask.'.diamond.transcript.fna';
+    $outfile_noORF = $root.$output_mask.'.diamond.noORF.fna';
+  }
 
   open(FAA,">$outfile_prot") || die "# ERROR: cannot write to $outfile_prot\n";
   open(CDS,">$outfile_cds")  || die "# ERROR: cannot write to $outfile_cds\n";
@@ -422,7 +430,7 @@ foreach $input_FASTA_file (@input_files)
 
   my $consensus = new cppcode::Consensus();         #CPP
   $consensus->set_priority(2);                      #CPP
-  $consensus->set_min_overlap($MINCONOVERLAP);      #CPP
+  $consensus->set_min_overlap($min_overlap);        #CPP
   $consensus->set_sources('transdecoder','blastx'); #CPP
 
   my $fasta_ref = read_FASTA_file_array($tmp_FASTA_file);

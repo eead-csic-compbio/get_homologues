@@ -200,7 +200,7 @@ foreach $input_FASTA_file (@input_files)
     print "# cannot read $input_FASTA_file, skip it\n";
     next;
   }
-  push(@trash,$short_header_file);
+  push(@trash,$short_header_file);  
   
   # from now on use short temp file
   $input_FASTA_file = $short_header_file;
@@ -394,6 +394,7 @@ foreach $input_FASTA_file (@input_files)
       else
       {
         system("gzip $blastx_outfile");
+        
         print "# parsing blastx output ($blastx_outfile_gz) ...\n";
         ($ref_blastxseqs_cds,$ref_blastxhits) =
           parse_blastx_cds_sequences($tmp_FASTA_file,$blastx_outfile_gz);
@@ -412,6 +413,13 @@ foreach $input_FASTA_file (@input_files)
   my $outfile_prot  = $root.$output_mask.'.cds.faa';
   my $outfile_rna   = $root.$output_mask.'.transcript.fna';
   my $outfile_noORF = $root.$output_mask.'.noORF.fna';
+  if($INP_diamond)
+  {
+    $outfile_cds   = $root.$output_mask.'.diamond.cds.fna';
+    $outfile_prot  = $root.$output_mask.'.diamond.cds.faa';
+    $outfile_rna   = $root.$output_mask.'.diamond.transcript.fna';
+    $outfile_noORF = $root.$output_mask.'.diamond.noORF.fna';
+  }
 
   open(FAA,">$outfile_prot") || die "# ERROR: cannot write to $outfile_prot\n";
   open(CDS,">$outfile_cds")  || die "# ERROR: cannot write to $outfile_cds\n";
@@ -422,16 +430,16 @@ foreach $input_FASTA_file (@input_files)
 
   #my $consensus = new cppcode::Consensus();         #CPP
   #$consensus->set_priority(2);                      #CPP
-  #$consensus->set_min_overlap($MINCONOVERLAP);      #CPP
+  #$consensus->set_min_overlap($min_overlap);        #CPP
   #$consensus->set_sources('transdecoder','blastx'); #CPP
 
   my $fasta_ref = read_FASTA_file_array($tmp_FASTA_file);
   $n_of_ORFs = $n_of_noORFs = 0;
   foreach $seq ( 0 .. $#{$fasta_ref} )
   {
-
-    #$seqname = $fasta_ref->[$seq][NAME]; #print ">$seqname\n";
     $seqname = (split(/\s+/,$fasta_ref->[$seq][NAME]))[0];
+    
+    #next if($seqname ne 'AT1G02065.2'); # debugging
 
     $seq_transcod      = $ref_transcodseqs_cds->{$seqname} || '';
     $seq_transcod_prot = $ref_transcodseqs_prot->{$seqname} || '';
