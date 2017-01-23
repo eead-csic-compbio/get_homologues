@@ -983,7 +983,8 @@ Time required to perform BLASTP and DIAMOND (-X) searches among 9 <SPAN  CLASS="
 <TABLE>
 <CAPTION><STRONG>Table 4:</STRONG>
 Resources required to analyze 220 <SPAN  CLASS="textit">Escherichia coli</SPAN> genomes with DIAMOND (-X) on a 32-core Linux box running SGE. 
-The total number of sequences was 1,104,985. The OMCL (-M) command was run after the BDBH job and thus avoided re-running DIAMOND.</CAPTION>
+The total number of sequences was 1,104,985. The OMCL (-M) commands were run after the BDBH job and thus avoided re-running DIAMOND.
+While the input genomes took 626MB of drive space, the uncompressed output was 172GB.</CAPTION>
 <TR><TD>
 <DIV ALIGN="CENTER">
 <TABLE CELLPADDING=3 BORDER="1" ALIGN="CENTER">
@@ -1001,6 +1002,11 @@ The total number of sequences was 1,104,985. The OMCL (-M) command was run after
 <TD ALIGN="RIGHT">30,098</TD>
 <TD ALIGN="RIGHT">81,059</TD>
 <TD ALIGN="RIGHT">34,155</TD>
+</TR>
+<TR><TD ALIGN="LEFT">-m cluster -X -M -t 0 -A</TD>
+<TD ALIGN="RIGHT">30,098</TD>
+<TD ALIGN="RIGHT">315,781</TD>
+<TD ALIGN="RIGHT">13,474</TD>
 </TR>
 </TABLE>
 </DIV>
@@ -3782,7 +3788,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>manual -no_antialias_text -split 0 -dir manual -no_navigation -show_section_numbers</TT>
 <P>
-The translation was initiated by Bruno Contreras Moreira on 2017-01-05
+The translation was initiated by Bruno Contreras Moreira on 2017-01-09
 <BR><HR>
 <ADDRESS>
 Bruno Contreras-Moreira and Pablo Vinuesa<br><a href="https://github.com/eead-csic-compbio/get_homologues">https://github.com/eead-csic-compbio/get_homologues</a>

@@ -2,11 +2,17 @@
 # Associate images original text with physical files.
 
 
-$key = q/Evalue<max(Evalue);MSF=1.6/;
+$key = q/G;MSF=1.6/;
 $cached_env_img{$key} = q|<IMG
- WIDTH="155" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
- SRC="|."$dir".q|img3.png"
- ALT="$ Evalue &lt; max(Evalue)$">|; 
+ WIDTH="16" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="|."$dir".q|img1.png"
+ ALT="$ G$">|; 
+
+$key = q/coveragege20%;MSF=1.6/;
+$cached_env_img{$key} = q|<IMG
+ WIDTH="111" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="|."$dir".q|img4.png"
+ ALT="$ coverage \ge 20\%$">|; 
 
 $key = q/G^{2};MSF=1.6/;
 $cached_env_img{$key} = q|<IMG
@@ -20,17 +26,11 @@ $cached_env_img{$key} = q|<IMG
  SRC="|."$dir".q|img6.png"
  ALT="$ identity \ge 50\%$">|; 
 
-$key = q/G;MSF=1.6/;
+$key = q/Evalue<max(Evalue);MSF=1.6/;
 $cached_env_img{$key} = q|<IMG
- WIDTH="16" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
- SRC="|."$dir".q|img1.png"
- ALT="$ G$">|; 
-
-$key = q/coveragege20%;MSF=1.6/;
-$cached_env_img{$key} = q|<IMG
- WIDTH="111" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
- SRC="|."$dir".q|img4.png"
- ALT="$ coverage \ge 20\%$">|; 
+ WIDTH="155" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="|."$dir".q|img3.png"
+ ALT="$ Evalue &lt; max(Evalue)$">|; 
 
 $key = q/coveragege50%&;MSF=1.6/;
 $cached_env_img{$key} = q|<IMG
