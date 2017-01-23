@@ -176,3 +176,6 @@
 19012017: transcripts2cdsCPP.pl & transcripts2cdsCPP.pl now handle correctly reverse strand sequences
 19012017: transcripts2cdsCPP.pl & transcripts2cdsCPP.pl now process correctly lower case sequences
 19012017: transcripts2cdsCPP.pl & transcripts2cdsCPP.pl now save blastx & diamond output in different files
+20012017: fixed transcripts2cdsCPP.pl so that now it prints correctly -noover evidences, shown as -mismatches earlier
+23012017: added transcripts2cds BLASTX & DIAMOND benchmarks to EST manual
+23012017: updated EST manual and added one question to FAQ section
