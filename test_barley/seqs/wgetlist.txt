@@ -1,0 +1,16 @@
+http://floresta.eead.csic.es/plant-pan-genomes/barley_transcripts/Alexis.trinity.fna.bz2     
+http://floresta.eead.csic.es/plant-pan-genomes/barley_transcripts/AmagiNijo.trinity.fna.bz2  
+http://floresta.eead.csic.es/plant-pan-genomes/barley_transcripts/Beiqing5.trinity.fna.bz2   
+http://floresta.eead.csic.es/plant-pan-genomes/barley_transcripts/Esterel.trinity.fna.bz2
+http://floresta.eead.csic.es/plant-pan-genomes/barley_transcripts/Franka.trinity.fna.bz2        
+http://floresta.eead.csic.es/plant-pan-genomes/barley_transcripts/HarunaNijo_transcripts.fa.gz  
+http://floresta.eead.csic.es/plant-pan-genomes/barley_transcripts/Himala2.trinity.fna.bz2       
+http://floresta.eead.csic.es/plant-pan-genomes/barley_transcripts/Hs_ECI-2-0.trinity.fna.bz2       
+http://floresta.eead.csic.es/plant-pan-genomes/barley_transcripts/Hs_Turkey-19-24.trinity.fna.bz2  
+http://floresta.eead.csic.es/plant-pan-genomes/barley_transcripts/Hs_XZ2.trinity.fna.bz2           
+http://floresta.eead.csic.es/plant-pan-genomes/barley_transcripts/Morex_MIPS_cDNAs.fna.bz2         
+http://floresta.eead.csic.es/plant-pan-genomes/barley_transcripts/Padanggamu.trinity.fna.bz2
+http://floresta.eead.csic.es/plant-pan-genomes/barley_transcripts/SBCC073_fLF.Trinity.fna.gz
+http://floresta.eead.csic.es/plant-pan-genomes/barley_transcripts/Scarlett_fLF.Trinity.fna.gz
+http://floresta.eead.csic.es/plant-pan-genomes/barley_transcripts/TX9425.trinity.fna.bz2
+http://floresta.eead.csic.es/plant-pan-genomes/barley_transcripts/Yiwuerleng.trinity.fna.bz2
