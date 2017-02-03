@@ -5,8 +5,6 @@ The first version, **suitable for bacterial genomes**, was described in:
 
 [Contreras-Moreira B, Vinuesa P (2013) Appl. Environ. Microbiol. 79:7696-7701](http://aem.asm.org/content/79/24/7696.long)
 
-and
-
 [Vinuesa P, Contreras-Moreira B (2015) Methods in Molecular Biology Volume 1231, 203-232](http://link.springer.com/protocol/10.1007%2F978-1-4939-1720-4_14)
 
 The software has also been adapted to the study of **intra-specific eukaryotic pan-genomes**, as described in:
