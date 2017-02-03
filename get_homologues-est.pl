@@ -173,9 +173,10 @@ if(defined($opts{'v'}))
   print "\nProgram written by Bruno Contreras-Moreira (1) and Pablo Vinuesa (2).\n";
   print "\n 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)\n";
   print " 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)\n\n";
-  #print "\nPrimary citation (PubMed:24096415):\n\n";
-  #print " Contreras-Moreira B, Vinuesa P. (2013) GET_HOMOLOGUES, a versatile software package for scalable and\n".
-  #      " robust microbial pangenome analysis. Appl Environ Microbiol 79(24):7696-701. doi: 10.1128/AEM.02411-13\n";
+  print "\nPrimary citation:\n\n";
+  print " Contreras-Moreira B, Cantalapiedra CP, Garcia Pereira MJ, Gordon S, Vogel JP, Igartua E, Casas AM,\n".
+        " Vinuesa P (2017) Analysis of plant pan-genomes and transcriptomes with GET_HOMOLOGUES-EST, a clustering\n".
+        " solution for sequences of the same species. Front. Plant Sci. 10.3389/fpls.2017.00184\n";
   print "\nThis software employs code, binaries and data from different authors, please cite them accordingly:\n";
   print " OrthoMCL v1.4 (www.orthomcl.org , PubMed:12952885)\n";
   print " NCBI Blast-2.2 (blast.ncbi.nlm.nih.gov , PubMed=9254694,20003500)\n";
