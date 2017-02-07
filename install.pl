@@ -215,6 +215,9 @@ else
 
     my $FLATSWISSPROTFILE = $SWISSPROTFILE;
     $FLATSWISSPROTFILE =~ s/\.gz//;
+   
+    # remove path
+    $SWISSPROTFILE = (split(/\//,$SWISSPROTFILE))[-1];
     
     if(!-s $FLATSWISSPROTFILE)
     {
