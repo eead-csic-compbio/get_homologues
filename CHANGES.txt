@@ -180,3 +180,4 @@
 23012017: added transcripts2cds BLASTX & DIAMOND benchmarks to EST manual
 23012017: updated EST manual and added one question to FAQ section
 03022017: added GET_HOMOLOGUES-EST article reference http://journal.frontiersin.org/article/10.3389/fpls.2017.00184/full
+07022017: fixed uniprot path in install.pl
