@@ -14,9 +14,9 @@ but includes code and binaries from other authors:
  NCBI Blast-2.2 (blast.ncbi.nlm.nih.gov , PubMed=9254694,20003500)
  BioPerl v1.5.2 (www.bioperl.org , PubMed=12368254)
  HMMER 3.1b2 (http://hmmer.org)
- Pfam (http://pfam.xfam.org/ , PubMed=19920124)
+ Pfam (http://pfam.xfam.org , PubMed=19920124)
  PHYLIP 3.695 (http://evolution.genetics.washington.edu/phylip) 
- Transdecoder r20140704 (http://transdecoder.sf.net , PubMed=23845962)
+ Transdecoder r20140704 (http://transdecoder.github.io , PubMed=23845962)
  MVIEW 1.60.1 (https://github.com/desmid/mview, PubMed=9632837)
  diamond 0.8.25 (https://github.com/bbuchfink/diamond, PubMed=25402007)
  
