@@ -181,3 +181,6 @@
 23012017: updated EST manual and added one question to FAQ section
 03022017: added GET_HOMOLOGUES-EST article reference http://journal.frontiersin.org/article/10.3389/fpls.2017.00184/full
 07022017: fixed uniprot path in install.pl
+02032017: added Bio::Coordinate to lib/bioperl-1.5.2_102 to fix broken parse_pangenome_matrix.pl -p
+02032017: Added FAQ to manuals
+02032017: updated protocol to instal Grid Engine on multi-core systems

@@ -440,7 +440,7 @@ $cmd = "$UTIL_DIR/gene_list_to_gff.pl $acc_file $gff3_file.inx > $cds_file.best_
 
 #print STDERR "transdecoder is finished.\n"; # Bruno Dec2014
 
-rmtree($workdir); # Bruno Dec2014
+rmtree($workdir); # Bruno Dec2014  
 
 exit(0);
 
