@@ -13,7 +13,7 @@ The software was then adapted to the study of **intra-specific eukaryotic pan-ge
 
 GET_HOMOLOGUES-EST has been tested with genomes and transcriptomes of *Arabidopsis thaliana* and *Hordeum vulgare*, available at [http://floresta.eead.csic.es/plant-pan-genomes](http://floresta.eead.csic.es/plant-pan-genomes).
 
-A [tutorial](pangenome_workshop.html) is available, covering typical examples of both GET_HOMOLOGUES and GET_HOMOLOGUES-EST.
+A [tutorial](http://digital.csic.es/handle/10261/146411) is available, covering typical examples of both GET_HOMOLOGUES and GET_HOMOLOGUES-EST.
 
 The code is regularly patched (see [CHANGES.txt](./CHANGES.txt) in each release), and has been used in a variety of studies 
 (see citing papers [here](https://scholar.google.es/scholar?start=0&hl=en&as_sdt=2005&cites=5259912818944685430)).
