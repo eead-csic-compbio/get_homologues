@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-# 2013-6 Bruno Contreras-Moreira, Pablo Vinuesa
+# 2013-7 Bruno Contreras-Moreira, Pablo Vinuesa
 # download_genomes_ncbi.pl
 
 # Attempts to download a list of genomes from the NCBI.
@@ -10,14 +10,14 @@
 use strict;
 use File::Fetch;
 
-my $VERSION  = 2.0;
+my $VERSION  = 2.1;
 
 # http://www.ncbi.nlm.nih.gov/books/NBK25500/
 my $EFETCHEXE = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&rettype=gbwithparts&retmode=text&id=';
 my $NCBIHOST  = 'ftp://ftp.ncbi.nlm.nih.gov';
-my $WGSURL    = 'http://www.ncbi.nlm.nih.gov/Traces/wgs/?download='; 
+my $WGSURL    = 'ftp://ftp.ncbi.nlm.nih.gov/sra/wgs_aux/'; 
 
-my $COMPLETE_GENOMES_DIR = '/genomes/all/'; # includes also refseq folders Jan2016
+my $COMPLETE_GENOMES_DIR = '/genomes/all/'; # includes refseq GCA & GCF folders Mar2017
 my $LOCAL_GENOMES_DIR    = './';            # where to store downloaded files
 
 my $EXTENSION    = 'gbk';
@@ -74,6 +74,8 @@ chdir($LOCAL_GENOMES_DIR);
 print "\n# checking complete genomes...\n";
 foreach $dir (sort {$wanted_genome{$a}{'order'}<=>$wanted_genome{$b}{'order'}} keys(%wanted_genome))
 {  
+  next if($dir !~ /^GC/);
+
   if($new_name{$dir})
   {
     $single_file = "_".$new_name{$dir} . ".$EXTENSION";
@@ -91,12 +93,13 @@ foreach $dir (sort {$wanted_genome{$a}{'order'}<=>$wanted_genome{$b}{'order'}} k
   {
     #GCA_000016445.1_ASM1644v1_genomic.gbff.gz
     $file = "$dir\_genomic.$WGSEXTENSION.gz"; 
-    
     if(!-s $file)
     {
-      #system("wget -q $NCBIHOST$COMPLETE_GENOMES_DIR$dir/$file -O $file");
-      my ($ff,$content); 
-      $ff = File::Fetch->new(uri =>"$NCBIHOST$COMPLETE_GENOMES_DIR$dir/$file");   
+      my ($ff,$content,$path);
+      $path = (split(/\./,$dir))[0];
+      $path =~ s/_//;
+      $path =~ s/...\K(?=.)/\//sg;
+      $ff = File::Fetch->new(uri =>"$NCBIHOST$COMPLETE_GENOMES_DIR$path/$dir/$file");   
       if($ff->fetch( to => \$content ))
       {
         open(GBKFILE,">$file") || die "# cannot append to $file\n";
@@ -158,23 +161,23 @@ foreach $dir (sort {$wanted_genome{$a}{'order'}<=>$wanted_genome{$b}{'order'}} k
     $wanted_genome{$dir}{'downloaded'}=1;
     next;
   }
-  
+ 
   eval
   {
+    my $path = substr($dir,0,4);
+    $path =~ s/..\K(?=.)/\//sg;
+    $path .= "/".(split(/\./,$dir))[0]."/";
     $file = "$dir.1.$WGSEXTENSION.gz";
-  
-    # wget hack
-    system("wget -q $WGSURL.$file -O $file") if(!-s $file);
-    
-    ##File::Fetch fails as it creates tmp file with invalid name on my system
-    #my ($ff,$content); 
-    #$ff = File::Fetch->new(uri=>"$WGSURL$file");   
-    #if($ff->fetch( to => \$content )){
-    #  open(GBKFILE,">$file") || die "# cannot append to $file\n";
-    #  binmode(GBKFILE);
-    #  print GBKFILE $content;
-    #  close(GBKFILE);
-    #}else { warn "# cannot fetch $WGSURL$file\n" }
+
+    #system("wget -q $WGSURL.$path.$file -O $file") if(!-s $file);
+    my ($ff,$content); 
+    $ff = File::Fetch->new(uri=>"$WGSURL$path$file");   
+    if($ff->fetch( to => \$content )){
+      open(GBKFILE,">$file") || die "# cannot append to $file\n";
+      binmode(GBKFILE);
+      print GBKFILE $content;
+      close(GBKFILE);
+    }else { warn "# cannot fetch $WGSURL$path$file\n" }
     
     if(!-s $file)
     {
