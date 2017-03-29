@@ -185,3 +185,4 @@
 02032017: Added FAQ to manuals
 02032017: updated protocol to install Grid Engine on multi-core systems
 15032017: updated complete and WGS genome downloads in download_genomes_ncbi.pl
+29032017: updated FAQ about computing bootstrap values of parsimony pangenome trees
