@@ -13,12 +13,12 @@ we kindly ask you to report errors or bugs in the program to the authors
 ( bcontreras@eead.csic.es / vinuesa@ccg.unam.mx ) and to acknowledge the 
 use of the program in scientific publications:
 
-Contreras-Moreira,B. and Vinuesa,P. (2013) GET_HOMOLOGUES, a versatile software
+Contreras-Moreira B and Vinuesa P (2013) GET_HOMOLOGUES, a versatile software
 package for scalable and robust microbial pangenome analysis. 
 Appl.Environ.Microbiol. 79:7696-7701
 
 Contreras-Moreira B, Cantalapiedra CP, Garcia-Pereira MJ, Gordon SP, Vogel JP, 
-Igartua E, Casas AM and Vinuesa (2017) Analysis of Plant Pan-Genomes and 
+Igartua E, Casas AM and Vinuesa P (2017) Analysis of Plant Pan-Genomes and 
 Transcriptomes with GET_HOMOLOGUES-EST, a Clustering Solution for Sequences of 
 the Same Species. Front. Plant Sci. 10.3389/fpls.2017.00184
 
