@@ -187,3 +187,5 @@
 15032017: updated complete and WGS genome downloads in download_genomes_ncbi.pl
 29032017: updated FAQ about computing bootstrap values of parsimony pangenome trees
 30032017: updated LICENSE
+17042017: added parse_pangenome_matrix.pl -I to produce reports for subsets of taxa in a pangenome matrix
+17042017: parse_pangenome_matrix.pl -s now produces the number of cloud, shell & core clusters per taxon

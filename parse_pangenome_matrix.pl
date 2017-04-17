@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# 2013-6 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2013-7 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -37,10 +37,10 @@ my %COLORS = ('cloud'=>'"red"','shell'=>'"orange"','soft_core'=>'"yellow"','core
 # guide to prepare friendly figures for colorblind people [http://jfly.iam.u-tokyo.ac.jp/color/index.html]
 # uncomment and edit colors below to use RGB colors
 my %RGBCOLORS = ( 
-  #'cloud'    =>'rgb(0,0,0,maxColorValue=255)',
-  #'shell'    =>'rgb(230,159,0,maxColorValue=255)',
-  #'soft_core'=>'rgb(86,180,233,maxColorValue=255)',
-  #'core'     =>'rgb(0,158,115,maxColorValue=255)'
+  'cloud'    =>'rgb(0,0,0,maxColorValue=255)',
+  'shell'    =>'rgb(230,159,0,maxColorValue=255)',
+  'soft_core'=>'rgb(86,180,233,maxColorValue=255)',
+  'core'     =>'rgb(0,158,115,maxColorValue=255)'
 );
 
 
@@ -55,9 +55,9 @@ check_installed_features(@FEATURES2CHECK);
 
 my ($INP_matrix,$INP_absent,$INP_expansions,$INP_includeA,$INP_includeB,%opts) = ('',0,0,'','');
 my ($INP_refgenome,$INP_list_taxa,$INP_plotshell,$INP_cutoff,$needAB,$Rparams) = ('',0,0,$CUTOFF,0,'');
-my ($INP_absentB,$INP_skip_singletons,$needB) = (0,0);
+my ($INP_absentB,$INP_skip_singletons,$INP_taxa_file,$needB) = (0,0,'');
 
-getopts('hagSselp:m:A:B:P:', \%opts);
+getopts('hagSselp:m:I:A:B:P:', \%opts);
 
 if(($opts{'h'})||(scalar(keys(%opts))==0))
 {
@@ -66,6 +66,7 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   print   "-m \t input pangenome matrix .tab                               (required, made by compare_clusters.pl)\n"; #, ideally with -t 0)\n";
   print   "-s \t report cloud,shell,soft core and core clusters            (optional, creates plot if R is installed)\n";
   print   "-l \t list taxa names present in clusters reported in -m matrix (optional, recommended before using -p option)\n";
+  print   "-I \t use only taxon names included in file                     (optional, requires -s, ignores -A,-B,-a,-g,-e)\n";
   print   "-A \t file with taxon names (.faa,.gbk,.nucl files) of group A  (optional, example -A clade_list_pathogenic.txt)\n";
   print   "-B \t file with taxon names (.faa,.gbk,.nucl files) of group B  (optional, example -B clade_list_symbiotic.txt)\n";
   print   "-a \t find genes/clusters which are absent in B                 (optional, requires -B)\n";
@@ -88,57 +89,64 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
 if(defined($opts{'m'})){ $INP_matrix = $opts{'m'} }
 else{ die "\n# $0 : need -m parameter, exit\n"; }
 
-if(defined($opts{'a'}))
-{
-  $INP_absentB = 1;
-  $needB = 1;
-}
-elsif(defined($opts{'g'}))
-{
-  $INP_absent = 1;
-  $needAB = 1;
-
-  if(defined($opts{'P'}) && $opts{'P'} > 0 && $opts{'P'} <= 100)
-  {
-    $CUTOFF = $opts{'P'};
-    $INP_cutoff = $CUTOFF;
-  }
-}
-elsif(defined($opts{'e'}))
-{
-  $INP_expansions = 1;
-  $needAB = 1;
-}
-
-if(defined($opts{'p'}))
-{
-  $INP_refgenome = $opts{'p'};
-  $needAB = 1;
-}
-
 if(defined($opts{'l'})){ $INP_list_taxa = 1 }
 
-if(defined($opts{'s'})){ $INP_plotshell = 1 }
-
-if(defined($opts{'A'}))
+if(defined($opts{'s'}))
 {
-  $INP_includeA = $opts{'A'};
-}
-elsif($needAB){ die "\n# $0 : need -A parameter, exit\n"; }
-
-if(defined($opts{'B'}))
-{
-  $INP_includeB = $opts{'B'};
-}
-elsif($needAB || $needB){ die "\n# $0 : need -B parameter, exit\n"; }
-
-if(($INP_absentB ||$INP_absent) && $opts{'S'})
-{
-  $INP_skip_singletons = 1;
+    $INP_plotshell = 1;
+    if(defined($opts{'I'})){ $INP_taxa_file = $opts{'I'} }
 }
 
-printf("\n# %s -m %s -A %s -B %s -a %d -g %d -e %d -p %s -s %d -l %d -P %d -S %d\n\n",
-  $0,$INP_matrix,$INP_includeA,$INP_includeB,$INP_absentB,$INP_absent,
+if($INP_taxa_file eq '')
+{
+  if(defined($opts{'a'}))
+  {
+    $INP_absentB = 1;
+    $needB = 1;
+  }
+  elsif(defined($opts{'g'}))
+  {
+    $INP_absent = 1;
+    $needAB = 1;
+
+    if(defined($opts{'P'}) && $opts{'P'} > 0 && $opts{'P'} <= 100)
+    {
+      $CUTOFF = $opts{'P'};
+      $INP_cutoff = $CUTOFF;
+    }
+  }
+  elsif(defined($opts{'e'}))
+  {
+    $INP_expansions = 1;
+    $needAB = 1;
+  }
+
+  if(defined($opts{'p'}))
+  {
+    $INP_refgenome = $opts{'p'};
+    $needAB = 1;
+  }
+
+  if(defined($opts{'A'}))
+  {
+    $INP_includeA = $opts{'A'};
+  }
+  elsif($needAB){ die "\n# $0 : need -A parameter, exit\n"; }
+
+  if(defined($opts{'B'}))
+  {
+    $INP_includeB = $opts{'B'};
+  }
+  elsif($needAB || $needB){ die "\n# $0 : need -B parameter, exit\n"; }
+
+  if(($INP_absentB ||$INP_absent) && $opts{'S'})
+  {
+    $INP_skip_singletons = 1;
+  }
+}
+
+printf("\n# %s -m %s -I %s -A %s -B %s -a %d -g %d -e %d -p %s -s %d -l %d -P %d -S %d\n\n",
+  $0,$INP_matrix,$INP_taxa_file,$INP_includeA,$INP_includeB,$INP_absentB,$INP_absent,
   $INP_expansions,$INP_refgenome,$INP_plotshell,$INP_list_taxa,$INP_cutoff,$INP_skip_singletons);
 
 if(!$needB && !$needAB && !$INP_plotshell && !$INP_list_taxa)
@@ -150,7 +158,7 @@ $CUTOFF /= 100; # use 0-1 float from now on
 
 #################################### MAIN PROGRAM  ################################################
 
-my (%cluster_names,%pangemat,$col,$cluster_dir);
+my (%cluster_names,%pangemat,%included_taxa,$col,$cluster_dir);
 my (%included_input_filesA,%included_input_filesB);
 my ($n_of_clusters,$n_of_includedA,$n_of_includedB) = (0,0,0);
 my ($outfile_root,$outpanfileA,$outexpanfileA,$taxon);
@@ -160,6 +168,10 @@ my (@pansetA,@pansetB,@expA,@expB,@shell);
 
 $outfile_root = $INP_refgenome; $outfile_root =~ s/\W+//g;
 $outfile_root = (split(/\.tab/,$INP_matrix))[0] . '_' . $outfile_root;
+if($INP_taxa_file)
+{
+  $outfile_root .= '_'.basename($INP_taxa_file);
+}
 $shell_input      = $outfile_root . '_shell_input.txt';
 $shell_estimates  = $outfile_root . '_shell_estimates.tab';
 $shell_output_png = $outfile_root . '_shell.png';
@@ -176,6 +188,17 @@ $outexpanfileA    = $outfile_root . '_expansions_list.txt';
 if($INP_skip_singletons)
 {
   $outpanfileA = $outfile_root . '_pangenes_no-singletons_list.txt';
+}
+
+## 0) read include file if required
+if($INP_taxa_file)
+{
+  open(INCLUDE_FILE,"<",$INP_taxa_file) || die "# EXIT : cannot read $INP_taxa_file\n";
+  while(<INCLUDE_FILE>)
+  {
+    $included_taxa{(split)[0]} = 1;
+  }
+  close(INCLUDE_FILE); 
 }
 
 ## 1) parse pangenome matrix
@@ -235,7 +258,10 @@ while(<MAT>)
   {
     #_Escherichia_coli_ETEC_H10407_uid42749.gbk     1       1	...
     #Bd3-1_r.1.cds.fna.nucl	1	2 ...
- 
+    
+    # skip taxon if not in include file, only if requested
+    next if($INP_taxa_file && !$included_taxa{$data[0]});
+
     foreach $col (1 .. $#data)
     {
       $pangemat{$data[0]}[$col] = $data[$col];
@@ -244,7 +270,7 @@ while(<MAT>)
   }
 }
 close(MAT);
-print "# matrix contains $n_of_clusters clusters and ".scalar(keys(%pangemat))." taxa\n\n";
+print "# matrix contains $n_of_clusters clusters and ".scalar(keys(%pangemat))." taxa\n\n"; 
 
 if($needB)
 {
@@ -569,17 +595,25 @@ if($INP_refgenome)
 if($INP_plotshell)
 {
   unlink($shell_output_png,$shell_output_pdf);
-  my $n_of_taxa = scalar(keys(%pangemat));
-  my ($cloudpos,$cloudmax,$cluster,$s,%stats,%total) = (-1,-1);
-  my $softcorepos = int($SOFTCOREFRACTION*$n_of_taxa); 
+  my @taxa = sort keys(%pangemat);
+  my @occup_class = qw( cloud shell soft_core core );
+  my $n_of_taxa = scalar(@taxa);
+  my ($cloudpos,$cloudmax,$cluster,$s,$class,%stats,%total,%taxa_total) = (-1,-1);
+  my $softcorepos = int($SOFTCOREFRACTION*$n_of_taxa);  
   
   if($n_of_taxa < 5)
   {
     die "# EXIT : need at least 5 taxa to perform -s analysis\n";
   }  
 
-  # calculate shell sums and fill gaps
-  foreach $cluster (1 .. $#shell){ $stats{$shell[$cluster]}++; }
+  # calculate shell sums, fill gaps and get final number of clusters
+  $n_of_clusters = 0;
+  foreach $cluster (1 .. $#shell)
+  { 
+    next if(!$shell[$cluster]);      
+    $stats{$shell[$cluster]}++; 
+    $n_of_clusters++;
+  }
   foreach $s ( 1 .. $n_of_taxa ){ if(!$stats{$s}){ $stats{$s} = 0 } }
 
   open(SINP,">$shell_input") || die "# EXIT : cannot create $shell_input\n";
@@ -593,8 +627,7 @@ if($INP_plotshell)
     }
   }
   close(SINP);
-    
-  
+
   # print lists of genomic compartments
   open(CLOUDF,">$cloudlistfile") || die "# EXIT : cannot create $cloudlistfile\n";
   open(SHELLF,">$shelllistfile") || die "# EXIT : cannot create $shelllistfile\n";
@@ -602,25 +635,33 @@ if($INP_plotshell)
   open(COREF,">$corelistfile") || die "# EXIT : cannot create $corelistfile\n";
   foreach $cluster (1 .. $#shell)
   {
+    next if(!$shell[$cluster]);
     if($shell[$cluster] <= $cloudpos)
     {
       print CLOUDF "$cluster_names{$cluster}\n";
       $total{'cloud'}++;
+
+      # record which taxa contribute this sequence 
+      foreach $taxon (@taxa){ if($pangemat{$taxon}[$cluster] > 0){ $taxa_total{'cloud'}{$taxon}++ } }  
     }
     elsif($shell[$cluster] >= $softcorepos)
     {
       print SCOREF "$cluster_names{$cluster}\n";
       $total{'soft_core'}++;
+      foreach $taxon (@taxa){ if($pangemat{$taxon}[$cluster] > 0){ $taxa_total{'soft_core'}{$taxon}++ } }
+
       if($shell[$cluster] == $n_of_taxa)
       {
         print COREF "$cluster_names{$cluster}\n";
         $total{'core'}++;
+        foreach $taxon (@taxa){ if($pangemat{$taxon}[$cluster] > 0){ $taxa_total{'core'}{$taxon}++ } }
       }
     }
     else
     {
       print SHELLF "$cluster_names{$cluster}\n";
       $total{'shell'}++;
+      foreach $taxon (@taxa){ if($pangemat{$taxon}[$cluster] > 0){ $taxa_total{'shell'}{$taxon}++ } }
     }
   }
   close(CLOUDF);
@@ -838,6 +879,18 @@ EOR
   else
   {
     die "# $0 : cannot create plots as this script requires the software R to be installed; please install it (http://www.r-project.org)\n";
+  }
+
+  # print occupnacy stats per taxon
+  print "\n\n# occupancy stats:\n";
+  foreach $class (@occup_class){ print "\t$class" } print "\n";
+  foreach $taxon (@taxa)
+  {
+    print $taxon;
+    foreach $class (@occup_class)
+    {
+      printf("\t%d",$taxa_total{$class}{$taxon} || 0);
+    } print "\n";
   }
 }
 
