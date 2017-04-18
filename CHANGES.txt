@@ -189,3 +189,4 @@
 30032017: updated LICENSE
 17042017: added parse_pangenome_matrix.pl -I to produce reports for subsets of taxa in a pangenome matrix
 17042017: parse_pangenome_matrix.pl -s now produces the number of cloud, shell & core clusters per taxon
+18042017: fixed uniprot ftp time-out error message in install.pl (thanks hliang)

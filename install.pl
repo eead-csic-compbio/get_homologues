@@ -2,7 +2,7 @@
 
 # script that checks/compiles software required by get_homologues[-est] and checks dependencies
 # for first-time users
-# last checked Nov2016
+# last checked Apr2017
 
 use strict;
 use Cwd;
@@ -247,7 +247,7 @@ else
       }
       else
       {
-        warn "# cannot connect to $BLASTSERVERPATH: $@\n\n";
+        warn "# cannot connect to $SWISSPROTSERVER: $@\n\n";
         warn "<< You might manually download $SWISSPROTFILE from $SWISSPROTSERVER/$SWISSPROTFOLDER to any location\n".
           "<< and edit variable BLASTXDB as to point to that location, as explained in the manual.\n".
           #"inside set_phyTools_env in file lib/phyTools.pm pointing to the destination folder.\n".
