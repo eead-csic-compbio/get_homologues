@@ -66,7 +66,7 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   print   "-m \t input pangenome matrix .tab                               (required, made by compare_clusters.pl)\n"; #, ideally with -t 0)\n";
   print   "-s \t report cloud,shell,soft core and core clusters            (optional, creates plot if R is installed)\n";
   print   "-l \t list taxa names present in clusters reported in -m matrix (optional, recommended before using -p option)\n";
-  print   "-I \t use only taxon names included in file                     (optional, requires -s, ignores -A,-B,-a,-g,-e)\n";
+  print   "-I \t use only taxon names included in file                     (optional, ignores -A,-g,-e)\n";
   print   "-A \t file with taxon names (.faa,.gbk,.nucl files) of group A  (optional, example -A clade_list_pathogenic.txt)\n";
   print   "-B \t file with taxon names (.faa,.gbk,.nucl files) of group B  (optional, example -B clade_list_symbiotic.txt)\n";
   print   "-a \t find genes/clusters which are absent in B                 (optional, requires -B)\n";
@@ -94,10 +94,30 @@ if(defined($opts{'l'})){ $INP_list_taxa = 1 }
 if(defined($opts{'s'}))
 {
     $INP_plotshell = 1;
-    if(defined($opts{'I'})){ $INP_taxa_file = $opts{'I'} }
 }
 
-if($INP_taxa_file eq '')
+if(defined($opts{'I'}))
+{ 
+  $INP_taxa_file = $opts{'I'};
+
+  if(defined($opts{'a'}))
+  {
+    $INP_absentB = 1;
+    $needB = 1;
+  }
+
+  if(defined($opts{'B'}))
+  {
+    $INP_includeB = $opts{'B'};
+  }
+  elsif($needB){ die "\n# $0 : need -B parameter, exit\n"; }
+
+  if($INP_absentB && $opts{'S'})
+  {
+    $INP_skip_singletons = 1;
+  }
+}
+else
 {
   if(defined($opts{'a'}))
   {
@@ -333,6 +353,8 @@ if($INP_absentB)
   print "\n# finding genes which are absent in B ...\n";
   foreach $col (1 .. $n_of_clusters)
   {
+    next if(!$shell[$col]);
+
     my ($presentA,$absentA,$absentB,$presentB) = (0,0,0,0);
     foreach $taxon (keys(%pangemat))
     {
