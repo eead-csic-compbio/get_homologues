@@ -191,3 +191,4 @@
 17042017: parse_pangenome_matrix.pl -s now produces the number of cloud, shell & core clusters per taxon
 18042017: fixed uniprot ftp time-out error message in install.pl (thanks hliang)
 25042017: parse_pangenome_matrix.pl -I now supports -B to produce lists of absent genes in pan-genome matrix subsets
+16052017: added message to make_nr_pangenome_matrix.pl to warn users that BLAST files must be removed with different refs

@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# 2016 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2017 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Laboratory of Computational Biology, EEAD/CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -545,6 +545,7 @@ if($INP_reference_file || $INP_reference_cluster_dir)
   else
   {
     print "# re-using previous BLAST output $nr_pangenome_reference_blast_file\n";
+    print "\n# WARNING: remove this file if trying different reference sequences\n";
   }
 
   blast_parse($nr_pangenome_reference_blast_file,$nr_pangenome_reference_bpo_file,\%ref_length,$BLAST_PVALUE_CUTOFF_DEFAULT,1);
