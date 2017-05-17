@@ -1,8 +1,9 @@
 #!/usr/bin/env perl
 
-# 2016 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2017 Bruno Contreras-Moreira (1), Ruben Sancho (1,2) and Pablo Vinuesa (3):
 # 1: http://www.eead.csic.es/compbio (Laboratory of Computational Biology, EEAD/CSIC, Spain)
-# 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
+# 2: Grupo Bioflora, EPS, Universidad de Zaragoza, Spain
+# 3: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
 # This script produces a multiple alignment view of BLAST locally-aligned sequences clustered by get_homologues[-est].pl
 # It does not necessarily conserved the original sequence order 
@@ -32,17 +33,18 @@ my $DEFEVALUE      = 10; # default BLAST E-value
 my $MINBLUNTBLOCK  = 100; # min alignment width with blunt ends
 my $MAXSEQNAMELEN  = 30;
 
-my ($INP_nucleotides,$INP_blunt,$do_PFAM,$INP_clusterfile,$INP_outfile,%opts) = (1,0,0,'','');
+my ($INP_nucleotides,$INP_blunt,$do_PFAM,$INP_clusterfile,$INP_outfile,$INP_ref_file,%opts) = (1,0,0,'','','');
 
-getopts('hDbPf:o:', \%opts);
+getopts('hDbPf:o:r:', \%opts);
 
 if(($opts{'h'})||(scalar(keys(%opts))==0))
 {
   print   "\nusage: $0 [options]\n\n";
   print   "-h this message\n";
-  print   "-f input cluster FASTA file            (expects nucleotides)\n";        
+  print   "-f input cluster FASTA file            (expects nucleotides, aligns longest seq to rest of cluster)\n";        
   print   "-o output alignment file               (optional, produces FASTA format)\n";
   print   "-P sequences are peptides              (optional)\n";
+  print   "-r reference sequence FASTA            (optional, attempts to align cluster to this external seq)\n";
   print   "-b blunt alignment borders             (optional, otherwise all bits aligned by BLAST are shown)\n";
   print   "-D match Pfam domains                  (optional, based on six-frame translation of longest seq)\n";
   exit(0);
@@ -54,6 +56,8 @@ if(defined($opts{'f'})){  $INP_clusterfile = $opts{'f'}; }
 else{ die "# EXIT : need -f cluster FASTA file\n"; }
 
 if(defined($opts{'o'})){  $INP_outfile = $opts{'o'}; }
+
+if(defined($opts{'r'})){  $INP_ref_file = $opts{'r'}; }
 
 if(defined($opts{'P'})){  $INP_nucleotides = 0 }
 
@@ -71,13 +75,35 @@ if(defined($opts{'D'}))
   else{ warn_missing_soft('PFAM') }
 }
 
-printf(STDERR "\n# %s -f %s -o %s -P %s -b %s -D %s\n",
-  $0,$INP_clusterfile,$INP_outfile,$INP_nucleotides,$INP_blunt,$do_PFAM);
+printf(STDERR "\n# %s -f %s -r %s -o %s -P %s -b %s -D %s\n",
+  $0,$INP_clusterfile,$INP_ref_file,$INP_outfile,$INP_nucleotides,$INP_blunt,$do_PFAM);
 
 ##########################################################################
 
 my ($maxlength,$longest_seq,$length,$start,$end,$seq,$fh,$seqname) = (0,-1);
+my ($ext_seq,$ext_seqname) = ('','');
 my ($command,$Pfam_string,$Pfam_full,@trash,%short_names);
+
+## read reference external sequence if requested (take first seq only)
+if($INP_ref_file ne "")
+{
+  my $external_ref = read_FASTA_file_array($INP_ref_file,$INP_nucleotides);
+  foreach $seq (0 .. $#{$external_ref})
+  {
+    # shorten name
+    if($external_ref->[$seq][NAME] =~ m/^(\S+).*?(\[\S+?\])$/ || 
+      $external_ref->[$seq][NAME] =~ m/^(\S+).*?(\[\S+?\])\s\|/)
+    {
+      $$ext_seqname = "$1\_$2"; 
+    }
+    else{ $ext_seqname = (split(/\s+/,$external_ref->[$seq][NAME]))[0] }
+
+    $ext_seq = $external_ref->[$seq][SEQ];
+    last;
+  }
+
+  warn "# external sequence parsed: $ext_seqname\n";
+}
 
 ## parse input cluster and get sequences
 my $cluster_ref = read_FASTA_file_array($INP_clusterfile,$INP_nucleotides);
@@ -193,9 +219,15 @@ my ($fhq,$filenameq)   = tempfile(UNLINK => 1); # blast query
 my ($fhb,$filenameb)   = tempfile(UNLINK => 1); # blast output
 my ($fha,$filenamea)   = tempfile(UNLINK => 1); # out alignment file
 
+if($ext_seq ne '')
+{
+  $fh = $fhq;
+  print $fh ">$ext_seqname\n$ext_seq\n";    
+}
+
 foreach $seq (0 .. $#{$cluster_ref})
 {
-  if($seq == $longest_seq){ $fh = $fhq }
+  if($ext_seq eq '' && $seq == $longest_seq){ $fh = $fhq }
   else{ $fh = $fhdb }
   
   print $fh ">$short_names{$seq}\n$cluster_ref->[$seq][SEQ]\n";
