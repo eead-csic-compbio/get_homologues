@@ -193,3 +193,4 @@
 25042017: parse_pangenome_matrix.pl -I now supports -B to produce lists of absent genes in pan-genome matrix subsets
 16052017: added message to make_nr_pangenome_matrix.pl to warn users that BLAST files must be removed with different refs
 17052017: added option -r to annotate_cluster.pl so that external sequences can be used to drive cluster alignment
+30052017: updated lib/ForkManager.pm to v1.19 (http://search.cpan.org/perldoc?Parallel%3A%3AForkManager)
