@@ -11,7 +11,7 @@ The software was then adapted to the study of **intra-specific eukaryotic pan-ge
 
 [Contreras-Moreira B, Cantalapiedra CP et al (2017) Front. Plant Sci. 10.3389/fpls.2017.00184](http://journal.frontiersin.org/article/10.3389/fpls.2017.00184/full)
 
-GET_HOMOLOGUES-EST has been tested with genomes and transcriptomes of *Arabidopsis thaliana* and *Hordeum vulgare*, available at [http://floresta.eead.csic.es/plant-pan-genomes](http://floresta.eead.csic.es/plant-pan-genomes).
+GET_HOMOLOGUES-EST has been tested with genomes and transcriptomes of *Arabidopsis thaliana* and *Hordeum vulgare*, available at [http://floresta.eead.csic.es/plant-pan-genomes](http://floresta.eead.csic.es/plant-pan-genomes). It was also used to produce the *Brachypodium distachyon* pangenome at [https://brachypan.jgi.doe.gov](https://brachypan.jgi.doe.gov).
 
 A [tutorial](http://digital.csic.es/handle/10261/146411) is available, covering typical examples of both GET_HOMOLOGUES and GET_HOMOLOGUES-EST.
 
