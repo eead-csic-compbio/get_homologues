@@ -1,6 +1,6 @@
 #!/usr/bin/env perl 
 
-# 2016 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2017 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -1295,14 +1295,14 @@ if(!-s $bpo_file || $current_files ne $previous_files || ($doCOG && !-s $cogblas
       
       # now concat the other accessions
       $blastDBfile = $newDIR ."/". $new_infile .".others";
-      if(!-s $blastDBfile.".dmnd")
+      if(!-s $blastDBfile.".dmnd" || $current_files ne $previous_files)
       {
         open(ALLOTHERS,">",$blastDBfile) || die "# EXIT: cannot create $blastDBfile\n";
         foreach my $other_infile (@newfiles)
         {
           next if($other_infile eq $new_infile);
           $infile = (split(/\.$FASTAEXTENSION/,$other_infile))[0];
-          next if($include_file && !$included_input_files{$infile});
+          next if($include_file && !$included_input_files{$infile}); 
           
           open(OTHER,"$newDIR/$other_infile") ||
             die "# EXIT: cannot read $newDIR/$other_infile\n";
@@ -1408,7 +1408,7 @@ if(!-s $bpo_file || $current_files ne $previous_files || ($doCOG && !-s $cogblas
       $clusteroutfile = $newDIR ."/_". $new_infile ."_others.queue";
       push(@to_be_deleted,$clusteroutfile);
 
-      if(-s $blastout) # check previous runs
+      if(-s $blastout && $current_files eq $previous_files) # check previous runs
       {
         if(!-s $blast_file){ push(@tmp_blast_output_files,$blastout); }
         next;
