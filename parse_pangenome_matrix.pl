@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# 2013-7 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2017 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -37,10 +37,10 @@ my %COLORS = ('cloud'=>'"red"','shell'=>'"orange"','soft_core'=>'"yellow"','core
 # guide to prepare friendly figures for colorblind people [http://jfly.iam.u-tokyo.ac.jp/color/index.html]
 # uncomment and edit colors below to use RGB colors
 my %RGBCOLORS = ( 
-  'cloud'    =>'rgb(0,0,0,maxColorValue=255)',
-  'shell'    =>'rgb(230,159,0,maxColorValue=255)',
-  'soft_core'=>'rgb(86,180,233,maxColorValue=255)',
-  'core'     =>'rgb(0,158,115,maxColorValue=255)'
+#  'cloud'    =>'rgb(0,0,0,maxColorValue=255)',
+#  'shell'    =>'rgb(230,159,0,maxColorValue=255)',
+#  'soft_core'=>'rgb(86,180,233,maxColorValue=255)',
+#  'core'     =>'rgb(0,158,115,maxColorValue=255)'
 );
 
 
@@ -57,7 +57,7 @@ my ($INP_matrix,$INP_absent,$INP_expansions,$INP_includeA,$INP_includeB,%opts) =
 my ($INP_refgenome,$INP_list_taxa,$INP_plotshell,$INP_cutoff,$needAB,$Rparams) = ('',0,0,$CUTOFF,0,'');
 my ($INP_absentB,$INP_skip_singletons,$INP_taxa_file,$needB) = (0,0,'');
 
-getopts('hagSselp:m:I:A:B:P:', \%opts);
+getopts('hagselp:m:I:A:B:P:S:', \%opts);
 
 if(($opts{'h'})||(scalar(keys(%opts))==0))
 {
@@ -72,7 +72,7 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   print   "-a \t find genes/clusters which are absent in B                 (optional, requires -B)\n";
   print   "-g \t find genes/clusters present in A which are absent in B    (optional, requires -A & -B)\n";
   print   "-e \t find gene family expansions in A with respect to B        (optional, requires -A & -B)\n";
-  print   "-S \t skip singletons when comparing A and B                    (optional, requires -a/-g, skips sequences found in <2 taxa)\n";
+  print   "-S \t skip clusters with occupancy <S when comparing A and B    (optional, requires -a/-g, example -S 2)\n";
   print   "-P \t percentage of genomes that must comply presence/absence   (optional, default=$CUTOFF, requires -g)\n";
   if(eval{ require GD } ) # show only if GD is available
   {
@@ -112,9 +112,9 @@ if(defined($opts{'I'}))
   }
   elsif($needB){ die "\n# $0 : need -B parameter, exit\n"; }
 
-  if($INP_absentB && $opts{'S'})
+  if($INP_absentB && $opts{'S'} && $opts{'S'} > 0)
   {
-    $INP_skip_singletons = 1;
+    $INP_skip_singletons = $opts{'S'};
   }
 }
 else
@@ -159,9 +159,9 @@ else
   }
   elsif($needAB || $needB){ die "\n# $0 : need -B parameter, exit\n"; }
 
-  if(($INP_absentB ||$INP_absent) && $opts{'S'})
+  if(($INP_absentB ||$INP_absent) && $opts{'S'} && $opts{'S'} > 0)
   {
-    $INP_skip_singletons = 1;
+    $INP_skip_singletons = $opts{'S'};
   }
 }
 
@@ -207,7 +207,7 @@ $outexpanfileA    = $outfile_root . '_expansions_list.txt';
 
 if($INP_skip_singletons)
 {
-  $outpanfileA = $outfile_root . '_pangenes_no-singletons_list.txt';
+  $outpanfileA = $outfile_root . '_pangenes_min_occup'.$INP_skip_singletons.'_list.txt';
 }
 
 ## 0) read include file if required
@@ -373,7 +373,7 @@ if($INP_absentB)
     if($presentA > 0 && $absentB == $n_of_includedB)
     {
       # pan gene in set A
-      next if($INP_skip_singletons && $presentA == 1);
+      next if($INP_skip_singletons && $presentA < $INP_skip_singletons);
       push(@pansetA,$cluster_names{$col});
     }
   }
@@ -386,7 +386,7 @@ if($INP_absentB)
   
   if($INP_skip_singletons)
   {
-    print OUTLIST "# genes absent in B, excluding singletons (".scalar(@pansetA)."):\n";
+    print OUTLIST "# genes absent in B with occupancy>=$INP_skip_singletons (".scalar(@pansetA)."):\n";
   }
   else{ print OUTLIST "# genes absent in B (".scalar(@pansetA)."):\n"; }
   foreach $col (@pansetA){ print OUTLIST "$col\n" }
@@ -416,7 +416,7 @@ elsif($INP_absent)
     {
       # pan gene in set A
       #print "$cluster_names{$col} present only in ($n_of_includedA) taxa in set A\n";
-      next if($INP_skip_singletons && $presentA == 1);
+      next if($INP_skip_singletons && $presentA < $INP_skip_singletons);
       push(@pansetA,$cluster_names{$col});
     }
     elsif($presentB >= ($n_of_includedB*$CUTOFF) && $absentA >= ($n_of_includedA*$CUTOFF))
@@ -435,7 +435,7 @@ elsif($INP_absent)
   
   if($INP_skip_singletons)
   {
-    print OUTLIST "# genes present in set A and absent in B, excluding singletons (".scalar(@pansetA)."):\n";
+    print OUTLIST "# genes present in set A and absent in B with occupancy>=$INP_skip_singletons (".scalar(@pansetA)."):\n";
   }
   else{ print OUTLIST "# genes present in set A and absent in B (".scalar(@pansetA)."):\n"; }
   foreach $col (@pansetA){ print OUTLIST "$col\n" }

@@ -195,3 +195,4 @@
 17052017: added option -r to annotate_cluster.pl so that external sequences can be used to drive cluster alignment
 30052017: updated lib/ForkManager.pm to v1.19 (http://search.cpan.org/perldoc?Parallel%3A%3AForkManager)
 09062017: fixed bug in get_homologues.pl -X which produced zero clusters when new sequences files were added to previous results
+12062017: parse_pangenome_matrix.pl -S now takes an integer to indicate the minimum occupancy requested of clusters
