@@ -1647,7 +1647,7 @@ sub collapse_taxon_alignments
       $FASTAcons[$n_of_collapsed][NAME]  = $FASTA[$sorted_fragments[$seq]][NAME];
       if($merged ne '')
       {
-        $FASTAcons[$n_of_collapsed][NAME] .= "collapsed:$sorted_fragments[$seq],$merged";
+        $FASTAcons[$n_of_collapsed][NAME] .= " collapsed:$sorted_fragments[$seq],$merged";
       }
       $FASTAcons[$n_of_collapsed][SEQ] = join('',@consensus);
       $n_of_collapsed++;
