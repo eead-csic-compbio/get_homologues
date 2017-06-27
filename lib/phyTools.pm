@@ -1,5 +1,5 @@
 # Bruno Contreras-Moreira, Pablo Vinuesa
-# 2005-16 CCG/UNAM, Mexico, EEAD/CSIC, Zaragoza, Spain
+# 2005-17 CCG/UNAM, Mexico, EEAD/CSIC, Zaragoza, Spain
 # This is a collection of subroutines used in our projects,
 # including primers4clades and get_homologues.pl
 
@@ -10,7 +10,9 @@ require Exporter;
 @EXPORT = qw(
   set_phyTools_env $ERROR read_FASTA_sequence feature_is_installed check_installed_features
   extract_gene_name extract_CDSs_from_genbank extract_intergenic_from_genbank extract_features_from_genbank extract_genes_from_genbank
-  find_taxa_FASTA_headers find_taxa_FASTA_array_headers read_FASTA_file_array run_PARS check_variants_FASTA_alignment NAME SEQ 
+  find_taxa_FASTA_headers find_taxa_FASTA_array_headers read_FASTA_file_array run_PARS 
+  check_variants_FASTA_alignment collapse_taxon_alignments
+  NAME SEQ 
   );
 
 $phyTools::ERROR = "phyError";
@@ -1291,7 +1293,7 @@ sub check_variants_FASTA_alignment
 	my $n_of_sequences = -1;
 
 	# read in multiFASTA
-  open(FASTA,"<$infile") || die "# read_trim_FASTA_file: cannot read $infile $!\n";
+  open(FASTA,"<$infile") || die "# check_variants_FASTA_alignment: cannot read $infile $!\n";
   while(<FASTA>)
   {
 		next if(/^$/ || /^#/);
@@ -1455,10 +1457,210 @@ sub check_variants_FASTA_alignment
   foreach $seq (0 .. $n_of_sequences)
 	{
     $FASTA[$seq][SEQ] = $trimmed_seq[$seq];		
-    $FASTA[$seq][NAME] .= " SNPs:$snps_string" if($snps_string && !$peptideOK);		
+    if($blunt)
+    {
+      $FASTA[$seq][NAME] .= " SNPs:$snps_string" if($snps_string && !$peptideOK);		
+      $FASTA[$seq][NAME] .= " parsimony:$pars_string" if($pars_string);
+    }  
   }
 
 	return \@FASTA;
 }    
+
+# Input FASTA sequences are expected to be aligned
+# takes 5 args: filename (string),  type of sequence (scalar), 
+# overlap (natural), maxmismatches (natural), maxgaps (natural)
+# returns: array of aligned, collapsed sequences; 
+# 2D array has 2ary indexes: NAME,SEQ; first sequence is '0'
+sub collapse_taxon_alignments
+{
+  my ( $infile, $peptideOK, $min_overlap, $max_mismatches, $max_gaps, $verbose ) = @_;
+  
+  sub _get_mismatches_gaps
+  {
+    my ($ref_MSA, $seqA, $seqB, $start, $end) = @_;
+    my ($mismatches,$gaps,$col,$A,$B) = (0,0);
+    for $col ($start .. $end)
+    {
+      $A = $ref_MSA->[$seqA][$col];
+      $B = $ref_MSA->[$seqB][$col];
+      if($A eq $B){ next }
+      elsif($A eq '-' || $B eq '-'){ $gaps++ }
+      else{ $mismatches++ }
+    }
+    return ($mismatches,$gaps);
+  }
+  
+  my (@FASTA,@FASTAcons,@matrix,%length,%taxon2id);
+  my (%left,%right,%midpoint);
+	my ($name,$seq,$seq2,$nt,$l,$taxon,$MSAwidth);
+  my ($overlap,$mismatches,$gaps,$cons_start,$cons_end);
+	my ($n_of_sequences,$n_of_collapsed) = (-1,0);
+
+	# read in multiFASTA
+  open(FASTA,"<",$infile) || die "# collapse_taxon_alignments: cannot read $infile $!\n";
+  while(<FASTA>)
+  {
+		next if(/^$/ || /^#/);
+    if(/^>(\S+)/)
+    {
+			$n_of_sequences++; # first sequence ID is 0
+      $name = $1;
+			$nt = 0;
+      $FASTA[$n_of_sequences][NAME] = $name;
+      
+      $taxon = '';
+      if($name =~ m/^(\S+).*?\[(\S+?)\]*$/ || $name =~ m/^(\S+).*?\[(\S+?)\]\s\|/ ||
+        $name =~ m/^(\S+).*?\[(.+?)\]*\s\|/ || $name =~ m/^(\S+).*?\[(.+?)\]*/)
+      {
+        $taxon = (split(/\.f/,$2))[0];
+        push(@{$taxon2id{$taxon}},$n_of_sequences); #print "$taxon $n_of_sequences\n";
+      }  
+    }
+    elsif($n_of_sequences>-1)
+    {
+		  $seq = $_; 
+		  $seq =~ s/[\s|\n]//g;
+		  $seq = uc($seq); # does not conserve original case
+      $FASTA[$n_of_sequences][SEQ] .= $seq; 
+      
+      # split sequence in order to later check for variants
+	    foreach my $letter (split(//,$seq))
+		  {
+		    $matrix[$n_of_sequences][$nt++] = $letter;
+      }  
+    }  
+	}
+  close(FASTA);
+  
+	if($n_of_sequences == -1)
+	{
+    warn "# collapse_taxon_alignments: $infile contains no sequences, exit\n";
+	  return [];
+  }
+
+  if(scalar(keys(%taxon2id)) < 1)
+	{
+    warn "# collapse_taxon_alignments: cannot parse taxon names in $infile, exit\n";
+	  return [];
+  }
+  
+	# check sequences are aligned
+  $MSAwidth = 0;
+	foreach $seq (0 .. $n_of_sequences)
+	{
+		$l = length($FASTA[$seq][SEQ]);
+		$length{$l} = 1;
+    $MSAwidth = $l;
+	}
+	 
+	if(scalar(keys(%length)) > 1)
+	{
+		warn "# collapse_taxon_alignments: input seqs at $infile are not aligned, exit\n";
+		return [];
+	}#else{ print "# MSAwidth=$MSAwidth\n" }
+  
+  # compute coordinates of aligned fragments
+  foreach $seq (0 .. $n_of_sequences)
+  {
+    # N/5' end
+    $nt=0;
+    while($matrix[$seq][$nt] eq '-'){ $nt++ }
+    $left{$seq} = $nt;
+    
+    # C/3' end a d midpoint
+    $nt = $MSAwidth-1;
+    while($matrix[$seq][$nt] eq '-'){ $nt-- }
+    $right{$seq} = $nt;
+    
+    $midpoint{$seq} = sprintf("%1.0f",$left{$seq} + (($right{$seq}-$left{$seq}+1)/2));  
+  }    
+  
+  # compare fragments of same taxon
+  foreach $taxon (sort(keys(%taxon2id)))
+  {
+    my ($merged,%collapsed);
+   
+    # ensure that                left-most            and   longest fragments are handled first
+    my @sorted_fragments = sort {$left{$a}<=>$left{$b} || $midpoint{$b}<=>$midpoint{$a}} @{$taxon2id{$taxon}};
+
+    warn "# collapse_taxon_alignments: $taxon (n=".scalar(@sorted_fragments).")\n"; #,".join(',',@sorted_fragments)."\n";
+    
+    foreach $seq (0 .. $#sorted_fragments-1)
+    {
+      next if($collapsed{$sorted_fragments[$seq]});
+    
+      my @consensus = @{$matrix[$sorted_fragments[$seq]]};
+      
+      $merged = "$sorted_fragments[$seq],";
+      $cons_start = $left{$sorted_fragments[$seq]};
+      $cons_end   = $right{$sorted_fragments[$seq]};
+      print "# $taxon $sorted_fragments[$seq] $cons_start $cons_end\n" if($verbose);
+           
+      foreach my $seq2 ($seq+1 .. $#sorted_fragments)
+      {
+        next if($collapsed{$sorted_fragments[$seq2]});
+        print "## $taxon $sorted_fragments[$seq2] $left{$sorted_fragments[$seq2]} $right{$sorted_fragments[$seq2]}\n" if($verbose);
+        
+        # $seq includes $seq2, should not happen the other way aorund as they are sorted above
+        if($left{$sorted_fragments[$seq]} <= $left{$sorted_fragments[$seq2]} 
+          && $right{$sorted_fragments[$seq]} >= $right{$sorted_fragments[$seq2]})
+        {
+          ($mismatches,$gaps) = _get_mismatches_gaps( \@matrix, $sorted_fragments[$seq], $sorted_fragments[$seq2], 
+            $left{$sorted_fragments[$seq2]}, $right{$sorted_fragments[$seq2]} ); #print "seq[seq2] $mismatches $gaps\n"; 
+            
+          if($mismatches <= $max_mismatches && $gaps <= $max_gaps)
+          {
+            $collapsed{$sorted_fragments[$seq2]} = 1;
+            $merged .= "{$sorted_fragments[$seq2]},"; 
+          }
+        }
+        #elsif($left{$sorted_fragments[$seq2]} <= $left{$sorted_fragments[$seq]} # $seq2 includes $seq
+        #  && $right{$sorted_fragments[$seq2]} >= $right{$sorted_fragments[$seq]}){
+        #  #  ($mismatches,$gaps) = _get_mismatches_gaps( \@matrix, $sorted_fragments[$seq], $sorted_fragments[$seq2], 
+        #  #    $left{$sorted_fragments[$seq]}, $right{$sorted_fragments[$seq]} ); #print "seq2[seq] $mismatches $gaps\n"; 
+        #}
+        else # check end-to-start overlaps
+        {        
+          $overlap = ($right{$sorted_fragments[$seq]}-$left{$sorted_fragments[$seq2]})+1; 
+          if($overlap > $min_overlap)
+          {
+            ($mismatches,$gaps) = _get_mismatches_gaps( \@matrix, $sorted_fragments[$seq], $sorted_fragments[$seq2], 
+            $left{$sorted_fragments[$seq2]}, $right{$sorted_fragments[$seq]} ); #print "seq.seq2 $overlap $mismatches $gaps\n";
+            
+            if($mismatches <= $max_mismatches && $gaps <= $max_gaps)
+            {
+              $collapsed{$sorted_fragments[$seq2]} = 1;
+              $merged  .= ">$sorted_fragments[$seq2],"; 
+              $cons_end = $right{$sorted_fragments[$seq2]};
+              
+              foreach $nt ($right{$sorted_fragments[$seq]}+1 .. $cons_end)
+              {
+                $consensus[$nt] = $matrix[$sorted_fragments[$seq2]][$nt];
+              }
+            }
+          }
+        }
+      }
+      
+      # add this collapsed/merged sequence
+      $FASTAcons[$n_of_collapsed][NAME]  = "$FASTA[$sorted_fragments[$seq]][NAME] collapsed:$merged";
+      $FASTAcons[$n_of_collapsed][SEQ] = join('',@consensus);
+      $n_of_collapsed++;
+    }  
+    
+    # add this raw/uncollapsed sequence
+    if(scalar(@sorted_fragments) == 1)
+    {
+      $FASTAcons[$n_of_collapsed][SEQ]  = $FASTA[$sorted_fragments[0]][SEQ];
+      $FASTAcons[$n_of_collapsed][NAME] = $FASTA[$sorted_fragments[0]][NAME];
+      $n_of_collapsed++;
+    }
+            
+  } # foreach taxon
+  
+  return \@FASTAcons;
+}
+
 
 1;
