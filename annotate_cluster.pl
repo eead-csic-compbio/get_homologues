@@ -434,7 +434,7 @@ if($INP_outfile && $#{$align_ref})
 if($INP_collapse && $INP_outfile)
 {
   warn "\n# collapsing taxon aligned sequences overlap >= $INP_collapse residues\n";
-  my $collapsed_align_ref = collapse_taxon_alignments($INP_outfile,!$INP_nucleotides,$INP_collapse,$MAXMISMCOLLAP,$MAXGAPSCOLLAP,1);
+  my $collapsed_align_ref = collapse_taxon_alignments($INP_outfile,!$INP_nucleotides,$INP_collapse,$MAXMISMCOLLAP,$MAXGAPSCOLLAP);
   
   my $collapsed_outfile_name;
   if($INP_outfile =~ m/(\S+?)\.(\S+)$/)
