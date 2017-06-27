@@ -201,5 +201,7 @@
 26062017: added parsimony-informative sites in headers of blunt-end clusters produced by in annotate_cluster.pl -b
 26062017: annotate_cluster.pl now shows unaligned cluster sequences and prints number of taxa in the alignment
 26062017: annotate_cluster.pl now removes temporary files
-27062017: added sub collapse_taxon_alignments to lib/PhyTools.pm
-27062017: initialize compartments to zero if empty before plotting (thanks Felipe Lira!) 
+27062017: added sub collapse_taxon_alignments to lib/phyTools.pm
+27062017: added annotate_cluster.pl -c 40 to collapse alignments of sequences from same taxon
+27062017: added Pfam domains to collapsed sequences
+27062017: initialize compartments in parse_pangenome_matrix.pl to zero if empty before plotting (thanks Felipe Lira!) 
