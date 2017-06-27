@@ -196,3 +196,10 @@
 30052017: updated lib/ForkManager.pm to v1.19 (http://search.cpan.org/perldoc?Parallel%3A%3AForkManager)
 09062017: fixed bug in get_homologues.pl -X which produced zero clusters when new sequences files were added to previous results
 12062017: parse_pangenome_matrix.pl -S now takes an integer to indicate the minimum occupancy requested of clusters
+26062017: improved description of annotate_cluster.pl -h
+26062017: increased length of sequence names in annotate_cluster.pl
+26062017: added parsimony-informative sites in headers of blunt-end clusters produced by in annotate_cluster.pl -b
+26062017: annotate_cluster.pl now shows unaligned cluster sequences and prints number of taxa in the alignment
+26062017: annotate_cluster.pl now removes temporary files
+27062017: added sub collapse_taxon_alignments to lib/PhyTools.pm
+27062017: initialize compartments to zero if empty before plotting (thanks Felipe Lira!) 

@@ -2045,7 +2045,7 @@ sub makeOrtholog
   if(-s $orth_file && !$force_parsing)
   {
 
-    # try to re-use previouisly calculated orthologues
+    # try to re-use previously calculated orthologues
     my ($ref_data_structure);
 
     eval { $ref_data_structure = retrieve($orth_file) };
