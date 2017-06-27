@@ -691,7 +691,10 @@ if($INP_plotshell)
   close(SCOREF);
   close(COREF);
 
+  if(!$total{'cloud'}){ $total{'cloud'} = 0 }
   if(!$total{'shell'}){ $total{'shell'} = 0 }
+  if(!$total{'soft_core'}){ $total{'soft_core'} = 0 }
+  if(!$total{'core'}){ $total{'core'} = 0 }
 
   print "# cloud size: $total{'cloud'} list: $cloudlistfile\n";
   print "# shell size: $total{'shell'} list: $shelllistfile\n";
