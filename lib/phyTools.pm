@@ -1586,18 +1586,18 @@ sub collapse_taxon_alignments
 
     warn "# collapse_taxon_alignments: $taxon (n=".scalar(@sorted_fragments).")\n"; #,".join(',',@sorted_fragments)."\n";
     
-    foreach $seq (0 .. $#sorted_fragments-1)
+    foreach $seq (0 .. $#sorted_fragments)
     {
       next if($collapsed{$sorted_fragments[$seq]});
     
       my @consensus = @{$matrix[$sorted_fragments[$seq]]};
       
-      $merged = "$sorted_fragments[$seq],";
+      $merged = '';
       $cons_start = $left{$sorted_fragments[$seq]};
       $cons_end   = $right{$sorted_fragments[$seq]};
       print "# $taxon $sorted_fragments[$seq] $cons_start $cons_end\n" if($verbose);
            
-      foreach my $seq2 ($seq+1 .. $#sorted_fragments)
+      foreach $seq2 ($seq+1 .. $#sorted_fragments)
       {
         next if($collapsed{$sorted_fragments[$seq2]});
         print "## $taxon $sorted_fragments[$seq2] $left{$sorted_fragments[$seq2]} $right{$sorted_fragments[$seq2]}\n" if($verbose);
@@ -1607,11 +1607,11 @@ sub collapse_taxon_alignments
           && $right{$sorted_fragments[$seq]} >= $right{$sorted_fragments[$seq2]})
         {
           ($mismatches,$gaps) = _get_mismatches_gaps( \@matrix, $sorted_fragments[$seq], $sorted_fragments[$seq2], 
-            $left{$sorted_fragments[$seq2]}, $right{$sorted_fragments[$seq2]} ); #print "seq[seq2] $mismatches $gaps\n"; 
+            $left{$sorted_fragments[$seq2]}, $right{$sorted_fragments[$seq2]} ); #print "seq{seq2} $mismatches $gaps\n"; 
             
           if($mismatches <= $max_mismatches && $gaps <= $max_gaps)
           {
-            $collapsed{$sorted_fragments[$seq2]} = 1;
+            $collapsed{$sorted_fragments[$seq2]} = 1; 
             $merged .= "{$sorted_fragments[$seq2]},"; 
           }
         }
@@ -1626,7 +1626,7 @@ sub collapse_taxon_alignments
           if($overlap > $min_overlap)
           {
             ($mismatches,$gaps) = _get_mismatches_gaps( \@matrix, $sorted_fragments[$seq], $sorted_fragments[$seq2], 
-            $left{$sorted_fragments[$seq2]}, $right{$sorted_fragments[$seq]} ); #print "seq.seq2 $overlap $mismatches $gaps\n";
+            $left{$sorted_fragments[$seq2]}, $right{$sorted_fragments[$seq]} ); #print "seq>seq2 $overlap $mismatches $gaps\n";
             
             if($mismatches <= $max_mismatches && $gaps <= $max_gaps)
             {
@@ -1643,20 +1643,16 @@ sub collapse_taxon_alignments
         }
       }
       
-      # add this collapsed/merged sequence
-      $FASTAcons[$n_of_collapsed][NAME]  = "$FASTA[$sorted_fragments[$seq]][NAME] collapsed:$merged";
+      # add this raw/merged sequence
+      $FASTAcons[$n_of_collapsed][NAME]  = $FASTA[$sorted_fragments[$seq]][NAME];
+      if($merged ne '')
+      {
+        $FASTAcons[$n_of_collapsed][NAME] .= "collapsed:$sorted_fragments[$seq],$merged";
+      }
       $FASTAcons[$n_of_collapsed][SEQ] = join('',@consensus);
       $n_of_collapsed++;
     }  
-    
-    # add this raw/uncollapsed sequence
-    if(scalar(@sorted_fragments) == 1)
-    {
-      $FASTAcons[$n_of_collapsed][SEQ]  = $FASTA[$sorted_fragments[0]][SEQ];
-      $FASTAcons[$n_of_collapsed][NAME] = $FASTA[$sorted_fragments[0]][NAME];
-      $n_of_collapsed++;
-    }
-            
+              
   } # foreach taxon
   
   return \@FASTAcons;

@@ -446,7 +446,11 @@ if($INP_collapse && $INP_outfile)
   open(COLLAPSED,">",$collapsed_outfile_name) || die "# cannot create $collapsed_outfile_name\n";
   foreach $seq (0 .. $#{$collapsed_align_ref})
   {
-    print COLLAPSED ">$collapsed_align_ref->[$seq][NAME]\n$collapsed_align_ref->[$seq][SEQ]\n";
+    print COLLAPSED ">$collapsed_align_ref->[$seq][NAME]";
+    
+    if($do_PFAM){ print COLLAPSED " Pfam:$Pfam_full($Pfam_string)" }
+    
+    print COLLAPSED "\n$collapsed_align_ref->[$seq][SEQ]\n";
   }
   
   printf( STDERR "\n# collapsed alignment file: %s (aligned sequences: %d)\n",
