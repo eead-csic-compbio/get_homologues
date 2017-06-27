@@ -42,7 +42,7 @@ my ($INP_nucleotides,$INP_blunt,$do_PFAM,$INP_clusterfile,$INP_outfile,$INP_ref_
 my $warning = <<'END_WARN';
 WARNING: Clusters of transcripts often contain a fraction of BLASTN hits that do not match 
 the longest sequence; instead, they align towards the 5' or 3' of other sequences and are 
-not included by default in the produced multiple squence alignment (MSA):
+not included in the produced cumulative multiple sequence alignment (MSA):
  
  -----------------            <= longest/reference sequence
               -------------
