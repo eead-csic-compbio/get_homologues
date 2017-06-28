@@ -1952,12 +1952,12 @@ Finally, option <code>-c </code> can be invoked to collapse aligned sequences fr
 This might be useful when working with clusters of transcript isoforms, which are often redundant and
 broken in possibly overlapping fragments. Taking the same example cluster, we could try to collapse 
 isoforms with overlaps <SPAN CLASS="MATH"><IMG
- WIDTH="20" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ WIDTH="36" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
  SRC="img9.png"
- ALT="$ \eg 30$"></SPAN> residues like this:
+ ALT="$ \geq 30$"></SPAN> residues like this:
 
 <P>
-<code>./annotate_cluster.pl -f outdir/1004_TR425-c0_g2_i1.fna -o 1004_TR425-c0_g2_i1.aln.fna -D</code> -c 30
+<code>./annotate_cluster.pl -f outdir/1004_TR425-c0_g2_i1.fna -o 1004_TR425-c0_g2_i1.aln.fna -D -c 30</code>
 <BR>
 <P>
 Note that by default the script does not tolerate mismatches between sequences to be collapsed, but 
