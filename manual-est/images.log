@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=latex 2017.5.2)  27 JUN 2017 17:32
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=latex 2017.5.2)  28 JUN 2017 16:18
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -439,7 +439,16 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7.4> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 196.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 196.
-l2hSize :tex2html_wrap_inline2498:7.38493pt::7.38493pt::54.2014pt.
+! Undefined control sequence.
+l.196 $ \eg
+            30$%
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+l2hSize :tex2html_wrap_inline2446:7.24997pt::7.24997pt::10.50003pt.
 [1
 
 
@@ -466,4 +475,4 @@ Here is how much of TeX's memory you used:
  14 hyphenation exceptions out of 8191
  29i,5n,26p,554b,362s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on images.dvi (1 page, 2376 bytes).
+Output written on images.dvi (1 page, 2304 bytes).

@@ -1951,13 +1951,10 @@ rendered with <A NAME="tex2html63"
 Finally, option <code>-c </code> can be invoked to collapse aligned sequences from the same species or taxon.
 This might be useful when working with clusters of transcript isoforms, which are often redundant and
 broken in possibly overlapping fragments. Taking the same example cluster, we could try to collapse 
-isoforms with overlaps <!-- MATH
- $>30 residues$
- -->
-<SPAN CLASS="MATH"><IMG
- WIDTH="90" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+isoforms with overlaps <SPAN CLASS="MATH"><IMG
+ WIDTH="20" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
  SRC="img9.png"
- ALT="$ &gt;30 residues$"></SPAN> like this:
+ ALT="$ \eg 30$"></SPAN> residues like this:
 
 <P>
 <code>./annotate_cluster.pl -f outdir/1004_TR425-c0_g2_i1.fna -o 1004_TR425-c0_g2_i1.aln.fna -D</code> -c 30
@@ -1971,7 +1968,7 @@ Instead, as BLASTN-placed gaps in identical sequences can often move, by default
 
 <P>
 By default, the script <code>annotate_cluster.pl</code> looks for the longest sequences and aligns all other cluster
-sequences to it with BLASTN (megablast). The usar can also pass an external, reference sequence to guide cluster
+sequences to it with BLASTN (megablast). The user can also pass an external, reference sequence to guide cluster
 alignment (see option <code>-r</code>). However, in either case, clusters of transcripts often contain a fraction 
 of BLASTN hits that do not match the longest/reference sequence; instead, they align towards the 5' or 3' of 
 other sequences of the clusters and are thus not included in the produced multiple sequence alignment (MSA):
@@ -2432,7 +2429,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>manual-est -no_antialias_text -split 0 -dir manual-est -no_navigation -show_section_numbers</TT>
 <P>
-The translation was initiated by Bruno Contreras Moreira on 2017-06-27
+The translation was initiated by Bruno Contreras Moreira on 2017-06-28
 <BR><HR>
 <ADDRESS>
 Bruno Contreras-Moreira and Pablo Vinuesa<br><a href="https://github.com/eead-csic-compbio/get_homologues">https://github.com/eead-csic-compbio/get_homologues</a>
