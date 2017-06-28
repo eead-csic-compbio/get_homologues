@@ -120,7 +120,7 @@ foreach $input_FASTA_file (@ARGV)
 {
   if($input_FASTA_file =~ /([\+])/)
   {
-    die "# EXIT : need a valid input FASTA file, offending char: '$1'\n";
+    die "# EXIT : need a valid input FASTA file ($input_FASTA_file), offending char: '$1'\n";
   }
   elsif(!-e $input_FASTA_file)
   {

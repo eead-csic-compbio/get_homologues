@@ -205,3 +205,4 @@
 27062017: added annotate_cluster.pl -c 40 to collapse alignments of sequences from same taxon
 27062017: added Pfam domains to collapsed sequences
 27062017: initialize compartments in parse_pangenome_matrix.pl to zero if empty before plotting (thanks Felipe Lira!) 
+28062017: transcripts2cdsCPP.pl & transcripts2cdsCPP.pl now print name of offending files with '+' chars
