@@ -353,7 +353,7 @@ foreach $seq (0 .. $#{$cluster_ref})
 }    
     
 close($fhnq);    
-close($fhnb);
+close($fhndb); 
 
 printf(STDERR "# taxa included in alignment: %d\n",scalar(keys(%aligned_taxa)));  
 
