@@ -324,7 +324,16 @@ else{ $do_features = 0 }
 
 if(defined($opts{'A'})){ $do_ANIb_matrix = 1 }
 
-if(defined($opts{'g'}) && defined($opts{'d'}) && !$do_features){ $do_intergenic = 1; }
+if(defined($opts{'g'}) && defined($opts{'d'}) && !$do_features)
+{ 
+  if($min_cluster_size ne 'all')
+  {
+    die "\n# WARNING: intergenic sequences are extracted between syntenic core clusters, ".
+      "please remove option -t $min_cluster_size\n\n";
+  }
+  
+  $do_intergenic = 1; 
+}
 else{ $do_intergenic = 0 }
 
 if(defined($opts{'M'}))
@@ -512,6 +521,7 @@ my ($reparse_all,$total_genbankOK,$n_of_similar_length_paralogues,$pfam_annot,$d
 my ($BDBHdone,$PARANOIDdone,$orthoMCLdone,$COGdone,$n_of_parsed_lines,$n_of_pfam_parsed_lines) = (0,0,0,0,0,0);
 my ($diff_BDBH_params,$diff_INP_params,$diff_HOM_params,$diff_OMCL_params,$lockcapableFS) = (0,0,0,0,0);
 my ($total_clustersOK,$clgene,$clorth,%ANIb_matrix,%GIclusters,$clustersOK,%cluster_ids) = (0);
+my (@sorted_clusters,%taxa_clusters);
 
 constructDirectory($newDIR);
 
@@ -2633,8 +2643,10 @@ GENE: foreach $gene (sort {$a<=>$b} (keys(%orthologues)))
   elsif($do_intergenic)
   {
     my $gi = (split(/\s+/,$header))[0];  #$gi =~ s/>//;
-    push(@{$GIclusters{$cluster_name}},$gi);
+    push(@{$GIclusters{$cluster_name}},$gi); 
     push(@{$idclusters{$cluster_name}},$gene);
+    push(@{$taxa_clusters{$cluster_name}},$gindex2[$gene]);
+    push(@sorted_clusters,$cluster_name);
   }
   
   # 4.3.2) print orthologues
@@ -2683,10 +2695,11 @@ GENE: foreach $gene (sort {$a<=>$b} (keys(%orthologues)))
     }
     elsif($do_intergenic)
     {
-      my $gi = (split(/\s+/,$header))[0]; #$gi =~ s/>//;
+      my $gi = (split(/\s+/,$header))[0]; #$gi =~ s/>//; 
       push(@{$GIclusters{$cluster_name}},$gi);
       push(@{$idclusters{$cluster_name}},$orth);
-    }
+      push(@{$taxa_clusters{$cluster_name}},$gindex2[$orth]);
+    } 
   }
 
   $clusterfile = $FASTAresultsDIR ."/$cluster_name.faa";
@@ -2809,8 +2822,9 @@ if($do_intergenic && !$total_clustersOK)
   my ($ref_left_neighb,$ref_right_neighb,$ref_taxon,$n_of_clusterOK,$cluster_FNA,%intergenes);
   my (@left_orth_cluster,@right_orth_cluster,@ref_cluster,@other_cluster,$interg,$ref_interg);
   my ($ref_left_strand,$ref_right_strand,$ref_strand,$other_strand,$ref_interg_seq,$str1,$str2);
-  my (@left_id_cluster,@right_id_cluster,@ref_id_cluster);
-  my ($n_of_interg_clusters,$left_cluster_name,$right_cluster_name,$cluster_name) = (0);
+  my (@left_id_cluster,@right_id_cluster,@ref_id_cluster,$other_orth,$clindex,$clindex2);
+  my (@left_taxa_cluster,@right_taxa_cluster,@ref_taxa_cluster,@other_taxa_cluster,$other_taxon);
+  my ($n_of_interg_clusters,$left_cluster_name,$right_cluster_name,$cluster_name,$ref_index) = (0);
   my ($interg_cluster_list_file,$interg_cluster_file,$cluster_FNA_counter,$interg_FNAresultsDIR);
 
   print "\n# looking for valid clusters of intergenic regions (n_of_taxa=$min_cluster_size)...\n";
@@ -2832,27 +2846,48 @@ if($do_intergenic && !$total_clustersOK)
   foreach $seq (0 .. $#{$reference_intergenes})
   {
     #>intergenic242|NC_005956|coords:1917497..1917790|length:294|neighbours:GI:49476308(-1),GI:49476309(1)|[Bartonella ...]
+    #>1 | intergenic211|unknown|coords:175776..176373|length:598|neighbours:ID:PROKKA_01921(-1),ID:PROKKA_01922(1)|neighbour_genes:...
+    # strand is captured as \S+
+
     # this is reference intergene
     if($reference_intergenes->[$seq][NAME] =~ m/neighbours:(.+?)\((\S+)\),(.+?)\((\S+)\)/)
     {
       @left_orth_cluster=@right_orth_cluster=@left_id_cluster=@right_id_cluster=();
-      $left_cluster_name = $right_cluster_name = '';
+      @left_taxa_cluster=@right_taxa_cluster=();
+      $cluster = $left_cluster_name = $right_cluster_name = '';
       ($ref_left_neighb,$ref_left_strand,$ref_right_neighb,$ref_right_strand) = ($1,$2,$3,$4);
 
-      # 5.1.1) check whether both intergene neighbors (left&right genes) are included
-      # in orthologus protein clusters (OPCs), calculated in step #4
-      foreach $cluster (keys(%GIclusters))
+      # 5.1.1) check whether both intergene neighbors (left & right genes) are included
+      # in orthologous protein clusters (OPCs), calculated in step #4
+      # With BDBH 1st sequence in cluster is reference; that is not guaranteed with OMCL or COGS
+      foreach $cluster (@sorted_clusters)
       {
-        if(grep(/$ref_left_neighb/,@{$GIclusters{$cluster}}))
+        # find 1st sequence from reference genome
+        $ref_index = 0;
+        while($ref_index <= $#{$idclusters{$cluster}})
+        {
+          last if($taxa_clusters{$cluster}[$ref_index] eq $taxa[$reference_proteome]); 
+          $ref_index++;
+        }
+        
+        # this should not happen, as core clusters must contain reference
+        next if($ref_index > $#{$idclusters{$cluster}});
+        
+        # find cluster including CDS to the left
+        if($ref_left_neighb eq $GIclusters{$cluster}[$ref_index]) 
         {
           @left_orth_cluster = @{$GIclusters{$cluster}};
           @left_id_cluster = @{$idclusters{$cluster}};
+          @left_taxa_cluster = @{$taxa_clusters{$cluster}};
           $left_cluster_name = $cluster;
         }
-        if(grep(/$ref_right_neighb/,@{$GIclusters{$cluster}}))
+        
+        # find cluster including CDS to the right
+        if($ref_right_neighb eq $GIclusters{$cluster}[$ref_index])
         {
           @right_orth_cluster = @{$GIclusters{$cluster}};
           @right_id_cluster = @{$idclusters{$cluster}};
+          @right_taxa_cluster = @{$taxa_clusters{$cluster}};
           $right_cluster_name = $cluster;
         }
         last if(@left_orth_cluster && @right_orth_cluster);
@@ -2864,7 +2899,9 @@ if($do_intergenic && !$total_clustersOK)
       {
         @ref_cluster = @left_orth_cluster;
         @ref_id_cluster = @left_id_cluster;
+        @ref_taxa_cluster = @left_taxa_cluster;
         @other_cluster = @right_orth_cluster;
+        @other_taxa_cluster = @right_taxa_cluster;
         $ref_strand = $ref_left_strand;
         $other_strand = $ref_right_strand;
         $cluster_name = "$left_cluster_name-$right_cluster_name";
@@ -2873,59 +2910,63 @@ if($do_intergenic && !$total_clustersOK)
       {
         @ref_cluster = @right_orth_cluster;
         @ref_id_cluster = @right_id_cluster;
+        @ref_taxa_cluster = @right_taxa_cluster;
         @other_cluster = @left_orth_cluster;
+        @other_taxa_cluster = @left_taxa_cluster;
         $ref_strand = $ref_right_strand;
         $other_strand = $ref_left_strand;
         $cluster_name = "$right_cluster_name-$left_cluster_name";
-      } #print "## $ref_strand $other_strand $cluster_name\n@ref_cluster\n@other_cluster)\n\n";
+      } 
 
-      # 5.1.3) check whether remaining OPCs members are as well neighbors of an intergene
+      # 5.1.3) check whether cluster members from other taxa are also neighbors of this intergenic sequence
       ($n_of_clusterOK,$cluster_FNA,$cluster_FNA_counter) = (0,'',1);
-      foreach $orth (@ref_cluster)
+      foreach $clindex (0 .. $#ref_cluster)
       {
-
-        # 5.1.3.1) find out intergenes flanked by this $orth gene (up to 2)
+        $orth  = $ref_cluster[$clindex]; #ID:PROKKA_02598
+        $taxon = $ref_taxa_cluster[$clindex]; #UT414_pilon.prokka_modID.gbk
+   
+        # 5.1.3.1) find out intergenes flanked by this $orth gene 
         my (@ref,@ref_seq);
         $ref_interg = $ref_interg_seq = '';
-        TAXA: foreach $taxon (@taxa)
+        foreach $interg (@{$intergenes{$taxon}})
         {
-          foreach $interg (@{$intergenes{$taxon}})
+          if($interg->[NAME] =~ /$orth/)
           {
-            if($interg->[NAME] =~ /$orth/)
-            {
-              $ref_interg = $interg->[NAME];
-              $ref_interg_seq = $interg->[SEQ];
-              push(@ref,$ref_interg);
-              push(@ref_seq,$ref_interg_seq);
-              if(scalar(@ref)>1){ last TAXA }
-            }
+            $ref_interg = $interg->[NAME];
+            $ref_interg_seq = $interg->[SEQ]; 
+            push(@ref,$ref_interg);
+            push(@ref_seq,$ref_interg_seq);
+            last if(scalar(@ref)>1); # a gene can only flank <=2 intergenes
           }
         }
         next if(!@ref); # this should never happen
-
-        # 5.1.3.2) find out whether any $other_orth gene in @other_cluster
-        # is an intergenic neighbor of $orth
-        OTHER: foreach my $other_orth (@other_cluster)
+        
+        # 5.1.3.2) find out whether any $other_orth genes in @other_cluster are neighbors of $orth
+        OTHER: foreach $clindex2 (0 .. $#other_cluster)
         {
+          $other_orth  = $other_cluster[$clindex2];
+          $other_taxon = $other_taxa_cluster[$clindex2];
+          
+          next if($other_taxon ne $taxon);
+        
           for(my $i=0;$i<scalar(@ref);$i++)
           {
             $ref_interg = $ref[$i];
             $ref_interg_seq = $ref_seq[$i];
+            
             if($ref_interg =~ /$other_orth/)
             {
-
               # check that neighbors $orth,$other_orth and ref intergene
               # have equal strand orientation
               if($ref_interg =~ /$orth\((\S+)\),$other_orth\((\S+)\)/)
               {
-                ($str1,$str2) = ($1,$2);
+                ($str1,$str2) = ($1,$2); #print "$str1,$str2 $orth $other_orth $ref_interg\n";
                 if($str1 eq $ref_strand && $str2 eq $other_strand)
                 {
                   $cluster_FNA .= ">$cluster_FNA_counter | $ref_interg\n";
                   $cluster_FNA .= "$ref_interg_seq\n";
                   $n_of_clusterOK++;
                   $cluster_FNA_counter++;
-
                   #print ">1 $orth $other_orth $str1 $str2 $ref_interg\n";
                 }
               }
@@ -2952,16 +2993,9 @@ if($do_intergenic && !$total_clustersOK)
       # 5.1.4) produce clusters of orthologous intergenes
       if($n_of_clusterOK == scalar(@ref_cluster))
       {
-
         # check taxa present in this cluster
-        my @interg_taxon_names;
-        foreach my $id (@ref_id_cluster)
-        {
-          push(@interg_taxon_names,$gindex2[$id])
-            if(!grep(/$gindex2[$id]/,@interg_taxon_names));
-        }
-        next if(scalar(@interg_taxon_names) < $min_cluster_size);
-
+        my @interg_taxon_names = @ref_taxa_cluster;
+        
         $n_of_interg_clusters++;
         $cluster_name = $n_of_interg_clusters.'-'.$cluster_name;
 
