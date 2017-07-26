@@ -215,7 +215,8 @@ modules from the <A NAME="tex2html7"
   HREF="http://www.bioperl.org">Bioperl</A>
 collection, 
 and module <A NAME="tex2html8"
-  HREF="<"><</A>900>>http://search.cpan.org/perldoc?Parallelare also required, and have been included in the <SPAN  CLASS="textit">get_homologues</SPAN> bundle for your convenience.
+  HREF="<"><</A>900>>http://search.cpan.org/perldoc?Parallel
+are also required, and have been included in the <SPAN  CLASS="textit">get_homologues</SPAN> bundle for your convenience.
 
 <P>
 Should this version of BioPerl fail in your system (as diagnosed by <SPAN  CLASS="textit">install.pl</SPAN>) 
@@ -278,7 +279,8 @@ $ make
 </PRE>
 
 <P>
-To compile <SPAN  CLASS="textit">COGtriangles</SPAN> the GNU <SPAN  CLASS="textit">g++</SPAN> compiler is required. You should obtain it by any of the alternatives listed in section <A HREF="#perlmods">2.1</A>.
+To compile <SPAN  CLASS="textit">COGtriangles</SPAN> the GNU <SPAN  CLASS="textit">g++</SPAN> compiler is required. 
+You should obtain it by any of the alternatives listed in section <A HREF="#perlmods">2.1</A>.
 The compilation would then include several steps:
 <PRE>
 $cd bin/COGsoft;
@@ -312,9 +314,7 @@ BLAST binaries, which are respectively <SPAN  CLASS="textit">blastall</SPAN> and
 It is possible to make use of <SPAN  CLASS="textit">get_homologues</SPAN> on a computer farm or high-performance computing cluster
 managed by <A NAME="tex2html15"
   HREF="http://gridscheduler.sourceforge.net/">gridengine</A>. In particular we have tested this feature with 
-versions GE 6.0u8, 6.2u4, 2011.11p1 
-invoking the program with option <code>-m cluster</code>.
-For this command to work it might be necessary to edit the <SPAN  CLASS="textit">get_homologues.pl</SPAN> file and add the right 
+versions GE 6.0u8, 6.2u4, 2011.11p1 invoking the program with option <code>-m cluster</code>.For this command to work it might be necessary to edit the <SPAN  CLASS="textit">get_homologues.pl</SPAN> file and add the right 
 path to set global variable <code>$SGEPATH</code>. To find out the installation path of your SGE installation
 you might try the next terminal command: <code>$ which qsub</code>
 <BR>
@@ -584,7 +584,8 @@ For their use with <SPAN  CLASS="textit">get_homologues</SPAN>,
 GenBank files for the same species (for example, from the main chromosome and from a couple of plasmids)
 must be concatenated. For instance, the genomic sequences of <SPAN  CLASS="textit">Rhizobium etli CFN 42</SPAN> comprise
 <A NAME="tex2html30"
-  HREF="<"><</A>901>>http://www.ncbi.nlm.nih.gov/genome?Db=genome&amp;term=rhizobiumwhich can be concatenated into a single <SPAN  CLASS="textit">_Rhizobium_etli_CFN42.gbk</SPAN> file.
+  HREF="<"><</A>901>>http://www.ncbi.nlm.nih.gov/genome?Db=genome&amp;term=rhizobium
+which can be concatenated into a single <SPAN  CLASS="textit">_Rhizobium_etli_CFN42.gbk</SPAN> file.
 
 <P>
 In order to assist in this task this software package includes the accompanying script
@@ -622,8 +623,7 @@ as does the bundled file <code>sample_genome_list.txt</code>.
 
 <BR>
 <BR>
-First, it can be seen that completed genomes have NC accession numbers, and 
-can be added to the list as follows:
+First, it can be seen that completed genomes have NC accession numbers, and can be added to the list as follows:
 <PRE>
 NC_010159                   Yersinia_pestis_Angola
 </PRE>
@@ -956,11 +956,9 @@ this might be the only way to complete a job.
 <LI><code>-m</code> allows the choice of runmode, which can be either <code>-m local</code> (the default) or 
 <code>-m cluster</code>. In the second case global variable <code>$SGEPATH</code> might need to be appropriately set, as explained in section <A HREF="#dependencies">2.3</A>,
 as well as <code>$QUEUESETTINGS</code>, that specificies for instance a particular queue name for your cluster jobs.
-
 <P>
 </LI>
 <LI><code>-n</code> sets the number of threads/CPUs to dedicate to each BLAST/HMMER job run locally, which by default is 2.
-
 <P>
 </LI>
 <LI><code>-I list_file.txt</code> allows the user to restrict a <SPAN  CLASS="textit">get_homologues</SPAN> job to a subset of the genomes included in the input <code>-d </code> folder. 
@@ -1416,7 +1414,8 @@ and the accompanying scripts with provided sample input data.
 This example takes the provided sample input folder <code>sample_buch_fasta</code>,
 which contains the proteins sets of four 
 <A NAME="tex2html57"
-  HREF="<"><</A>902>>http://en.wikipedia.org/wiki/Buchnera_and compiles clusters of BDBH sequences, which are candidates to be orthologues, with this command:
+  HREF="<"><</A>902>>http://en.wikipedia.org/wiki/Buchnera_
+and compiles clusters of BDBH sequences, which are candidates to be orthologues, with this command:
 <BR><code>$ ./get_homologues.pl -d sample_buch_fasta </code> . 
 
 <P>
@@ -1868,7 +1867,7 @@ MDDRERGLAFLFAITLPPVMVWFLV...
 <P>
 The BDBH algorithm in <SPAN  CLASS="textit">get_homologues.pl</SPAN> can be modified by requiring bidirectional best hits to
 share the same domain architecture, annotated in terms of Pfam domains. For large volumes of sequences 
-this taks should be accomplished on a computer cluster, but of course can also be performed locally.
+this task should be accomplished on a computer cluster, but of course can also be performed locally.
 The command on the terminal could then be: <code>$ ./get_homologues.pl -d sample_plasmids_gbk -D</code> 
 <BR>
 <P>
@@ -2073,7 +2072,7 @@ illustrated by processing folder <code>sample_plasmids_gbk</code> with options
 <BR>
 The restraints that apply to the parsed
 intergenic regions are defined by three global variables variables within <code>get_homologues.pl</code>,
-as explained in section <A HREF="#intergdefs">3.4</A>. These default values might be edited for specific taks;
+as explained in section <A HREF="#intergdefs">3.4</A>. These default values might be edited for specific tasks;
 for instance, chloroplast intergenic regions are usually much smaller than 200 bases, the default size, 
 and therefore variable <code>$MININTERGENESIZE</code> should be set to a smaller value.
 Moreover, in this example we restrict the search for conserved intergenic segments to  
@@ -2088,7 +2087,6 @@ K_pneumoniae_KP96_plasmid_pKP96.gb
 <P>
 We can now execute 
 <BR><code>$ ./get_homologues.pl -d sample_plasmids_gbk -g -I sample_plasmids_gbk/include_list.txt</code>:
-
 <P>
 <PRE>
 # results_directory=sample_plasmids_gbk_homologues
@@ -2187,7 +2185,6 @@ By enforcing this option we are actually asking for all possible clusters, inclu
 contain sequences from all input genomes (taxa). For this reason the use of this option usually means
 that a large number of clusters are reported. This is particularly true for COG runs, since this algorithm
 does not resolve clusters involving less than 3 genomes. The default algorithm BDBH is not available with this option.
-
 <BR>
 For instance, by calling
 <code>$ ./get_homologues.pl -d sample_plasmids_gbk -t 0 -G</code> we obtain 199 clusters:
@@ -3267,7 +3264,6 @@ in the corresponding GenBank files. Miscellaneous features report on diverse thi
 in replicon replication,  and many more "miscellaneous" features. Note that there is great heterogeneity both in the format and detail of annotating 
 genome features. By default, <SPAN  CLASS="textit">get_homologues.pl</SPAN> will extract only the 'CDS' feature (i.e. the sequences for protein-coding sequences) from the 
 GenBank file. By using option <code>-a</code> the user can select which features to parse, such as 'tRNA' or 'rRNA'. 
-
 <P>
 </LI>
 <LI>Could you explain what the inflation parameter of orthoMCL is and how to decide what value to use?
@@ -3538,7 +3534,8 @@ which means that protein sequences with <!-- MATH
 <SPAN CLASS="MATH"><IMG
  WIDTH="111" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
  SRC="img5.png"
- ALT="$ coverage \ge 50\% &amp; $"></SPAN> and <!-- MATH
+ ALT="$ coverage \ge 50\% &amp; $"></SPAN> and 
+<!-- MATH
  $identity  \ge 50\%$
  -->
 <SPAN CLASS="MATH"><IMG
@@ -3853,7 +3850,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>manual -no_antialias_text -split 0 -dir manual -no_navigation -show_section_numbers</TT>
 <P>
-The translation was initiated by Bruno Contreras Moreira on 2017-03-29
+The translation was initiated by Bruno Contreras Moreira on 2017-07-25
 <BR><HR>
 <ADDRESS>
 Bruno Contreras-Moreira and Pablo Vinuesa<br><a href="https://github.com/eead-csic-compbio/get_homologues">https://github.com/eead-csic-compbio/get_homologues</a>
