@@ -634,7 +634,7 @@ sub add_labels2newick_tree
   return join(";\n",split(/;/,$fully_labelled_tree));
 }
 
-# Updated Jun2016
+# Updated Aug2017
 sub extract_intergenic_from_genbank
 {
   # takes a genbank input file and creates a FNA file containing all intergenic sequences found
@@ -668,6 +668,8 @@ sub extract_intergenic_from_genbank
   {
     $seq->alphabet('dna');
     my ($gbaccession,$sequence,$gen,@genes) = ( $seq->accession() );
+    if($gbaccession eq 'unknown'){ $gbaccession = $seq->display_id() } # prokka-compatible
+ 
     $sequence = $seq->primary_seq()->seq() || 'empty, need a full genbank entry!';
     $taxon = '';
     for my $f ($seq->get_SeqFeatures)
@@ -760,6 +762,7 @@ sub extract_intergenic_from_genbank
   return $n_of_intergenic;
 }
 
+# Updated Aug 2017
 sub extract_features_from_genbank
 {
   # takes a genbank input file and creates a single FASTA nucleotide file containing all features
@@ -814,6 +817,8 @@ sub extract_features_from_genbank
   { 
     $seq->alphabet('dna'); 
     $gbaccession = $seq->accession();
+    if($gbaccession eq 'unknown'){ $gbaccession = $seq->display_id() } # prokka-compatible
+    
     $taxon = $coords = $genelength = $source = '';
     for my $f ($seq->get_SeqFeatures)
     {
@@ -932,7 +937,7 @@ sub extract_features_from_genbank
   return \%already_seen;
 }
 
-# Updated Oct2016
+# Updated Aug2017
 sub extract_CDSs_from_genbank
 {
  # takes a genbank input file and creates two FASTA files containing all CDSs in
@@ -969,6 +974,8 @@ sub extract_CDSs_from_genbank
     $seq->alphabet('dna'); 
     
     $gbaccession = $seq->accession();
+    if($gbaccession eq 'unknown'){ $gbaccession = $seq->display_id() } # prokka-compatible
+    
     $source = '';
     foreach my $f ($seq->get_SeqFeatures)
     {
@@ -1123,7 +1130,7 @@ sub extract_CDSs_from_genbank
   return $n_of_CDS;
 }
 
-# Updated Oct2016
+# Updated Aug2017
 # To to be used when extract_CDSs fails, in cases such as FN869568.gbk
 sub extract_genes_from_genbank
 {
@@ -1158,6 +1165,7 @@ sub extract_genes_from_genbank
   {
     $seq->alphabet('dna'); 
     $gbaccession = $seq->accession();
+    if($gbaccession eq 'unknown'){ $gbaccession = $seq->display_id() } # prokka-compatible
     $source = '';
     foreach my $f ($seq->get_SeqFeatures)
     {

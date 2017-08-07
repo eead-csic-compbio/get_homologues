@@ -209,3 +209,4 @@
 30062017: temp blastdb file closed properly in annotate_clusters.pl 
 25072017: corrected intergenic clusters produced with get_homologues.pl -g when using prokka-annotated GenBank files (thanks Uriel Alonso!)
 25072017: updated get_homologues.pl -g and checked this section in the manual
+07082017: extract_*_genbank subs in lib/phyTools.pm now parse LOCUS when accession is not available in GenBank files, such as those made with PROKKA 
