@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# 2013-6 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2013-7 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Laboratory of Computational Biology, EEAD/CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -35,7 +35,7 @@ my $RFORBIDDENPATHCHARS = '#';
 
 my ($INP_prot,$INP_synt,$INP_pange,$INP_taxa,$INP_include,$INP_ref,$INP_orthoxml,%opts) = (1,0,0,0,'',0,0);
 my ($INP_tree,$INP_dirs,$INP_output_dir) = (0,'','');
-my ($allparams,$dir,$file,$n_of_dirs,$corrected_name,$seqname,$seq,$gi,$id,$sequence);
+my ($allparams,$dir,$file,$n_of_dirs,$corrected_name,$seqname,$seq,$gi,$id,$sequence,$dir2);
 my ($ref_dir,$params,$n_of_taxa,$n_of_seqs,$neigh1,$neigh2,$list,$taxon,%included_input_files) = ('','');
 my (@cluster_dirs,%stats,%set,%lists,%pangemat,%deprecated_clusters);
 
@@ -684,7 +684,7 @@ if($INP_pange && %pangemat)
 ## 4) calculate Venn diagram if R is available
 if($n_of_dirs <=3 && $n_of_dirs > 1)
 {
-  my ($k,@venn,@sector,$shortn);
+  my ($k,@venn,@sector,$shortn,$shortn2);
   my $tmp_input_file = $INP_output_dir.'/_input_file_list.txt';
   my $venn_file = $INP_output_dir."/venn$params\.pdf";
 
@@ -728,6 +728,7 @@ if($n_of_dirs <=3 && $n_of_dirs > 1)
   foreach my $d (0 .. $#cluster_dirs)
   {
     $dir = $cluster_dirs[$d];
+    
     push(@venn,$set{$d}); # one array ref per data set
     if($dir =~ /homologues/){ $shortn = (split(/homologues.*?\//,$dir))[1]; }# short name
     else{ $shortn = basename($dir) }
@@ -749,6 +750,32 @@ if($n_of_dirs <=3 && $n_of_dirs > 1)
     push(@venn,$dirvennfile);
     push(@sector,$sectorfile);
   }
+  
+  # add intersections of two sets if there are 3 sets in total
+  if($#cluster_dirs == 2)
+  {
+    foreach my $d (0 .. $#cluster_dirs-1)
+    {
+      $dir = $cluster_dirs[$d];
+      if($dir =~ /homologues/){ $shortn = (split(/homologues.*?\//,$dir))[1]; }
+      else{ $shortn = basename($dir) }
+    
+      foreach my $d2 ($d+1 .. $#cluster_dirs)
+      {
+        $dir2 = $cluster_dirs[$d2];
+        if($dir2 =~ /homologues/){ $shortn2 = (split(/homologues.*?\//,$dir2))[1]; }
+        else{ $shortn2 = basename($dir2) }
+        
+        my $sectorfile = $INP_output_dir.'/intersection_' . $shortn . '_' . $shortn2 .".venn$params.txt";
+        
+        if(-s $sectorfile){ unlink($sectorfile) }
+
+        print TMPIN "$sectorfile\t$sectorfile\t$sectorfile\n";
+        push(@sector,$sectorfile);
+      }
+    }       
+  }
+  
   close(TMPIN);
 
   if($Rok)
@@ -794,7 +821,6 @@ venndia <- function(labels, A, B, C, ...)
     nABC <- length(intersABC)   
 	
     # shorten element labels in relevant lists/sectors
-    # NOTE: remaining sectors can be added if required
     uniqueA = gsub(pattern=".faa_.+",replacement=".faa", uniqueA)
     uniqueA = gsub(pattern=".fna_.+",replacement=".fna", uniqueA)
     uniqueB = gsub(pattern=".faa_.+",replacement=".faa", uniqueB)
@@ -803,12 +829,18 @@ venndia <- function(labels, A, B, C, ...)
     uniqueC = gsub(pattern=".fna_.+",replacement=".fna", uniqueC)
     intersABC = gsub(pattern=".faa_.+",replacement=".faa", intersABC)
     intersABC = gsub(pattern=".fna_.+",replacement=".fna", intersABC)
+    intersAB = gsub(pattern=".faa_.+",replacement=".faa", intersAB)
+    intersAB = gsub(pattern=".fna_.+",replacement=".fna", intersAB)
+    intersAC = gsub(pattern=".faa_.+",replacement=".faa", intersAC)
+    intersAC = gsub(pattern=".fna_.+",replacement=".fna", intersAC)
+    intersBC = gsub(pattern=".faa_.+",replacement=".faa", intersBC)
+    intersBC = gsub(pattern=".fna_.+",replacement=".fna", intersBC)
     
     pdf(file='$venn_file')
     par(mar=c(2,2,0,0))
     plot(-10,-10,ylim=c(0,9), xlim=c(0,9),axes=F)
-	#mtext(c('$INP_dirs'),side=1,cex=0.4,adj=0)
-	#mtext(c('$params'),side=1,cex=0.4,adj=0)
+	  #mtext(c('$INP_dirs'),side=1,cex=0.4,adj=0)
+	  #mtext(c('$params'),side=1,cex=0.4,adj=0)
     circle(x=3, y=6, r=3, col=rgb(1,0,0,.5), border=NA)
     circle(x=6, y=6, r=3, col=rgb(0,.5,.1,.5), border=NA)
     if(cMissing == F)
@@ -818,8 +850,8 @@ venndia <- function(labels, A, B, C, ...)
        	text( x=c(2, 7, 4.5, 4.5, 3, 6, 4.5), y=c(7, 7, 2, 7, 4, 4, 5), 
         c(nA, nB, nC, nAB, nAC, nBC, nABC), cex=2)
 	
- 	# return sectors
-	list(uniqueA,uniqueB,uniqueC)
+ 	      # return sectors, including intersections of two sets Aug2017
+	      list(uniqueA,uniqueB,uniqueC,intersAB,intersAC,intersBC)
     }
     else
     {
@@ -827,32 +859,39 @@ venndia <- function(labels, A, B, C, ...)
        	text( x=c(2, 7, 4.5), y=c(6, 6, 6), 
         c(nA, nB, nAB), cex=2)
 		
-   	# return sectors
-	list(uniqueA,uniqueB)
+   	    # return sectors
+	      list(uniqueA,uniqueB)
     }
 }
 
 input_files = read.table('$tmp_input_file',header=F)
+
 set1 = read.table(toString(input_files[1,1]),sep="\n",colClasses="character")
 set2 = read.table(toString(input_files[2,1]),sep="\n",colClasses="character")
 labels = c(toString(input_files[1,2]),toString(input_files[2,2]))
 
-if(nrow(input_files) == 3)
+if(nrow(input_files) == 6)
 {
 	set3 = read.table(toString(input_files[3,1]),sep="\n",colClasses="character")
 	labels[3] <- toString(input_files[3,2])
 	sectors = venndia(labels,set1[1]\$V1,set2[1]\$V1,set3[1]\$V1)
 	# print venn sectors to files
+  # unique
 	if(length(sectors[1])>0){ lapply(sectors[1],write,toString(input_files[1,3]),append=T,ncolumns=1) }
 	if(length(sectors[2])>0){ lapply(sectors[2],write,toString(input_files[2,3]),append=T,ncolumns=1) }
 	if(length(sectors[3])>0){ lapply(sectors[3],write,toString(input_files[3,3]),append=T,ncolumns=1) }
+  # intersections of two sets
+  if(length(sectors[4])>0){ lapply(sectors[4],write,toString(input_files[4,3]),append=T,ncolumns=1) }
+	if(length(sectors[5])>0){ lapply(sectors[5],write,toString(input_files[5,3]),append=T,ncolumns=1) }
+	if(length(sectors[6])>0){ lapply(sectors[6],write,toString(input_files[6,3]),append=T,ncolumns=1) }
+  
 	
 }else
 { 
 	sectors = venndia(labels,set1[1]\$V1,set2[1]\$V1) 
-	# print venn sectors to files
+	# print unique venn sectors to files
 	if(length(sectors[1])>0){ lapply(sectors[1],write,toString(input_files[1,3]),append=T,ncolumns=1) }
-        if(length(sectors[2])>0){ lapply(sectors[2],write,toString(input_files[2,3]),append=T,ncolumns=1) }
+  if(length(sectors[2])>0){ lapply(sectors[2],write,toString(input_files[2,3]),append=T,ncolumns=1) }
 }	
 
 q()
