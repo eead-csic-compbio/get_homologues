@@ -593,6 +593,7 @@ if($INP_orthoxml)
 if($INP_pange && %pangemat)
 {
   my $pangenome_phylip_file = $INP_output_dir . "/pangenome_matrix$params\.phylip";
+  my $pangenome_fasta_file  = $INP_output_dir . "/pangenome_matrix$params\.fasta";
   my $pangenome_matrix_file = $INP_output_dir . "/pangenome_matrix$params\.tab";
 
 # 1) ordena taxa por clustering jerarquico ,de la matriz pangenomica
@@ -638,15 +639,21 @@ if($INP_pange && %pangemat)
 
   print "# pangenome_file = $pangenome_matrix_file\n";
 
-# version in phylip format http://evolution.genetics.washington.edu/phylip/doc/discrete.html
+  # version in phylip format http://evolution.genetics.washington.edu/phylip/doc/discrete.html
   open(PANGEMATRIX,">$pangenome_phylip_file")
     || die "# EXIT: cannot create $pangenome_phylip_file\n";
+
+  # FASTA-format file with binary data as sequence, for IQ-TREE 
+  open(PANGEMATRIX2,">$pangenome_fasta_file")
+      || die "# EXIT: cannot create $pangenome_fasta_file\n";
 
   printf PANGEMATRIX ("%10d    %d\n",scalar(@taxon_names),scalar(@cluster_names));
   for($taxon=0;$taxon<scalar(@taxon_names);$taxon++)
   {
     $file_number = sprintf("%010d",$taxon);
     printf PANGEMATRIX ("%s    ",$file_number);
+
+    print PANGEMATRIX2 ">$taxon_names[$taxon]\n";
 
     $file_name{$file_number}{'NAME'} = $taxon_names[$taxon];
 
@@ -655,15 +662,24 @@ if($INP_pange && %pangemat)
       if($pangemat{$taxon_names[$taxon]}{$cluster_name})
       {
         print PANGEMATRIX "1";
+        print PANGEMATRIX2 "1";
       }
-      else{ print PANGEMATRIX "0"; }
+      else
+      { 
+        print PANGEMATRIX "0"; 
+        print PANGEMATRIX2 "0";
+      }
     }
     print PANGEMATRIX "\n";
+    print PANGEMATRIX2 "\n";
   }
+
+  close(PANGEMATRIX2);
 
   close(PANGEMATRIX);
 
   print "# pangenome_phylip file = $pangenome_phylip_file\n";
+  print "# pangenome_FASTA file = $pangenome_fasta_file\n";
 
   if($INP_tree)
   {
