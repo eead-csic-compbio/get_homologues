@@ -16,7 +16,8 @@ GET_HOMOLOGUES-EST has been tested with genomes and transcriptomes of *Arabidops
 A [tutorial](http://digital.csic.es/handle/10261/146411) is available, covering typical examples of both GET_HOMOLOGUES and GET_HOMOLOGUES-EST.
 
 The code is regularly patched (see [CHANGES.txt](./CHANGES.txt) in each release), and has been used in a variety of studies 
-(see citing papers [here](https://scholar.google.es/scholar?start=0&hl=en&as_sdt=2005&cites=5259912818944685430)).
+(see citing papers [here](https://scholar.google.es/scholar?start=0&hl=en&as_sdt=2005&cites=5259912818944685430) and 
+[here](https://scholar.google.es/scholar?oi=bibs&hl=en&cites=14330917787074873427&as_sdt=5), respectively).
 
 We kindly ask you to report errors or bugs in the program to the authors and to acknowledge the use of the program in scientific publications.
 
