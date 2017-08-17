@@ -213,3 +213,4 @@
 09082017: compare_clusters.pl now prints lists of genes in intersections of two sets when comparing 3 cluster sets
 10082017: compare_clusters.pl -m now produces a FASTA version of the binary pangenome matrix so that fully-labelled trees can be inferred with software such as IQ-TREE
 10082017: added question to FAQ section in manuals explaining a way to compute ML pangenome tress with boostrap and aLRT support (Thanks Uriel Alonso and Ruben Sancho)
+17082017: updated manuals and plot_matrix_heatmap.sh with options -r (remove column names and cell contents) and -k (set name for color key X-axis)
