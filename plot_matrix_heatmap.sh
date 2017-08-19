@@ -9,7 +9,8 @@
 #: OUTPUT: svg and pdf; png not implemented yet
 
 progname=${0##*/} # plot_matrix_heatmap.sh
-VERSION='v0.4_17Aug17'   # added option -r to remove column names and cell contents, and -k 
+VERSION='v0.5_18Aug17'   # added options -d (max no. decimals) and -x (filter matrix with regex)
+         #'v0.4_17Aug17' # added option -r to remove column names and cell contents, and -k 
          #'v0.3_13Apr16' # added option -c to filter input matrix by a maximum similarity cut-off value
                          # to reduce excessive redundancy. Improved the help text printed with -M
          #'0.2_26Feb15'  # wrote R function sim2dist() to compute bioNJ tree with ape
@@ -37,6 +38,7 @@ function print_help()
     OPTIONAL:
      I) filter out excessive redundancy in the tab-delimited ANI matrix file
        -c <float> (maximum) identity cut-off value (e.g. 97.3) [def: $sim_cutoff]
+       -d <int> maximum number of decimals in matrix display [0-2; def: $decimals]
 	
     II) tweak the graphical output:
        -t <string> text for plot title                    [def input_tab_file_name]
@@ -55,11 +57,14 @@ function print_help()
                  and use the former to construct a NJ tree and save it as newick string
 		 Do not use with a binary presence-absence matrix
     
+    SUBSET MATRIX WITH REGULAR EXPRESSIONS
+       -x <string> regex, like: 'Smalt|Smc'               [def $regex]
+    
     MORE DETAILED HELP:
        -M <flag> prints gplot installation instructions and further usage information
        
     EXAMPLE:
-      $progname -i Avg_identity.tab -c 98.5 -t "Genus X ANIb (OMCL all clusters)" -N -o pdf -m 22 -v 22 -p 20 -H 20 -W 30
+      $progname -i Avg_identity.tab -c 98.5 -t "Genus X ANIb (OMCL all clusters)" -N -o pdf -m 22 -v 22 -p 20 -H 20 -W 30 -x 'Smalt|Smc'
 
     #------------------------------------------------------------------------------------------------------------------
     AIM: Plot ordered heatmaps with row and col. dendrogram, from squared numeric (distance or presence-absence) matrix,
@@ -156,6 +161,8 @@ function check_dependencies()
 #----------------------------------- GET OPTIONS ---------------------------------------#
 #---------------------------------------------------------------------------------------#
 tab_file=
+regex=
+
 check_dep=0
 
 sim_cutoff=100
@@ -171,13 +178,18 @@ do_nj=0
 reorder_clusters=1
 remove_colnames=0
 key_xaxis="Value"
+decimals=0
+
+subset_matrix=0
 
 # See bash cookbook 13.1 and 13.2
-while getopts ':c:i:t:m:o:p:v:H:W:k:hrMNC?:' OPTIONS
+while getopts ':c:i:d:t:m:o:p:v:x:H:W:k:hrMNC?:' OPTIONS
 do
    case $OPTIONS in
 
    c)   sim_cutoff=$OPTARG
+        ;;
+   d)   decimals=$OPTARG
         ;;
    i)   tab_file=$OPTARG
         ;;
@@ -202,6 +214,8 @@ do
    r)   remove_colnames=1
         ;;
    k)   key_xaxis=$OPTARG
+        ;;
+   x)   regex=$OPTARG
         ;;
    C)   reorder_clusters=0
         ;;
@@ -235,6 +249,12 @@ then
     text=$(echo $tab_file)
 fi
 
+if [ ! -z "$regex" ]
+then
+    subset_matrix=1
+fi
+
+
 #-------------------#
 #>>>>>> MAIN <<<<<<<#
 #-------------------#
@@ -247,7 +267,8 @@ cat << PARAMS
 ##############################################################################################
 >>> $progname v$VERSION run started at $start_time
         working directory = $wkdir
-        input tab_file = $tab_file | sim_cutoff = $sim_cutoff
+        input tab_file = $tab_file | sim_cutoff = $sim_cutoff | max_decimals = $decimals
+	subset_matrix = $subset_matrix | regex = $regex
         text=$text|margin_hor=$margin_hor|margin_vert=$margin_vert|points=$points
         width=$width|height=$height|outformat=$outformat
         reorder_clusters=$reorder_clusters|remove_colnames=$remove_colnames|key_xaxis=$key_xaxis|do_bioNJ=$do_nj
@@ -276,8 +297,21 @@ library("ape")
 options(expressions = 100000) #https://stat.ethz.ch/pipermail/r-help/2004-January/044109.html
 tab <- read.table(file="$tab_file", header=TRUE)
 mat_dat <- data.matrix(tab[,2:ncol(tab)])
+
+mat_dat <- round(mat_dat,$decimals)
+
 rnames <- tab[,1]
 rownames(mat_dat) <- rnames
+
+if($subset_matrix > 0 ){
+  include_list <- grep("$regex", rownames(mat_dat))
+   mat_dat <- mat_dat[include_list, ]
+   mat_dat <- mat_dat[,include_list]
+   #mat_dat <- f.mat2
+   #rm(f.mat)
+}
+
+
 
 if($sim_cutoff < 100)
 {
