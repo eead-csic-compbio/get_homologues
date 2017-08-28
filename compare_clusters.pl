@@ -232,26 +232,36 @@ foreach my $d (0 .. $#cluster_dirs)
     next if(-d "$dir/$file"); #print "$dir/$file\n";
 
     # read sequences in each cluster
-    my ($clusterkey,$cluster_data,$n_of_cluster_seqs) = ('','',0);
+    my ($clusterkey,$cluster_data,$n_of_cluster_seqs,$taxon_name) = ('','',0);
     my (@choppedseqs,@clusterseqs,%cluster_taxa,@gis,@neighbors,@sorted_taxa);
     my $cluster_ref = read_FASTA_file_array("$dir/$file");
 
-    if($taxa{$file}) # previosly read from cluster list file
+    if($taxa{$file}) # previously read from .cluster_list file
     {
       %cluster_taxa = %{$taxa{$file}};
-      delete($cluster_taxa{'sorted_taxa'}); # otherwise it would count as one extra taxa; it is conserved in %taxa
+      delete($cluster_taxa{'sorted_taxa'}); # otherwise it would count as one extra taxa; conserved in %taxa
+      #Uncultured_bacterium_plasmid_pRSB205.gb 1
     }
     else # automatically extracted from headers, error prone
     {
-      %cluster_taxa = find_taxa_FASTA_array_headers($cluster_ref,1);
+      my %cluster_taxa_in_headers = find_taxa_FASTA_array_headers($cluster_ref,1);
+      
+      foreach $taxon (keys(%cluster_taxa_in_headers))
+      { 
+        $taxon_name = $taxon;
+        $taxon_name =~ s/\[|\]//g; 
+        $cluster_taxa{$taxon_name} = $cluster_taxa_in_headers{$taxon}{'SIZE'};
+      } 
+      
       foreach $seq (0 .. $#{$cluster_ref})
       {
-        foreach $taxon (keys(%cluster_taxa))
+        foreach $taxon (keys(%cluster_taxa_in_headers))
         {
-          if(grep(/^$seq$/,@{$cluster_taxa{$taxon}{'MEMBERS'}}))
+          if(grep(/^$seq$/,@{$cluster_taxa_in_headers{$taxon}{'MEMBERS'}}))
           {
-            $taxon =~ s/\[|\]//g;
-            push(@{$taxa{$file}{'sorted_taxa'}},$taxon);
+            $taxon_name = $taxon;
+            $taxon_name =~ s/\[|\]//g; 
+            push(@{$taxa{$file}{'sorted_taxa'}},$taxon_name);
           }
         }
       }
@@ -470,7 +480,6 @@ if($INP_ref)
 my @intersection_keys;
 foreach my $key (keys(%stats))
 {
-
   # intersection steps
   next if($stats{$key}{'total'} != $n_of_dirs);
 
@@ -596,10 +605,7 @@ if($INP_pange && %pangemat)
   my $pangenome_fasta_file  = $INP_output_dir . "/pangenome_matrix$params\.fasta";
   my $pangenome_matrix_file = $INP_output_dir . "/pangenome_matrix$params\.tab";
 
-# 1) ordena taxa por clustering jerarquico ,de la matriz pangenomica
-# codigo en python en collective intelligence para hacer clusters y pintar dendrograma
-# 2) ordena clusters (en horizontal) de mas frecuentes a menos, de core a pan
-
+  # 1) sort clusters
   my @taxon_names = keys(%pangemat);
   my (%cluster_names,$cluster_name,$file_number,%file_name);
   for($taxon=0;$taxon<scalar(@taxon_names);$taxon++)

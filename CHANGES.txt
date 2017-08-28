@@ -216,4 +216,4 @@
 17082017: updated manuals and plot_matrix_heatmap.sh with options -r (remove column names and cell contents) and -k (set name for color key X-axis)
 19082017: added options -d (max no. decimals) and -x (filter matrix with regex) to plot_matrix_heatmap.sh
 28082017: added parse_pangenome_matrix.pl -x to compute cluster intersection between taxa in a pangenome matrix (thanks Sean and John!)
-
+28082017: fixed bug in compare_clusters.pl when .cluster_list file is not parsed, due to previous changes in find_taxa_FASTA_array_headers (thanks Audrey Bioteau)
