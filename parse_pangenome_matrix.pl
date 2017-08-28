@@ -55,9 +55,9 @@ check_installed_features(@FEATURES2CHECK);
 
 my ($INP_matrix,$INP_absent,$INP_expansions,$INP_includeA,$INP_includeB,%opts) = ('',0,0,'','');
 my ($INP_refgenome,$INP_list_taxa,$INP_plotshell,$INP_cutoff,$needAB,$Rparams) = ('',0,0,$CUTOFF,0,'');
-my ($INP_absentB,$INP_skip_singletons,$INP_taxa_file,$needB) = (0,0,'');
+my ($INP_absentB,$INP_skip_singletons,$INP_shared_matrix,$INP_taxa_file,$needB) = (0,0,0,'');
 
-getopts('hagselp:m:I:A:B:P:S:', \%opts);
+getopts('hagselxp:m:I:A:B:P:S:', \%opts);
 
 if(($opts{'h'})||(scalar(keys(%opts))==0))
 {
@@ -66,13 +66,14 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   print   "-m \t input pangenome matrix .tab                               (required, made by compare_clusters.pl)\n"; #, ideally with -t 0)\n";
   print   "-s \t report cloud,shell,soft core and core clusters            (optional, creates plot if R is installed)\n";
   print   "-l \t list taxa names present in clusters reported in -m matrix (optional, recommended before using -p option)\n";
+  print   "-x \t produce matrix of intersection pangenome clusters         (optional, requires -s)\n";
   print   "-I \t use only taxon names included in file                     (optional, ignores -A,-g,-e)\n";
   print   "-A \t file with taxon names (.faa,.gbk,.nucl files) of group A  (optional, example -A clade_list_pathogenic.txt)\n";
   print   "-B \t file with taxon names (.faa,.gbk,.nucl files) of group B  (optional, example -B clade_list_symbiotic.txt)\n";
   print   "-a \t find genes/clusters which are absent in B                 (optional, requires -B)\n";
   print   "-g \t find genes/clusters present in A which are absent in B    (optional, requires -A & -B)\n";
   print   "-e \t find gene family expansions in A with respect to B        (optional, requires -A & -B)\n";
-  print   "-S \t skip clusters with occupancy <S when comparing A and B    (optional, requires -a/-g, example -S 2)\n";
+  print   "-S \t skip clusters with occupancy <S                           (optional, requires -x/-a/-g, example -S 2)\n";
   print   "-P \t percentage of genomes that must comply presence/absence   (optional, default=$CUTOFF, requires -g)\n";
   if(eval{ require GD } ) # show only if GD is available
   {
@@ -93,7 +94,17 @@ if(defined($opts{'l'})){ $INP_list_taxa = 1 }
 
 if(defined($opts{'s'}))
 {
-    $INP_plotshell = 1;
+	$INP_plotshell = 1;
+	
+	if(defined($opts{'x'}))
+	{
+		$INP_shared_matrix = 1;
+
+		if($opts{'S'} && $opts{'S'} > 0)
+		{
+			$INP_skip_singletons = $opts{'S'};
+		}
+	}
 }
 
 if(defined($opts{'I'}))
@@ -165,9 +176,10 @@ else
   }
 }
 
-printf("\n# %s -m %s -I %s -A %s -B %s -a %d -g %d -e %d -p %s -s %d -l %d -P %d -S %d\n\n",
-  $0,$INP_matrix,$INP_taxa_file,$INP_includeA,$INP_includeB,$INP_absentB,$INP_absent,
-  $INP_expansions,$INP_refgenome,$INP_plotshell,$INP_list_taxa,$INP_cutoff,$INP_skip_singletons);
+printf("\n# %s -m %s -I %s -A %s -B %s -a %d -g %d -e %d -p %s -s %d -l %d -x %d -P %d -S %d\n\n",
+	$0,$INP_matrix,$INP_taxa_file,$INP_includeA,$INP_includeB,$INP_absentB,$INP_absent,
+	$INP_expansions,$INP_refgenome,$INP_plotshell,$INP_list_taxa,$INP_shared_matrix,
+	$INP_cutoff,$INP_skip_singletons);
 
 if(!$needB && !$needAB && !$INP_plotshell && !$INP_list_taxa)
 {
@@ -183,7 +195,7 @@ my (%included_input_filesA,%included_input_filesB);
 my ($n_of_clusters,$n_of_includedA,$n_of_includedB) = (0,0,0);
 my ($outfile_root,$outpanfileA,$outexpanfileA,$taxon);
 my ($shell_input,$shell_output_png,$shell_output_pdf,$shell_circle_png,$shell_circle_pdf,$shell_estimates);
-my ($cloudlistfile,$shelllistfile,$softcorelistfile,$corelistfile);
+my ($cloudlistfile,$shelllistfile,$softcorelistfile,$corelistfile,$intersection_file);
 my (@pansetA,@pansetB,@expA,@expB,@shell);
 
 $outfile_root = $INP_refgenome; $outfile_root =~ s/\W+//g;
@@ -204,9 +216,11 @@ $softcorelistfile = $outfile_root . '_softcore_list.txt';
 $corelistfile     = $outfile_root . '_core_list.txt';
 $outpanfileA      = $outfile_root . '_pangenes_list.txt';
 $outexpanfileA    = $outfile_root . '_expansions_list.txt';
+$intersection_file= $outfile_root . '_intersection.tab';
 
 if($INP_skip_singletons)
 {
+  $intersection_file= $outfile_root . "_intersection_min_occup$INP_skip_singletons.tab";
   $outpanfileA = $outfile_root . '_pangenes_min_occup'.$INP_skip_singletons.'_list.txt';
 }
 
@@ -916,6 +930,52 @@ EOR
     {
       printf("\t%d",$taxa_total{$class}{$taxon} || 0);
     } print "\n";
+  }
+
+  # produce intersection matrix if required
+  if($INP_shared_matrix)
+  {
+		my ($taxon2,$intersect);
+    my ($mean_pan_clusters,$mean_intersection) = (0,0);
+
+		open(INTERSECTIONF,">$intersection_file") 
+			|| die "# EXIT : cannot create $intersection_file\n";
+
+		print INTERSECTIONF "intersection";
+		foreach $taxon (@taxa){ print INTERSECTIONF "\t$taxon" } 
+		print INTERSECTIONF "\n";  
+		foreach $taxon (@taxa)
+		{
+			print INTERSECTIONF "$taxon";
+			foreach $taxon2 (@taxa)
+			{
+				$intersect = 0;
+				foreach $cluster (1 .. $#shell)
+				{
+					next if(!$shell[$cluster]);
+					next if($INP_skip_singletons && 
+						$shell[$cluster] < $INP_skip_singletons);
+
+					if($pangemat{$taxon}[$cluster] > 0 && 
+						$pangemat{$taxon2}[$cluster] > 0)
+					{
+						$intersect++;
+					}
+				}	
+				print INTERSECTIONF "\t$intersect";	
+
+        if($taxon eq $taxon2){ $mean_pan_clusters += $intersect }
+        $mean_intersection += $intersect;
+			}
+			print INTERSECTIONF "\n";
+		}
+
+		close(INTERSECTIONF);
+
+		print "\n# intersection pangenome matrix: $intersection_file\n";		
+    printf("# mean %%cluster intersection: %1.2f\n",
+      100 * ($mean_intersection/($n_of_taxa ** 2)) /
+      ($mean_pan_clusters/$n_of_taxa));
   }
 }
 
