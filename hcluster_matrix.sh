@@ -12,7 +12,7 @@
 
 
 progname=${0##*/} 
-VERSION='0.4_7Sep15' # v0.4_7Sep17; added options -x <regex> to select specific rows (genomes) 
+VERSION='0.4_7Sep17' # v0.4_7Sep17; added options -x <regex> to select specific rows (genomes) 
                      #                                       from the input pangenome_matrix_t0.tab
                      #                            -c <0|1> to print or not distances in heatmap cells
 		     #                            -f <int> maximum number of decimals in matrix display (if -c 1)
