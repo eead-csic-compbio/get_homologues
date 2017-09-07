@@ -217,3 +217,4 @@
 19082017: added options -d (max no. decimals) and -x (filter matrix with regex) to plot_matrix_heatmap.sh
 28082017: added parse_pangenome_matrix.pl -x to compute cluster intersection between taxa in a pangenome matrix (thanks Sean and John!)
 28082017: fixed bug in compare_clusters.pl when .cluster_list file is not parsed, due to previous changes in find_taxa_FASTA_array_headers (thanks Audrey Bioteau)
+06092017: added options -x <regex>, -c <0|1> and -f <int> to hcluster_matrix.sh (thanks Marga Gomila)
