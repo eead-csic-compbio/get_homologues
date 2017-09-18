@@ -219,3 +219,4 @@
 28082017: fixed bug in compare_clusters.pl when .cluster_list file is not parsed, due to previous changes in find_taxa_FASTA_array_headers (thanks Audrey Bioteau)
 06092017: added options -x <regex>, -c <0|1> and -f <int> to hcluster_matrix.sh (thanks Marga Gomila)
 18092017: added oneliner to transpose matrix to compare_clusters.pl
+18092017: fixed parsing of filenames with -I in cases where input files are like numbers.faa (thanks cdeai)

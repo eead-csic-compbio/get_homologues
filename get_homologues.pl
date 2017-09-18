@@ -1059,8 +1059,8 @@ if($include_file)
     $includedfull = $included;
     if($do_features){ $includedfull .= '_features'; }
     foreach $taxon (@taxa)
-    {
-      if($includedfull =~ /$taxon/)
+    { 
+      if($taxon =~ /^$includedfull$/) #if($includedfull =~ /$taxon/)
       {
         push(@Itaxa,$taxon);
         $n_of_sequences += $psize{$included};
@@ -1073,7 +1073,7 @@ if($include_file)
   }
   print "\n";
 
-  if($n_of_matched_included < 3)
+  if($n_of_matched_included < scalar(keys(%included_input_files)))
   {
     die "# EXIT : failed to match taxa included in $include_file ($n_of_matched_included), ".
       "please make sure their names match those of input files\n";
