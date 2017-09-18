@@ -686,6 +686,14 @@ if($INP_pange && %pangemat)
 
   print "# pangenome_phylip file = $pangenome_phylip_file\n";
   print "# pangenome_FASTA file = $pangenome_fasta_file\n";
+  
+  print "\n# NOTE: matrix can be transposed for your convenience with:\n\n";
+  
+print <<'TRANS';
+  perl -F'\t' -ane '$r++;for(1 .. @F){$m[$r][$_]=$F[$_-1]};$mx=@F;END{for(1 .. $mx){for $t(1 .. $r){print"$m[$t][$_]\t"}print"\n"}}' \
+TRANS
+
+  print "   $pangenome_matrix_file\n\n";
 
   if($INP_tree)
   {
