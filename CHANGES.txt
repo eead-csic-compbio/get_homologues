@@ -220,3 +220,4 @@
 06092017: added options -x <regex>, -c <0|1> and -f <int> to hcluster_matrix.sh (thanks Marga Gomila)
 18092017: added oneliner to transpose matrix to compare_clusters.pl
 18092017: fixed parsing of filenames with -I in cases where input files are like numbers.faa (thanks cdeai)
+20092017: removed especial chars >,<,& from cluster names in get_homologues.pl and get_homologues-est.pl (thanks Guella!)

@@ -2588,7 +2588,7 @@ GENE: foreach $gene (sort {$a<=>$b} (keys(%orthologues)))
   }
 
   $cluster_name =~ s/ /_/g;
-  $cluster_name =~ s/[\s|\(|\)|\*|;|\|\[|\]|\/|:|,]/-/g;
+  $cluster_name =~ s/[\s|\(|\)|\*|;|\|\[|\]|\/|:|,|>|&|<]/-/g;
   $cluster_name = $generef.'_'.$cluster_name;
   if($names{$cluster_name})
   {
