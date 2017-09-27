@@ -221,3 +221,4 @@
 18092017: added oneliner to transpose matrix to compare_clusters.pl
 18092017: fixed parsing of filenames with -I in cases where input files are like numbers.faa (thanks cdeai)
 20092017: removed especial chars >,<,& from cluster names in get_homologues.pl and get_homologues-est.pl (thanks Guella!)
+27092017: updated table of occupancy classes in the manual
