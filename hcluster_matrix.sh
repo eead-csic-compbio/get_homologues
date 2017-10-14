@@ -12,7 +12,9 @@
 
 
 progname=${0##*/} 
-VERSION='0.4_7Sep17' # v0.4_7Sep17; added options -x <regex> to select specific rows (genomes) 
+VERSION='0.5_14Oct17' #v'0.5_14Oct17'; added options -A and -X to control the angle 
+                      #                and character eXpansion factor of leaf labels
+         #'0.4_7Sep17' # v0.4_7Sep17; added options -x <regex> to select specific rows (genomes) 
                      #                                       from the input pangenome_matrix_t0.tab
                      #                            -c <0|1> to print or not distances in heatmap cells
 		     #                            -f <int> maximum number of decimals in matrix display (if -c 1)
@@ -54,14 +56,19 @@ function print_help()
        -W <integer> ouptupt device width                      [def:$width]     
        -N <flag> print Notes and exit                         [flag]
 
+       -A <integer> angle to rotate leaf labels               [def $angle]
+       -X <float> leaf label character expansion factor       [def $charExp]
+       
+
     Select genomes from input pangenome_matrix_t0.tab using regular expressions
        -x <string> regex, like: 'Escherichia|Salmonella'      [def $regex]
+       
 
     EXAMPLE:
       $progname -i pangenome_matrix_t0.tab -t "Pan-genome tree for Genus X" -a complete -d manhattan -o pdf -x 'maltoph|genosp' 
 
     AIM: compute a distance matrix from a pangenome_matrix.tab file produced after running 
-          get_homologues.pl and compare_clusters.pl with options -t 0 -m .
+         get_homologues.pl and compare_clusters.pl with options -t 0 -m .
          The pangenome_matrix.tab file processed by hclust(), and heatmap.2()
     
     OUTPUT: a newick file with extension .ph and svg|pdf output of hclust and heatmap.2 calls
@@ -186,15 +193,21 @@ algorithm=ward.D2
 distance=gower
 decimals=2
 
+charExp=1.0
+angle=45
+#colTax=1
+
 subset_matrix=0
 
 
 # See bash cookbook 13.1 and 13.2
-while getopts ':a:c:i:d:t:m:o:p:f:v:x:H:W:R:hND?:' OPTIONS
+while getopts ':a:A:c:i:d:t:m:o:p:f:v:x:X:H:W:R:hND?:' OPTIONS
 do
    case $OPTIONS in
 
    a)   algorithm=$OPTARG
+        ;;
+   A)   angle=$OPTARG
         ;;
    c)   cell_note=$OPTARG
         ;;
@@ -215,6 +228,8 @@ do
    t)   text=$OPTARG
         ;;
    x)   regex=$OPTARG
+        ;;
+   X)   charExp=$OPTARG
         ;;
    C)   reorder_clusters=0
         ;;
@@ -294,6 +309,7 @@ cat << PARAMS
 	distance:$distance|dist_cutoff:$dist_cutoff|hclustering_meth:$algorithm|cell_note:$cell_note
         text:$text|margin_hor:$margin_hor|margin_vert:$margin_vert|points:$points
         width:$width|height:$height|outformat:$outformat
+	angle:$angle|charExp:$charExp
 ##############################################################################################
 
 PARAMS
@@ -348,14 +364,20 @@ dev.off()
     
 if($cell_note == 0){
    $outformat(file="$heatmap_outfile", width=$width, height=$height, pointsize=$pointsize)
-   heatmap.2(as.matrix(my_dist), main="$text $distance dist.", notecol="black", density.info="none", trace="none", dendrogram="row", margins=c($margin_vert,$margin_hor), lhei = c(1,5))
+   heatmap.2(as.matrix(my_dist), main="$text $distance dist.", notecol="black", density.info="none", trace="none", dendrogram="row", 
+   margins=c($margin_vert,$margin_hor), lhei = c(1,5),
+   cexRow=$charExp, cexCol=$charExp, srtRow=$angle, srtCol=$angle)
+)
    dev.off()
 }
 
 if($cell_note == 1){
    $outformat(file="$heatmap_outfile", width=$width, height=$height, pointsize=$pointsize)
-   heatmap.2(as.matrix(my_dist), cellnote=round(as.matrix(my_dist),$decimals), main="$text $distance dist.", notecol="black", density.info="none", trace="none", dendrogram="row",       margins=c($margin_vert,$margin_hor), lhei = c(1,5))
-    dev.off()
+   heatmap.2(as.matrix(my_dist), cellnote=round(as.matrix(my_dist),$decimals), main="$text $distance dist.", 
+   notecol="black", density.info="none", trace="none", dendrogram="row", 
+   margins=c($margin_vert,$margin_hor), lhei = c(1,5),
+   cexRow=$charExp, cexCol=$charExp, srtRow=$angle, srtCol=$angle)
+   dev.off()
 }    
 
 RCMD
