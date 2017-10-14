@@ -367,7 +367,6 @@ if($cell_note == 0){
    heatmap.2(as.matrix(my_dist), main="$text $distance dist.", notecol="black", density.info="none", trace="none", dendrogram="row", 
    margins=c($margin_vert,$margin_hor), lhei = c(1,5),
    cexRow=$charExp, cexCol=$charExp, srtRow=$angle, srtCol=$angle)
-)
    dev.off()
 }
 
