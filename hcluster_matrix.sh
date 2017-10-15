@@ -56,7 +56,7 @@ function print_help()
        -W <integer> ouptupt device width                      [def:$width]     
        -N <flag> print Notes and exit                         [flag]
 
-       -A <integer> angle to rotate leaf labels               [def $angle]
+       -A <'integer,integer'> angle to rotate leaf labels       [def $angle]
        -X <float> leaf label character expansion factor       [def $charExp]
        
 
@@ -65,7 +65,7 @@ function print_help()
        
 
     EXAMPLE:
-      $progname -i pangenome_matrix_t0.tab -t "Pan-genome tree for Genus X" -a complete -d manhattan -o pdf -x 'maltoph|genosp' 
+      $progname -i pangenome_matrix_t0.tab -t "Pan-genome tree" -a ward.D2 -d euclidean -o pdf -x 'maltoph|genosp' -A 'NULL,45' -X 0.8
 
     AIM: compute a distance matrix from a pangenome_matrix.tab file produced after running 
          get_homologues.pl and compare_clusters.pl with options -t 0 -m .
@@ -194,7 +194,7 @@ distance=gower
 decimals=2
 
 charExp=1.0
-angle=45
+angle='NULL,NULL'
 #colTax=1
 
 subset_matrix=0
@@ -309,7 +309,7 @@ cat << PARAMS
 	distance:$distance|dist_cutoff:$dist_cutoff|hclustering_meth:$algorithm|cell_note:$cell_note
         text:$text|margin_hor:$margin_hor|margin_vert:$margin_vert|points:$points
         width:$width|height:$height|outformat:$outformat
-	angle:$angle|charExp:$charExp
+	angle:"$angle"|charExp:$charExp
 ##############################################################################################
 
 PARAMS
@@ -322,6 +322,9 @@ tree_file="hclust_${distance}-${algorithm}_${tab_file%.*}_tree.$outformat"
 tree_file=${tree_file//\//_}
 newick_file="hclust_${distance}-${algorithm}_${tab_file%.*}_tree.ph"
 newick_file=${newick_file//\//_}
+
+aRow=$(echo "$angle" | cut -d, -f1)
+aCol=$(echo "$angle" | cut -d, -f2)
 
 echo ">>> Plotting files $tree_file and $heatmap_outfile ..."
 echo "     this will take some time, please be patient"
@@ -346,6 +349,8 @@ if($subset_matrix > 0 ){
    table <- table[include_list, ]
 }
 
+
+
 mat_dat <- data.matrix(table[,2:ncol(table)])
 
 rnames <- table[,1]
@@ -366,7 +371,8 @@ if($cell_note == 0){
    $outformat(file="$heatmap_outfile", width=$width, height=$height, pointsize=$pointsize)
    heatmap.2(as.matrix(my_dist), main="$text $distance dist.", notecol="black", density.info="none", trace="none", dendrogram="row", 
    margins=c($margin_vert,$margin_hor), lhei = c(1,5),
-   cexRow=$charExp, cexCol=$charExp, srtRow=$angle, srtCol=$angle)
+   cexRow=$charExp, cexCol=$charExp, 
+   srtRow=$aRow, srtCol=$aCol)
    dev.off()
 }
 
@@ -375,7 +381,8 @@ if($cell_note == 1){
    heatmap.2(as.matrix(my_dist), cellnote=round(as.matrix(my_dist),$decimals), main="$text $distance dist.", 
    notecol="black", density.info="none", trace="none", dendrogram="row", 
    margins=c($margin_vert,$margin_hor), lhei = c(1,5),
-   cexRow=$charExp, cexCol=$charExp, srtRow=$angle, srtCol=$angle)
+   cexRow=$charExp, cexCol=$charExp, 
+   srtRow=$aRow, srtCol=$aCol)
    dev.off()
 }    
 
