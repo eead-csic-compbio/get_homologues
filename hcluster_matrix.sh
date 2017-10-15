@@ -44,7 +44,8 @@ function print_help()
     OPTIONAL:
        -a <string> algorithm/method for clustering 
              [ward.D|ward.D2|single|complete|average(=UPGMA)] [def $algorithm]
-       -c <int> 1|0 to display or not the distace values in the heatmap cells [def:$cell_note]
+       -c <int> 1|0 to display or not the distace values      [def:$cell_note]
+                    in the heatmap cells 
        -d <string> distance type [euclidean|manhattan|gower]  [def $distance]
        -f <int> maximum number of decimals in matrix display  [1,2; def:$decimals]
        -t <string> text for Main title                        [def:$text]
@@ -56,11 +57,11 @@ function print_help()
        -W <integer> ouptupt device width                      [def:$width]     
        -N <flag> print Notes and exit                         [flag]
 
-       -A <'integer,integer'> angle to rotate leaf labels       [def $angle]
+       -A <'integer,integer'> angle to rotate row,col labels  [def $angle]
        -X <float> leaf label character expansion factor       [def $charExp]
        
 
-    Select genomes from input pangenome_matrix_t0.tab using regular expressions
+    Select genomes from input pangenome_matrix_t0.tab using regular expressions:
        -x <string> regex, like: 'Escherichia|Salmonella'      [def $regex]
        
 
