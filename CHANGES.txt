@@ -222,4 +222,5 @@
 18092017: fixed parsing of filenames with -I in cases where input files are like numbers.faa (thanks cdeai)
 20092017: removed especial chars >,<,& from cluster names in get_homologues.pl and get_homologues-est.pl (thanks Guella!)
 27092017: updated table of occupancy classes in the manual
+15102017: added options -a and -X; improved documentation (thanks Pablo!)
 23102017: despite the increase in size, updated BLAST+ to ncbi-blast-2.6.0+ as it handles better than 2.2.27+ alignments with low complexity (thanks Uriel Alonso!)
