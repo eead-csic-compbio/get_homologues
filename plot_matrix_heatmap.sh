@@ -37,7 +37,7 @@ function print_help()
        $progname <string (tab-delimited matrix file)> [-t|-m|-v|-o|-p|-H|-W|-C|-r|-k|-N|-M]
     
     REQUIRED
-       -i <string> presence_absence tab file     
+       -i <string> *Avg_identity.tab file     
        
     OPTIONAL:
      I) filter out excessive redundancy in the tab-delimited ANI matrix file
@@ -66,13 +66,13 @@ function print_help()
 		 Do not use with a binary presence-absence matrix
     
     SUBSET MATRIX WITH REGULAR EXPRESSIONS
-       -x <string> regex, like: 'Smalt|Smc'               [def $regex]
+       -x <string> regex, like: 'species1|species2'       [def $regex]
     
     MORE DETAILED HELP:
        -M <flag> prints gplot installation instructions and further usage information
        
     EXAMPLE:
-      $progname -i Avg_identity.tab -c 98 -t "Genus X ANIb (OMCL all clusters)" -N -o pdf -m 22 -v 22 -p 20 -H 20 -W 30 -x 'Smalt|Smc' -d 1 -a 45 -X 0.9
+      $progname -i Avg_identity.tab -c 99.5 -d 1 -t "Genus X ANIb (OMCL all clusters)" -N -o pdf -m 22 -v 22 -p 20 -H 20 -W 30 -x 'sp1|sp2' -a 45 -X 0.9
 
     #------------------------------------------------------------------------------------------------------------------
     AIM: Plot ordered heatmaps with row and col. dendrogram, from squared numeric (distance or presence-absence) matrix,
