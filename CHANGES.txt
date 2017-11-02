@@ -224,3 +224,5 @@
 27092017: updated table of occupancy classes in the manual
 15102017: added options -a and -X; improved documentation (thanks Pablo!)
 23102017: despite the increase in size, updated BLAST+ to ncbi-blast-2.6.0+ as it handles better than 2.2.27+ alignments with low complexity (thanks Uriel Alonso!)
+30102017: added commented lines in get_homologues.pl to request $NOFSAMPLESREPORT samples when using -c -I include file
+31102017: added hclustering of ANdist matrix in plot_matrix_heatmap.sh for convenient cluster delimitatios at distance cutoffs of 6,5,4  which correspond to ANI values of 94%, 95% and 96%, respectively

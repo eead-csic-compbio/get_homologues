@@ -1635,7 +1635,7 @@ if($do_genome_composition)
   my @tmptaxa = @taxa;
   my $n_of_taxa = scalar(@tmptaxa);
 
-  if($include_file)
+  if($include_file) # add 0 && if you wish $NOFSAMPLESREPORT samples even if using a -I include file
   {
     $NOFSAMPLESREPORT = 1;
     print "\n# genome composition report (samples=1, using sequence order implicit in -I file: $include_file)\n";
@@ -1648,7 +1648,8 @@ if($do_genome_composition)
   }
 
   for($s=0;$s<$NOFSAMPLESREPORT;$s++) # random-sort the list of taxa $NOFSAMPLESREPORT times
-  {
+  { 
+    #if($s) # in case you wish $NOFSAMPLESREPORT samples even if using a -I include file
     if(!$include_file && $s) # reshuffle until a new permutation is obtained, conserve input order in first sample
     {
       $sort = fisher_yates_shuffle( \@tmptaxa );
