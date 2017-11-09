@@ -604,6 +604,7 @@ if($INP_pange && %pangemat)
   my $pangenome_phylip_file = $INP_output_dir . "/pangenome_matrix$params\.phylip";
   my $pangenome_fasta_file  = $INP_output_dir . "/pangenome_matrix$params\.fasta";
   my $pangenome_matrix_file = $INP_output_dir . "/pangenome_matrix$params\.tab";
+  my $pangenome_csv_tr_file = $INP_output_dir . "/pangenome_matrix$params\.tr.csv"; # tr = transposed
 
   # 1) sort clusters
   my @taxon_names = keys(%pangemat);
@@ -684,9 +685,42 @@ if($INP_pange && %pangemat)
 
   close(PANGEMATRIX);
 
+  # transposed version in CSV format for Scoary https://github.com/AdmiralenOla/Scoary
+  open(PANGEMATRIXCSV,">$pangenome_csv_tr_file")
+    || die "# EXIT: cannot create $pangenome_csv_tr_file\n";
+
+  # add header
+  my $simple_taxon;  
+  print PANGEMATRIXCSV "Gene,Non-unique Gene name,Annotation,No. isolates,No. sequences,Avg sequences per isolate,".
+    "Genome fragment,Order within fragment,Accessory Fragment,Accessory Order with Fragment,QC,Min group size nuc,".
+    "Max group size nuc,Avg group size nuc";
+  for($taxon=0;$taxon<scalar(@taxon_names);$taxon++)
+  {
+    $simple_taxon = $taxon_names[$taxon];
+    $simple_taxon =~ s/ /_/g;
+    $simple_taxon =~ s/[\s|\(|\)|\*|;|\|\[|\]|\/|:|,|>|&|<]/-/g;
+    print PANGEMATRIXCSV ",$simple_taxon";
+  } print PANGEMATRIXCSV "\n";
+
+  foreach $cluster_name (@cluster_names)
+  {
+    print PANGEMATRIXCSV "$cluster_name,,,,,,,,,,,,,"; # Roary fields empty as they're not used by Scoary
+
+    for($taxon=0;$taxon<scalar(@taxon_names);$taxon++)
+    {
+      if($pangemat{$taxon_names[$taxon]}{$cluster_name})
+      {
+        print PANGEMATRIXCSV ",1";
+      }  
+      else{ print PANGEMATRIXCSV ",0" }
+    } print PANGEMATRIXCSV "\n";
+  }
+  close(PANGEMATRIXCSV);
+
   print "# pangenome_phylip file = $pangenome_phylip_file\n";
   print "# pangenome_FASTA file = $pangenome_fasta_file\n";
-  
+  print "# pangenome CSV file (Scoary) = $pangenome_csv_tr_file\n";
+    
   print "\n# NOTE: matrix can be transposed for your convenience with:\n\n";
   
 print <<'TRANS';

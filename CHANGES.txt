@@ -226,3 +226,4 @@
 23102017: despite the increase in size, updated BLAST+ to ncbi-blast-2.6.0+ as it handles better than 2.2.27+ alignments with low complexity (thanks Uriel Alonso!)
 30102017: added commented lines in get_homologues.pl to request $NOFSAMPLESREPORT samples when using -c -I include file
 31102017: added hclustering of ANdist matrix in plot_matrix_heatmap.sh for convenient cluster delimitatios at distance cutoffs of 6,5,4  which correspond to ANI values of 94%, 95% and 96%, respectively
+09112017: compare_clusters.pl -m now produces also pangenome CSV file for Scoary GWAS analyses with Fisher's Exact test
