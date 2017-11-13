@@ -125,7 +125,7 @@ although most have been backported.
 
 <P>
 <BR><P></P>
-<DIV ALIGN="CENTER"><A NAME="539"></A>
+<DIV ALIGN="CENTER"><A NAME="540"></A>
 <TABLE>
 <CAPTION><STRONG>Table 1:</STRONG>
 List of novel scripts/features in <SPAN  CLASS="textit">get_homologues-est</SPAN>.</CAPTION>
@@ -233,7 +233,7 @@ modules from the <A NAME="tex2html7"
   HREF="http://www.bioperl.org">Bioperl</A>
 collection, 
 and module <A NAME="tex2html8"
-  HREF="<"><</A>550>>http://search.cpan.org/perldoc?Parallel
+  HREF="<"><</A>552>>http://search.cpan.org/perldoc?Parallel
 are also required, and have been included in the <SPAN  CLASS="textit">get_homologues-est</SPAN> bundle for your convenience.
 
 <P>
@@ -434,9 +434,9 @@ database engine, which requires Perl core module
 <P>
 The accompanying script <SPAN  CLASS="textit">transcripts2cds.pl</SPAN> should work out of the box, but the more efficient
 <SPAN  CLASS="textit">transcripts2cdsCPP.pl</SPAN> requires the installation of module <A NAME="tex2html20"
-  HREF="<"><</A>551>>http://search.cpan.org/perldoc?Inline
+  HREF="<"><</A>553>>http://search.cpan.org/perldoc?Inline
 which in turn requires <A NAME="tex2html21"
-  HREF="<"><</A>552>>http://search.cpan.org/perldoc?Inline
+  HREF="<"><</A>554>>http://search.cpan.org/perldoc?Inline
 The installation of these modules is known to be troublesome in some systems, but the standard way should work in most cases:
 
 <P>
@@ -1518,7 +1518,7 @@ in PubMed=<A NAME="tex2html57"
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:pangenomet"></A><A NAME="541"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:pangenomet"></A><A NAME="542"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 7:</STRONG>
 
@@ -1925,7 +1925,7 @@ CCTGCTGGTGCATTTTTTTACAAACAGTTGGCACAGAGTATTTGTTGCTAATTGTGTTCGTTTTCTTGAA...
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:annotcluster"></A><A NAME="542"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:annotcluster"></A><A NAME="543"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 10:</STRONG>
 Fragment of alignment produced by annotate_cluster.pl, 
@@ -2329,6 +2329,18 @@ The NJ tree is computed from the distance matrix that you indicate the program t
 
 <P>
 </LI>
+<LI>I ran <SPAN  CLASS="textit">get_homologues</SPAN> with fasta files of 78 genomes; is there a way to export a 78 x 78 matrix 
+of the number of homologues shared between each genome?
+
+<P>
+If you did your analysis requesting cluster of all occupancies (<code>-t 0</code>) then you can get what you want in two steps. 
+First, you must produce a pangenome matrix with <code>compare_clusters -d ... -m</code>. Now it is possible to request an intersection 
+pangenome matrix (<code>pangenome_matrix_t0__intersection.tab</code>) which contains the number of sequence clusters shared by 
+any two pairs of genomes with <code>parse_pangenome_matrix.pl -m pangenome_matrix_t0.tab -s -x</code>.
+Note that these clusters might contain several inparalogues of the same species.
+
+<P>
+</LI>
 </UL>
 
 <P>
@@ -2465,7 +2477,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>manual-est -no_antialias_text -split 0 -dir manual-est -no_navigation -show_section_numbers</TT>
 <P>
-The translation was initiated by Bruno Contreras Moreira on 2017-08-17
+The translation was initiated by Bruno Contreras Moreira on 2017-11-13
 <BR><HR>
 <ADDRESS>
 Bruno Contreras-Moreira and Pablo Vinuesa<br><a href="https://github.com/eead-csic-compbio/get_homologues">https://github.com/eead-csic-compbio/get_homologues</a>
