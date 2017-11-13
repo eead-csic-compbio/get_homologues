@@ -228,3 +228,4 @@
 31102017: added hclustering of ANdist matrix in plot_matrix_heatmap.sh for convenient cluster delimitatios at distance cutoffs of 6,5,4  which correspond to ANI values of 94%, 95% and 96%, respectively
 09112017: compare_clusters.pl -m now produces also pangenome CSV file for Scoary GWAS analyses with Fisher's Exact test
 13112017: updated manuals with option to compute cluster intersection matrices with parse_pangenome_matrix -x
+13112017: explained transposed CSV pangenome matrix for software Scoary in manual
