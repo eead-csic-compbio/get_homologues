@@ -2,7 +2,7 @@
 
 # script that checks/compiles software required by get_homologues[-est] and checks dependencies
 # for first-time users
-# last checked Apr2017
+# last checked Nov2017
 
 use strict;
 use Cwd;
@@ -31,6 +31,14 @@ my %packages =
   );
 
 my ($SOguess,$output,$command,$cwd) = ('','','',getcwd());
+my $force_unsupervised = 0;
+
+# unsupervised, forced install
+if(defined($ARGV[0]) && $ARGV[0] eq 'force')
+{ 
+  $force_unsupervised = 1; 
+  print "# \$force_unsupervised=$force_unsupervised\n\n";
+}
 
 ##############################################################################################
 
@@ -120,11 +128,16 @@ else
 
 print "## checking optional PFAM library (lib/phyTools: \$ENV{'PFAMDB'})\n";
 print "# required by get_homologues.pl -D and get_homologues-est.pl -D\n";
-if(! -s $ENV{'PFAMDB'}.'.h3m')
+if($force_unsupervised || ! -s $ENV{'PFAMDB'}.'.h3m')
 {
-  print "# cannot locate Pfam-A, would you like to download it now? [Y/n]\n";
-  my $userword = <STDIN>;
-  if($userword =~ m/Y/i)
+  my $userword = '';
+  if(!$force_unsupervised)
+  {
+    print "# cannot locate Pfam-A, would you like to download it now? [Y/n]\n";
+    $userword = <STDIN>;
+  }    
+
+  if($force_unsupervised || $userword =~ m/Y/i)
   {
     chdir($ENV{'MARFIL'}.'/db/');
     
@@ -201,15 +214,20 @@ else{ print ">> OK\n"; }
 # check swissprot DB
 print "## checking optional SWISSPROT library (lib/phyTools: \$ENV{'BLASTXDB'})\n";
 print "# required by transcripts2cds.pl and transcripts2cdsCPP.pl\n";
-if(-s $ENV{'BLASTXDB'}.'.phr' && -s $ENV{'BLASTXDB'}.'.dmnd')
+if(!$force_unsupervised && -s $ENV{'BLASTXDB'}.'.phr' && -s $ENV{'BLASTXDB'}.'.dmnd')
 {
   print ">> OK\n";
 }
 else
 {
-  print "# cannot locate SWISSPROT, would you like to download it now? [Y/n]\n";
-  my $userword = <STDIN>;
-  if($userword =~ m/Y/i)
+  my $userword = '';
+  if(!$force_unsupervised)
+  { 
+    print "# cannot locate SWISSPROT, would you like to download it now? [Y/n]\n";
+    $userword = <STDIN>; 
+  }
+
+  if($force_unsupervised || $userword =~ m/Y/i)
   {
     chdir($ENV{'MARFIL'}.'/db/');
 
