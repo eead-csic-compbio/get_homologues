@@ -125,7 +125,7 @@ although most have been backported.
 
 <P>
 <BR><P></P>
-<DIV ALIGN="CENTER"><A NAME="540"></A>
+<DIV ALIGN="CENTER"><A NAME="544"></A>
 <TABLE>
 <CAPTION><STRONG>Table 1:</STRONG>
 List of novel scripts/features in <SPAN  CLASS="textit">get_homologues-est</SPAN>.</CAPTION>
@@ -233,7 +233,7 @@ modules from the <A NAME="tex2html7"
   HREF="http://www.bioperl.org">Bioperl</A>
 collection, 
 and module <A NAME="tex2html8"
-  HREF="<"><</A>552>>http://search.cpan.org/perldoc?Parallel
+  HREF="<"><</A>556>>http://search.cpan.org/perldoc?Parallel
 are also required, and have been included in the <SPAN  CLASS="textit">get_homologues-est</SPAN> bundle for your convenience.
 
 <P>
@@ -434,9 +434,10 @@ database engine, which requires Perl core module
 <P>
 The accompanying script <SPAN  CLASS="textit">transcripts2cds.pl</SPAN> should work out of the box, but the more efficient
 <SPAN  CLASS="textit">transcripts2cdsCPP.pl</SPAN> requires the installation of module <A NAME="tex2html20"
-  HREF="<"><</A>553>>http://search.cpan.org/perldoc?Inline
+  HREF="http://search.cpan.org/perldoc?Inline%3A%3ACPP">Inline::CPP</A>,
 which in turn requires <A NAME="tex2html21"
-  HREF="<"><</A>554>>http://search.cpan.org/perldoc?Inline
+  HREF="http://search.cpan.org/perldoc?Inline%3A%3AC">Inline::C</A>
+and g++, the GNU C++ compiler.
 The installation of these modules is known to be troublesome in some systems, but the standard way should work in most cases:
 
 <P>
@@ -615,7 +616,7 @@ Options that control clustering:
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:flow"></A><A NAME="191"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:flow"></A><A NAME="195"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 1:</STRONG>
 Flowchart of get_homologues-est.</CAPTION>
@@ -652,7 +653,7 @@ relying on BLASTN searches.
 <P>
 Perhaps the most important optional parameter would be the choice of clustering algorithm (Table <A HREF="#tab:algs">2</A>):
 <BR><P></P>
-<DIV ALIGN="CENTER"><A NAME="205"></A>
+<DIV ALIGN="CENTER"><A NAME="209"></A>
 <TABLE>
 <CAPTION><STRONG>Table 2:</STRONG>
 List of available clustering algorithms. Note that the COG triangles algorithm is not supported.</CAPTION>
@@ -706,7 +707,7 @@ This EST-specific feature can be turned off by setting <code>-i 0</code>. Redund
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="214"></A>
+<DIV ALIGN="CENTER"><A NAME="218"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 2:</STRONG>
 Redundant isoforms (dashed) are optionally removed from an input sequence set if they overlap a longer 
@@ -750,7 +751,7 @@ This feature can be used to filter out singletons or artifacts which might arise
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="224"></A>
+<DIV ALIGN="CENTER"><A NAME="228"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 3:</STRONG>
 Histograms of % identity reported by BLASTN among Arabidopsis thaliana CDS sequences (left) and Hordeum vulgare (right) transcripts. 
@@ -814,7 +815,7 @@ unless both of them come from a full-length collection (see <A HREF="#input">3.1
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="239"></A>
+<DIV ALIGN="CENTER"><A NAME="243"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 4:</STRONG>
 Coverage illustrated with the alignment of sequence 'query' to two aligned fragments of sequence 'subject'.
@@ -1052,7 +1053,7 @@ Our benchmarks suggest that 78 to 92% of deduced CDS sequences match the correct
 
 <P>
 <BR><P></P>
-<DIV ALIGN="CENTER"><A NAME="288"></A>
+<DIV ALIGN="CENTER"><A NAME="292"></A>
 <TABLE>
 <CAPTION><STRONG>Table 3:</STRONG>
 Fraction of correct peptide sequences in deduced CDS obtained by combining BLASTX and TransDecoder.</CAPTION>
@@ -1132,7 +1133,7 @@ The results obtained with DIAMOND instead of BLASTX are very similar:
 
 <P>
 <BR><P></P>
-<DIV ALIGN="CENTER"><A NAME="299"></A>
+<DIV ALIGN="CENTER"><A NAME="303"></A>
 <TABLE>
 <CAPTION><STRONG>Table 4:</STRONG>
 Fraction of correct peptide sequences in deduced CDS obtained by combining DIAMOND and TransDecoder.</CAPTION>
@@ -1426,7 +1427,7 @@ are installed, this matrix can be plotted with the following command:
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:ANImat"></A><A NAME="340"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:ANImat"></A><A NAME="344"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 5:</STRONG>
 Heatmap of Average Nucleotide Identity.</CAPTION>
@@ -1478,7 +1479,7 @@ Both matrices can be plotted with script <SPAN  CLASS="textit">plot_pancore_matr
 <BR>
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:pant0"></A><A NAME="fig:pant2"></A><A NAME="361"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:pant0"></A><A NAME="fig:pant2"></A><A NAME="365"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 6:</STRONG>
 Pan-transcriptome size estimates (-t 0, left) and (-t 2,  right) based on random samples of 4 transcriptome sets. 
@@ -1518,7 +1519,7 @@ in PubMed=<A NAME="tex2html57"
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:pangenomet"></A><A NAME="542"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:pangenomet"></A><A NAME="546"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 7:</STRONG>
 
@@ -1553,7 +1554,7 @@ The next Figure show some of this snapshots:
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:snapshot"></A><A NAME="381"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:snapshot"></A><A NAME="385"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 8:</STRONG>
 
@@ -1607,7 +1608,7 @@ are installed, such a pangenome matrix can be used to hierarchically cluster str
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:hclustpange"></A><A NAME="393"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:hclustpange"></A><A NAME="397"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 9:</STRONG>
 Hierarchical grouping of strains based on pangenome matrix.</CAPTION>
@@ -1925,7 +1926,7 @@ CCTGCTGGTGCATTTTTTTACAAACAGTTGGCACAGAGTATTTGTTGCTAATTGTGTTCGTTTTCTTGAA...
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:annotcluster"></A><A NAME="543"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:annotcluster"></A><A NAME="547"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 10:</STRONG>
 Fragment of alignment produced by annotate_cluster.pl, 
@@ -2142,7 +2143,7 @@ in the figure, which combines data from the original benchmark and new data gene
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:RAMtimev2"></A><A NAME="462"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:RAMtimev2"></A><A NAME="466"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 11:</STRONG>
 Computing time and RAM requirements of the original algorithm (OMCL, measured on 6 sequence sets) 
@@ -2170,7 +2171,7 @@ These three common situations are illustrated in the figure.
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:ESTcaveats"></A><A NAME="471"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:ESTcaveats"></A><A NAME="475"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 12:</STRONG>
 Common problems faced when clustering transcripts/CDS sequences.</CAPTION>
@@ -2247,7 +2248,7 @@ to analyze conserved non-coding sequences among <SPAN  CLASS="textit">Brachypodi
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:CNS"></A><A NAME="486"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:CNS"></A><A NAME="490"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 13:</STRONG>
 Core-genome composition analysis of conserved non-coding sequences (CNS) from 56 Brachypodium distachyon ecotypes and rice.</CAPTION>
@@ -2477,7 +2478,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>manual-est -no_antialias_text -split 0 -dir manual-est -no_navigation -show_section_numbers</TT>
 <P>
-The translation was initiated by Bruno Contreras Moreira on 2017-11-13
+The translation was initiated by Bruno Contreras Moreira on 2017-11-28
 <BR><HR>
 <ADDRESS>
 Bruno Contreras-Moreira and Pablo Vinuesa<br><a href="https://github.com/eead-csic-compbio/get_homologues">https://github.com/eead-csic-compbio/get_homologues</a>
