@@ -215,7 +215,7 @@ modules from the <A NAME="tex2html12"
   HREF="http://www.bioperl.org">Bioperl</A>
 collection, 
 and module <A NAME="tex2html13"
-  HREF="<"><</A>938>>http://search.cpan.org/perldoc?Parallel
+  HREF="http://search.cpan.org/~yanick/Parallel-ForkManager-1.19/lib/Parallel/ForkManager.pm">Parallel::ForkManager</A>
 are also required, and have been included in the <SPAN  CLASS="textit">get_homologues</SPAN> bundle for your convenience.
 
 <P>
@@ -552,13 +552,13 @@ of DNA and protein sequences clusters, which might have different applications.
 <P>
 There are many ways to obtain GenBank files, starting by manual browsing and downloading from the
 <A NAME="tex2html34"
-  HREF="http://www.ncbi.nlm.nih.gov/genbank">NCBI site</A>, keeping in mind that <SPAN ID="txt176">full files</SPAN>, 
+  HREF="http://www.ncbi.nlm.nih.gov/genbank">NCBI site</A>, keeping in mind that <SPAN ID="txt178">full files</SPAN>, 
 which include the reference nucleotide sequences, should be downloaded. In fact, <SPAN  CLASS="textit">get_homologues.pl</SPAN>
 will fail to parse any ORF in summary GenBank files. 
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:genbankfull"></A><A NAME="181"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:genbankfull"></A><A NAME="183"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 1:</STRONG>
 NCBI download widget showing the choice of 'GenBank (full)' format, 
@@ -575,7 +575,7 @@ which contains the raw reference nucleotide sequences.</CAPTION>
 </DIV>
 
 <P>
-Often users take <SPAN ID="txt185">custom-made GenBank files</SPAN>, resulting from in-house genome assemblies, to be analysed. 
+Often users take <SPAN ID="txt187">custom-made GenBank files</SPAN>, resulting from in-house genome assemblies, to be analysed. 
 In most cases genes from such files don't have GenBank identifiers assigned yet, and so we recommend 
 adding the field <code>locus_tag</code> to each CDS feature so that parsed sequences can be properly identified.
 
@@ -584,7 +584,7 @@ For their use with <SPAN  CLASS="textit">get_homologues</SPAN>,
 GenBank files for the same species (for example, from the main chromosome and from a couple of plasmids)
 must be concatenated. For instance, the genomic sequences of <SPAN  CLASS="textit">Rhizobium etli CFN 42</SPAN> comprise
 <A NAME="tex2html35"
-  HREF="<"><</A>939>>http://www.ncbi.nlm.nih.gov/genome?Db=genome&amp;term=rhizobium
+  HREF="<"><</A>940>>http://www.ncbi.nlm.nih.gov/genome?Db=genome&amp;term=rhizobium
 which can be concatenated into a single <SPAN  CLASS="textit">_Rhizobium_etli_CFN42.gbk</SPAN> file.
 
 <P>
@@ -761,7 +761,7 @@ Options that control clustering:
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:flow"></A><A NAME="225"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:flow"></A><A NAME="227"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 2:</STRONG>
 Flowchart of get_homologues.</CAPTION>
@@ -795,7 +795,7 @@ The possible input file combinations are summarized in Table <A HREF="#tab:infor
 
 <P>
 <BR><P></P>
-<DIV ALIGN="CENTER"><A NAME="238"></A>
+<DIV ALIGN="CENTER"><A NAME="240"></A>
 <TABLE>
 <CAPTION><STRONG>Table 1:</STRONG>
 Valid input file combinations.</CAPTION>
@@ -853,7 +853,7 @@ relying on BLASTP searches.
 <P>
 Perhaps the most important optional parameter would be the choice of clustering algorithm (Table <A HREF="#tab:algs">2</A>):
 <BR><P></P>
-<DIV ALIGN="CENTER"><A NAME="256"></A>
+<DIV ALIGN="CENTER"><A NAME="258"></A>
 <TABLE>
 <CAPTION><STRONG>Table 2:</STRONG>
 List of available clustering algorithms.</CAPTION>
@@ -893,7 +893,7 @@ PubMed=<A NAME="tex2html42"
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="BDBHflow"></A><A NAME="262"></A>
+<DIV ALIGN="CENTER"><A NAME="BDBHflow"></A><A NAME="264"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 3:</STRONG>
 Flowchart of BDBH algorithm with default parameters and G genomes. 
@@ -986,7 +986,7 @@ with more singletons produced than in BLASTP-based analysesi (see section <A HRE
 
 <P>
 <BR><P></P>
-<DIV ALIGN="CENTER"><A NAME="904"></A>
+<DIV ALIGN="CENTER"><A NAME="906"></A>
 <TABLE>
 <CAPTION><STRONG>Table 3:</STRONG>
 Time required to perform BLASTP and DIAMOND (-X) searches among 9 <SPAN  CLASS="textit">Mycobacterium africanum</SPAN> accessions.</CAPTION>
@@ -1023,7 +1023,7 @@ Time required to perform BLASTP and DIAMOND (-X) searches among 9 <SPAN  CLASS="
 
 <P>
 <BR><P></P>
-<DIV ALIGN="CENTER"><A NAME="905"></A>
+<DIV ALIGN="CENTER"><A NAME="907"></A>
 <TABLE>
 <CAPTION><STRONG>Table 4:</STRONG>
 Resources required to analyze 220 <SPAN  CLASS="textit">Escherichia coli</SPAN> genomes with DIAMOND (-X) on a 32-core Linux box running SGE. 
@@ -1062,7 +1062,7 @@ While the input genomes took 626MB of drive space, the uncompressed output was 1
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:diamondpangenome"></A><A NAME="906"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:diamondpangenome"></A><A NAME="908"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 4:</STRONG>
 Comparison of OMCL-based pangenomes of 9 <SPAN  CLASS="textit">Mycobacterium africanum</SPAN> accessions computed with BLASTP (left) and DIAMOND (right).</CAPTION>
@@ -1114,7 +1114,7 @@ standard OMCL and COGS algorithms have completed, to preserve each algorithm fea
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="318"></A>
+<DIV ALIGN="CENTER"><A NAME="320"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 5:</STRONG>
 Coverage [BDBH,OMCL] and overall segment coverage [COGS] illustrated with the
@@ -1148,7 +1148,7 @@ effect was negligible.
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:BDBHmin"></A><A NAME="907"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:BDBHmin"></A><A NAME="909"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 6:</STRONG>
 For  <SPAN CLASS="MATH"><IMG
@@ -1197,7 +1197,7 @@ my $INTERGENEFLANKORF    = 180;   # length in nts of intergene flanks borrowed
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:flanks"></A><A NAME="335"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:flanks"></A><A NAME="337"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 7:</STRONG>
 Two divergent ORFs flanking an intergenic region. Only 180 bases from each ORF are taken for compiling intergenic
@@ -1414,7 +1414,7 @@ and the accompanying scripts with provided sample input data.
 This example takes the provided sample input folder <code>sample_buch_fasta</code>,
 which contains the proteins sets of four 
 <A NAME="tex2html62"
-  HREF="<"><</A>940>>http://en.wikipedia.org/wiki/Buchnera_
+  HREF="<"><</A>941>>http://en.wikipedia.org/wiki/Buchnera_
 and compiles clusters of BDBH sequences, which are candidates to be orthologues, with this command:
 <BR><code>$ ./get_homologues.pl -d sample_buch_fasta </code> . 
 
@@ -1617,7 +1617,7 @@ such as the one in Figure <A HREF="#fig:venn">8</A>, might also be produced whic
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:venn"></A><A NAME="411"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:venn"></A><A NAME="413"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 8:</STRONG>
 Venn diagram showing the overlap between clusters of 'orthologous' sequences produced
@@ -1981,7 +1981,7 @@ The following output is produced:
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:synteny"></A><A NAME="452"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:synteny"></A><A NAME="454"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 9:</STRONG>
 A cluster is called syntenic when it contains neighboring genes which are also contained in other single
@@ -2363,7 +2363,7 @@ depending on the software used (such as MEGA or TreeView).
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:parstree"></A><A NAME="908"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:parstree"></A><A NAME="910"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 10:</STRONG>
 Example of pangenomic tree of the consensus COG and OMCL pangenomic matrix obtained for a few plasmids. 
@@ -2383,7 +2383,7 @@ Plot produced with <A NAME="tex2html65"
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:iqtree"></A><A NAME="909"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:iqtree"></A><A NAME="911"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 11:</STRONG>
 Pangenomic tree of the consensus COG and OMCL pangenomic matrix with bootstrap;aLRT values.
@@ -2410,7 +2410,7 @@ which was called to produce Figure <A HREF="#fig:panheatmap">12</A>:
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:panheatmap"></A><A NAME="544"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:panheatmap"></A><A NAME="546"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 12:</STRONG>
 Heatmap of the previous pangenome matrix, with dendrograms sorting genomes according to cluster occupancy.</CAPTION>
@@ -2485,7 +2485,7 @@ option <code>-l</code>. A valid syntax would be:
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:pangemat"></A><A NAME="563"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:pangemat"></A><A NAME="565"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 13:</STRONG>
 Map of plasmid OX105 highlighting 7 genes absent in pKP96.</CAPTION>
@@ -2529,7 +2529,7 @@ which does not require an A list, rather a B list is sufficient. It is called as
 
 <P>
 <BR><P></P>
-<DIV ALIGN="CENTER"><A NAME="911"></A>
+<DIV ALIGN="CENTER"><A NAME="913"></A>
 <TABLE>
 <CAPTION><STRONG>Table 5:</STRONG>
 Definitions of pangenome compartments/occupancy classes used by <SPAN  CLASS="textit">GET_HOMOLOGUES</SPAN>, 
@@ -2622,7 +2622,7 @@ components does not improve the mixture model. Please check that paper for a ful
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:pangematbar"></A><A NAME="912"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:pangematbar"></A><A NAME="914"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 14:</STRONG>
 Barplot of the pangenome matrix created in section <A HREF="#pange">4.8.1</A>. 
@@ -2640,7 +2640,7 @@ Core clusters are in white for clarity, but note that according to the definitio
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:pangematbar"></A><A NAME="913"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:pangematbar"></A><A NAME="915"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 15:</STRONG>
 Area plot of the pangenome matrix created in section <A HREF="#pange">4.8.1</A>. 
@@ -2736,7 +2736,7 @@ genomes	mean	stddev	|	samples
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:core"></A><A NAME="fig:pan"></A><A NAME="914"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:core"></A><A NAME="fig:pan"></A><A NAME="916"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 16:</STRONG>
 Core-genome (left) and pan-genome (right) estimates after ten random samples of 4 taxa. 
@@ -2790,7 +2790,7 @@ by invoking options <code>-c -z</code>. The resulting data file can be plotted t
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:core2"></A><A NAME="649"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:core2"></A><A NAME="651"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 17:</STRONG>
 Core-genome estimate after ten random samples of 35 taxa.</CAPTION>
@@ -2929,7 +2929,7 @@ cd sample_plasmids_gbk_homologues
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:ANImap"></A><A NAME="678"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:ANImap"></A><A NAME="680"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 18:</STRONG>
 Example heatmap derived from an average nucleotide identity matrix calculated with get_homologues.pl.</CAPTION>
@@ -3118,7 +3118,7 @@ as this way BLAST/HMMER jobs will be split and sent to different jobs and the re
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:RAM"></A><A NAME="714"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:RAM"></A><A NAME="716"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 19:</STRONG>
 Runtime of a typical bacterial genomic BLASTP jobs as calculated with 1 to 8 CPU cores when splitting the job in batches.
@@ -3194,7 +3194,7 @@ advisable to re-run the same job with the <code>-s</code> flag.
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:RAMtime"></A><A NAME="741"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:RAMtime"></A><A NAME="743"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 20:</STRONG>
 Computing time and RAM requirements of the BDBH, COG and OMCL algorithms when processing input volumes of increasing size. 
@@ -3221,7 +3221,7 @@ in the figure, which combines data from the original benchmark and new data gene
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:RAMtimev2"></A><A NAME="751"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:RAMtimev2"></A><A NAME="753"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 21:</STRONG>
 Computing time and RAM requirements of the original algorithm (OMCL, measured on 6 sequence sets) 
@@ -3767,7 +3767,7 @@ for an example application of this script.
 
 <P>
 <BR><P></P>
-<DIV ALIGN="CENTER"><A NAME="866"></A>
+<DIV ALIGN="CENTER"><A NAME="868"></A>
 <TABLE>
 <CAPTION><STRONG>Table 6:</STRONG>
 Frequent warnings and error messages produced by get_homologues and kin scripts.</CAPTION>
@@ -3971,7 +3971,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>manual -no_antialias_text -split 0 -dir manual -no_navigation -show_section_numbers</TT>
 <P>
-The translation was initiated by Bruno Contreras Moreira on 2017-11-13
+The translation was initiated by Bruno Contreras Moreira on 2017-11-28
 <BR><HR>
 <ADDRESS>
 Bruno Contreras-Moreira and Pablo Vinuesa<br><a href="https://github.com/eead-csic-compbio/get_homologues">https://github.com/eead-csic-compbio/get_homologues</a>
