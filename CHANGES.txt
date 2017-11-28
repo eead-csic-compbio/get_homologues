@@ -230,3 +230,4 @@
 13112017: updated manuals with option to compute cluster intersection matrices with parse_pangenome_matrix -x
 13112017: explained transposed CSV pangenome matrix for software Scoary in manual
 27112017: added option 'force' to install.pl so that it can install with no supervision
+28112017: install.pl now exits explicitely with exit(0)

@@ -398,3 +398,4 @@ else
   print "\n### 3) Your get_homologues kit is now fully functional\n";
 }
 
+exit(0);
