@@ -31,13 +31,21 @@ my %packages =
   );
 
 my ($SOguess,$output,$command,$cwd) = ('','','',getcwd());
-my $force_unsupervised = 0;
+my ($force_unsupervised,$noDBs) = (0,0);
 
 # unsupervised, forced install
-if(defined($ARGV[0]) && $ARGV[0] eq 'force')
+if(defined($ARGV[0]))
 { 
-  $force_unsupervised = 1; 
-  print "# \$force_unsupervised=$force_unsupervised\n\n";
+  if($ARGV[0] eq 'force')
+  {
+    $force_unsupervised = 1;   
+    print "# \$force_unsupervised=$force_unsupervised\n\n";
+  }
+  elsif($ARGV[0] eq 'no_databases')
+  { 
+    $noDBs = 1;   
+    print "# \$no_databases=$noDBs\n\n";
+  }
 }
 
 ##############################################################################################
@@ -126,190 +134,191 @@ else
     "<< Then re-run\n";
 }
 
-print "## checking optional PFAM library (lib/phyTools: \$ENV{'PFAMDB'})\n";
-print "# required by get_homologues.pl -D and get_homologues-est.pl -D\n";
-if($force_unsupervised || ! -s $ENV{'PFAMDB'}.'.h3m')
+if(!$noDBs)
 {
-  my $userword = '';
-  if(!$force_unsupervised)
+  print "## checking optional PFAM library (lib/phyTools: \$ENV{'PFAMDB'})\n";
+  print "# required by get_homologues.pl -D and get_homologues-est.pl -D\n";
+  if($force_unsupervised || ! -s $ENV{'PFAMDB'}.'.h3m')
   {
-    print "# cannot locate Pfam-A, would you like to download it now? [Y/n]\n";
-    $userword = <STDIN>;
-  }    
-
-  if($force_unsupervised || $userword =~ m/Y/i)
-  {
-    chdir($ENV{'MARFIL'}.'/db/');
-    
-    my $ftp;
-    
-    if(! -s $PFAMHMMFILE)
+    my $userword = '';
+    if(!$force_unsupervised)
     {
-      print "# connecting to $PFAMSERVERURL ...\n";
-      eval{ require Net::FTP; };
+      print "# cannot locate Pfam-A, would you like to download it now? [Y/n]\n";
+      $userword = <STDIN>;
+    }    
 
-      if($ftp = Net::FTP->new($PFAMSERVERURL,Passive=>1,Debug =>0,Timeout=>60))
+    if($force_unsupervised || $userword =~ m/Y/i)
+    {
+      chdir($ENV{'MARFIL'}.'/db/');
+      my $ftp;
+    
+      if(! -s $PFAMHMMFILE)
       {
-        $ftp->login("anonymous",'-anonymous@') || die "# cannot login ". $ftp->message();
-        $ftp->cwd($PFAMFOLDER) || warn "# cannot change working directory to $PFAMFOLDER ". $ftp->message();
-        $ftp->binary();
-        my $downsize = $ftp->size($PFAMHMMFILE);
-        $ftp->hash(\*STDOUT,$downsize/20) if($downsize);
-        printf("# downloading ftp://%s/%s/%s (%1.1fMb) ...\n",$PFAMSERVERURL,$PFAMFOLDER,$PFAMHMMFILE,$downsize/(1024*1024));
-        print "# [        50%       ]\n# ";
-        if(!$ftp->get($PFAMHMMFILE))
+        print "# connecting to $PFAMSERVERURL ...\n";
+        eval{ require Net::FTP; };
+  
+        if($ftp = Net::FTP->new($PFAMSERVERURL,Passive=>1,Debug =>0,Timeout=>60))
         {
-          warn "# cannot download file $PFAMHMMFILE ". $ftp->message() ."\n\n";
+          $ftp->login("anonymous",'-anonymous@') || die "# cannot login ". $ftp->message();
+          $ftp->cwd($PFAMFOLDER) || warn "# cannot change working directory to $PFAMFOLDER ". $ftp->message();
+          $ftp->binary();
+          my $downsize = $ftp->size($PFAMHMMFILE);
+          $ftp->hash(\*STDOUT,$downsize/20) if($downsize);
+          printf("# downloading ftp://%s/%s/%s (%1.1fMb) ...\n",$PFAMSERVERURL,$PFAMFOLDER,$PFAMHMMFILE,$downsize/(1024*1024));
+          print "# [        50%       ]\n# ";
+          if(!$ftp->get($PFAMHMMFILE))
+          {
+            warn "# cannot download file $PFAMHMMFILE ". $ftp->message() ."\n\n";
+            warn "<< You might manually download $PFAMHMMFILE from $PFAMSERVERURL/$PFAMFOLDER to any location\n".
+              "<< and edit variable PFAMDB as to point to that location, as explained in the manual.\n".
+              "<< Then re-run\n";
+          }
+        }
+        else
+        {
+          warn "# cannot connect to $PFAMSERVERURL: $@\n\n";
           warn "<< You might manually download $PFAMHMMFILE from $PFAMSERVERURL/$PFAMFOLDER to any location\n".
             "<< and edit variable PFAMDB as to point to that location, as explained in the manual.\n".
+            #"inside set_phyTools_env in file lib/phyTools.pm pointing to the destination folder.\n".
             "<< Then re-run\n";
         }
-      }
-      else
-      {
-        warn "# cannot connect to $PFAMSERVERURL: $@\n\n";
-        warn "<< You might manually download $PFAMHMMFILE from $PFAMSERVERURL/$PFAMFOLDER to any location\n".
-          "<< and edit variable PFAMDB as to point to that location, as explained in the manual.\n".
-          #"inside set_phyTools_env in file lib/phyTools.pm pointing to the destination folder.\n".
-          "<< Then re-run\n";
-      }
-      
-      print "\n";
-      $ftp->quit();
-    }
-          
-    if(-s $PFAMHMMFILE)
-    {
-      print "# gunzip $PFAMHMMFILE ...\n";
-      system("gunzip $PFAMHMMFILE");
-
-      my $hmmpress = (split(/hmmscan/,$ENV{'EXE_HMMPFAM'}))[0].'hmmpress';
-      $PFAMHMMFILE =~ s/\.gz//;
-      print "# pressing $PFAMHMMFILE ...\n";
-      system("$hmmpress $PFAMHMMFILE");
-      if(!-s $PFAMHMMFILE.'.h3m')
-      {
-        warn "# failed pressing $PFAMHMMFILE\n";
-      }
-      else
-      { 
-        unlink($PFAMHMMFILE);
-        print ">> OK\n"; 
-      }
         
-      chdir($cwd);
-    }
-  }
-  else
-  {
-    warn "<< You might manually download $PFAMHMMFILE from $PFAMSERVERURL/$PFAMFOLDER to any location\n".
-      "<< and edit variable PFAMDB as to point to that location, as explained in the manual.\n".
-      #"inside set_phyTools_env in file lib/phyTools.pm pointing to the destination folder.\n".
-      "<< Then re-run\n";
-  }
-}
-else{ print ">> OK\n"; }
-
-
-# check swissprot DB
-print "## checking optional SWISSPROT library (lib/phyTools: \$ENV{'BLASTXDB'})\n";
-print "# required by transcripts2cds.pl and transcripts2cdsCPP.pl\n";
-if(!$force_unsupervised && -s $ENV{'BLASTXDB'}.'.phr' && -s $ENV{'BLASTXDB'}.'.dmnd')
-{
-  print ">> OK\n";
-}
-else
-{
-  my $userword = '';
-  if(!$force_unsupervised)
-  { 
-    print "# cannot locate SWISSPROT, would you like to download it now? [Y/n]\n";
-    $userword = <STDIN>; 
-  }
-
-  if($force_unsupervised || $userword =~ m/Y/i)
-  {
-    chdir($ENV{'MARFIL'}.'/db/');
-
-    my $FLATSWISSPROTFILE = $SWISSPROTFILE;
-    $FLATSWISSPROTFILE =~ s/\.gz//;
-   
-    # remove path
-    $SWISSPROTFILE = (split(/\//,$SWISSPROTFILE))[-1];
-    
-    if(!-s $FLATSWISSPROTFILE)
-    {
-      print "# connecting to $SWISSPROTSERVER ...\n";
-      eval{ require Net::FTP; };
-
-      if(my $ftp = Net::FTP->new($SWISSPROTSERVER,Passive=>1,Debug =>0,Timeout=>60))
-      {
-        $ftp->login("anonymous",'-anonymous@') || die "# cannot login ". $ftp->message();
-        $ftp->cwd($SWISSPROTFOLDER) || warn "# cannot change working directory to $SWISSPROTFOLDER ". $ftp->message();
-        $ftp->binary();
-        my $downsize = $ftp->size($SWISSPROTFILE);
-        $ftp->hash(\*STDOUT,$downsize/20) if($downsize);
-        printf("# downloading ftp://%s/%s/%s (%1.1fMb) ...\n",$SWISSPROTSERVER,$SWISSPROTFOLDER,$SWISSPROTFILE,$downsize/(1024*1024));
-        print "# [        50%       ]\n# ";
-      
-        if(!$ftp->get($SWISSPROTFILE))
-        {
-          warn "# cannot download file $SWISSPROTFILE ". $ftp->message() ."\n\n";
-          warn "<< You might manually download $SWISSPROTFILE from $SWISSPROTSERVER/$SWISSPROTFOLDER to any location\n".
-            "<< and edit variable BLASTXDB as to point to that location, as explained in the manual.\n".
-            "<< Then re-run\n";
-        }
-
         print "\n";
         $ftp->quit();
       }
-      else
+            
+      if(-s $PFAMHMMFILE)
       {
-        warn "# cannot connect to $SWISSPROTSERVER: $@\n\n";
-        warn "<< You might manually download $SWISSPROTFILE from $SWISSPROTSERVER/$SWISSPROTFOLDER to any location\n".
-          "<< and edit variable BLASTXDB as to point to that location, as explained in the manual.\n".
-          #"inside set_phyTools_env in file lib/phyTools.pm pointing to the destination folder.\n".
-          "<< Then re-run\n";
-      }
-    }      
-    
-    if(-s $SWISSPROTFILE)
-    {
-      print "# gunzip $SWISSPROTFILE ...\n"; 
-      system("gunzip $SWISSPROTFILE"); 
-    }
-    
-    if(-s $FLATSWISSPROTFILE)
-    {
-      executeFORMATDB_EST($FLATSWISSPROTFILE);
-      executeMAKEDB($FLATSWISSPROTFILE);
-             
-      if(!-s $FLATSWISSPROTFILE.'.phr')
-      {
-        warn "# failed formatting $SWISSPROTFILE (blastx)\n";
-      }
-      elsif(!-s $FLATSWISSPROTFILE.'.dmnd')
-      {
-        warn "# failed formatting $SWISSPROTFILE (diamond)\n";
-      }
-      else
-      {    
-        system("gzip $FLATSWISSPROTFILE"); 
-        print ">> OK\n"; 
+        print "# gunzip $PFAMHMMFILE ...\n";
+        system("gunzip $PFAMHMMFILE");
+  
+        my $hmmpress = (split(/hmmscan/,$ENV{'EXE_HMMPFAM'}))[0].'hmmpress';
+        $PFAMHMMFILE =~ s/\.gz//;
+        print "# pressing $PFAMHMMFILE ...\n";
+        system("$hmmpress $PFAMHMMFILE");
+        if(!-s $PFAMHMMFILE.'.h3m')
+        {
+          warn "# failed pressing $PFAMHMMFILE\n";
+        }
+        else
+        { 
+          unlink($PFAMHMMFILE);
+          print ">> OK\n"; 
+        }
+          
+        chdir($cwd);
       }
     }
-              
-    chdir($cwd);
+    else
+    {
+      warn "<< You might manually download $PFAMHMMFILE from $PFAMSERVERURL/$PFAMFOLDER to any location\n".
+        "<< and edit variable PFAMDB as to point to that location, as explained in the manual.\n".
+        #"inside set_phyTools_env in file lib/phyTools.pm pointing to the destination folder.\n".
+        "<< Then re-run\n";
+    }
+  }
+  else{ print ">> OK\n"; }
+
+  # check swissprot DB
+  print "## checking optional SWISSPROT library (lib/phyTools: \$ENV{'BLASTXDB'})\n";
+  print "# required by transcripts2cds.pl and transcripts2cdsCPP.pl\n";
+  if(!$force_unsupervised && -s $ENV{'BLASTXDB'}.'.phr' && -s $ENV{'BLASTXDB'}.'.dmnd')
+  {
+    print ">> OK\n";
   }
   else
   {
-    warn "<< You might manually download $SWISSPROTFILE from $SWISSPROTSERVER/$SWISSPROTFOLDER to any location\n".
-      "<< and edit variable BLASTXDB as to point to that location, as explained in the manual.\n".
-      #"inside set_phyTools_env in file lib/phyTools.pm pointing to the destination folder.\n".
-      "<< Then re-run\n";
+    my $userword = '';
+    if(!$force_unsupervised)
+    { 
+      print "# cannot locate SWISSPROT, would you like to download it now? [Y/n]\n";
+      $userword = <STDIN>; 
+    }
+  
+    if($force_unsupervised || $userword =~ m/Y/i)
+    {
+      chdir($ENV{'MARFIL'}.'/db/');
+  
+      my $FLATSWISSPROTFILE = $SWISSPROTFILE;
+      $FLATSWISSPROTFILE =~ s/\.gz//;
+     
+      # remove path
+      $SWISSPROTFILE = (split(/\//,$SWISSPROTFILE))[-1];
+      
+      if(!-s $FLATSWISSPROTFILE)
+      {
+        print "# connecting to $SWISSPROTSERVER ...\n";
+        eval{ require Net::FTP; };
+  
+        if(my $ftp = Net::FTP->new($SWISSPROTSERVER,Passive=>1,Debug =>0,Timeout=>60))
+        {
+          $ftp->login("anonymous",'-anonymous@') || die "# cannot login ". $ftp->message();
+          $ftp->cwd($SWISSPROTFOLDER) || warn "# cannot change working directory to $SWISSPROTFOLDER ". $ftp->message();
+          $ftp->binary();
+          my $downsize = $ftp->size($SWISSPROTFILE);
+          $ftp->hash(\*STDOUT,$downsize/20) if($downsize);
+          printf("# downloading ftp://%s/%s/%s (%1.1fMb) ...\n",$SWISSPROTSERVER,$SWISSPROTFOLDER,$SWISSPROTFILE,$downsize/(1024*1024));
+          print "# [        50%       ]\n# ";
+        
+          if(!$ftp->get($SWISSPROTFILE))
+          {
+            warn "# cannot download file $SWISSPROTFILE ". $ftp->message() ."\n\n";
+            warn "<< You might manually download $SWISSPROTFILE from $SWISSPROTSERVER/$SWISSPROTFOLDER to any location\n".
+              "<< and edit variable BLASTXDB as to point to that location, as explained in the manual.\n".
+              "<< Then re-run\n";
+          }
+  
+          print "\n";
+          $ftp->quit();
+        }
+        else
+        {
+          warn "# cannot connect to $SWISSPROTSERVER: $@\n\n";
+          warn "<< You might manually download $SWISSPROTFILE from $SWISSPROTSERVER/$SWISSPROTFOLDER to any location\n".
+            "<< and edit variable BLASTXDB as to point to that location, as explained in the manual.\n".
+            #"inside set_phyTools_env in file lib/phyTools.pm pointing to the destination folder.\n".
+            "<< Then re-run\n";
+        }
+      }      
+      
+      if(-s $SWISSPROTFILE)
+      {
+        print "# gunzip $SWISSPROTFILE ...\n"; 
+        system("gunzip $SWISSPROTFILE"); 
+      }
+      
+      if(-s $FLATSWISSPROTFILE)
+      {
+        executeFORMATDB_EST($FLATSWISSPROTFILE);
+        executeMAKEDB($FLATSWISSPROTFILE);
+               
+        if(!-s $FLATSWISSPROTFILE.'.phr')
+        {
+          warn "# failed formatting $SWISSPROTFILE (blastx)\n";
+        }
+        elsif(!-s $FLATSWISSPROTFILE.'.dmnd')
+        {
+          warn "# failed formatting $SWISSPROTFILE (diamond)\n";
+        }
+        else
+        {    
+          system("gzip $FLATSWISSPROTFILE"); 
+          print ">> OK\n"; 
+        }
+      }
+                
+      chdir($cwd);
+    }
+    else
+    {
+      warn "<< You might manually download $SWISSPROTFILE from $SWISSPROTSERVER/$SWISSPROTFOLDER to any location\n".
+        "<< and edit variable BLASTXDB as to point to that location, as explained in the manual.\n".
+        #"inside set_phyTools_env in file lib/phyTools.pm pointing to the destination folder.\n".
+        "<< Then re-run\n";
+    }
   }
 }
-
+  
 # finally check whether other optional software is installed and provide installation instructions
 my (@missing_packages,@missing_perl_modules);
 
