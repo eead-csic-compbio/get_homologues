@@ -232,3 +232,4 @@
 27112017: added option 'force' to install.pl so that it can install with no supervision
 28112017: install.pl now exits explicitely with exit(0)
 28112017: added option 'no_databases' to install.pl for building docker images
+28112017: forgotten URI::Escape added to list of required Perl modules in EST manual
