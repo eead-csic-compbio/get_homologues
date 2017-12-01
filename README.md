@@ -15,7 +15,7 @@ GET_HOMOLOGUES-EST has been tested with genomes and transcriptomes of *Arabidops
 
 A [tutorial](http://digital.csic.es/handle/10261/146411) is available, covering typical examples of both GET_HOMOLOGUES and GET_HOMOLOGUES-EST.
 
-A [Docker image](https://hub.docker.com/r/eeadcsiccompbio/get_homologues) is available with this GET_HOMOLOGUES, 
+A [Docker image](https://hub.docker.com/r/eeadcsiccompbio/get_homologues) is available with GET_HOMOLOGUES 
 bundled with [GET_PHYLOMARKERS](https://github.com/vinuesa/get_phylomarkers), ready to use.
 
 The code is regularly patched (see [CHANGES.txt](./CHANGES.txt) in each release), and has been used in a variety of studies 
