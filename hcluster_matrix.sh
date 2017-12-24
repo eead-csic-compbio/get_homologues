@@ -12,7 +12,8 @@
 
 
 progname=${0##*/} 
-VERSION='0.5_14Oct17' #v'0.5_14Oct17'; added options -A and -X to control the angle 
+VERSION='0.6_24Dec17' # v0.6_124Dec17: remove the invariant (core-genome) and singleton columns from input table
+         #v'0.5_14Oct17'; added options -A and -X to control the angle 
                       #                and character eXpansion factor of leaf labels
          #'0.4_7Sep17' # v0.4_7Sep17; added options -x <regex> to select specific rows (genomes) 
                      #                                       from the input pangenome_matrix_t0.tab
@@ -342,15 +343,24 @@ library("ape")
 
 options(expressions = 100000) #https://stat.ethz.ch/pipermail/r-help/2004-January/044109.html
 
-table <- read.table(file="${tab_file}ED", header=TRUE)
+table <- read.table(file="${tab_file}ED", header=TRUE, sep="\t")
+
+# remove the invariant (core-genome) columns
+table <- table[sapply(table,  function(x) length(unique(x))>1)]
+
+# remove the singleton columns (i.e., those with colSums > 1)
+#   need to exclude column 1, which is not numeric
+no_singletons <- table[, colSums(table[,-1]) > 1]
+
+# add first (genome names) column back
+table <- cbind(table[,1], no_singletons)
+rm(no_singletons)
 
 # filter rows with user-provided regex
 if($subset_matrix > 0 ){
   include_list <- grep("$regex", table\$Genome)
    table <- table[include_list, ]
 }
-
-
 
 mat_dat <- data.matrix(table[,2:ncol(table)])
 
