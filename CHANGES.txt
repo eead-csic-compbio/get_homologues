@@ -233,3 +233,4 @@
 28112017: install.pl now exits explicitely with exit(0)
 28112017: added option 'no_databases' to install.pl for building docker images
 28112017: forgotten URI::Escape added to list of required Perl modules in EST manual
+24122017: removes the invariant (core-genome) and singleton (cloud-genome) columns before computing distances @ hcluster_matrix.sh
