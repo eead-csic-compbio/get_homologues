@@ -234,3 +234,6 @@
 28112017: added option 'no_databases' to install.pl for building docker images
 28112017: forgotten URI::Escape added to list of required Perl modules in EST manual
 24122017: removes the invariant (core-genome) and singleton (cloud-genome) columns before computing distances @ hcluster_matrix.sh
+03012018: updated example figure created with plot_matrix_heatmap.sh in the manual
+03012018: renamed hcluster_matrix.sh to hcluster_pangenome_matrix.sh and updated install.pl, release.pl accordingly
+03012018: added links to GET_PHYLOMARKERS 

@@ -324,7 +324,7 @@ my (@missing_packages,@missing_perl_modules);
 
 print "## checking optional software R (lib/phyTools: \$ENV{'EXE_R'})\n";
 print "# required by compare_clusters.pl, parse_pangenome_matrix.pl -s, plot_pancore_matrix.pl and\n";
-print "# plot_matrix_heatmap.sh, hcluster_matrix.sh\n";
+print "# plot_matrix_heatmap.sh, hcluster_pangenome_matrix.sh\n";
 $output = `$ENV{'EXE_R'} --version 2>&1`;
 if($output =~ /R version/){ print ">> OK\n"; }
 else
