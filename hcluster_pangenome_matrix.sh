@@ -12,7 +12,10 @@
 
 
 progname=${0##*/} 
-VERSION='0.6_24Dec17' # v0.6_124Dec17: remove the invariant (core-genome) and singleton columns from input table
+VERSION='v1.0_25Jan18' # added the gap- and silhouette meand width goodness of clustering statistics
+                       #  to determine the optimal number of clusters automatically.
+		       # Calls new package factoextra; fviz_dend; fviz_gap_stat
+         # v0.6_124Dec17: remove the invariant (core-genome) and singleton columns from input table
          #v'0.5_14Oct17'; added options -A and -X to control the angle 
                       #                and character eXpansion factor of leaf labels
          #'0.4_7Sep17' # v0.4_7Sep17; added options -x <regex> to select specific rows (genomes) 
@@ -32,61 +35,6 @@ start_time="$date_F$date_T"
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>> FUNCTION DEFINITIONS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
 #---------------------------------------------------------------------------------#
 
-function print_help()
-{
-    cat << HELP
-    
-    USAGE synopsis for: [$progname v.$VERSION]:
-       $progname -i <string (name of matrix file)> [-d <distance> -a <algorithm> -o <format> ...]
-    
-    REQUIRED
-       -i <string> name of matrix file     
-       
-    OPTIONAL:
-       -a <string> algorithm/method for clustering 
-             [ward.D|ward.D2|single|complete|average(=UPGMA)] [def $algorithm]
-       -c <int> 1|0 to display or not the distace values      [def:$cell_note]
-                    in the heatmap cells 
-       -d <string> distance type [euclidean|manhattan|gower]  [def $distance]
-       -f <int> maximum number of decimals in matrix display  [1,2; def:$decimals]
-       -t <string> text for Main title                        [def:$text]
-       -m <integer> margins_horizontal                        [def:$margin_hor]
-       -v <integer> margins_vertical                          [def:$margin_vert]
-       -o <string> output file format  [svg|pdf]              [def:$outformat]
-       -p <integer> points for plotting device                [def:$points]    
-       -H <integer> ouptupt device height                     [def:$height]    
-       -W <integer> ouptupt device width                      [def:$width]     
-       -N <flag> print Notes and exit                         [flag]
-
-       -A <'integer,integer'> angle to rotate row,col labels  [def $angle]
-       -X <float> leaf label character expansion factor       [def $charExp]
-       
-
-    Select genomes from input pangenome_matrix_t0.tab using regular expressions:
-       -x <string> regex, like: 'Escherichia|Salmonella'      [def $regex]
-       
-
-    EXAMPLE:
-      $progname -i pangenome_matrix_t0.tab -t "Pan-genome tree" -a ward.D2 -d euclidean -o pdf -x 'maltoph|genosp' -A 'NULL,45' -X 0.8
-
-    AIM: compute a distance matrix from a pangenome_matrix.tab file produced after running 
-         get_homologues.pl and compare_clusters.pl with options -t 0 -m .
-         The pangenome_matrix.tab file processed by hclust(), and heatmap.2()
-    
-    OUTPUT: a newick file with extension .ph and svg|pdf output of hclust and heatmap.2 calls
-     
-    DEPENDENCIES:
-         R packages: ape, cluster and gplots. Run $progname -N for installation instructions.
-
-HELP
-
-  check_dependencies
-
-exit 0
-
-}
-#---------------------------------------------------------------------------
-
 function print_notes()
 {
    cat << NOTES
@@ -103,7 +51,7 @@ function print_notes()
     
     i) with root privileges, type the following into your shell console:
        sudo R
-       > install.packages(c("ape", "gplots", "cluster"), dependencies=TRUE)
+       > install.packages(c("ape", "gplots", "cluster", "factoextra"), dependencies=TRUE)
        > q()
        
        $ exit # quit root account
@@ -132,7 +80,7 @@ function print_notes()
      
    2. The pangenome_matrix ouput file will be automatically edited chagne PATH for Genome in cell 1,1
    
-   3. Uses distance methods from the daisy() function from the cluster package.
+   3. Uses distance methods from the cluster::daisy() function.
    
       run ?daisy from within R for a detailed description of gower distances for categorical data
       
@@ -173,6 +121,72 @@ function check_dependencies()
     echo '# Run check_dependencies() ... looks good: R is installed.'
     echo   
 }
+#---------------------------------------------------------------------------
+
+function print_help()
+{
+    cat << HELP
+    
+    USAGE synopsis for: [$progname v.$VERSION]:
+       $progname -i <string (name of matrix file)> [-d <distance> -a <algorithm> -o <format> ...]
+    
+    REQUIRED
+       -i <string> name of matrix file     
+       
+    OPTIONAL:
+     * Clustering
+       -a <string> algorithm/method for clustering 
+             [ward.D|ward.D2|single|complete|average(=UPGMA)] [def: $algorithm]
+       -d <string> distance type [euclidean|manhattan|gower]  [def: $distance]
+     * Goodness of clustering
+       -s <string> goodness of clustering statistic [gap|sil] [def: $clust_stat]
+       -S <integer> number of random starts (gap statistic)   [def: $n_start]
+       -n <integer> num. of bootstrap replicates (gap stat.)  [def: $n_boot]                                                   
+       -k <integer> max. number of clusters                   [def: $k_max; NOTE: 2<= k <= n-1 ]
+   
+     * Plotting
+       -c <int> 1|0 to display or not the distace values      [def:$cell_note]
+                    in the heatmap cells 
+       -f <int> maximum number of decimals in matrix display  [1,2; def:$decimals]
+       -t <string> text for Main title                        [def:$text]
+       -m <integer> margins_horizontal                        [def:$margin_hor]
+       -v <integer> margins_vertical                          [def:$margin_vert]
+       -o <string> output file format  [svg|pdf]              [def:$outformat]
+       -p <integer> points for plotting device                [def:$points]    
+       -H <integer> ouptupt device height                     [def:$height]    
+       -W <integer> ouptupt device width                      [def:$width]     
+       -A <'integer,integer'> angle to rotate row,col labels  [def $angle]
+       -X <float> leaf label character expansion factor       [def $charExp]
+
+     * Filter input pangenome_matrix_t0.tab using regular expressions:
+       -x <string> regex, like: 'Escherichia|Salmonella'      [def $regex]
+       
+     * Miscelaneous
+       -N <flag> print Notes and exit                         [flag]
+
+    EXAMPLE:
+      $progname -i pangenome_matrix_t0.tab -t "Pan-genome tree" -a ward.D2 -d gower -o pdf -x 'maltoph|genosp' -A 'NULL,45' -X 0.8 -s gap -S 25 -n 500
+
+    AIM: compute a distance matrix from a pangenome_matrix.tab file produced after running 
+         get_homologues.pl and compare_clusters.pl with options -t 0 -m .
+         The pangenome_matrix.tab file processed by hclust(), and heatmap.2()
+    
+    OUTPUT: a newick file with extension .ph and svg|pdf output of hclust and heatmap.2 calls +
+             goodness of clustering (gap|silhouette width) dentrogram and stats plot.
+     
+    DEPENDENCIES:
+         R packages: ape, cluster, gplots and factoextra. Run $progname -N for installation instructions.
+	 
+    IMPORTANT NOTE: to get the best display of your genome lables, these should be made as short as possible.
+                    This can be simply done by executing sed commands such as: 
+		    sed 's/LongGenusName/L/g; s/speciesname/spn/g' pangenome_matrix_t0.tab > pangenome_matrix_t0.tabed
+HELP
+
+  check_dependencies
+
+exit 0
+
+}
 
 #------------------------------------------------------------------------#
 #------------------------------ GET OPTIONS -----------------------------#
@@ -183,6 +197,15 @@ regex=
 runmode=0
 check_dep=0
 cell_note=0
+decimals=2
+
+algorithm=ward.D2
+distance=manhattan
+
+clust_stat=sil
+n_start=25
+n_boot=100     
+k=15
 
 text="Pan-genome tree; "
 width=17
@@ -190,12 +213,9 @@ height=15
 points=15
 margin_hor=20
 margin_vert=21
-outformat=svg
-algorithm=ward.D2
-distance=gower
-decimals=2
+outformat=pdf
 
-charExp=1.0
+charExp=0.8
 angle='NULL,NULL'
 #colTax=1
 
@@ -203,7 +223,7 @@ subset_matrix=0
 
 
 # See bash cookbook 13.1 and 13.2
-while getopts ':a:A:c:i:d:t:m:o:p:f:v:x:X:H:W:R:hND?:' OPTIONS
+while getopts ':a:A:c:d:f:i:k:t:m:n:o:p:s:S:v:x:X:H:W:R:hND?:' OPTIONS
 do
    case $OPTIONS in
 
@@ -219,13 +239,21 @@ do
         ;;
    i)   tab_file=$OPTARG
         ;;
+   k)	k=$OPTARG
+	;;
    m)   margin_hor=$OPTARG
+        ;;
+   n)	n_boot=$OPTARG
         ;;	
    v)   margin_vert=$OPTARG
         ;;
    o)   outformat=$OPTARG
         ;;
    p)   points=$OPTARG
+        ;;
+   s)   clust_stat=$OPTARG
+        ;;
+   S)   n_start=$OPTARG
         ;;
    t)   text=$OPTARG
         ;;
@@ -270,12 +298,20 @@ then
        exit 1    
 fi
 
-#if [ -z $runmode ]
-#then
-#       echo "# ERROR: no runmode defined!"
-#       print_help
-#       exit 1    
-#fi
+if [ $clust_stat != "sil" -a $clust_stat != "gap" ]
+then
+       echo "# ERROR: goodness of clustering stats must be sil|gap"
+       print_help
+       exit 1	 
+fi
+
+if [ $dist != "gower" -a $dist != "manhattan" a $dist != "euclidean" ]
+then
+       echo "# ERROR: distances must be one of gower|manhattan|euclidean"
+       print_help
+       exit 1	 
+fi
+
 
 if [ -z $DEBUG ]
 then
@@ -306,12 +342,24 @@ cat << PARAMS
 
 ##############################################################################################
 >>> $progname v$VERSION run started at $start_time
-        working direcotry:$wkdir
+        
+	# General
+	working direcotry:$wkdir
         input tab_file:$tab_file | regex:$regex
-	distance:$distance|dist_cutoff:$dist_cutoff|hclustering_meth:$algorithm|cell_note:$cell_note
+	distance:$distance|dist_cutoff:$dist_cutoff|hclustering_meth:$algorithm
+	
+	# Heatmaps
+	cell_note:$cell_note
         text:$text|margin_hor:$margin_hor|margin_vert:$margin_vert|points:$points
         width:$width|height:$height|outformat:$outformat
 	angle:"$angle"|charExp:$charExp
+	
+	# Goodnes of clustering stats
+          * gap satistic
+	     n_start:$n_start|n_boot:$n_boot
+	  * gap and silhouette width
+	     k:$k
+	      
 ##############################################################################################
 
 PARAMS
@@ -328,33 +376,45 @@ newick_file=${newick_file//\//_}
 aRow=$(echo "$angle" | cut -d, -f1)
 aCol=$(echo "$angle" | cut -d, -f2)
 
+
+
 echo ">>> Plotting files $tree_file and $heatmap_outfile ..."
 echo "     this will take some time, please be patient"
 echo
 
 # 2) replace path with "Genome" in first col of 1st row of source $tab_file (pangenome_matrix_t0.tab)
-perl -pe 's/source\S+/Genome/' $tab_file > ${tab_file}ED
+perl -pe 's/source\S+/Genome/' $tab_file | sed 's/\.fna//g; s/\.gbk//g; s/-/_/g'  > ${tab_file}ed
 
 # 3) call R using a heredoc and write the resulting script to file 
 R --no-save -q <<RCMD > ${progname%.*}_script_run_at_${start_time}.R
 library("gplots")
 library("cluster")
 library("ape")
+library("factoextra")
 
+# 0.1 save original parameters
+opar <- par(no.readonly = TRUE)
+
+# set options
 options(expressions = 100000) #https://stat.ethz.ch/pipermail/r-help/2004-January/044109.html
 
-table <- read.table(file="${tab_file}ED", header=TRUE, sep="\t")
+# 1 read cleaned pan-genome matrix
+table <- read.table(file="${tab_file}ed", header=TRUE, sep="\t")
+tab.dim <- dim(table)
+
+# 1.1 Note that silhouette statistics are only defined if 2 <= k <= n -1 genomes
+#   so make sure the user provides a usable k or set it to maximum possible value automatically
+n_tax <- dim(table)[1]
+k <- $k
+max_k <- n_tax -1 
+if( k >= n_tax) k <- max_k
 
 # remove the invariant (core-genome) columns
+#cat("Removing invariant (core-genome) columns from ${tab_file} ...\n")
 table <- table[sapply(table,  function(x) length(unique(x))>1)]
 
-# remove the singleton columns (i.e., those with colSums > 1)
-#   need to exclude column 1, which is not numeric
-no_singletons <- table[, colSums(table[,-1]) > 1]
-
-# add first (genome names) column back
-table <- cbind(table[,1], no_singletons)
-rm(no_singletons)
+write.table(table, file="pangenome_matrix_variable_sites_only.tsv", sep="\t", 
+            row.names = FALSE)
 
 # filter rows with user-provided regex
 if($subset_matrix > 0 ){
@@ -362,22 +422,38 @@ if($subset_matrix > 0 ){
    table <- table[include_list, ]
 }
 
-mat_dat <- data.matrix(table[,2:ncol(table)])
+# for goodness of clustering stats we require a dfr without the strain names
+# dfr.num <- table %>% select(2:dim(table)[2])
+# using good ol' base R to avoid more dependencies ... may enforce tydiverse in the future
+dfr.num <- table[,2:ncol(table)]
+dfr.num <- droplevels.data.frame(dfr.num)
 
-rnames <- table[,1]
-rownames(mat_dat) <-rnames
 
-my_dist <- daisy(mat_dat, metric="$distance", stand=FALSE)
+# 2.4 convert dfr.num to matrix
+dfr.num.mat <- as.matrix(dfr.num)
+
+# >>> add rownmaes to each matrix and dfr
+genomes <- table\$Genome
+rownames(dfr.num.mat) <- genomes
+rownames(dfr.num) <- genomes
+
+my_dist <- daisy(dfr.num.mat, metric="$distance", stand=FALSE)
+dist.manh <- get_dist(dfr.num, method="manhattan")
 
 write.table(as.matrix(my_dist), file="${distance}_dist_matrix.tab", row.names=TRUE, col.names=FALSE, sep="\t")
 
+# write Newick-formatted dendrogram
+dendro <- as.dendrogram(hclust(my_dist, method="$algorithm"))
 nwk_tree <- as.phylo(hclust(my_dist, method="$algorithm"), hang=-1, main="$algorithm clustering with $distance dist")
 write.tree(phy=nwk_tree, file="$newick_file")
 
+
+# plot the heatmaps
 $outformat("$tree_file", width=$width, height=$height, pointsize=$pointsize)
 plot(hclust(my_dist, method="$algorithm"), hang=-1, main="$algorithm clustering with $distance dist")
 dev.off()
     
+# without cell values
 if($cell_note == 0){
    $outformat(file="$heatmap_outfile", width=$width, height=$height, pointsize=$pointsize)
    heatmap.2(as.matrix(my_dist), main="$text $distance dist.", notecol="black", density.info="none", trace="none", dendrogram="row", 
@@ -387,6 +463,7 @@ if($cell_note == 0){
    dev.off()
 }
 
+# with cell values
 if($cell_note == 1){
    $outformat(file="$heatmap_outfile", width=$width, height=$height, pointsize=$pointsize)
    heatmap.2(as.matrix(my_dist), cellnote=round(as.matrix(my_dist),$decimals), main="$text $distance dist.", 
@@ -397,14 +474,79 @@ if($cell_note == 1){
    dev.off()
 }    
 
-RCMD
+# compute goodness of clustering stats
 
+if("$clust_stat" == "gap"){
+    gap_stat <- clusGap(dfr.num, diss = dist.manh, FUN = hcut, nstart = $n_start, d.power = 2, K.max = k, B = $n_boot, method = "Tibs2001SEmax")
+    #fviz_gap_stat(gap_stat)
+
+    # maximum SE.sim, which corresponds to the optimal number of clusters
+    # gap_stat.gow$Tab
+    gap_max_SEsim <- max(gap_stat\$Tab[,3])
+    gap_SEsim_bool_vec <- gap_stat\$Tab[,3]==gap_max_SEsim
+
+    # to get the actual number of clusters, we need to get the index of TRUE value
+    #  we add min, just in case there are 2 equal SE.sim values, to get the first one
+    #  gap_n_clust <- print(gap_stat, method = "firstSEmax", SE.factor = 1)
+    gap_n_clust <- min(which(gap_SEsim_bool_vec == TRUE))
+
+    gap_plot_name <- paste("gap-statistic_plot_", "$algorithm", "-", "manhattan", ".${outformat}", sep = "")
+    
+    gap_stat_plot <- fviz_gap_stat(gap_stat, maxSE = list(method = "Tibs2001SEmax", SE.factor= 1)) # optimal no. clusters: 13; both with d.power=1(def)|2, with B=50|100
+    $outformat(gap_plot_name)
+    plot(gap_stat_plot)
+    dev.off()
+
+    # plot with clusters delimited by rectangles
+    gap_hc_plot_name <- paste("hcluster_", "$algorithm", "-", "manhattan_cut_at_gap-stat_k", gap_n_clust, ".${outformat}", sep = "")
+    title <- paste("hc of pan-genome (", "$algorithm", "-", "manhattan; gap-statistic: k = ", gap_n_clust, ")", sep="")
+
+    d_plot <- fviz_dend(dendro, k = gap_n_clust, cex = $charExp, horiz = TRUE,  k_colors = "jco", rect = TRUE, rect_border = "jco", rect_fill = TRUE, main = "")  # , main = title
+    
+    $outformat(gap_hc_plot_name)
+    par(mar=c(2,1,2,10))
+    plot(d_plot)
+    dev.off()
+ 
+    par(opar)
+}
+
+if("$clust_stat" == "sil"){
+   my_dist.nbc.sil <- fviz_nbclust(dfr.num, diss = dist.manh, FUN = hcut, method = "silhouette", k.max = k)
+
+   # extract the number of optimal clusters:
+   sil_max <- max(my_dist.nbc.sil\$data\$y)
+   sil_n_clust <- as.integer(my_dist.nbc.sil\$data[my_dist.nbc.sil\$data\$y==sil_max,][1])
+     
+   sil_plot_name <- paste("silhouette_width_statistic_plot_", "$algorithm", "-", "manhattan", ".${outformat}", sep = "")
+   
+   $outformat(sil_plot_name)
+   plot(my_dist.nbc.sil)
+   dev.off()
+   
+   sil_hc_plot_name <- paste("hcluster_", "$algorithm", "-", "manhattan_cut_at_silhouette_mean_width_k", sil_n_clust, ".${outformat}", sep = "")
+   title <- paste("hc of pan-genome (", "$algorithm", "-", "manhattan; silhouette mean width: k = ", sil_n_clust, ")", sep="")
+   
+   
+   d_plot <- fviz_dend(dendro, k = sil_n_clust, cex = $charExp, horiz = TRUE,  k_colors = "jco", rect = TRUE, rect_border = "jco", rect_fill = TRUE, main = "") # , main = title
+   $outformat(sil_hc_plot_name)
+   par(mar=c(2,1,2,10))
+   plot(d_plot)
+   dev.off()
+   
+   par(opar)
+
+}
+
+par(opar)
+
+RCMD
 
 if [ -s $tree_file ]
 then
      echo ">>> File $tree_file was generated"
 else
-     echo ">>> ERROR: File $tree_file was were NOT generated!"
+     echo ">>> ERROR: File $tree_file was  NOT generated!"
 fi
 
 
@@ -412,19 +554,36 @@ if [ -s ${distance}_dist_matrix.tab ]
 then
      echo ">>> File ${distance}_dist_matrix.tab was generated"
 else
-     echo ">>> ERROR: File ${distance}_dist_matrix.tab was were NOT generated!"
+     echo ">>> ERROR: File ${distance}_dist_matrix.tab was NOT generated!"
 fi
 
 if [ -s $heatmap_outfile ] 
 then
      echo ">>> File $heatmap_outfile was generated"
 else
-     echo ">>> ERROR: File $heatmap_outfile was were NOT generated!"
+     echo ">>> ERROR: File $heatmap_outfile was NOT generated!"
 fi
 
 if [ -s $newick_file ] 
 then
      echo ">>> File $newick_file was generated"
 else
-     echo ">>> ERROR: File $newick_file was were NOT generated!"
+     echo ">>> ERROR: File $newick_file was NOT generated!"
 fi
+
+goodness_of_clust_plot=$(find . -name '*statistic_plot*')
+if [ -s $goodness_of_clust_plot ]
+then
+     echo ">>> File $goodness_of_clust_plot was generated"
+else
+     echo ">>> ERROR: File $goodness_of_clust_plot was NOT generated!"
+fi
+
+dendro_cut_file=$(find . -name 'hclust*cut_at*')
+if [ -s $dendro_cut_file ]
+then
+     echo ">>> File $dendro_cut_file was generated"
+else
+     echo ">>> ERROR: File $dendro_cut_file was NOT generated!"
+fi
+
