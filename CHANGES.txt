@@ -237,3 +237,4 @@
 03012018: updated example figure created with plot_matrix_heatmap.sh in the manual
 03012018: renamed hcluster_matrix.sh to hcluster_pangenome_matrix.sh and updated install.pl, release.pl accordingly
 03012018: added links to GET_PHYLOMARKERS 
+25012018: added the gap- and silhouette meand width goodness of clustering statistics to hcluster_pangenome_matrix.sh; calls functions of new package: factoextra
