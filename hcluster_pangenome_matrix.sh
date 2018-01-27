@@ -12,9 +12,14 @@
 
 
 progname=${0##*/} 
-VERSION='v1.0_25Jan18' # added the gap- and silhouette meand width goodness of clustering statistics
+VERSION='v1.1_26Jan18' #  v1.1_26Jan18 changed fviz_dend for dendextend to plot clustering results for better control of plot params
+                       #     and proper plotting of scale-bar in gower-distances-based hclus plots, which don't render 
+		       #     correctly with fviz_dend. changed default distance back to gower. Improved documentation
+		       #     Now depends also on 
+                       #  v1.1_25Jan18; Major upgrade: added the gap- and silhouette meand width goodness of clustering statistics
                        #  to determine the optimal number of clusters automatically.
 		       # Calls new package factoextra; fviz_dend; fviz_gap_stat
+		       # Improved/updated documentation and extended user input checking
          # v0.6_124Dec17: remove the invariant (core-genome) and singleton columns from input table
          #v'0.5_14Oct17'; added options -A and -X to control the angle 
                       #                and character eXpansion factor of leaf labels
@@ -131,8 +136,7 @@ function print_help()
        $progname -i <string (name of matrix file)> [-d <distance> -a <algorithm> -o <format> ...]
     
     REQUIRED
-       -i <string> name of matrix file     
-       
+       -i <string> name of matrix file 
     OPTIONAL:
      * Clustering
        -a <string> algorithm/method for clustering 
@@ -141,8 +145,10 @@ function print_help()
      * Goodness of clustering
        -s <string> goodness of clustering statistic [gap|sil] [def: $clust_stat]
        -S <integer> number of random starts (gap statistic)   [def: $n_start]
+       -M <string>  method: [firstSEmax|Tibs2001SEmax|
+                             globalSEmax|firstmax|globalmax]  [def: $gap_method]
        -n <integer> num. of bootstrap replicates (gap stat.)  [def: $n_boot]                                                   
-       -k <integer> max. number of clusters                   [def: $k_max; NOTE: 2<= k <= n-1 ]
+       -k <integer> max. number of clusters                   [def: ${k}; NOTE: 2<= k <= n-1 ]
    
      * Plotting
        -c <int> 1|0 to display or not the distace values      [def:$cell_note]
@@ -177,9 +183,15 @@ function print_help()
     DEPENDENCIES:
          R packages: ape, cluster, gplots and factoextra. Run $progname -N for installation instructions.
 	 
-    IMPORTANT NOTE: to get the best display of your genome lables, these should be made as short as possible.
-                    This can be simply done by executing sed commands such as: 
-		    sed 's/LongGenusName/L/g; s/speciesname/spn/g' pangenome_matrix_t0.tab > pangenome_matrix_t0.tabed
+    IMPORTANT NOTES: 
+        1. to get the best display of your genome lables, these should be made as short as possible.
+           This can be simply done by executing sed commands such as: 
+	   sed 's/LongGenusName/L/g; s/speciesname/spn/g' pangenome_matrix_t0.tab > pangenome_matrix_t0.tabed
+	2. The gap-statistic of clustering goodness is compuationally intensive and takes a long time 
+	   (up to hours) to run on a large pan-genome matrix (n_genomes > 50; n_clusters > 8000) with a reasonalbe 
+	   (n >= 500) number of bootstrap replicates and independent searches (S >= 20) and large numbers 
+	   of potential clusters (k >= 15). The default option is the silhouette-width statistic, which is 
+	   much faster to run, although also less powerful and much more conservative.
 HELP
 
   check_dependencies
@@ -200,12 +212,13 @@ cell_note=0
 decimals=2
 
 algorithm=ward.D2
-distance=manhattan
+distance=gower
 
 clust_stat=sil
 n_start=25
 n_boot=100     
 k=15
+gap_method=Tibs2001SEmax
 
 text="Pan-genome tree; "
 width=17
@@ -215,7 +228,7 @@ margin_hor=20
 margin_vert=21
 outformat=pdf
 
-charExp=0.8
+charExp=0.7
 angle='NULL,NULL'
 #colTax=1
 
@@ -223,7 +236,7 @@ subset_matrix=0
 
 
 # See bash cookbook 13.1 and 13.2
-while getopts ':a:A:c:d:f:i:k:t:m:n:o:p:s:S:v:x:X:H:W:R:hND?:' OPTIONS
+while getopts ':a:A:c:d:f:i:k:t:m:M:n:o:p:s:S:v:x:X:H:W:R:hND?:' OPTIONS
 do
    case $OPTIONS in
 
@@ -242,6 +255,8 @@ do
    k)	k=$OPTARG
 	;;
    m)   margin_hor=$OPTARG
+        ;;
+   M)   gap_method=$OPTARG
         ;;
    n)	n_boot=$OPTARG
         ;;	
@@ -305,7 +320,7 @@ then
        exit 1	 
 fi
 
-if [ $dist != "gower" -a $dist != "manhattan" a $dist != "euclidean" ]
+if [ $distance != "gower" -a $distance != "manhattan" -a $distance != "euclidean" ]
 then
        echo "# ERROR: distances must be one of gower|manhattan|euclidean"
        print_help
@@ -329,8 +344,13 @@ then
     subset_matrix=1
 fi
 
-
-
+if [ $gap_method != "Tibs2001SEmax" -a $gap_method != "firstSEmax" -a $gap_method != "globalSEmax" -a $gap_method != "firstmax" -a $gap_method != "globalmax" ]
+then
+    echo "ERROR: gat_metod must be one of: firstSEmax|Tibs2001SEmax|globalSEmax|firstmax|globalmax"
+    print_help
+    exit 1
+fi
+                           
 #-------------------#
 #>>>>>> MAIN <<<<<<<#
 #-------------------#
@@ -356,7 +376,7 @@ cat << PARAMS
 	
 	# Goodnes of clustering stats
           * gap satistic
-	     n_start:$n_start|n_boot:$n_boot
+	     n_start:$n_start|n_boot:$n_boot|gap_model:$gap_model
 	  * gap and silhouette width
 	     k:$k
 	      
@@ -377,168 +397,170 @@ aRow=$(echo "$angle" | cut -d, -f1)
 aCol=$(echo "$angle" | cut -d, -f2)
 
 
-
 echo ">>> Plotting files $tree_file and $heatmap_outfile ..."
 echo "     this will take some time, please be patient"
 echo
 
 # 2) replace path with "Genome" in first col of 1st row of source $tab_file (pangenome_matrix_t0.tab)
-perl -pe 's/source\S+/Genome/' $tab_file | sed 's/\.fna//g; s/\.gbk//g; s/-/_/g'  > ${tab_file}ed
+perl -pe 's/^source\S+/Genome/' $tab_file | sed 's/\.f[an]a//g; s/\.gbk//g; s/-/_/g; s/__/_/g' > ${tab_file}ed
 
 # 3) call R using a heredoc and write the resulting script to file 
 R --no-save -q <<RCMD > ${progname%.*}_script_run_at_${start_time}.R
-library("gplots")
+suppressPackageStartupMessages(library("gplots"))
 library("cluster")
 library("ape")
-library("factoextra")
+suppressPackageStartupMessages(library(dendextend))
+suppressPackageStartupMessages(library(factoextra))
 
 # 0.1 save original parameters
 opar <- par(no.readonly = TRUE)
 
-# set options
+# 0.2 set options
 options(expressions = 100000) #https://stat.ethz.ch/pipermail/r-help/2004-January/044109.html
 
-# 1 read cleaned pan-genome matrix
+# 1. read cleaned pan-genome matrix
 table <- read.table(file="${tab_file}ed", header=TRUE, sep="\t")
-tab.dim <- dim(table)
 
-# 1.1 Note that silhouette statistics are only defined if 2 <= k <= n -1 genomes
+# 2. Note that silhouette statistics are only defined if 2 <= k <= n -1 genomes
 #   so make sure the user provides a usable k or set it to maximum possible value automatically
 n_tax <- dim(table)[1]
 k <- $k
 max_k <- n_tax -1 
 if( k >= n_tax) k <- max_k
 
-# remove the invariant (core-genome) columns
+# 3. remove the invariant (core-genome) columns
 #cat("Removing invariant (core-genome) columns from ${tab_file} ...\n")
 table <- table[sapply(table,  function(x) length(unique(x))>1)]
 
 write.table(table, file="pangenome_matrix_variable_sites_only.tsv", sep="\t", 
             row.names = FALSE)
 
-# filter rows with user-provided regex
+# 4. filter rows with user-provided regex
 if($subset_matrix > 0 ){
   include_list <- grep("$regex", table\$Genome)
    table <- table[include_list, ]
 }
 
 # for goodness of clustering stats we require a dfr without the strain names
-# dfr.num <- table %>% select(2:dim(table)[2])
-# using good ol' base R to avoid more dependencies ... may enforce tydiverse in the future
+# using good ol' base R to avoid more dependencies ... may enforce tydiverse in the future ... 
+#  ... It is likely not wise to attempt escaping the gravity of the tidyverse ;)
+#  As a matter of fact, factoextra meakes use of ggplot2, a core tidyverse package.
+#dfr.num <- table %>% select(2:dim(table)[2])
 dfr.num <- table[,2:ncol(table)]
 dfr.num <- droplevels.data.frame(dfr.num)
 
-
-# 2.4 convert dfr.num to matrix
+# 5.1 convert dfr.num to matrix
 dfr.num.mat <- as.matrix(dfr.num)
 
-# >>> add rownmaes to each matrix and dfr
+# 5.2 add rownmaes to each matrix and dfr
 genomes <- table\$Genome
 rownames(dfr.num.mat) <- genomes
 rownames(dfr.num) <- genomes
 
-my_dist <- daisy(dfr.num.mat, metric="$distance", stand=FALSE)
-dist.manh <- get_dist(dfr.num, method="manhattan")
+# 6.1 compute distances from the numeric matrix
+my_dist <- suppressWarnings(daisy(dfr.num.mat, metric="$distance", stand=FALSE))
 
+# 6.2 write the distance matrix to disk
 write.table(as.matrix(my_dist), file="${distance}_dist_matrix.tab", row.names=TRUE, col.names=FALSE, sep="\t")
 
-# write Newick-formatted dendrogram
+# 7.1 compute dendrograms and phylogenies using hclust and write Newick-formatted string to disk
 dendro <- as.dendrogram(hclust(my_dist, method="$algorithm"))
-nwk_tree <- as.phylo(hclust(my_dist, method="$algorithm"), hang=-1, main="$algorithm clustering with $distance dist")
+nwk_tree <- as.phylo(hclust(my_dist, method="$algorithm"), hang=-1, main="$algorithm clustering with $distance dist", cex = $charExp)
 write.tree(phy=nwk_tree, file="$newick_file")
 
-
-# plot the heatmaps
+# 7,2 plot the dendrogram
 $outformat("$tree_file", width=$width, height=$height, pointsize=$pointsize)
-plot(hclust(my_dist, method="$algorithm"), hang=-1, main="$algorithm clustering with $distance dist")
+plot(hclust(my_dist, method="$algorithm"), hang=-1, main="$algorithm clustering with $distance dist", cex = $charExp)
 dev.off()
     
-# without cell values
+# 8.1 Plot heatmaps without cell values
 if($cell_note == 0){
    $outformat(file="$heatmap_outfile", width=$width, height=$height, pointsize=$pointsize)
-   heatmap.2(as.matrix(my_dist), main="$text $distance dist.", notecol="black", density.info="none", trace="none", dendrogram="row", 
-   margins=c($margin_vert,$margin_hor), lhei = c(1,5),
-   cexRow=$charExp, cexCol=$charExp, 
-   srtRow=$aRow, srtCol=$aCol)
+       heatmap.2(as.matrix(my_dist), main="$text $distance dist.", notecol="black", density.info="none", trace="none", dendrogram="row", 
+       margins=c($margin_vert,$margin_hor), lhei = c(1,5),
+       cexRow=$charExp, cexCol=$charExp, 
+       srtRow=$aRow, srtCol=$aCol)
    dev.off()
 }
 
-# with cell values
+# 8.2 Plot heatmaps with cell values
 if($cell_note == 1){
    $outformat(file="$heatmap_outfile", width=$width, height=$height, pointsize=$pointsize)
-   heatmap.2(as.matrix(my_dist), cellnote=round(as.matrix(my_dist),$decimals), main="$text $distance dist.", 
-   notecol="black", density.info="none", trace="none", dendrogram="row", 
-   margins=c($margin_vert,$margin_hor), lhei = c(1,5),
-   cexRow=$charExp, cexCol=$charExp, 
-   srtRow=$aRow, srtCol=$aCol)
+       heatmap.2(as.matrix(my_dist), cellnote=round(as.matrix(my_dist),$decimals), main="$text $distance dist.", 
+       notecol="black", density.info="none", trace="none", dendrogram="row", 
+       margins=c($margin_vert,$margin_hor), lhei = c(1,5),
+       cexRow=$charExp, cexCol=$charExp, 
+       srtRow=$aRow, srtCol=$aCol)
    dev.off()
 }    
 
-# compute goodness of clustering stats
+# 9. compute goodness of clustering stats [gap|silhouette-width]
+# 9.1 gap-statistic
 
 if("$clust_stat" == "gap"){
-    gap_stat <- clusGap(dfr.num, diss = dist.manh, FUN = hcut, nstart = $n_start, d.power = 2, K.max = k, B = $n_boot, method = "Tibs2001SEmax")
-    #fviz_gap_stat(gap_stat)
-
-    # maximum SE.sim, which corresponds to the optimal number of clusters
-    # gap_stat.gow$Tab
-    gap_max_SEsim <- max(gap_stat\$Tab[,3])
-    gap_SEsim_bool_vec <- gap_stat\$Tab[,3]==gap_max_SEsim
-
-    # to get the actual number of clusters, we need to get the index of TRUE value
-    #  we add min, just in case there are 2 equal SE.sim values, to get the first one
-    #  gap_n_clust <- print(gap_stat, method = "firstSEmax", SE.factor = 1)
-    gap_n_clust <- min(which(gap_SEsim_bool_vec == TRUE))
-
-    gap_plot_name <- paste("gap-statistic_plot_", "$algorithm", "-", "manhattan", ".${outformat}", sep = "")
+    # compute the gap_statistic using cluster::clusGap
+    gap_stat <- clusGap(dfr.num, diss = my_dist, FUN = hcut, nstart = $n_start, d.power = 2, K.max = k, B = $n_boot, method = "$gap_method")
     
-    gap_stat_plot <- fviz_gap_stat(gap_stat, maxSE = list(method = "Tibs2001SEmax", SE.factor= 1)) # optimal no. clusters: 13; both with d.power=1(def)|2, with B=50|100
+    # cluster::maxSE gets the optimal number of clusters;
+    gap_n_clust <- maxSE(gap_stat\$Tab[, "gap"], gap_stat\$Tab[, "SE.sim"], method = "$gap_method")
+       
+    dend <- color_branches(dendro, k = gap_n_clust)
+    
+    gap_plot_name <- paste("gap-statistic_plot_${algorithm}-${distance}", ".${outformat}", sep = "")
+    
+    gap_stat_plot <- fviz_gap_stat(gap_stat, maxSE = list(method = "$gap_method", SE.factor= 1))
+    
     $outformat(gap_plot_name)
     plot(gap_stat_plot)
     dev.off()
 
     # plot with clusters delimited by rectangles
-    gap_hc_plot_name <- paste("hcluster_", "$algorithm", "-", "manhattan_cut_at_gap-stat_k", gap_n_clust, ".${outformat}", sep = "")
-    title <- paste("hc of pan-genome (", "$algorithm", "-", "manhattan; gap-statistic: k = ", gap_n_clust, ")", sep="")
-
-    d_plot <- fviz_dend(dendro, k = gap_n_clust, cex = $charExp, horiz = TRUE,  k_colors = "jco", rect = TRUE, rect_border = "jco", rect_fill = TRUE, main = "")  # , main = title
+    gap_hc_plot_name <- paste("hcluster_${algorithm}-${distance}_cut_at_gap-stat_k", gap_n_clust, ".${outformat}", sep = "")
+    title <- paste("hc of pan-genome (${algorithm}-${distance}; gap-statistic: k = ", gap_n_clust, ")", sep="")
     
     $outformat(gap_hc_plot_name)
-    par(mar=c(2,1,2,10))
-    plot(d_plot)
-    dev.off()
- 
-    par(opar)
+       par(mar=c(3,1,1,8))
+       #plot(d_plot)
+       #dend %>% set("branches_k_color", value = 3:gap_n_clust, k = gap_n_clust ) %>% 
+       dend %>% set("branches_k_color", k = gap_n_clust ) %>% 
+              set("labels_cex", c($charExp)) %>% plot(horiz = TRUE) 
+     
+       dend %>% rect.dendrogram(k = gap_n_clust, horiz = TRUE, border = 8, lty = 5, lwd = 1)
+   dev.off()
+   par(opar)
 }
 
+# 9.2 silhouette-width statistic
 if("$clust_stat" == "sil"){
-   my_dist.nbc.sil <- fviz_nbclust(dfr.num, diss = dist.manh, FUN = hcut, method = "silhouette", k.max = k)
+   # compute the silhouette-width statistic using factoextra::fviz_nbclust
+   my_dist.nbc.sil <- fviz_nbclust(dfr.num, diss = my_dist, FUN = hcut, method = "silhouette", k.max = k)
 
    # extract the number of optimal clusters:
    sil_max <- max(my_dist.nbc.sil\$data\$y)
    sil_n_clust <- as.integer(my_dist.nbc.sil\$data[my_dist.nbc.sil\$data\$y==sil_max,][1])
+   
+   # use dendextend::color_branches
+   dend <- color_branches(dendro, k = sil_n_clust)
      
-   sil_plot_name <- paste("silhouette_width_statistic_plot_", "$algorithm", "-", "manhattan", ".${outformat}", sep = "")
+   sil_plot_name <- paste("silhouette_width_statistic_plot_", "${algorithm}", "-", "$distance", ".${outformat}", sep = "")
    
    $outformat(sil_plot_name)
-   plot(my_dist.nbc.sil)
+      plot(my_dist.nbc.sil)
    dev.off()
    
-   sil_hc_plot_name <- paste("hcluster_", "$algorithm", "-", "manhattan_cut_at_silhouette_mean_width_k", sil_n_clust, ".${outformat}", sep = "")
-   title <- paste("hc of pan-genome (", "$algorithm", "-", "manhattan; silhouette mean width: k = ", sil_n_clust, ")", sep="")
+   sil_hc_plot_name <- paste("hcluster_", "${algorithm}", "-", "${distance}", "_cut_at_silhouette_mean_width_k", sil_n_clust, ".${outformat}", sep = "")
+   title <- paste("hc of pan-genome (", "${algorithm}", "-", "{$distance}", "; silhouette mean width: k = ", sil_n_clust, ")", sep="")
    
-   
-   d_plot <- fviz_dend(dendro, k = sil_n_clust, cex = $charExp, horiz = TRUE,  k_colors = "jco", rect = TRUE, rect_border = "jco", rect_fill = TRUE, main = "") # , main = title
-   $outformat(sil_hc_plot_name)
-   par(mar=c(2,1,2,10))
-   plot(d_plot)
-   dev.off()
-   
-   par(opar)
-
+    $outformat(sil_hc_plot_name)
+    par(mar=c(3,1,1,8))
+       #plot(d_plot)
+       #dend %>% set("branches_k_color", value = 3:sil_n_clust, k = sil_n_clust ) %>% 
+       dend %>% set("branches_k_color", k = sil_n_clust ) %>% 
+             set("labels_cex", c($charExp)) %>% plot(horiz = TRUE) 
+      dend %>% rect.dendrogram(k = sil_n_clust, horiz = TRUE, border = 8, lty = 5, lwd = 1)
+    dev.off()
+    par(opar)
 }
-
-par(opar)
 
 RCMD
 
