@@ -239,3 +239,4 @@
 03012018: added links to GET_PHYLOMARKERS 
 25012018: added the gap- and silhouette meand width goodness of clustering statistics to hcluster_pangenome_matrix.sh; calls functions of new package: factoextra
 27012018: much improved estimation of n_gap_clusters; changed fviz_dend for dendextend to plot clustering results for better control of plot params and proper plotting of scale-bar in gower-distances-based hclus plots, which don't render correctly with fviz_dend. The default distance was therefore reversed to gower. Extended documentation
+27012018: added the mean silhouette width statistic to compute and plot the  optimal number of clusters in ANDg matrices. Requires 2 new R packages: dendextend and factoextra
