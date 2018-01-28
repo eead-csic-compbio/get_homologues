@@ -9,21 +9,27 @@
 #: OUTPUT: svg and pdf; png not implemented yet
 
 progname=${0##*/} # plot_matrix_heatmap.sh
-VERSION='v1.0_27Jan18' # added the mean silhouette width statistic to compute and plot
-                       #    the  optimal number of clusters in ANDg matrices.
-		       # requires new R packages: dendextend and factoextra
+VERSION='v1.0.1_28Jan18' # * added filtering code to clean-up taxon names in pangenome_matrix*.tab; 
+                         # * added option -b to control the amount of right-border (margin) in 
+			 #   the cgAND dendrogram plot, which now also displays vertical lines
+			 #   at the critical cgAND values of 4,5,6
+			 # * removed the (now) redundant and ugly plot produced by hclust.
 
-  #'v0.8_31Oct17'   # added hclustering (complete linkage, hang=-1) of ANdist matrix 
-  		  #  for convenient cluster delimitatios at distance cutoffs of 6,5 and 4
-	 	  #  which correspond to ANI values of 94%, 95% and 96%, respectively
-  #'v0.7_14Oct17' # added options -X (charExp) and -a (label rotation angle)
-  #'v0.5_18Aug17' # added options -d (max no. decimals) and -x (filter matrix with regex)
-  #'v0.4_17Aug17' # added option -r to remove column names and cell contents, and -k 
-  #'v0.3_13Apr16' # added option -c to filter input matrix by a maximum similarity cut-off value
-  		  # to reduce excessive redundancy. Improved the help text printed with -M
-  #'0.2_26Feb15'  # wrote R function sim2dist() to compute bioNJ tree with ape
-  		  # based on ANI sim-matrix, and write it to file as newick string
-  #'0.1_16Feb15'; first version
+# added the mean silhouette width statistic to compute and plot
+#    the  optimal number of clusters in ANDg matrices.
+# requires new R packages: dendextend and factoextra
+
+#'v0.8_31Oct17'   # added hclustering (complete linkage, hang=-1) of ANdist matrix 
+		#  for convenient cluster delimitatios at distance cutoffs of 6,5 and 4
+        	#  which correspond to ANI values of 94%, 95% and 96%, respectively
+#'v0.7_14Oct17' # added options -X (charExp) and -a (label rotation angle)
+#'v0.5_18Aug17' # added options -d (max no. decimals) and -x (filter matrix with regex)
+#'v0.4_17Aug17' # added option -r to remove column names and cell contents, and -k 
+#'v0.3_13Apr16' # added option -c to filter input matrix by a maximum similarity cut-off value
+		# to reduce excessive redundancy. Improved the help text printed with -M
+#'0.2_26Feb15'  # wrote R function sim2dist() to compute bioNJ tree with ape
+		# based on ANI sim-matrix, and write it to file as newick string
+#'0.1_16Feb15'; first version
 
 date_F=$(date +%F |sed 's/-/_/g')-
 date_T=$(date +%T |sed 's/:/./g')
@@ -128,6 +134,7 @@ function print_help()
        -C <flag> do not reorder clusters                  [def reorder clusters and plot dendrogram]
        -r <flag> remove column names and cell contents    [def names and cell contents are printed]
        -k <string> text for scale X-axis                  [def "Value"]
+       -b <integer> right border (margin) in dendrograms  [def $right_margin]
        -X <float> character expansion factor              [def $charExp]
      * Goodness of clustering
        -K <integer> max. number of clusters               [def: ${k}; NOTE: 2 <= K <= n-1 ]
@@ -146,7 +153,7 @@ function print_help()
        -M <flag> prints gplot installation instructions and further usage information
        
     EXAMPLE:
-      $progname -i Avg_identity.tab -c 99.5 -d 1 -t "Genus X ANIb (OMCL all clusters)" -N -o pdf -m 22 -v 22 -p 20 -H 20 -W 30 -x 'sp1|sp2' -a 45 -X 0.9
+      $progname -i Avg_identity.tab -c 99.5 -d 1 -t "Genus X ANIb (OMCL all clusters)" -N -o pdf -m 22 -v 22 -p 20 -H 20 -W 30 -x 'sp1|sp2' -a 45 -b 12 -X 0.9 -K 20
 
     #------------------------------------------------------------------------------------------------------------------
     AIM: Plot ordered heatmaps with row and col. dendrogram, from squared numeric (distance or presence-absence) matrix,
@@ -195,16 +202,19 @@ remove_colnames=0
 key_xaxis="Value"
 decimals=0
 charExp=1.0
+right_margin=10
 angle=45
 
 subset_matrix=0
 
 # See bash cookbook 13.1 and 13.2
-while getopts ':a:c:i:d:t:m:o:p:v:x:X:H:W:k:K:hrMNC?:' OPTIONS
+while getopts ':a:b:c:i:d:t:m:o:p:v:x:X:H:W:k:K:hrMNC?:' OPTIONS
 do
    case $OPTIONS in
 
    a)   angle=$OPTARG
+        ;;
+   b)   right_margin=$OPTARG
         ;;
    c)   sim_cutoff=$OPTARG
         ;;
@@ -212,31 +222,31 @@ do
         ;;
    i)   tab_file=$OPTARG
         ;;
+   k)   key_xaxis=$OPTARG
+        ;;
    m)   margin_hor=$OPTARG
         ;;	
-   v)   margin_vert=$OPTARG
-        ;;
    o)   outformat=$OPTARG
         ;;
    p)   points=$OPTARG
         ;;
+   r)   remove_colnames=1
+        ;;
    t)   text=$OPTARG
+        ;;
+   v)   margin_vert=$OPTARG
+        ;;
+   x)   regex=$OPTARG
         ;;
    H)   height=$OPTARG
         ;;
-   W)   width=$OPTARG
+   K)   k=$OPTARG
         ;;
    M)   print_man && exit 0
         ;;
    N)   do_nj=1
         ;;
-   r)   remove_colnames=1
-        ;;
-   k)   key_xaxis=$OPTARG
-        ;;
-   K)   k=$OPTARG
-        ;;
-   x)   regex=$OPTARG
+   W)   width=$OPTARG
         ;;
    X)   charExp=$OPTARG
         ;;
@@ -293,7 +303,7 @@ cat << PARAMS
         input tab_file : $tab_file | sim_cutoff : $sim_cutoff | max_decimals : $decimals
 	subset_matrix : $subset_matrix | regex : $regex
         text:$text|margin_hor:$margin_hor|margin_vert:$margin_vert|points:$points
-	angle:$angle|charExp:$charExp
+	angle:$angle|charExp:$charExp|right_margin:$right_margin
         width:$width|height:$height|outformat:$outformat
         reorder_clusters:$reorder_clusters|remove_colnames:$remove_colnames|key_xaxis:$key_xaxis|do_bioNJ:$do_nj
 	k:$k
@@ -301,6 +311,11 @@ cat << PARAMS
 ##############################################################################################
 
 PARAMS
+
+
+
+# 0) cleanup input matrix:
+sed 's/\.gbk_features//g' $tab_file > ed && mv ed $tab_file
 
 # 1) prepare R's output file names
 sim_cutoff_int=$(echo $sim_cutoff | cut -d\. -f1)
@@ -314,8 +329,8 @@ else
    heatmap_outfile="${tab_file%.*}_heatmap.$outformat"
    echo "# Plotting file $heatmap_outfile"
    nj_tree="${tab_file%.*}_BioNJ.ph"
-   hc_tree="${tab_file%.*}_hclust_ANdist.pdf"
 fi
+
 
 # 2) call R using a heredoc and write the resulting script to file 
 R --no-save -q <<RCMD > ${progname%.*}_script_run_at_${start_time}.R
@@ -411,16 +426,6 @@ if($do_nj > 0){
   sim2dist <- function(x) 100 - x
   bionj <- bionj(as.dist(apply(mat_dat, 1, sim2dist)))
   write.tree(phy=bionj, file="$nj_tree")
-  
-  $outformat(file="$hc_tree", width=$width, height=$height, pointsize=$pointsize)
-  par(mar=c(3,1,1,5)) 
-  hc <- hclust(as.dist(apply(mat_dat, 1, sim2dist)), method="complete")
-  plot(as.dendrogram(hc), horiz=TRUE, main="Hierarchical clustering of ANdist")
-  abline(v=6, lty=2, lwd=1)
-  abline(v=5, lty=2, lwd=1)
-  abline(v=4, lty=2, lwd=1)
-  dev.off()
-  par(opar)
 }
 
 # 3. perform goodness of clustering using the meand width silhouette test 
@@ -458,12 +463,20 @@ ANDg_hc_outfile <- paste("ANDg_hc_plot_cut_at_mean_silhouette_width_k",sil_n_clu
 title <- paste("ANDg complete linkage dendrogram (k = ", sil_n_clust, ")", sep="")
 
 $outformat(ANDg_hc_outfile)
-par(mar=c(3,1,1,10))
+par(mar=c(6.1,2,2,$right_margin))
    #plot(d_plot)
-   #dend %>% set("branches_k_color", k = sil_n_clust ) %>% 
-   dend %>% set("branches_k_color", value = 3:sil_n_clust, k = sil_n_clust ) %>% 
-         set("labels_cex", c($charExp)) %>% plot(horiz = TRUE) 
+   dend %>% set("branches_k_color", k = sil_n_clust ) %>% 
+         set("labels_cex", c($charExp)) %>% plot(horiz = TRUE, xlab = "cgAND %") 
   dend %>% rect.dendrogram(k = sil_n_clust, horiz = TRUE, border = 8, lty = 5, lwd = 1)
+  abline(v=6.0, col="red", lty=2)
+  abline(v=5.0, col="black", lty=2)
+  abline(v=4.0, col="blue", lty=2)
+  
+
+
+
+dev.off()
+
 dev.off()
 par(opar)
 
@@ -485,13 +498,6 @@ then
      echo ">>> file $nj_tree was produced"
      echo
 fi
-
-if [ "$do_nj" -eq 1 ] && [ -s "$hc_tree" ]
-then
-     echo ">>> file $hc_tree was produced"
-     echo
-fi
-
 
 if [ "$do_nj" -eq 1 ] && [ ! -s "$nj_tree" ] 
 then
