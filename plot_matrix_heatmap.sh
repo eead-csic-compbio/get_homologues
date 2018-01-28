@@ -9,7 +9,8 @@
 #: OUTPUT: svg and pdf; png not implemented yet
 
 progname=${0##*/} # plot_matrix_heatmap.sh
-VERSION='v1.0.1_28Jan18' # * added filtering code to clean-up taxon names in pangenome_matrix*.tab; 
+VERSION='v1.0.2_28Jan18' # * added check for existence of input *Avg_identity.tab file and adjusted par(mar)
+                         # * added filtering code to clean-up taxon names in pangenome_matrix*.tab; 
                          # * added option -b to control the amount of right-border (margin) in 
 			 #   the cgAND dendrogram plot, which now also displays vertical lines
 			 #   at the critical cgAND values of 4,5,6
@@ -314,7 +315,9 @@ PARAMS
 
 
 
-# 0) cleanup input matrix:
+# 0) check and cleanup input matrix:
+
+[ ! -s $tab_file ] && echo "# ERROR: there is no file $tab_file in $wkdir! Will exit now." && exit 1
 sed 's/\.gbk_features//g' $tab_file > ed && mv ed $tab_file
 
 # 1) prepare R's output file names
@@ -463,10 +466,10 @@ ANDg_hc_outfile <- paste("ANDg_hc_plot_cut_at_mean_silhouette_width_k",sil_n_clu
 title <- paste("ANDg complete linkage dendrogram (k = ", sil_n_clust, ")", sep="")
 
 $outformat(ANDg_hc_outfile)
-par(mar=c(6.1,2,2,$right_margin))
+par(mar=c(5.7,1,1,$right_margin))
    #plot(d_plot)
    dend %>% set("branches_k_color", k = sil_n_clust ) %>% 
-         set("labels_cex", c($charExp)) %>% plot(horiz = TRUE, xlab = "cgAND %") 
+         set("labels_cex", c($charExp)) %>% plot(horiz = TRUE, xlab = "cgANDb (%)") 
   dend %>% rect.dendrogram(k = sil_n_clust, horiz = TRUE, border = 8, lty = 5, lwd = 1)
   abline(v=6.0, col="red", lty=2)
   abline(v=5.0, col="black", lty=2)
