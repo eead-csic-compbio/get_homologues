@@ -634,8 +634,6 @@ if($INP_pange && %pangemat)
       if($pangemat{$taxon_names[$taxon]}{$cluster_name})
       {
         print PANGEMATRIX "$pangemat{$taxon_names[$taxon]}{$cluster_name}\t";
-
-        #print PANGEMATRIX "1\t";
       }
       else{ print PANGEMATRIX "0\t"; }
     }
