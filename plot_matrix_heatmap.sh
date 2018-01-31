@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# 2015-7 Pablo Vinuesa (1) and Bruno Contreras-Moreira (2):
+# 2015-8 Pablo Vinuesa (1) and Bruno Contreras-Moreira (2):
 # 1: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 # 2: http://www.eead.csic.es/compbio (Laboratory of Computational Biology, EEAD/CSIC, Spain)
 
@@ -52,7 +52,7 @@ function print_man()
     
     i) with root privileges, type the following into your shell console:
        sudo R
-       > install.packages(c("gplots", "ape"), dependencies=TRUE)
+       > install.packages(c("gplots", "ape", "dendextend", "factoextra"), dependencies=TRUE)
        > q()
        
        $ exit # exit from the root account
@@ -70,7 +70,7 @@ function print_man()
        # to make this options persistent
        
        # Call R from your terminal and type:
-       > install.packages("gplots", dependencies=TRUE, lib="~/lib/R") 	
+       > install.packages(c("gplots", "ape", "dendextend","factoextra"), dependencies=TRUE, lib="~/lib/R") 	
    
    2) Once installed, you can read the documentation for packages and functions by typing the following into the R console:
       library("gplots")       # loads the lib into the environment
