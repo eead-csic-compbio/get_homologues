@@ -245,3 +245,5 @@
 28012018: plot_matrix_heatmap.sh: added option -b to cgAND dendrogram plot, which contains vert lines @ cgANDb 4,5,6; removed hclust plots
 28012018: document changes to plot_matrix_heatmap.sh v1.0.1
 28012018: added check for existence of input *Avg_identity.tab file and adjusted par(mar) in plot_matrix_heatmap.sh
+31012018: added the complete.cases(tab)check in plot_matrix_heatmap.sh
+01022018: install.pl now can download bin.tar and extract binaries to cloned repos
