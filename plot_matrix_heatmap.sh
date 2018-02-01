@@ -9,7 +9,8 @@
 #: OUTPUT: svg and pdf; png not implemented yet
 
 progname=${0##*/} # plot_matrix_heatmap.sh
-VERSION='v1.0.2_28Jan18' # * added check for existence of input *Avg_identity.tab file and adjusted par(mar)
+VERSION='v1.0.3_31Jan18' # added the complete.cases(tab)check, at the head of the script to stop its execution if( dim(tab)[1] < 3 )
+       #'v1.0.2_28Jan18' # * added check for existence of input *Avg_identity.tab file and adjusted par(mar)
                          # * added filtering code to clean-up taxon names in pangenome_matrix*.tab; 
                          # * added option -b to control the amount of right-border (margin) in 
 			 #   the cgAND dendrogram plot, which now also displays vertical lines
@@ -349,7 +350,12 @@ options(expressions = 100000) #https://stat.ethz.ch/pipermail/r-help/2004-Januar
 opar<-par(no.readonly = TRUE)
 
 # 1. read and process the table
-tab <- read.table(file="$tab_file", header=TRUE)
+tab <- read.table(file="$tab_file", header=TRUE, sep = "\t")
+tab <- tab[complete.cases(tab), ]
+#tab <- na.omit(tab)
+
+if( dim(tab)[1] < 3) stop('There are less than two complete data rows. Pleae revise your input table!') 
+
 dfr.num <- tab[,2:ncol(tab)]
 dfr.num <- droplevels.data.frame(dfr.num)
 
