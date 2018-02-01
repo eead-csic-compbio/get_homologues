@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
-# script that checks/compiles software required by get_homologues[-est] and checks dependencies
-# for first-time users
+# Script that checks/compiles software required by get_homologues[-est] and checks dependencies
+# for first-time users.
 # last checked Feb2018
 
 use strict;
@@ -13,7 +13,7 @@ use lib "$Bin/lib/bioperl-1.5.2_102/";
 require phyTools;
 use transcripts;
 
-my $WGETEXE = 'wget'; # add path if required
+my $WGETEXE = 'wget'; # add path if required, likely not pre-installed in MacOS
 my $BINTGZFILE = 'bin.tgz';
 my $BINURL = "https://github.com/eead-csic-compbio/get_homologues/releases/download/v3/$BINTGZFILE";
 
@@ -81,13 +81,15 @@ if(! -e $ENV{'MARFIL'}.'/bin/COGsoft/')
         die "# cannot download file $BINTGZFILE \n\n".
               "<< You might manually download it from $BINURL to $ENV{'MARFIL'}/bin/\n".
               "<< and re-run\n";
-      }      
-      else      
-      {
-        print "# extracting $BINTGZFILE ...\n";
-        system("tar xfz $BINTGZFILE");
-        chdir($cwd);
-      }
+      } 
+    }
+   
+    if(-s $BINTGZFILE)    
+    {
+      print "# extracting $BINTGZFILE ...\n";
+      system("tar xfz $BINTGZFILE");
+      unlink($BINTGZFILE);
+      chdir($cwd);
     }         
   }          
 }
