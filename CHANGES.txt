@@ -247,3 +247,4 @@
 28012018: added check for existence of input *Avg_identity.tab file and adjusted par(mar) in plot_matrix_heatmap.sh
 31012018: added the complete.cases(tab)check in plot_matrix_heatmap.sh
 01022018: install.pl now can download bin.tar and extract binaries to cloned repos
+05022018: increased min complete cases to 5 in plot_matrix_heatmap.sh
