@@ -103,6 +103,7 @@ our @EXPORT = qw(
 # executable software
 our $SORTLIMITRAM        = "500M"; # buffer size should fit in all computers
 our $SORTBIN             = "sort --buffer-size=$SORTLIMITRAM"; # sort is part of all Linux systems, otherwise edit
+our $GZIPBIN             = "gzip";
 
 # all these defined in phyTools.pm:
 our $BLASTP              = $ENV{"EXE_BLASTP"};
@@ -722,15 +723,17 @@ sub pfam_parse
 }
 
 # sorts and merges partial BLAST/DIAMOND results using GNU sort
-# three arguments:
+# optionally also compresses results as a side-effect
+# arguments:
 # 1. String Variable: blast out file
 # 2. boolean flag stating whether secondary hsps are to be conserved 
-# 3. array of sorted blast output filenames
-# uses globals: $TMP_DIR , $SORTLIMITRAM
-# Updated Mar2015
+# 3. boolean flag stating whether BLAST outfiles are to be compressed
+# 4. array of sorted blast output filenames
+# uses globals: $TMP_DIR , $SORTLIMITRAM, $SORTBIN, $GZIPBIN
+# Updated Mar2018
 sub sort_blast_results
 {
-  my ($sorted_outfile,$keep_secondary_hsps,@blast_outfiles) = @_;
+  my ($sorted_outfile,$keep_secondary_hsps,$compress_blast,@blast_outfiles) = @_;
 
   my ($file,$size,$files,$root,$cleantmpfile,$tmpfile,$sortedtmpfile);
   my (@tmpfiles,@roots,%cluster);
@@ -750,6 +753,24 @@ sub sort_blast_results
       unshift(@{$cluster{$root}},$cleantmpfile);
     }
     else{ push(@{$cluster{$root}},$cleantmpfile); }
+    
+    if($compress_blast)
+    {
+      if(!-s $file.'.gz')
+      {
+        system("$GZIPBIN $file");
+        if($? != 0)
+        {
+          die "# sort_blast_results : cannot compress $file\n";
+        }
+      }
+      
+      open(ORIG,"$GZIPBIN -dc $file |") || die "# sort_blast_results : cannot read $file.gz\n";
+    }
+    else
+    {
+      open(ORIG,$file) || die "# sort_blast_results : cannot read $file\n";
+    }
 
     # conserve secondary hsps attached to first one to avoid breaking ordered BLAST output
     # 90695	5112	70.57	1043	176	17	1	940	248	1262	0.0	1358
@@ -757,7 +778,7 @@ sub sort_blast_results
     # 90695	5279	60.49	1030	286	16	1	939	248	1247	0.0	1136
     my ($pqry,$psbj,$qry,$sbj) = ('-1','-1');
     open(CLEANBLAST,">$cleantmpfile") || die "# sort_blast_results : cannot create $cleantmpfile\n";
-    open(ORIG,$file) || die "# sort_blast_results : cannot read $file\n";
+    
     while(<ORIG>)
     {
       chomp;
@@ -780,8 +801,8 @@ sub sort_blast_results
     if($keep_secondary_hsps){ print CLEANBLAST "\n"; } # add last newline if required
     
     close(CLEANBLAST);
-    
-    push(@tmpfiles,$cleantmpfile);
+   
+    push(@tmpfiles,$cleantmpfile);      
   }
 
   foreach $root (@roots)

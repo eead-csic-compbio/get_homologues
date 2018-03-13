@@ -248,3 +248,6 @@
 31012018: added the complete.cases(tab)check in plot_matrix_heatmap.sh
 01022018: install.pl now can download bin.tar and extract binaries to cloned repos
 05022018: increased min complete cases to 5 in plot_matrix_heatmap.sh
+06032018: modified sort_blast_results so that it now can compress individual BLAST result files with global binary $SORTBIN
+06032018: get_homologues.pl and get_homologues-est.pl now compress individual BLAST files by default ($COMPRESSBLAST=1)
+13032018: added global $MAXSEQLENGTH to get_homologues-est.pl to warn of long sequences, which often cause downstream problems (thanks Alvaro Rodriguez)

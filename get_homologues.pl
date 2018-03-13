@@ -1,6 +1,6 @@
 #!/usr/bin/env perl 
 
-# 2017 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2018 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -39,15 +39,16 @@ my $WAITTIME  = 30;               # interval in seconds btween qstat commands
 my $BATCHSIZE = 100;
 
 ## global variables that control some algorithmic choices
-my $NOFSAMPLESREPORT     = 10;    # number of genome samples used for the generation of pan/core genomes
-my $MAXEVALUEBLASTSEARCH = 0.01;  # required to reduce size of blast output files
-my $MAXPFAMSEQS          = 250;   # default for -m cluster jobs, it is updated to 1000 with -m local
-my $MININTERGENESIZE     = 200;   # minimum length (nts) required for intergenic segments to be considered
+my $NOFSAMPLESREPORT     = 10;   # number of genome samples used for the generation of pan/core genomes
+my $MAXEVALUEBLASTSEARCH = 0.01; # required to reduce size of blast output files
+my $MAXPFAMSEQS          = 250;  # default for -m cluster jobs, it is updated to 1000 with -m local
+my $MININTERGENESIZE     = 200;  # minimum length (nts) required for intergenic segments to be considered
 my $MAXINTERGENESIZE     = 700;
-my $INTERGENEFLANKORF    = 180;   # length in nts of intergene flanks borrowed from neighbor ORFs (/3 for amino acids)
-my $PRINTCLUSTERSSCREEN  = 0;     # whether cluster names should be printed to screen
-my $KEEPSCNDHSPS         = 1;     # by default only the first BLAST hsp is kept for further calculations
-my $DISSABLEPRND         = 1;     # dissable paranoid (PRND, -P) options due to no redistribution license;
+my $INTERGENEFLANKORF    = 180;  # length in nts of intergene flanks borrowed from neighbor ORFs (/3 for amino acids)
+my $PRINTCLUSTERSSCREEN  = 0;    # whether cluster names should be printed to screen
+my $KEEPSCNDHSPS         = 1;    # by default only the first BLAST hsp is kept for further calculations
+my $COMPRESSBLAST        = 1;    # set to 0 if gzip is not available 
+my $DISSABLEPRND         = 1;    # dissable paranoid (PRND, -P) options due to no redistribution license;
 
 
 ## list of features/binaries required by this program (do not edit)
@@ -1383,6 +1384,11 @@ if(!-s $bpo_file || $current_files ne $previous_files || ($doCOG && !-s $cogblas
         if(!-s $blast_file){ push(@tmp_blast_output_files,$blastout); }
         next;
       }
+      elsif($COMPRESSBLAST && -s $blastout.'.gz') 
+      {
+        if(!-s $blast_file){ push(@tmp_blast_output_files,$blastout); }
+        next;
+      }
         
       $command = format_DIAMONDblastp_command("$newDIR/$new_infile",
         $blastout,$blastDBfile,$MAXEVALUEBLASTSEARCH,$psize{$infile});
@@ -1419,6 +1425,11 @@ if(!-s $bpo_file || $current_files ne $previous_files || ($doCOG && !-s $cogblas
       push(@to_be_deleted,$clusteroutfile);
 
       if(-s $blastout && $current_files eq $previous_files) # check previous runs
+      {
+        if(!-s $blast_file){ push(@tmp_blast_output_files,$blastout); }
+        next;
+      }
+      elsif($COMPRESSBLAST && -s $blastout.'.gz' && $current_files eq $previous_files) 
       {
         if(!-s $blast_file){ push(@tmp_blast_output_files,$blastout); }
         next;
@@ -1471,7 +1482,13 @@ if(!-s $bpo_file || $current_files ne $previous_files || ($doCOG && !-s $cogblas
           next if( ($bfile1 != $reference_proteome && $bfile2 != $reference_proteome) &&
             ($bfile1 != $bfile2) );#print "$bfile1 $bfile2 $new_infile $blastDBfile\n";
         }
+        
         if(-s $blastout) # check previous BLAST runs
+        {
+          if(!-s $blast_file){ push(@tmp_blast_output_files,$blastout); }
+          next;
+        }
+        elsif($COMPRESSBLAST && -s $blastout.'.gz')
         {
           if(!-s $blast_file){ push(@tmp_blast_output_files,$blastout); }
           next;
@@ -1518,15 +1535,16 @@ if(!-s $bpo_file || $current_files ne $previous_files || ($doCOG && !-s $cogblas
   print "# done\n\n";
 
   # concatenate blast output files to $blast_file (global var)
+  # compress BLAST files optionally
   if(@tmp_blast_output_files)
   {
     print "# concatenating and sorting BLAST/DIAMOND results...\n";
     foreach $blastout (@tmp_blast_output_files)
     {
-      if(!-e $blastout)
+      if(!-e $blastout && !-e $blastout.'.gz')
       {
         sleep($QUEUEWAIT); # give disk extra time
-        if(!-e $blastout)
+        if(!-e $blastout && !-e $blastout.'.gz')
         {
           die "# EXIT, $blastout does not exist, BLAST/DIAMOND search might failed ".
             "or hard drive is still writing it (please re-run)\n";
@@ -1535,7 +1553,7 @@ if(!-s $bpo_file || $current_files ne $previous_files || ($doCOG && !-s $cogblas
     }
     
     # NxN BLAST jobs OR 2xN diamond jobs (for N input  files)
-    sort_blast_results($blast_file,$KEEPSCNDHSPS,@tmp_blast_output_files);
+    sort_blast_results($blast_file,$KEEPSCNDHSPS,$COMPRESSBLAST,@tmp_blast_output_files);
       
     print "# done\n\n";
     unlink(@to_be_deleted); # remove .queue files

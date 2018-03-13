@@ -1,6 +1,6 @@
 #!/usr/bin/env perl 
 
-# 2017 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2018 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -39,6 +39,7 @@ my $WAITTIME  = 30;               # interval in seconds btween qstat commands
 my $BATCHSIZE = 1000; # after HS_BLASTN bench 
 
 ## global variables that control some algorithmic choices
+my $MAXSEQLENGTH = 50_000;        # used to warn about long sequences, which often cause downstream problems 
 my $NOFSAMPLESREPORT = 20;        # number of genome samples used for the generation of pan/core genomes
 my $MAXEVALUEBLASTSEARCH = 0.01;  # required to reduce size of blast output files
 my $MAXPFAMSEQS          = 250;   # default for -m cluster jobs, it is updated to 1000 with -m local
@@ -49,6 +50,9 @@ my $TRIMULTIHSP   = 1;            # correct overlaps when calculating cover of m
 my $MINSEQLENGTH  = 20;           # min length for input sequences to be considered (~ primer or miRNA) 
 my $NOCLOUDINCORE = 1;            # when calling -M -c -t X initial core/pan size excludes cloud genes, those with occup < X 8alternative 0)
 my $INCLUDEORDER  = 0;            # use implicit -I taxon order for -c composition analyses
+my $KEEPSCNDHSPS  = 1;            # by default only the first BLAST hsp is kept for further calculations
+my $COMPRESSBLAST = 1;            # save disk space by compressing BLASTN results, requires gzip
+
 
 ## list of features/binaries required by this program (do not edit)
 my @FEATURES2CHECK = ('EXE_BLASTN','EXE_FORMATDB','EXE_MCL','EXE_HMMPFAM',
@@ -672,10 +676,22 @@ if($inputDIR)
       $full_length_file{basename($infile).'.nucl'} = 1;
     }
     
-    # calculate median sequence length
-    foreach $seq ( 0 .. $#{$fasta_ref} ){ push(@fasta_length,length($fasta_ref->[$seq][SEQ])) }
+    # calculate median sequence length and warn if too long sequence are found
+    my ($total_long_seqs,$len) = (0,0);
+    foreach $seq ( 0 .. $#{$fasta_ref} )
+    { 
+      $len = length($fasta_ref->[$seq][SEQ]);
+      push(@fasta_length,$len);
+      
+      if($len > $MAXSEQLENGTH){ $total_long_seqs++ }
+    }
     @fasta_length = sort {$a<=>$b} @fasta_length;
-    printf(" median length = %d",$fasta_length[int($#fasta_length/2)]);
+    printf(" median length = %d",$fasta_length[int($#fasta_length/2)]);   
+  
+    if($total_long_seqs > 0)
+    {
+      printf(" WARNING: %d seqs > $MAXSEQLENGTH b",$total_long_seqs)
+    }
   
     print "\n";
 
@@ -1054,6 +1070,11 @@ if(!-s $bpo_file || $current_files ne $previous_files) # || $include_file
         if(!-s $blast_file){ push(@tmp_blast_output_files,$blastout); }
         next;
       }
+      elsif($COMPRESSBLAST && -s $blastout.'.gz')
+      {
+        if(!-s $blast_file){ push(@tmp_blast_output_files,$blastout); }
+        next;
+      }
 
       $command = format_BLASTN_command("$newDIR/$new_infile",
         $blastout,"$newDIR/$blastDBfile",
@@ -1086,22 +1107,26 @@ if(!-s $bpo_file || $current_files ne $previous_files) # || $include_file
   print "# done\n\n";
 
   # concat blast output files to $blast_file (global var)
+  # compress BLAST files optionally
   if(@tmp_blast_output_files)
   {
     print "# concatenating and sorting blast results...\n";
     foreach $blastout (@tmp_blast_output_files)
     {
-      if(!-e $blastout)
+      if(!-e $blastout && !-e $blastout.'.gz')
       {
         sleep($QUEUEWAIT); # give disk extra time
-        if(!-e $blastout)
+        if(!-e $blastout && !-e $blastout.'.gz')
         {
           die "# EXIT, $blastout does not exist, BLAST search might failed ".
             "or hard drive is still writing it (please re-run)\n";
         }
       }
     }
-    sort_blast_results($blast_file,1,@tmp_blast_output_files); # 1 -> secondary hsp are kept, as they jump over introns
+    
+    # secondary hsp are kept, as they jump over introns
+    sort_blast_results($blast_file,$KEEPSCNDHSPS,$COMPRESSBLAST,@tmp_blast_output_files); 
+    
     print "# done\n\n"; 
     unlink(@to_be_deleted); # remove .queue files
   }
