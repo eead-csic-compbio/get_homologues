@@ -1,7 +1,7 @@
 #!/usr/bin/env perl 
 
 # 2018 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
-# 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)
+# 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei-CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
 # This program uses BLASTN to define clusters of 'orthologous' transcript DNA sequences
@@ -39,7 +39,11 @@ my $WAITTIME  = 30;               # interval in seconds btween qstat commands
 my $BATCHSIZE = 1000; # after HS_BLASTN bench 
 
 ## global variables that control some algorithmic choices
-my $MAXSEQLENGTH = 50_000;        # used to warn about long sequences, which often cause downstream problems 
+my $MINSEQLENGTH = 20;            # min length for input sequences to be considered (~ primer or miRNA)
+my $MAXSEQLENGTH = 25000;         # max length for input sequences, warning issued: long seqs often cause downstream problems 
+                                  # In our barley tests with de novo Trinity assemblies, max length ~ 17Kb
+                                  # HQ Haruna Nijo barley flcDNAs reach 23Kb
+
 my $NOFSAMPLESREPORT = 20;        # number of genome samples used for the generation of pan/core genomes
 my $MAXEVALUEBLASTSEARCH = 0.01;  # required to reduce size of blast output files
 my $MAXPFAMSEQS          = 250;   # default for -m cluster jobs, it is updated to 1000 with -m local
@@ -47,7 +51,6 @@ my $PRINTCLUSTERSSCREEN  = 0;     # whether cluster names should be printed to s
 my $FULLENGTHFLAG = 'flcdna';     # input sequences in files with names containing this flag are considered full length, instead of fragments
 my $MINREDOVERLAP = 40;           # as in tgicl, min overlap to handle possibly redundant isoforms
 my $TRIMULTIHSP   = 1;            # correct overlaps when calculating cover of multi-hsp hits (alternative = 0)
-my $MINSEQLENGTH  = 20;           # min length for input sequences to be considered (~ primer or miRNA) 
 my $NOCLOUDINCORE = 1;            # when calling -M -c -t X initial core/pan size excludes cloud genes, those with occup < X 8alternative 0)
 my $INCLUDEORDER  = 0;            # use implicit -I taxon order for -c composition analyses
 my $KEEPSCNDHSPS  = 1;            # by default only the first BLAST hsp is kept for further calculations
@@ -63,15 +66,18 @@ my @FEATURES2CHECK = ('EXE_BLASTN','EXE_FORMATDB','EXE_MCL','EXE_HMMPFAM',
 my ($newDIR,$output_mask,$pancore_mask,$include_file,%included_input_files,%opts) = ('','','',0);
 my ($exclude_inparalogues,$doMCL,$do_PFAM,$reference_proteome_string) = (0,0,0,0);
 my ($isoform_overlap,$onlyblast,$inputDIR,$cluster_list_file) = ($MINREDOVERLAP,0);
-my ($isoform_best_hit,$n_of_cpus,$do_minimal_BDBHs,$add_rd_isoforms,$do_ANIb_matrix,$do_soft) = (0,$BLAST_NOCPU,0,0,0,0);
-my ($min_cluster_size,$runmode,$do_genome_composition,$saveRAM,$ANIb_matrix_file);
-my ($evalue_cutoff,$pi_cutoff,$pmatch_cutoff) = ($BLAST_PVALUE_CUTOFF_DEFAULT,$PERCENT_IDENTITY_CUTOFF_EST_DEFAULT,$PERCENT_MATCH_CUTOFF_DEFAULT);
+my ($isoform_best_hit,$n_of_cpus,$do_minimal_BDBHs,$add_rd_isoforms,$do_soft) = (0,$BLAST_NOCPU,0,0,0);
+my ($do_ANIb_matrix,$do_POCP_matrix) = (0,0);
+
+my ($min_cluster_size,$runmode,$do_genome_composition,$saveRAM,$ANIb_matrix_file,$POCP_matrix_file);
+my ($evalue_cutoff,$pi_cutoff,$pmatch_cutoff) = 
+  ($BLAST_PVALUE_CUTOFF_DEFAULT,$PERCENT_IDENTITY_CUTOFF_EST_DEFAULT,$PERCENT_MATCH_CUTOFF_DEFAULT);
 my $MCLinflation = $MCL_INFLATION_DEFAULT;
 my $random_number_generator_seed = 0;
 my $pwd = getcwd(); $pwd .= '/';
 my $start_time = new Benchmark();
 
-getopts('hvbcesDMoALzi:n:m:d:r:t:I:E:S:C:F:R:', \%opts);
+getopts('hvbcesPDMoALzi:n:m:d:r:t:I:E:S:C:F:R:', \%opts);
 
 if(($opts{'h'})||(scalar(keys(%opts))==0))
 {
@@ -149,6 +155,11 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
     "(optional, creates tab-separated matrix,\n";
   print   " uses blastn results                                           ".
     " [OMCL])\n";
+  print   "-P calculate percentage of conserved sequences (POCS),         ".
+    "(optional, creates tab-separated matrix,\n";
+  print   " uses blastn results, best with CDS                            ".
+    " [OMCL])\n";
+    
 	print   "-z add soft-core to genome composition analysis                ".
     "(optional, requires -c [OMCL])\n";
     
@@ -285,6 +296,8 @@ check_installed_features(@FEATURES2CHECK);
 
 if(defined($opts{'A'})){ $do_ANIb_matrix = 1 }
 
+if(defined($opts{'P'})){ $do_POCP_matrix = 1 }
+
 if(defined($opts{'M'}))
 {
   if(feature_is_installed('OMCL'))
@@ -317,6 +330,11 @@ else
   elsif($do_ANIb_matrix)
   {
     die "\n# WARNING: use of the default BDBH algorithm with option -A is not supported ".
+      "(please check the manual)\n\n";
+  }
+  elsif($do_POCP_matrix)
+  {
+    die "\n# WARNING: use of the default BDBH algorithm with option -P is not supported ".
       "(please check the manual)\n\n";
   }
 }
@@ -394,7 +412,7 @@ if(defined($opts{'F'}))
 print "# $0 -d $inputDIR -o $onlyblast -i $isoform_overlap -e $exclude_inparalogues -r $reference_proteome_string ".
   "-t $min_cluster_size -c $do_genome_composition -z $do_soft -I $include_file -m $runmode -n $n_of_cpus -M $doMCL ".
   "-C $pmatch_cutoff -S $pi_cutoff -E $evalue_cutoff -F $MCLinflation -b $do_minimal_BDBHs ".
-  "-s $saveRAM -D $do_PFAM -R $random_number_generator_seed -L $add_rd_isoforms -A $do_ANIb_matrix\n\n";
+  "-s $saveRAM -D $do_PFAM -R $random_number_generator_seed -L $add_rd_isoforms -A $do_ANIb_matrix -P $do_POCP_matrix\n\n";
 
 if($runmode eq 'cluster')
 {
@@ -404,8 +422,8 @@ if($runmode eq 'cluster')
 ###############################################################
 
 ## 0) declare most important vars
-my ($infile,$new_infile,$prot_new_infile,$p2oinfile,$seq,$seqL,$comma_input_files,@newfiles,%ressize,);
-my ($label,%orthologues,$gene,$orth,$para,%inparalogues,%paralogues,$FASTAresultsDIR,$order,%orth_taxa,$minlog);
+my ($infile,$new_infile,$prot_new_infile,$p2oinfile,$seq,$seqL,$comma_input_files,@newfiles,%ressize,%orth_taxa);
+my ($label,%orthologues,$gene,$orth,$orth2,$para,%inparalogues,%paralogues,$FASTAresultsDIR,$order,$minlog);
 my ($n_of_similar_length_orthologues,$clusterfile,$prot_clusterfile,$previous_files,$current_files,$inpara);
 my ($min_proteome_size,$reference_proteome,$smallest_proteome,$proteome_size,%seq_length,$cluster,$annot);
 my ($smallest_proteome_name,$reference_proteome_name,%psize,$taxon,$n_of_clusters,$n_of_taxa,$n_of_residues);
@@ -415,7 +433,7 @@ my ($reparse_all,$n_of_similar_length_paralogues,$pfam_annot,$protOK,$n_of_taxa_
 my ($BDBHdone,$PARANOIDdone,$orthoMCLdone,$n_of_parsed_lines,$n_of_pfam_parsed_lines) = (0,0,0,0,0);
 my ($diff_BDBH_params,$diff_INP_params,$diff_HOM_params,$diff_OMCL_params,$lockcapableFS) = (0,0,0,0,0);
 my ($diff_ISO_params,$redo_iso,$partial_sequences,$isof,%full_length_file,%redundant_isoforms) = (0);
-my ($total_clustersOK,$clgene,$clorth,%ANIb_matrix,%GIclusters,$clustersOK,%cluster_ids) = (0);
+my ($total_clustersOK,$clgene,$clorth,%ANIb_matrix,%POCP_matrix,%GIclusters,$clustersOK,%cluster_ids) = (0);
 
 constructDirectory($newDIR);
 
@@ -454,7 +472,7 @@ my $input_order_file = $newDIR."/input_order.txt";
 
 print "# version $VERSION\n";
 print "# results_directory=$newDIR\n";
-print "# parameters: MAXEVALUEBLASTSEARCH=$MAXEVALUEBLASTSEARCH MAXPFAMSEQS=$MAXPFAMSEQS BATCHSIZE=$BATCHSIZE MINSEQLENGTH=$MINSEQLENGTH\n";
+print "# parameters: MAXEVALUEBLASTSEARCH=$MAXEVALUEBLASTSEARCH MAXPFAMSEQS=$MAXPFAMSEQS BATCHSIZE=$BATCHSIZE MINSEQLENGTH=$MINSEQLENGTH MAXSEQLENGTH=$MAXSEQLENGTH\n";
 
 ################################################################
 
@@ -704,7 +722,7 @@ if($inputDIR)
 
     open(INPUT,">$newDIR/$new_infile") || die "# EXIT : cannot create $newDIR/$new_infile\n";
 
-    # sort sequences by nucleotide lenth (longest to shortest) to support isoform clustering
+    # sort sequences by nucleotide length (longest to shortest) to support isoform clustering
     my @length_sorted_seqs =
       map { $_->[0],$_->[1] }
       sort { $b->[1]<=>$a->[1] }
@@ -722,6 +740,11 @@ if($inputDIR)
       if($seqL < $MINSEQLENGTH)
       {
         print "# skipped short sequence ($fasta_ref->[$seq][NAME] , $seqL)\n";
+        next;
+      }
+      elsif($seqL > $MAXSEQLENGTH)
+      {
+        print "# skipped long sequence ($fasta_ref->[$seq][NAME] , $seqL)\n";
         next;
       }
 
@@ -2210,6 +2233,7 @@ if($add_rd_isoforms) # reverse hash of redundant isoforms
 }
 
 if($do_ANIb_matrix){ $ANIb_matrix_file = $FASTAresultsDIR.'Avg_identity.tab'; }
+if($do_POCP_matrix){ $POCP_matrix_file = $FASTAresultsDIR.'POCS.tab'; }
 
 open(CLUSTERLIST,">$cluster_list_file") || die "# EXIT: cannot create $cluster_list_file\n";
 
@@ -2422,13 +2446,27 @@ GENE: foreach $gene (sort {$a<=>$b} (keys(%orthologues)))
   if($do_ANIb_matrix)
   {
     my @genes = sort {$a<=>$b} ($gene,@{$orthologues{$gene}});
-    foreach $orth (0 .. $#genes)
+    foreach $orth (0 .. $#genes-1)
     {
-      foreach my $orth2 ($orth+1 .. $#genes)
+      foreach $orth2 ($orth+1 .. $#genes)
       {
         my @blast_data = blastqueryab($genes[$orth],$genes[$orth2]);
         next if(!$blast_data[3]);
         push(@{$ANIb_matrix{$taxon_names[$orth]}{$taxon_names[$orth2]}},$blast_data[3]);
+      }
+    }
+  }
+  
+  # 4.3.7) add data to POCP matrix if required
+  if($do_POCP_matrix)
+  {
+    my @genes = ($gene,@{$orthologues{$gene}});
+    foreach $orth (0 .. $#genes-1)
+    {
+      foreach $orth2 ($orth+1 .. $#genes)
+      {
+        next if($taxon_names[$orth] eq $taxon_names[$orth2]);
+        $POCP_matrix{$taxon_names[$orth]}{$taxon_names[$orth2]}++;
       }
     }
   }
@@ -2488,6 +2526,53 @@ if($do_ANIb_matrix)
 
   print "\n# average_nucleotide_identity_matrix_file = ".short_path($ANIb_matrix_file,$pwd)."\n";
 }
+
+if($do_POCP_matrix)
+{
+  open(POCPMATRIX,">$POCP_matrix_file") || die "# EXIT: cannot create $POCP_matrix_file\n";
+
+  print POCPMATRIX "genomes";
+  for($taxon=0;$taxon<scalar(@taxa);$taxon++)
+  {
+    print POCPMATRIX "\t$taxa[$taxon]";
+  } print POCPMATRIX "\n";
+
+  for($taxon=0;$taxon<scalar(@taxa);$taxon++)
+  {
+    print POCPMATRIX "$taxa[$taxon]";
+    for(my $taxon2=0;$taxon2<scalar(@taxa);$taxon2++)
+    {
+      if($taxon == $taxon2){ print POCPMATRIX "\t100" }
+      else
+      {
+        #Adapted from https://www.ncbi.nlm.nih.gov/pubmed/24706738
+        #The percentage of conserved proteins (POCP) between two genomes was calculated as [(C1 + C2)/(T1 + T2)] · 100%, 
+        #where C1 and C2 represent the conserved number of proteins in the two genomes being compared, respectively, 
+        #and T1 and T2 represent the total number of proteins in the two genomes being compared, respectively. 
+    
+        if($POCP_matrix{$taxa[$taxon]}{$taxa[$taxon2]})
+        {
+          printf(POCPMATRIX "\t%1.2f",
+            (200*$POCP_matrix{$taxa[$taxon]}{$taxa[$taxon2]}) /
+            ($gindex{$taxa[$taxon]}[2] + $gindex{$taxa[$taxon2]}[2]))
+        }
+        elsif($POCP_matrix{$taxa[$taxon2]}{$taxa[$taxon]})
+        {
+          printf(POCPMATRIX "\t%1.2f",
+            (200*$POCP_matrix{$taxa[$taxon2]}{$taxa[$taxon]}) /
+            ($gindex{$taxa[$taxon2]}[2] + $gindex{$taxa[$taxon]}[2]))
+        }
+        else{ print POCPMATRIX "\tNA" }
+      }
+    } print POCPMATRIX "\n";
+  }
+
+  close(POCPMATRIX);
+
+  print "\n# percent_conserved_sequences_file = ".short_path($POCP_matrix_file,$pwd)."\n";
+}
+
+
 
 # 5) clean and close stuff
 if($saveRAM)
