@@ -251,3 +251,8 @@
 06032018: modified sort_blast_results so that it now can compress individual BLAST result files with global binary $SORTBIN
 06032018: get_homologues.pl and get_homologues-est.pl now compress individual BLAST files by default ($COMPRESSBLAST=1)
 13032018: added global $MAXSEQLENGTH to get_homologues-est.pl to warn of long sequences, which often cause downstream problems (thanks Alvaro Rodriguez)
+27032018: sequences longer than $MAXSEQLENGTH are skipped (by default $MAXSEQLENGTH=25kb)
+04052018: compare_clusters.pl -m now produces also pangenome_genes file listing sequences names in each cluster
+04052018: compare_clusters.pl -m now sorts taxon names when printing pangenome matrices
+04052018: added -P option to compute perc of conserved proteins (POCP) in get_homologues.pl
+04052018: added -P option to compute perc of conserved sequences (POCS) in get_homologues-est.pl
