@@ -577,6 +577,8 @@ sub find_taxa_FASTA_array_headers
       # adhoc rules to filter out common annotations such as:
       # [5'-phosphate] , [3-hydroxymyristoyl] ,
       # [acyl-carrier-protein] , [NAD(P)H] , [Cu-Zn]
+      #[Bdistachyonv1.ABR2.1.primaryTrs.cds.fna.gz]
+
       next if(!$single_word_taxons_are_OK &&
         (substr($taxon,1,1) !~ /[A-Z]/ || $taxon !~ /\w+\s+\w+/)); #print ">> $taxon <<\n";
           
