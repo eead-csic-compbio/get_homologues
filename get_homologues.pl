@@ -1,7 +1,7 @@
 #!/usr/bin/env perl 
 
 # 2018 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
-# 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)
+# 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei-CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
 # This program uses BLAST (and DIAMOND/HMMER/Pfam) to define clusters of 'orthologous' ORF/intergenic
@@ -62,9 +62,10 @@ if(!$DISSABLEPRND){ push(@FEATURES2CHECK,'EXE_MULTIPARANOID'); }
 my ($newDIR,$output_mask,$pancore_mask,$include_file,$onlyblast,%included_input_files,%opts) = ('','','',0,0);
 my ($exclude_inparalogues,$doMCL,$doPARANOID,$doCOG,$do_PFAM,$reference_proteome_string) = (0,0,0,0,0,0);
 my ($inputDIR,$input_FASTA_file,$filter_by_length,$cluster_list_file,$do_intergenic,$do_features) = (0,0);
-my ($n_of_cpus,$COGmulticluster,$do_minimal_BDBHs,$do_ANIb_matrix,$do_soft) = ($BLAST_NOCPU,0,0,0,0);
-my ($do_diamond) = (0);
-my ($min_cluster_size,$runmode,$do_genome_composition,$saveRAM,$ANIb_matrix_file);
+my ($n_of_cpus,$COGmulticluster,$do_minimal_BDBHs,$do_soft) = ($BLAST_NOCPU,0,0,0);
+my ($do_ANIb_matrix,$do_POCP_matrix,$do_diamond) = (0,0,0);
+
+my ($min_cluster_size,$runmode,$do_genome_composition,$saveRAM,$ANIb_matrix_file,$POCP_matrix_file);
 my ($evalue_cutoff,$pi_cutoff,$pmatch_cutoff) = ($BLAST_PVALUE_CUTOFF_DEFAULT, # see marfil_homology.pm
   $PERCENT_IDENTITY_CUTOFF_DEFAULT,$PERCENT_MATCH_CUTOFF_DEFAULT);
 my ($MCLinflation,$neighbor_corr_cutoff) = ($MCL_INFLATION_DEFAULT,$MIN_NEIGHBOR_CORR_DEFAULT);
@@ -73,7 +74,7 @@ my $random_number_generator_seed = 0;
 my $pwd = getcwd(); $pwd .= '/';
 my $start_time = new Benchmark();
 
-getopts('hvbcesgADGPMXoxza:f:n:m:d:r:t:i:I:E:S:C:F:N:B:O:R:', \%opts);
+getopts('hvbcesgPADGMpXoxza:f:n:m:d:r:t:i:I:E:S:C:F:N:B:O:R:', \%opts);
 
 if(($opts{'h'})||(scalar(keys(%opts))==0))
 {
@@ -113,7 +114,7 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   print   "-G use COGtriangle algorithm (COGS, PubMed=20439257)           ".
     "(requires 3+ genomes|taxa)\n";
   print   "-M use orthoMCL algorithm (OMCL, PubMed=12952885)\n";
-  print   "-P use PARANOID algorithm (PRND, PubMed=16873526)\n" if(!$DISSABLEPRND);
+  print   "-p use PARANOID algorithm (PRND, PubMed=16873526)\n" if(!$DISSABLEPRND);
   print   "\nOptions that control sequence similarity searches:\n";
   print   "-X use diamond instead of blastp                               (optional, set threads with -n)\n";
   print   "-C min \%coverage in BLAST pairwise alignments                  ";
@@ -169,6 +170,10 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   print   "-B min bit-score (in bits)                                     ".
     "(default=$MIN_BITSCORE_DEFAULT [PRND])\n" if(!$DISSABLEPRND);
   print   "-A calculate average identity of clustered sequences,          ".
+    "(optional, creates tab-separated matrix,\n";
+  print   " by default uses blastp results but can use blastn with -a     ".
+    " recommended with -t 0 [OMCL|COGS])\n";  
+  print   "-P calculate percentage of conserved proteins (POCP),          ". 
     "(optional, creates tab-separated matrix,\n";
   print   " by default uses blastp results but can use blastn with -a     ".
     " recommended with -t 0 [OMCL|COGS])\n";
@@ -325,6 +330,8 @@ else{ $do_features = 0 }
 
 if(defined($opts{'A'})){ $do_ANIb_matrix = 1 }
 
+if(defined($opts{'P'})){ $do_POCP_matrix = 1 }
+
 if(defined($opts{'g'}) && defined($opts{'d'}) && !$do_features)
 { 
   if($min_cluster_size ne 'all')
@@ -347,7 +354,7 @@ if(defined($opts{'M'}))
   }
   else{ warn_missing_soft('OMCL') }
 }
-elsif(defined($opts{'P'}) && !$DISSABLEPRND)
+elsif(defined($opts{'p'}) && !$DISSABLEPRND)
 {
   if(feature_is_installed('PRND'))
   {
@@ -405,6 +412,11 @@ else
   elsif($do_ANIb_matrix)
   {
     die "\n# WARNING: use of the default BDBH algorithm with option -A is not supported ".
+      "(please check the manual)\n\n";
+  }
+  elsif($do_POCP_matrix)
+  {
+    die "\n# WARNING: use of the default BDBH algorithm with option -P is not supported ".
       "(please check the manual)\n\n";
   }
 }
@@ -499,9 +511,9 @@ if(defined($opts{'B'}) && !$DISSABLEPRND)
 }
 
 print "# $0 -i $input_FASTA_file -d $inputDIR -o $onlyblast -X $do_diamond -e $exclude_inparalogues -f $filter_by_length -r $reference_proteome_string ".
-  "-t $min_cluster_size -c $do_genome_composition -z $do_soft -I $include_file -m $runmode -n $n_of_cpus -M $doMCL -G $doCOG -P $doPARANOID ".
+  "-t $min_cluster_size -c $do_genome_composition -z $do_soft -I $include_file -m $runmode -n $n_of_cpus -M $doMCL -G $doCOG -p $doPARANOID ".
   "-C $pmatch_cutoff -S $pi_cutoff -E $evalue_cutoff -F $MCLinflation -N $neighbor_corr_cutoff -B $bitscore_cutoff -b $do_minimal_BDBHs ".
-  "-s $saveRAM -D $do_PFAM -g $do_intergenic -a '$do_features' -x $COGmulticluster -R $random_number_generator_seed -A $do_ANIb_matrix\n\n";
+  "-s $saveRAM -D $do_PFAM -g $do_intergenic -a '$do_features' -x $COGmulticluster -R $random_number_generator_seed -A $do_ANIb_matrix -P $do_POCP_matrix\n\n";
   
 if($runmode eq 'cluster')
 {
@@ -512,7 +524,7 @@ if($runmode eq 'cluster')
 
 ## 0) declare most important vars
 my ($infile,$new_infile,$p2oinfile,$seq,$comma_input_files,@newfiles,%ressize,%intergenic_FNA_files);
-my ($label,%orthologues,$gene,$orth,$para,%inparalogues,%paralogues,$FASTAresultsDIR,$order,%orth_taxa,$minlog);
+my ($label,%orthologues,$gene,$orth,$orth2,$para,%inparalogues,%paralogues,$FASTAresultsDIR,$order,$minlog);
 my ($n_of_similar_length_orthologues,$clusterfile,$dna_clusterfile,$previous_files,$current_files,$inpara);
 my ($min_proteome_size,$reference_proteome,$smallest_proteome,$proteome_size,%seq_length,$cluster,$annot);
 my ($smallest_proteome_name,$reference_proteome_name,%psize,$taxon,$n_of_clusters,$n_of_taxa,$n_of_residues);
@@ -521,8 +533,8 @@ my (%orth_registry,%LSE_registry,$LSE_reference,$LSE_t,$redo_inp,$redo_orth,%idc
 my ($reparse_all,$total_genbankOK,$n_of_similar_length_paralogues,$pfam_annot,$dnaOK,$n_of_taxa_cluster) = (0,0);
 my ($BDBHdone,$PARANOIDdone,$orthoMCLdone,$COGdone,$n_of_parsed_lines,$n_of_pfam_parsed_lines) = (0,0,0,0,0,0);
 my ($diff_BDBH_params,$diff_INP_params,$diff_HOM_params,$diff_OMCL_params,$lockcapableFS) = (0,0,0,0,0);
-my ($total_clustersOK,$clgene,$clorth,%ANIb_matrix,%GIclusters,$clustersOK,%cluster_ids) = (0);
-my (@sorted_clusters,%taxa_clusters);
+my ($total_clustersOK,$clgene,$clorth,%ANIb_matrix,%POCP_matrix,%GIclusters,$clustersOK,%cluster_ids) = (0);
+my (@sorted_clusters,%taxa_clusters,%orth_taxa);
 
 constructDirectory($newDIR);
 
@@ -1474,6 +1486,7 @@ if(!-s $bpo_file || $current_files ne $previous_files || ($doCOG && !-s $cogblas
         next if($include_file && !$included_input_files{$infile});
 
         $blastout   = $newDIR ."/_". $new_infile ."_". $blastDBfile.".blast";
+        #$blastout   = $newDIR ."/_". $new_infile ."_". $blastDBfile.".blast.norm"; # for tests with length-normalized bits
         $clusteroutfile = $newDIR ."/_". $new_infile ."_". $blastDBfile.".queue";
         push(@to_be_deleted,$clusteroutfile);
 
@@ -1552,7 +1565,7 @@ if(!-s $bpo_file || $current_files ne $previous_files || ($doCOG && !-s $cogblas
       }
     }
     
-    # NxN BLAST jobs OR 2xN diamond jobs (for N input  files)
+    # NxN BLAST jobs OR 2xN diamond jobs (for N input files)
     sort_blast_results($blast_file,$KEEPSCNDHSPS,$COMPRESSBLAST,@tmp_blast_output_files);
       
     print "# done\n\n";
@@ -2540,6 +2553,7 @@ $FASTAresultsDIR   = $newDIR ."/".$output_mask;
 $cluster_list_file = $FASTAresultsDIR .".cluster_list";
 
 if($do_ANIb_matrix){ $ANIb_matrix_file = $FASTAresultsDIR.'Avg_identity.tab'; }
+if($do_POCP_matrix){ $POCP_matrix_file = $FASTAresultsDIR.'POCP.tab'; }
 
 open(CLUSTERLIST,">$cluster_list_file") || die "# EXIT: cannot create $cluster_list_file\n";
 
@@ -2758,13 +2772,27 @@ GENE: foreach $gene (sort {$a<=>$b} (keys(%orthologues)))
   if($do_ANIb_matrix)
   {
     my @genes = sort {$a<=>$b} ($gene,@{$orthologues{$gene}});
-    foreach $orth (0 .. $#genes)
+    foreach $orth (0 .. $#genes-1)
     {
-      foreach my $orth2 ($orth+1 .. $#genes)
+      foreach $orth2 ($orth+1 .. $#genes)
       {
         my @blast_data = blastqueryab($genes[$orth],$genes[$orth2]);
         next if(!$blast_data[3]);
         push(@{$ANIb_matrix{$taxon_names[$orth]}{$taxon_names[$orth2]}},$blast_data[3]);
+      }
+    }
+  }
+  
+  # 4.3.7) add data to POCP matrix if required
+  if($do_POCP_matrix)
+  {
+    my @genes = ($gene,@{$orthologues{$gene}});
+    foreach $orth (0 .. $#genes-1)
+    {
+      foreach $orth2 ($orth+1 .. $#genes)
+      {
+        next if($taxon_names[$orth] eq $taxon_names[$orth2]);
+        $POCP_matrix{$taxon_names[$orth]}{$taxon_names[$orth2]}++;
       }
     }
   }
@@ -2829,6 +2857,54 @@ if($do_ANIb_matrix)
   if($do_features){ print "# NOTE: matrix computed on blastn results\n" }
   else{ print "# NOTE: matrix computed on blastp results\n" }
 }
+
+if($do_POCP_matrix)
+{
+  open(POCPMATRIX,">$POCP_matrix_file") || die "# EXIT: cannot create $POCP_matrix_file\n";
+
+  print POCPMATRIX "genomes";
+  for($taxon=0;$taxon<scalar(@taxa);$taxon++)
+  {
+    print POCPMATRIX "\t$taxa[$taxon]";
+  } print POCPMATRIX "\n";
+
+  for($taxon=0;$taxon<scalar(@taxa);$taxon++)
+  {
+    print POCPMATRIX "$taxa[$taxon]";
+    for(my $taxon2=0;$taxon2<scalar(@taxa);$taxon2++)
+    {
+      if($taxon == $taxon2){ print POCPMATRIX "\t100" }
+      else
+      {
+        #Adapted from https://www.ncbi.nlm.nih.gov/pubmed/24706738
+        #The percentage of conserved proteins (POCP) between two genomes was calculated as [(C1 + C2)/(T1 + T2)] · 100%, 
+        #where C1 and C2 represent the conserved number of proteins in the two genomes being compared, respectively, 
+        #and T1 and T2 represent the total number of proteins in the two genomes being compared, respectively. 
+    
+        if($POCP_matrix{$taxa[$taxon]}{$taxa[$taxon2]})
+        {
+          printf(POCPMATRIX "\t%1.2f",
+            (200*$POCP_matrix{$taxa[$taxon]}{$taxa[$taxon2]}) /
+            ($gindex{$taxa[$taxon]}[2] + $gindex{$taxa[$taxon2]}[2]))
+        }
+        elsif($POCP_matrix{$taxa[$taxon2]}{$taxa[$taxon]})
+        {
+          printf(POCPMATRIX "\t%1.2f",
+            (200*$POCP_matrix{$taxa[$taxon2]}{$taxa[$taxon]}) /
+            ($gindex{$taxa[$taxon2]}[2] + $gindex{$taxa[$taxon]}[2]))
+        }
+        else{ print POCPMATRIX "\tNA" }
+      }
+    } print POCPMATRIX "\n";
+  }
+
+  close(POCPMATRIX);
+
+  print "\n# percent_conserved_proteins_file = ".short_path($POCP_matrix_file,$pwd)."\n";
+  if($do_features){ print "# NOTE: matrix computed on blastn results\n" }
+  else{ print "# NOTE: matrix computed on blastp results\n" }
+}
+
 
 # 5) produce clusters of intergenic sequences if requested
 if($do_intergenic && !$total_clustersOK)
@@ -3255,30 +3331,6 @@ sub cluster_is_available
 
   return 1;
 }
-
-#sub estimate_RAM{
-#  my ($n_of_sequences) = @_;
-#  my ($use,$physicalRAM) = (0,0);
-#  if(-s "/proc/meminfo") # will work only in linux systems
-#  {
-#    open(MEMINFO,"/proc/meminfo") || warn "# estimate_RAM : cannot read /proc/meminfo\n";
-#    while(<MEMINFO>){ if(/MemTotal:\s+(\d+)/){ $physicalRAM = sprintf("%1.0f",$1/1024) } }
-#    close(MEMINFO);
-#  }
-#  # bencFeb2012
-#  #$use = sprintf("%1.0f",(0.030 * $n_of_sequences) + 130);
-#  # bench Jun2013
-#  $use = sprintf("%1.0f",(0.060 * $n_of_sequences) - 1700);
-#  #if($isMCL){ $use = sprintf("%1.0f",(0.030 * $n_of_sequences) + 192) }
-#  #else{ $use = sprintf("%1.0f",(0.027 * $n_of_sequences) + 122) }
-#  if($physicalRAM && $use > $physicalRAM)
-#  {
-#    $use = "$use Mb (larger than physical RAM, consider using -s option)";
-#  }
-#  elsif($use > 0){ $use = "$use Mb" }
-#  else{ $use = 0 }
-#  return $use;
-#}
 
 # submits jobs to a SGE queue, this subroutine should be edited for other cluster systems
 sub submit_cluster_job
