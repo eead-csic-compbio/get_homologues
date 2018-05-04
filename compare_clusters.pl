@@ -655,7 +655,7 @@ if($INP_pange && %pangemat)
       else
       { 
         print PANGEMATRIX "0\t"; 
-        print PANGENEMATRIX "-\t"; 
+        print PANGENEMATRIX "-\t"; # absent genes
       }
     }
     print PANGEMATRIX "\n";
