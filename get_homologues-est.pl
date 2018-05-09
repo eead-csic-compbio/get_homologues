@@ -762,7 +762,10 @@ if($inputDIR)
 
       if(!$onlyblast)
       {
-        $sequence_data[$n_of_sequences] = "$fasta_ref->[$seq][NAME] [$p2oinfile]";
+        # save simplified FASTA header
+        #$sequence_data[$n_of_sequences] = "$fasta_ref->[$seq][NAME] |[$p2oinfile]";
+        $sequence_data[$n_of_sequences] = (split(/\s+/,$fasta_ref->[$seq][NAME]))[0] ." [$p2oinfile]";
+        
         $sequence_dna[$n_of_sequences] = $fasta_ref->[$seq][SEQ];
         if($fasta_ref->[$seq][SEQ] eq '')
         {

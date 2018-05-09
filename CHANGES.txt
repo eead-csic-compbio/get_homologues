@@ -256,3 +256,4 @@
 04052018: compare_clusters.pl -m now sorts taxon names when printing pangenome matrices
 04052018: added -P option to compute perc of conserved proteins (POCP) in get_homologues.pl
 04052018: added -P option to compute perc of conserved sequences (POCS) in get_homologues-est.pl
+09052018: simplified headers in output FASTA files of get_homologues-est down to: >first_non-blank_word [source_taxon.fna] 
