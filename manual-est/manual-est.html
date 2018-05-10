@@ -130,7 +130,7 @@ although most have been backported.
 
 <P>
 <BR><P></P>
-<DIV ALIGN="CENTER"><A NAME="553"></A>
+<DIV ALIGN="CENTER"><A NAME="554"></A>
 <TABLE>
 <CAPTION><STRONG>Table 1:</STRONG>
 List of novel scripts/features in <SPAN  CLASS="textit">get_homologues-est</SPAN>.</CAPTION>
@@ -1527,7 +1527,7 @@ in PubMed=<A NAME="tex2html59"
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:pangenomet"></A><A NAME="555"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:pangenomet"></A><A NAME="556"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 7:</STRONG>
 
@@ -1934,7 +1934,7 @@ CCTGCTGGTGCATTTTTTTACAAACAGTTGGCACAGAGTATTTGTTGCTAATTGTGTTCGTTTTCTTGAA...
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:annotcluster"></A><A NAME="556"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:annotcluster"></A><A NAME="557"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 10:</STRONG>
 Fragment of alignment produced by annotate_cluster.pl, 
@@ -2306,7 +2306,10 @@ The node labels correspond to the number of bootstrap pseudoreplicates in which 
 <P>
 We recommend script <code>estimate_pangenome_trees.sh</code> from the <A NAME="tex2html74"
   HREF="https://github.com/vinuesa/get_phylomarkers">GET_PHYLOMARKERS</A>
-pipeline. Another alternative is to use the <code>.fasta</code> version of the pangenome matrix produced by script <code>./compare_clusters.pl -m </code> ,
+pipeline. 
+
+<P>
+Another alternative is to use the <code>.fasta</code> version of the pangenome matrix produced by script <code>./compare_clusters.pl -m </code> ,
 next to the <code>.tab</code> and <code>.phy</code> files. 
 This FASTA file can be analyzed with ML software such as <A NAME="tex2html75"
   HREF="http://iqtree.cibiv.univie.ac.at">IQ-TREE</A>
@@ -2350,6 +2353,14 @@ First, you must produce a pangenome matrix with <code>compare_clusters -d ... -m
 pangenome matrix (<code>pangenome_matrix_t0__intersection.tab</code>) which contains the number of sequence clusters shared by 
 any two pairs of genomes with <code>parse_pangenome_matrix.pl -m pangenome_matrix_t0.tab -s -x</code>.
 Note that these clusters might contain several inparalogues of the same species.
+
+<P>
+</LI>
+<LI>How can I use <SPAN  CLASS="textit">get_homologues</SPAN> to produce clusters for GET_PHYLOMARKERS?
+
+<P>
+You should use option <code>-e</code> and make sure that your input FASTA nucleotide files have twin files with matching peptide sequences.
+Then, in GET_PHYLOMARKERS make sure to set option -f EST.
 
 <P>
 </LI>
@@ -2489,7 +2500,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>manual-est -no_antialias_text -split 0 -dir manual-est -no_navigation -show_section_numbers</TT>
 <P>
-The translation was initiated by Bruno Contreras Moreira on 2018-01-31
+The translation was initiated by Bruno Contreras Moreira on 2018-05-10
 <BR><HR>
 <ADDRESS>
 Bruno Contreras-Moreira and Pablo Vinuesa<br><a href="https://github.com/eead-csic-compbio/get_homologues">https://github.com/eead-csic-compbio/get_homologues</a>
