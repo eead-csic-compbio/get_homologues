@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
-# 2017 Bruno Contreras-Moreira (1), Ruben Sancho (1,2) and Pablo Vinuesa (3):
-# 1: http://www.eead.csic.es/compbio (Laboratory of Computational Biology, EEAD/CSIC, Spain)
+# 2018 Bruno Contreras-Moreira (1), Ruben Sancho (1,2) and Pablo Vinuesa (3):
+# 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei-CSIC/Fundacion ARAID, Spain)
 # 2: Grupo Bioflora, EPS, Universidad de Zaragoza, Spain
 # 3: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -38,6 +38,7 @@ my $MAXGAPSCOLLAP = 2; # natural, number of tolerated gaps in different places w
 
 my $INP_collapse = 0;
 my ($INP_nucleotides,$INP_blunt,$do_PFAM,$INP_clusterfile,$INP_outfile,$INP_ref_file,%opts) = (1,0,0,'','','');
+my ($INP_includeA,$INP_includeB) = ('','');
 
 my $warning = <<'END_WARN';
 WARNING: Clusters of transcripts often contain a fraction of BLASTN hits that do not match 
@@ -54,20 +55,22 @@ not included in the produced cumulative multiple sequence alignment (MSA):
 
 END_WARN
 
-getopts('hDbPf:o:r:c:', \%opts);
+getopts('hDbPf:o:r:c:A:B:', \%opts);
 
 if(($opts{'h'})||(scalar(keys(%opts))==0))
 {
   print   "\nusage: $0 [options]\n\n";
   print   "-h this message\n";
-  print   "-f input cluster FASTA file       (expects nucleotides, aligns longest seq to rest of cluster)\n";        
-  print   "-o output alignment file          (optional, produces FASTA format)\n";
-  print   "-P sequences are peptides         (optional)\n";
-  print   "-r reference sequence FASTA       (optional, aligns cluster sequences to this external seq)\n";
-  print   "-b blunt alignment borders        (optional, also annotates SNPs and parsimony-informative sites)\n";
-  print   "-D match Pfam domains             (optional, based on six-frame translation of longest seq)\n";
-  print   "-c collapse overlapping fragments (optional, example -c 40 for overlaps >= 40 residues, requires -o,\n";
-  print   "                                   this is useful to merge fragmented de-novo transcripts)\n\n$warning";
+  print   "-f input cluster FASTA file          (expects nucleotides, aligns longest seq to rest of cluster)\n";        
+  print   "-o output alignment file             (optional, produces FASTA format)\n";
+  print   "-P sequences are peptides            (optional)\n";
+  print   "-r reference sequence FASTA          (optional, aligns cluster sequences to this external seq)\n";
+  print   "-b blunt alignment borders           (optional, also annotates SNPs and parsimony-informative sites)\n";
+  print   "-A file with taxon names of group A  (optional, identifies private variants of group A vs 'rest')\n";
+  print   "-B file with taxon names of group B  (optional, requires -A, group B is used as 'rest')\n";
+  print   "-D match Pfam domains                (optional, annotates longest seq, nucleotides on 6 frames)\n";
+  print   "-c collapse overlapping fragments    (optional, example -c 40 for overlaps >= 40 residues, requires -o,\n";
+  print   "                                      this is useful to merge fragmented de-novo transcripts)\n\n$warning";
   exit(0);
 }
 
@@ -104,19 +107,31 @@ if(defined($opts{'D'}))
   else{ warn_missing_soft('PFAM') }
 }
 
+if(defined($opts{'A'}))
+{
+  $INP_includeA = $opts{'A'};
+
+  if(defined($opts{'B'}))
+  {
+    $INP_includeB = $opts{'B'};
+  }
+}
+
 warn "\n# DEFBLASTNTASK=$DEFBLASTNTASK DEFEVALUE=$DEFEVALUE\n";
 warn "# MINBLUNTBLOCK=$MINBLUNTBLOCK MAXSEQNAMELEN=$MAXSEQNAMELEN\n";
 warn "# MAXMISMCOLLAP=$MAXMISMCOLLAP MAXGAPSCOLLAP=$MAXGAPSCOLLAP\n";
 
-printf(STDERR "\n# %s -f %s -r %s -o %s -P %s -b %s -D %s -c %d\n",
+printf(STDERR "\n# %s -f %s -r %s -o %s -P %s -b %s -D %s -c %d -A %s -B %s\n",
   $0,$INP_clusterfile,$INP_ref_file,$INP_outfile,$INP_nucleotides,
-  $INP_blunt,$do_PFAM,$INP_collapse);
+  $INP_blunt,$do_PFAM,$INP_collapse,$INP_includeA,$INP_includeB);
 
 ##########################################################################
 
 my ($maxlength,$longest_seq,$length,$start,$end,$seq,$fh,$seqname) = (0,-1);
-my ($ext_seq,$ext_seqname,$taxon,$align_seq) = ('','');
-my ($command,$Pfam_string,$Pfam_full,@trash,%short_names,%intaxa);
+my ($ext_seq,$ext_seqname,$taxon,$seqid,$align_seq) = ('','');
+my ($command,$Pfam_string,$Pfam_full);
+my (@trash,%short_names,%intaxa,%id2taxon);
+my (%included_input_filesA,%included_input_filesB,@listA,@listB);
 
 ## read reference external sequence if requested (take first seq only)
 if($INP_ref_file ne "")
@@ -163,6 +178,9 @@ foreach $seq (0 .. $#{$cluster_ref})
     $seqname =~ s/\s+/_/g;
     
     $intaxa{$taxon}++;
+    
+    # link id to taxon, as ids are less likely to be truncated in BLAST output
+    $id2taxon{$1} = $taxon;
   }
   else
   {
@@ -200,7 +218,6 @@ foreach $seq (0 .. $#{$cluster_ref})
   }
 }
 
-#printf(STDERR "\n# total   sequences: %d longest: %d\n",$#{$cluster_ref}+1,$longest_seq+1); 
 printf(STDERR "\n# total   sequences: %d taxa: %d\n",$#{$cluster_ref}+1,scalar(keys(%intaxa))); 
 
 if($#{$cluster_ref} == -1)
@@ -208,6 +225,80 @@ if($#{$cluster_ref} == -1)
   warn "# Cannot read input sequences, exit. Please set -P if using a peptide cluster.\n";
   exit;
 }
+
+## read include lists
+if($INP_includeA)
+{
+  # parse include_file A
+  open(INCL,$INP_includeA) || die "# EXIT : cannot read $INP_includeA\n";
+  while(<INCL>)
+  {
+    next if(/^#/ || /^$/);
+    $taxon = (split)[0];
+    $taxon = (split(/\.f/,$taxon))[0];
+    $included_input_filesA{$taxon} = 1;
+    
+    if(!$intaxa{$taxon})
+    {
+      die "# cannot match $taxon in $INP_clusterfile (included in $INP_includeA)\n";
+    }
+    else
+    {
+      foreach $seqid (keys(%id2taxon))
+      {
+        if($id2taxon{$seqid} eq $taxon)
+        {
+          push(@listA,$seqid);
+        }
+      }
+    }
+  }
+  close(INCL); 
+
+  printf(STDERR "# sequences included in group A = %d\n", scalar(@listA));
+
+  # set group 'rest'
+  if($INP_includeB)
+  {
+    # parse include_file B
+    open(INCL,$INP_includeB) || die "# EXIT : cannot read $INP_includeB\n";
+    while(<INCL>)
+    {
+      next if(/^#/ || /^$/);
+      $taxon = (split)[0];
+      $taxon = (split(/\.f/,$taxon))[0];
+      $included_input_filesB{$taxon} = 1; 
+      
+      if(!$intaxa{$taxon})
+      {
+        die "# cannot match $taxon in $INP_clusterfile (included in $INP_includeB)\n";
+      }
+      else
+      {
+        foreach $seqid (keys(%id2taxon))
+        {
+          if($id2taxon{$seqid} eq $taxon)
+          {
+            push(@listB,$seqid);
+          }
+        }
+      }
+    }
+    close(INCL);
+  }
+  else
+  {
+    foreach $seqid (keys(%id2taxon))
+    {
+      next if($included_input_filesA{$id2taxon{$seqid}});
+      $included_input_filesB{$taxon} = 1;
+      push(@listB,$seqid);
+    }
+  }
+  
+  printf(STDERR "# sequences included in group B = %d (rest)\n\n",scalar(@listB));
+}
+
 
 ## Pfam-annotate longest sequence if required
 if($do_PFAM)
@@ -300,6 +391,8 @@ else
   push(@trash,$filenamedb.'.psq', $filenamedb.'.pin', $filenamedb.'.phr');
 }
 
+
+
 system($command);
 if($? != 0)
 {
@@ -311,18 +404,35 @@ else
   unlink(@trash);
 }  
 
-## format raw alignment  #-width 60 
+## format raw alignment  (note that sequence ids are truncated to 60chr)
 $command = "$ENV{'EXE_MVIEW'} -in blast -out fasta $filenameb > $filenamea"; 
 system($command); 
 
-## extract SNPs and parsimony-informative sites, and trim alignment if required
-my $align_ref = check_variants_FASTA_alignment($filenamea,!$INP_nucleotides,$INP_blunt);
+## extract SNPs, parsimony-informative sites, private variants and trim alignment if required
+my ($align_ref,$nSNPS,$npars,$npriv,$SNPs,$pars,$priv,$missA,$missB) = 
+  check_variants_FASTA_alignment($filenamea,!$INP_nucleotides,$INP_blunt,\@listA,\@listB);
   
-printf(STDERR "# aligned sequences: %d width:   %d\n",$#{$align_ref}+1,length($align_ref->[0][SEQ]));  
+printf(STDERR "# aligned sequences: %d width:   %d\n\n",$#{$align_ref}+1,length($align_ref->[0][SEQ])); 
+
+if($INP_includeA)
+{
+  printf(STDERR "# alignment sites: SNP=%d parsimony-informative=%d private=%d unaligned A=%d B=%d (%s)\n",
+    $nSNPS,$npars,$npriv,$missA,$missB,$INP_clusterfile);
+  printf(STDERR "# private sites=%s\n\n",$priv); 
+}
+else
+{
+  printf(STDERR "# alignment sites: SNP=%d parsimony-informative=%d (%s)\n\n",
+    $nSNPS,$npars,$INP_clusterfile);
+}    
 
 
-## check aligned taxa and unaligned cluster sequences
-
+## check aligned & unaligned sequences
+# 
+# This can happen in several cases:
+# i) sequences were clusterred by BLASTN but aminoacid sequences are being annotated (translated fragments are shifted)
+# ii) longest sequence, which is used to build MSA, does not match some sequences
+#
 my ($fhndb,$filenamenotaligndb) = tempfile(UNLINK => 1); # blast DB
 my ($fhnq,$filenamenotalignq) = tempfile(UNLINK => 1); # blast output
 my ($fhnb,$filenamenotalignb) = tempfile(UNLINK => 1); # out alignment file
@@ -356,11 +466,7 @@ close($fhnq);
 close($fhndb); 
 
 printf(STDERR "# taxa included in alignment: %d\n",scalar(keys(%aligned_taxa)));  
-
-foreach $taxon (sort(keys(%aligned_taxa)))
-{
-  warn "## $taxon $aligned_taxa{$taxon}\n";
-}
+#foreach $taxon (sort(keys(%aligned_taxa))){ warn "## $taxon $aligned_taxa{$taxon}\n"; }
 
 if($unaligned > 0 && $#{$align_ref} > 0)
 {
@@ -374,7 +480,7 @@ if($unaligned > 0 && $#{$align_ref} > 0)
   else
   {
     executeFORMATDB($filenamenotaligndb,0,1); 
-    $command = format_BLASTP_command($filenamenotalignq,$filenamenotalignb,$filenamedb,
+    $command = format_BLASTP_command($filenamenotalignq,$filenamenotalignb,$filenamenotaligndb,
       $DEFEVALUE,1,0);
     push(@trash,$filenamenotaligndb.'.psq', $filenamenotaligndb.'.pin', $filenamenotaligndb.'.phr');  
   }
@@ -387,20 +493,31 @@ if($unaligned > 0 && $#{$align_ref} > 0)
   else
   {
     warn "\n# sequences not included in multiple alignment (n=$unaligned):\n";
-  
-    open(BLASTOUT,'<',$filenamenotalignb);
+ 
+    my $unhits = 0; 
+    open(BLASTOUT,'<',$filenamenotalignb) || die "# EXIT: cannot open $filenamenotalignb\n";
     while(<BLASTOUT>)
     {
       my @data = split(/\t/,$_,3);
       warn "# $data[0] (matches $data[1])\n";
+      $unhits++;
     }
     close(BLASTOUT);
+
+    # show unaligned sequences when there are no double-check hits
+    if($unhits == 0)
+    {
+      open(UNALIGNED,'<',$filenamenotalignq) || die "# EXIT: cannot open $filenamenotalignq\n";
+      while(<UNALIGNED>)
+      {
+        if(/^>(\S+)/){ print "# $1\n"; }
+      }
+      close(UNALIGNED);  
+    }
     
     unlink(@trash);
   }
 }
-
-
 
   
 ## print final alignment 
