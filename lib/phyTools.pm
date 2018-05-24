@@ -1,5 +1,5 @@
 # Bruno Contreras-Moreira, Pablo Vinuesa
-# 2005-17 CCG/UNAM, Mexico, EEAD/CSIC, Zaragoza, Spain
+# 2005-18 CCG/UNAM, Mexico, EEAD/CSIC, Zaragoza, Spain
 # This is a collection of subroutines used in our projects,
 # including primers4clades and get_homologues.pl
 
@@ -1292,15 +1292,31 @@ sub extract_gene_name
 
 
 # Input FASTA sequences are expected to be aligned
-# takes 3 args: filename string, type of sequence (scalar) and blunt [min allowed block] (scalar)
-# returns: ref to 2D array with 2ary indexes: NAME,SEQ; first sequence is '0'
+# takes 5 args: 
+# 1) filename string, required
+# 2) type of sequence (scalar), required 
+# 3) blunt [min allowed block] (scalar), optional
+# 4) array ref with sequence names of group A, optional
+# 5) array ref with sequence names of group B, only if 4) is set
+# 6) verbose (integer), optional
+#
+# returns 7 scalars: 
+# 1) ref to 2D array with 2ary indexes: NAME,SEQ; first sequence is '0'
+# 2) number of SNP positions (integer)
+# 3) number of pars positions (integer)
+# 4) number of private (A vs B) variants (integer)
+# 5) string with comma-sep SNP positions
+# 6) string with comma-sep SNP positions
+# 7) string with comma-sep SNP positions
+# 8) number of unaligned groupA sequences (integer)
+# 9) number of unaligned groupB sequences (integer)
 sub check_variants_FASTA_alignment
 {	
-  my ( $infile, $peptideOK, $blunt ) = @_;
+  my ( $infile, $peptideOK, $blunt, $arrayA, $arrayB, $verbose ) = @_;
   
-  my (@FASTA,@matrix,%length);
-	my ($name,$seq,$nt,$l);
-	my $n_of_sequences = -1;
+  my (@FASTA,@matrix,%length,@groupA,@groupB);
+	my ($name,$seq,$nt,$l,$seqname,$nameOK);
+	my ($n_of_sequences,$missA,$missB) = (-1,0,0);
 
 	# read in multiFASTA
   open(FASTA,"<$infile") || die "# check_variants_FASTA_alignment: cannot read $infile $!\n";
@@ -1312,6 +1328,37 @@ sub check_variants_FASTA_alignment
 			$n_of_sequences++; # first sequence ID is 0
       $name = $1;
 			$nt = 0;
+      
+      # match taxon names if arrayA/B are not null
+      $nameOK = 0;
+      foreach $seqname (@$arrayA)
+      {
+        if($name =~ m/\Q$seqname\E/)
+        { 
+          warn "# check_variants_FASTA_alignment: $n_of_sequences groupA\n" if($verbose);
+          push(@groupA,$n_of_sequences); 
+          $nameOK = 1; 
+          last;
+        }
+      }
+      
+      if(!$nameOK)
+      {
+        foreach $seqname (@$arrayB)
+        {
+          if($name =~ m/\Q$seqname\E/)
+          { 
+            warn "# check_variants_FASTA_alignment: $n_of_sequences groupB\n" if($verbose);
+            push(@groupB,$n_of_sequences); 
+            $nameOK = 1; 
+            last; 
+          }
+        }
+      } 
+      
+      if($verbose && !$nameOK){ warn "# check_variants_FASTA_alignment: cannot match $name\n" }    
+      
+      # store parsed name in matrix
       $FASTA[$n_of_sequences][NAME] = $name;
     }
     elsif($n_of_sequences>-1)
@@ -1333,7 +1380,7 @@ sub check_variants_FASTA_alignment
 	if($n_of_sequences == -1)
 	{
     warn "# check_variants_FASTA_alignment: $infile contains no sequences, skip it\n";
-	  return [];
+	  return ([],-1,-1,-1,'','','',-1,-1);
   }
 
 	# check sequences are aligned
@@ -1346,9 +1393,22 @@ sub check_variants_FASTA_alignment
 	if(scalar(keys(%length)) > 1)
 	{
 		warn "# check_variants_FASTA_alignment: input seqs at $infile are not aligned, skip it\n";
-		return [];
+		return ([],-1,-1,-1,'','','',-1,-1);
 	}
+  
+  # check included taxa names if required
+  if(@$arrayA)
+  {
+    if($verbose)
+    {
+      printf(STDERR "# check_variants_FASTA_alignment: found %d sequences of groupA\n",scalar(@groupA));
+      printf(STDERR "# check_variants_FASTA_alignment: found %d sequences of groupB\n",scalar(@groupB));
+    }
 
+    $missA = scalar(@$arrayA)-scalar(@groupA);
+    $missB = scalar(@$arrayB)-scalar(@groupB);
+  }
+  
   # produce a block of blunt-end sequences
   my ($first_blunt,$last_blunt,$gaps) = (0,$l-1);
 
@@ -1403,15 +1463,17 @@ sub check_variants_FASTA_alignment
 	  if($l < $blunt)
 	  {
 		  warn "# check_variants_FASTA_alignment: trimmed block at $infile is too short ($l<$blunt), skip it\n";
-		  return [];
+		  return ([],-1,-1,-1,'','','',-1,-1);
 	  }
 	} #warn "# $first_blunt $last_blunt\n";
   
   # annotate variants within possibly trimmed block of aligned sequences 
 	my @aminoacids  = qw( C S T P A G N D E Q H R K M I L V F Y W X - );
   my @nucleotides = qw( A C G T N - );
-  my ($letter,$degen,$pars,$G,$snps,$snps_string,$pars_string);
-  my (%freq,@trimmed_seq,@alphabet);
+  my ($letter,$degen,$pars,$G,$snps,$letterA,$letterB);
+  my ($snps_string,$pars_string,$private_string) = ('','','');
+  my ($snps_total,$pars_total,$private_total) = (0,0,0);
+  my (%freq,%freqA,%freqB,@trimmed_seq,@alphabet);
   my $effective_pos = 1;
   
   if($peptideOK)
@@ -1428,12 +1490,13 @@ sub check_variants_FASTA_alignment
   $nt = $first_blunt;
 	while($nt<=$last_blunt)
   {
+    # init
     $pars=$G=$snps=0;
     foreach $letter (@alphabet){ $freq{$letter} = 0 }
     
     foreach $seq (0 .. $n_of_sequences)
 	  {
-      $letter = $matrix[$seq][$nt];
+      $letter = $matrix[$seq][$nt]; 
 			$freq{$letter}++; 
       $trimmed_seq[$seq] .= $matrix[$seq][$nt];
     }
@@ -1446,18 +1509,46 @@ sub check_variants_FASTA_alignment
       if($freq{$letter} > 1){ $pars++ }
       if($letter eq '-'){ $G = 1 } # columns with gaps
 		}
-		
+    
     # check SNPs
     if($snps > 1 && $G == 0)
     { 
       $snps_string .= "$effective_pos,";
+      $snps_total++;
     }
     
 		# parsimony-informative positions: 2+ letters observed twice
 		if($pars > 1)
     {
       $pars_string .= "$effective_pos,";
+      $pars_total++; 
     }
+    
+    # check private variants in group A vs groupB
+    if(@groupA && ($snps || $G))
+    {
+      %freqA = ();
+      %freqB = ();
+      
+      foreach $seq (@groupA)
+	    {
+        $letterA = $matrix[$seq][$nt];
+			  $freqA{$letterA}++; 
+      }
+      
+      foreach $seq (@groupB)
+	    {
+        $letterB = $matrix[$seq][$nt];
+			  $freqB{$letterB}++; 
+      } 
+        
+      if(scalar(keys(%freqA))== 1 && scalar(keys(%freqB))== 1 && 
+        $letterA ne $degen && $letterB ne $degen && $letterA ne $letterB)
+      {
+        $private_string .= "$effective_pos($letterA:$letterB),";
+        $private_total++;
+      }
+    }  
     
     $effective_pos++;
     $nt++;
@@ -1467,14 +1558,9 @@ sub check_variants_FASTA_alignment
   foreach $seq (0 .. $n_of_sequences)
 	{
     $FASTA[$seq][SEQ] = $trimmed_seq[$seq];		
-    if($blunt)
-    {
-      $FASTA[$seq][NAME] .= " SNPs:$snps_string" if($snps_string && !$peptideOK);		
-      $FASTA[$seq][NAME] .= " parsimony:$pars_string" if($pars_string);
-    }  
   }
 
-	return \@FASTA;
+	return (\@FASTA,$snps_total,$pars_total,$private_total,$snps_string,$pars_string,$private_string,$missA,$missB);
 }    
 
 # Input FASTA sequences are expected to be aligned
