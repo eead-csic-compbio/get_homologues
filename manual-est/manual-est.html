@@ -156,7 +156,8 @@ List of novel scripts/features in <SPAN  CLASS="textit">get_homologues-est</SPAN
 <TD ALIGN="LEFT" VALIGN="TOP" WIDTH=360>Script to test whether a set of sequence clusters are enriched in some Pfam domains.</TD>
 </TR>
 <TR><TD ALIGN="LEFT">annotate_cluster.pl</TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=360>Script to reconstruct the BLAST alignments that support a selected sequence cluster.</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=360>Produces a multiple alignment view of the supporting local BLAST alignments of sequences in a cluster. 
+It can also annotate Pfam domains and find private sequence variants private to an arbitrary group of sequences.</TD>
 </TR>
 </TABLE>
 </DIV>
@@ -964,8 +965,8 @@ reciprocal best hits.
 
 <P>
 </LI>
-<LI><SPAN  CLASS="textit">annotate_cluster.pl</SPAN> can be used to retrieve a multiple alignment view of the supporting local BLAST alignments
-of the sequences in the cluster, and to annotate any encoded Pfam domain.
+<LI><SPAN  CLASS="textit">annotate_cluster.pl</SPAN> produces a multiple alignment view of the supporting local BLAST alignments of sequences in a cluster. 
+It can also annotate Pfam domains and find private sequence variants private to an arbitrary group of sequences.
 
 <P>
 </LI>
@@ -1595,11 +1596,11 @@ without singletons with this command:
 
 # parsing clusters in sample_transcripts_fasta_est_homologues/Esterel_2taxa_algOMCL_e0_ ...
 # cluster_list in place, will parse it (sample_[...]/Esterel_2taxa_algOMCL_e0_.cluster_list)
-# number of clusters = 5243
+# number of clusters = 5241
 
 # intersection output directory: outdir
 
-# intersection size = 5243 clusters
+# intersection size = 5241 clusters
 
 # intersection list = outdir/intersection_t0.cluster_list
 
@@ -1799,19 +1800,19 @@ that sequences might be truncated (option <code>-e</code>) and using 10 processo
 
 <P>
 <PRE>
-# input matrix contains 5243 clusters and 4 taxa
+# input matrix contains 5241 clusters and 4 taxa
 
 # filtering clusters ...
-# 5243 clusters with taxa &gt;= 1 and sequence length &gt;= 0
+# 5241 clusters with taxa &gt;= 1 and sequence length &gt;= 0
 
 # sorting clusters and extracting median sequence ...
 
 # running makeblastdb with outdir/pangenome_matrix_t0_nr_t1_l0_e1_C50_S90.fna
 
-# parsing blast result! (outdir/pangenome_matrix_t0_nr_t1_l0_e1_C50_S90.blast , 0.34MB)
+# parsing blast result! (outdir/pangenome_matrix_t0_nr_t1_l0_e1_C50_S90.blast , 0.37MB)
 # parsing file finished
 
-# 5210 non-redundant clusters
+# 5172 non-redundant clusters
 # created: outdir/pangenome_matrix_t0_nr_t1_l0_e1_C50_S90.fna
 
 # printing nr pangenome matrix ...
@@ -1836,10 +1837,10 @@ reference sequences, in this case annotated rice cDNAs:
 <P>
 This is the produced output:
 <PRE>
-# input matrix contains 5243 clusters and 4 taxa
+# input matrix contains 5241 clusters and 4 taxa
 
 # filtering clusters ...
-# 5243 clusters with taxa &gt;= 1 and sequence length &gt;= 0
+# 5241 clusters with taxa &gt;= 1 and sequence length &gt;= 0
 
 # sorting clusters and extracting median sequence ...
 # re-using previous BLAST output outdir/pangenome_matrix_t0_nr_t1_l0_e1_C50_S90.blast
@@ -1847,7 +1848,7 @@ This is the produced output:
 # parsing blast result! (outdir/pangenome_matrix_t0_nr_t1_l0_e1_C50_S90.blast , 0.34MB)
 # parsing file finished
 
-# 5210 non-redundant clusters
+# 5172 non-redundant clusters
 # created: outdir/pangenome_matrix_t0_nr_t1_l0_e1_C50_S90.fna
 
 # 66339 reference sequences parsed in oryza.fna
@@ -1906,29 +1907,30 @@ And will produce this output:
 # MINBLUNTBLOCK=100 MAXSEQNAMELEN=60
 # MAXMISMCOLLAP=0 MAXGAPSCOLLAP=2
 
-# ./annotate_cluster.pl -f outdir/1004_TR425-c0_g2_i1.fna -r 
-#    -o 1004_TR425-c0_g2_i1.aln.fna -P 1 -b 0 -D 1 -c 0
+# ./annotate_cluster.pl -f outdir/1004_TR425-c0_g2_i1.fna -r  \
+#     -o 1004_TR425-c0_g2_i1.aln.fna -P 1 -b 0 -D 1 -c 0 -A  -B 
 
 # total   sequences: 3 taxa: 2
 
 # Pfam domains: PF10602,PF01399,
 # Pfam annotation: 26S proteasome subunit RPN7;PCI domain;
 # aligned sequences: 3 width:   1595
+
+# alignment sites: SNP=3 parsimony-informative=0 (outdir/1004_TR425-c0_g2_i1.fna)
+
 # taxa included in alignment: 2
-## Esterel.trinity 2
-## flcdnas_Hnijo 1
 
 # alignment file: 1004_TR425-c0_g2_i1.aln.fna
 </PRE>
 
 <P>
 If option <code>-b</code> is enforced a blunt-end alignment is produced, which might be useful for further analyses.
-In either case, the produced FASTA alignment file will contain sequence variants and Pfam domains in each header,
+In either case, the produced FASTA alignment file will contain Pfam domains in each header,
 in addition to the relevant BLAST scores:
 
 <P>
 <PRE>
-&gt;TR425|c0_g2_i1_[Esterel.trinity.fna.bz2] bits E-value N qy ht 1:1595 SNPs:123,1169,.. Pfam:..
+&gt;TR425|c0_g2_i1_[Esterel.trinity.fna.bz2] bits E-value N qy ht 1:1595 Pfam:..
 CCTGCTGGTGCATTTTTTTACAAACAGTTGGCACAGAGTATTTGTTGCTAATTGTGTTCGTTTTCTTGAA...
 </PRE>
 
@@ -2500,7 +2502,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>manual-est -no_antialias_text -split 0 -dir manual-est -no_navigation -show_section_numbers</TT>
 <P>
-The translation was initiated by Bruno Contreras Moreira on 2018-05-10
+The translation was initiated by Bruno Contreras Moreira on 2018-05-24
 <BR><HR>
 <ADDRESS>
 Bruno Contreras-Moreira and Pablo Vinuesa<br><a href="https://github.com/eead-csic-compbio/get_homologues">https://github.com/eead-csic-compbio/get_homologues</a>

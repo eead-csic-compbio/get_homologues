@@ -2,24 +2,6 @@
 # Associate images original text with physical files.
 
 
-$key = q/identityge70%;MSF=1.6/;
-$cached_env_img{$key} = q|<IMG
- WIDTH="103" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
- SRC="|."$dir".q|img11.png"
- ALT="$ identity \ge 70\%$">|; 
-
-$key = q/.slashinstall.pl;MSF=1.6/;
-$cached_env_img{$key} = q|<IMG
- WIDTH="77" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
- SRC="|."$dir".q|img7.png"
- ALT="$ ./install.pl$">|; 
-
-$key = q/geq30;MSF=1.6/;
-$cached_env_img{$key} = q|<IMG
- WIDTH="36" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
- SRC="|."$dir".q|img9.png"
- ALT="$ \geq 30$">|; 
-
 $key = q/geq50%;MSF=1.6/;
 $cached_env_img{$key} = q|<IMG
  WIDTH="49" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
@@ -38,11 +20,11 @@ $cached_env_img{$key} = q|<IMG
  SRC="|."$dir".q|img5.png"
  ALT="$ G$">|; 
 
-$key = q/G^{2};MSF=1.6/;
+$key = q/.slashinstall.pl;MSF=1.6/;
 $cached_env_img{$key} = q|<IMG
- WIDTH="22" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
- SRC="|."$dir".q|img6.png"
- ALT="$ G^{2}$">|; 
+ WIDTH="77" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="|."$dir".q|img7.png"
+ ALT="$ ./install.pl$">|; 
 
 $key = q/occupancy>2;MSF=1.6/;
 $cached_env_img{$key} = q|<IMG
@@ -56,17 +38,35 @@ $cached_env_img{$key} = q|<IMG
  SRC="|."$dir".q|img3.png"
  ALT="$ \geq 70\%$">|; 
 
-$key = q/<70%;MSF=1.6/;
-$cached_env_img{$key} = q|<IMG
- WIDTH="49" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
- SRC="|."$dir".q|img2.png"
- ALT="$ &lt;70\%$">|; 
-
 $key = q/coveragege50%;MSF=1.6/;
 $cached_env_img{$key} = q|<IMG
  WIDTH="111" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
  SRC="|."$dir".q|img10.png"
  ALT="$ coverage \ge 50\%$">|; 
+
+$key = q/G^{2};MSF=1.6/;
+$cached_env_img{$key} = q|<IMG
+ WIDTH="22" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="|."$dir".q|img6.png"
+ ALT="$ G^{2}$">|; 
+
+$key = q/geq30;MSF=1.6/;
+$cached_env_img{$key} = q|<IMG
+ WIDTH="36" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="|."$dir".q|img9.png"
+ ALT="$ \geq 30$">|; 
+
+$key = q/identityge70%;MSF=1.6/;
+$cached_env_img{$key} = q|<IMG
+ WIDTH="103" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="|."$dir".q|img11.png"
+ ALT="$ identity \ge 70\%$">|; 
+
+$key = q/<70%;MSF=1.6/;
+$cached_env_img{$key} = q|<IMG
+ WIDTH="49" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="|."$dir".q|img2.png"
+ ALT="$ &lt;70\%$">|; 
 
 1;
 
