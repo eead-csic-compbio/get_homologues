@@ -342,7 +342,7 @@ sub constructAllFasta
       next unless ($_ ne '>');
       $_=~s/\>$//;
       $_=~s/\r|\n$//;
-      if($all_fa_file){ print ALLFA ">$_\n"; }
+      if($all_fa_file){ print ALLFA ">$_\n"; } 
       my @lines=split(/\r|\n/,$_);
       $id=shift(@lines);
 

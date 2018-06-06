@@ -260,3 +260,6 @@
 24052018: modified phyTools::check_variants_FASTA_alignment to compute also private variants if listsA & B are passed
 24052018: annotate_cluster.pl now can take -A/-B lists of taxa to compute private variants in the aligned sequences of the cluster
 24052018: updated descriptions of annotate_cluster.pl in manuals
+06062018: improved ANI computation by skipping self-taxon BLAST hits
+06062018: fixed POCP computation; now it is [100(C1 + C2)/(T1 + T2)]
+06062018: fixed POCS computation; now it is [100(C1 + C2)/(T1 + T2)] and T1/T2 are #nr seqs
