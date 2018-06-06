@@ -527,7 +527,7 @@ my ($infile,$new_infile,$p2oinfile,$seq,$comma_input_files,@newfiles,%ressize,%i
 my ($label,%orthologues,$gene,$orth,$orth2,$para,%inparalogues,%paralogues,$FASTAresultsDIR,$order,$minlog);
 my ($n_of_similar_length_orthologues,$clusterfile,$dna_clusterfile,$previous_files,$current_files,$inpara);
 my ($min_proteome_size,$reference_proteome,$smallest_proteome,$proteome_size,%seq_length,$cluster,$annot);
-my ($smallest_proteome_name,$reference_proteome_name,%psize,$taxon,$n_of_clusters,$n_of_taxa,$n_of_residues);
+my ($smallest_proteome_name,$reference_proteome_name,%psize,$taxon,$taxon2,$n_of_clusters,$n_of_taxa,$n_of_residues);
 my ($pname,$n_of_sequences,$refOK,$genbankOK,$cluster_size,$dna_cluster_size,$dna_cluster,$prot_cluster);
 my (%orth_registry,%LSE_registry,$LSE_reference,$LSE_t,$redo_inp,$redo_orth,%idclusters,%names,$generef);
 my ($reparse_all,$total_genbankOK,$n_of_similar_length_paralogues,$pfam_annot,$dnaOK,$n_of_taxa_cluster) = (0,0);
@@ -986,7 +986,7 @@ else # 1.2) input single FASTA file with [taxon names] in headers, order not che
   my %taxa_in_headers = find_taxa_FASTA_array_headers($fasta_ref,1);
 
   # 1.2.1) print sequences of the same taxon in separate files
-  foreach my $taxon (sort (keys(%taxa_in_headers)))
+  foreach $taxon (sort (keys(%taxa_in_headers)))
   {
     my $taxon_ressize = 0;
     $proteome_size = 0;
@@ -2571,7 +2571,8 @@ GENE: foreach $gene (sort {$a<=>$b} (keys(%orthologues)))
     }
   }
 
-  my (@taxon_names,$cluster_name,$header,%aligned_coords,%cluster_taxa,$ref_hash_short_orthologues);
+  my ($cluster_name,$header,$ref_hash_short_orthologues);
+  my (@taxon_names,%aligned_coords,%cluster_taxa);
 
   # 4.1) check length of sequences in clusters if requested
   if($filter_by_length)
@@ -2776,6 +2777,7 @@ GENE: foreach $gene (sort {$a<=>$b} (keys(%orthologues)))
     {
       foreach $orth2 ($orth+1 .. $#genes)
       {
+        next if($taxon_names[$orth] eq $taxon_names[$orth2]);
         my @blast_data = blastqueryab($genes[$orth],$genes[$orth2]);
         next if(!$blast_data[3]);
         push(@{$ANIb_matrix{$taxon_names[$orth]}{$taxon_names[$orth2]}},$blast_data[3]);
@@ -2786,15 +2788,19 @@ GENE: foreach $gene (sort {$a<=>$b} (keys(%orthologues)))
   # 4.3.7) add data to POCP matrix if required
   if($do_POCP_matrix)
   {
-    my @genes = ($gene,@{$orthologues{$gene}});
-    foreach $orth (0 .. $#genes-1)
+    my @cltaxa = keys(%{$orth_taxa{$gene}});
+    foreach $taxon (0 .. $#cltaxa-1)
     {
-      foreach $orth2 ($orth+1 .. $#genes)
+      foreach $taxon2 ($taxon+1 .. $#cltaxa)
       {
-        next if($taxon_names[$orth] eq $taxon_names[$orth2]);
-        $POCP_matrix{$taxon_names[$orth]}{$taxon_names[$orth2]}++;
+        # add the number of sequences in this cluster from taxa 1 & 2
+        $POCP_matrix{$cltaxa[$taxon]}{$cltaxa[$taxon2]} += $orth_taxa{$gene}{$cltaxa[$taxon]};
+        $POCP_matrix{$cltaxa[$taxon]}{$cltaxa[$taxon2]} += $orth_taxa{$gene}{$cltaxa[$taxon2]};    
+        # now in reverse order to make sure it all adds up
+        $POCP_matrix{$cltaxa[$taxon2]}{$cltaxa[$taxon]} += $orth_taxa{$gene}{$cltaxa[$taxon]};
+        $POCP_matrix{$cltaxa[$taxon2]}{$cltaxa[$taxon]} += $orth_taxa{$gene}{$cltaxa[$taxon2]}; 
       }
-    }
+    }  
   }
 
   $n_of_clusters++;
@@ -2825,24 +2831,18 @@ if($do_ANIb_matrix)
   for($taxon=0;$taxon<scalar(@taxa);$taxon++)
   {
     print ANIBMATRIX "$taxa[$taxon]";
-    for(my $taxon2=0;$taxon2<scalar(@taxa);$taxon2++)
+    for($taxon2=0;$taxon2<scalar(@taxa);$taxon2++)
     {
       if($taxon == $taxon2){ print ANIBMATRIX "\t100" }
       else
       {
-
-        #print "$taxa[$taxon] $taxa[$taxon2]\n";
         if($ANIb_matrix{$taxa[$taxon]}{$taxa[$taxon2]})
         {
-
-          #print scalar(@{$ANIb_matrix{$taxa[$taxon]}{$taxa[$taxon2]}})."\n";
           printf(ANIBMATRIX "\t%1.2f",
             calc_mean($ANIb_matrix{$taxa[$taxon]}{$taxa[$taxon2]}))
         }
         elsif($ANIb_matrix{$taxa[$taxon2]}{$taxa[$taxon]})
         {
-
-          #print scalar(@{$ANIb_matrix{$taxa[$taxon2]}{$taxa[$taxon]}})."\n";
           printf(ANIBMATRIX "\t%1.2f",
             calc_mean($ANIb_matrix{$taxa[$taxon2]}{$taxa[$taxon]}))
         }
@@ -2871,7 +2871,7 @@ if($do_POCP_matrix)
   for($taxon=0;$taxon<scalar(@taxa);$taxon++)
   {
     print POCPMATRIX "$taxa[$taxon]";
-    for(my $taxon2=0;$taxon2<scalar(@taxa);$taxon2++)
+    for($taxon2=0;$taxon2<scalar(@taxa);$taxon2++)
     {
       if($taxon == $taxon2){ print POCPMATRIX "\t100" }
       else
@@ -2884,14 +2884,8 @@ if($do_POCP_matrix)
         if($POCP_matrix{$taxa[$taxon]}{$taxa[$taxon2]})
         {
           printf(POCPMATRIX "\t%1.2f",
-            (200*$POCP_matrix{$taxa[$taxon]}{$taxa[$taxon2]}) /
+            (100*$POCP_matrix{$taxa[$taxon]}{$taxa[$taxon2]}) /
             ($gindex{$taxa[$taxon]}[2] + $gindex{$taxa[$taxon2]}[2]))
-        }
-        elsif($POCP_matrix{$taxa[$taxon2]}{$taxa[$taxon]})
-        {
-          printf(POCPMATRIX "\t%1.2f",
-            (200*$POCP_matrix{$taxa[$taxon2]}{$taxa[$taxon]}) /
-            ($gindex{$taxa[$taxon2]}[2] + $gindex{$taxa[$taxon]}[2]))
         }
         else{ print POCPMATRIX "\tNA" }
       }
