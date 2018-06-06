@@ -426,13 +426,13 @@ my ($infile,$new_infile,$prot_new_infile,$p2oinfile,$seq,$seqL,$comma_input_file
 my ($label,%orthologues,$gene,$orth,$orth2,$para,%inparalogues,%paralogues,$FASTAresultsDIR,$order,$minlog);
 my ($n_of_similar_length_orthologues,$clusterfile,$prot_clusterfile,$previous_files,$current_files,$inpara);
 my ($min_proteome_size,$reference_proteome,$smallest_proteome,$proteome_size,%seq_length,$cluster,$annot);
-my ($smallest_proteome_name,$reference_proteome_name,%psize,$taxon,$n_of_clusters,$n_of_taxa,$n_of_residues);
+my ($smallest_proteome_name,$reference_proteome_name,%psize,$taxon,$taxon2,$n_of_clusters,$n_of_taxa,$n_of_residues);
 my ($pname,$n_of_sequences,$refOK,$genbankOK,$cluster_size,$prot_cluster_size,$prot_cluster);
 my (%orth_registry,%LSE_registry,$LSE_reference,$LSE_t,$redo_inp,$redo_orth,%idclusters,%names,$generef);
 my ($reparse_all,$n_of_similar_length_paralogues,$pfam_annot,$protOK,$n_of_taxa_cluster) = (0);
 my ($BDBHdone,$PARANOIDdone,$orthoMCLdone,$n_of_parsed_lines,$n_of_pfam_parsed_lines) = (0,0,0,0,0);
 my ($diff_BDBH_params,$diff_INP_params,$diff_HOM_params,$diff_OMCL_params,$lockcapableFS) = (0,0,0,0,0);
-my ($diff_ISO_params,$redo_iso,$partial_sequences,$isof,%full_length_file,%redundant_isoforms) = (0);
+my ($diff_ISO_params,$redo_iso,$partial_sequences,$isof,%full_length_file,%redundant_isoforms,%total_redundant) = (0);
 my ($total_clustersOK,$clgene,$clorth,%ANIb_matrix,%POCP_matrix,%GIclusters,$clustersOK,%cluster_ids) = (0);
 
 constructDirectory($newDIR);
@@ -1250,6 +1250,7 @@ else
         {
           $redundant{$isof} = $rhash_isoforms_j->{$isof};
         }
+        $total_redundant{$taxa[$j]} = scalar(keys(%$rhash_isoforms_j));
         undef(%$rhash_isoforms_j);
       }
       write_redundant_hash($redundant_file);
@@ -1287,6 +1288,7 @@ else
           {
             $redundant{$isof} = $rhash_isoforms_j->{$isof};
           }
+          $total_redundant{$taxa[$j]} = scalar(keys(%$rhash_isoforms_j));
           undef(%$rhash_isoforms_j);
         }
         write_redundant_hash($redundant_file);
@@ -2255,7 +2257,8 @@ GENE: foreach $gene (sort {$a<=>$b} (keys(%orthologues)))
     }
   }
 
-  my (@taxon_names,$cluster_name,$header,%aligned_coords,%cluster_taxa,$ref_hash_short_orthologues);
+  my ($cluster_name,$header,$ref_hash_short_orthologues);
+  my (@taxon_names,%aligned_coords,%cluster_taxa);
 
   # 4.2) create output directory if necessary
   if(!-e $FASTAresultsDIR){ mkdir($FASTAresultsDIR); }
@@ -2453,6 +2456,7 @@ GENE: foreach $gene (sort {$a<=>$b} (keys(%orthologues)))
     {
       foreach $orth2 ($orth+1 .. $#genes)
       {
+        next if($taxon_names[$orth] eq $taxon_names[$orth2]);
         my @blast_data = blastqueryab($genes[$orth],$genes[$orth2]);
         next if(!$blast_data[3]);
         push(@{$ANIb_matrix{$taxon_names[$orth]}{$taxon_names[$orth2]}},$blast_data[3]);
@@ -2463,13 +2467,17 @@ GENE: foreach $gene (sort {$a<=>$b} (keys(%orthologues)))
   # 4.3.7) add data to POCP matrix if required
   if($do_POCP_matrix)
   {
-    my @genes = ($gene,@{$orthologues{$gene}});
-    foreach $orth (0 .. $#genes-1)
+    my @cltaxa = keys(%{$orth_taxa{$gene}});
+    foreach $taxon (0 .. $#cltaxa-1)
     {
-      foreach $orth2 ($orth+1 .. $#genes)
+      foreach $taxon2 ($taxon+1 .. $#cltaxa)
       {
-        next if($taxon_names[$orth] eq $taxon_names[$orth2]);
-        $POCP_matrix{$taxon_names[$orth]}{$taxon_names[$orth2]}++;
+        # add the number of sequences in this cluster from taxa 1 & 2
+        $POCP_matrix{$cltaxa[$taxon]}{$cltaxa[$taxon2]} += $orth_taxa{$gene}{$cltaxa[$taxon]};
+        $POCP_matrix{$cltaxa[$taxon]}{$cltaxa[$taxon2]} += $orth_taxa{$gene}{$cltaxa[$taxon2]};    
+        # now in reverse order to make sure it all adds up
+        $POCP_matrix{$cltaxa[$taxon2]}{$cltaxa[$taxon]} += $orth_taxa{$gene}{$cltaxa[$taxon]};
+        $POCP_matrix{$cltaxa[$taxon2]}{$cltaxa[$taxon]} += $orth_taxa{$gene}{$cltaxa[$taxon2]}; 
       }
     }
   }
@@ -2499,24 +2507,18 @@ if($do_ANIb_matrix)
   for($taxon=0;$taxon<scalar(@taxa);$taxon++)
   {
     print ANIBMATRIX "$taxa[$taxon]";
-    for(my $taxon2=0;$taxon2<scalar(@taxa);$taxon2++)
+    for($taxon2=0;$taxon2<scalar(@taxa);$taxon2++)
     {
       if($taxon == $taxon2){ print ANIBMATRIX "\t100" }
       else
       {
-
-        #print "$taxa[$taxon] $taxa[$taxon2]\n";
         if($ANIb_matrix{$taxa[$taxon]}{$taxa[$taxon2]})
         {
-
-          #print scalar(@{$ANIb_matrix{$taxa[$taxon]}{$taxa[$taxon2]}})."\n";
           printf(ANIBMATRIX "\t%1.2f",
             calc_mean($ANIb_matrix{$taxa[$taxon]}{$taxa[$taxon2]}))
         }
         elsif($ANIb_matrix{$taxa[$taxon2]}{$taxa[$taxon]})
         {
-
-          #print scalar(@{$ANIb_matrix{$taxa[$taxon2]}{$taxa[$taxon]}})."\n";
           printf(ANIBMATRIX "\t%1.2f",
             calc_mean($ANIb_matrix{$taxa[$taxon2]}{$taxa[$taxon]}))
         }
@@ -2532,6 +2534,8 @@ if($do_ANIb_matrix)
 
 if($do_POCP_matrix)
 {
+  my ($total_nr1,$total_nr2);
+
   open(POCPMATRIX,">$POCP_matrix_file") || die "# EXIT: cannot create $POCP_matrix_file\n";
 
   print POCPMATRIX "genomes";
@@ -2543,7 +2547,7 @@ if($do_POCP_matrix)
   for($taxon=0;$taxon<scalar(@taxa);$taxon++)
   {
     print POCPMATRIX "$taxa[$taxon]";
-    for(my $taxon2=0;$taxon2<scalar(@taxa);$taxon2++)
+    for($taxon2=0;$taxon2<scalar(@taxa);$taxon2++)
     {
       if($taxon == $taxon2){ print POCPMATRIX "\t100" }
       else
@@ -2555,15 +2559,15 @@ if($do_POCP_matrix)
     
         if($POCP_matrix{$taxa[$taxon]}{$taxa[$taxon2]})
         {
+          # make sure redundant sequences are not counted 
+          $total_nr1 = $gindex{$taxa[$taxon]}[2];
+          if($total_redundant{$taxa[$taxon]}){ $total_nr1 -= $total_redundant{$taxa[$taxon]} }
+          
+          $total_nr2 = $gindex{$taxa[$taxon2]}[2];
+          if($total_redundant{$taxa[$taxon2]}){ $total_nr2 -= $total_redundant{$taxa[$taxon2]} }
+          
           printf(POCPMATRIX "\t%1.2f",
-            (200*$POCP_matrix{$taxa[$taxon]}{$taxa[$taxon2]}) /
-            ($gindex{$taxa[$taxon]}[2] + $gindex{$taxa[$taxon2]}[2]))
-        }
-        elsif($POCP_matrix{$taxa[$taxon2]}{$taxa[$taxon]})
-        {
-          printf(POCPMATRIX "\t%1.2f",
-            (200*$POCP_matrix{$taxa[$taxon2]}{$taxa[$taxon]}) /
-            ($gindex{$taxa[$taxon2]}[2] + $gindex{$taxa[$taxon]}[2]))
+            (100*$POCP_matrix{$taxa[$taxon]}{$taxa[$taxon2]}) / ($total_nr1 + $total_nr2));
         }
         else{ print POCPMATRIX "\tNA" }
       }
