@@ -1486,7 +1486,6 @@ if(!-s $bpo_file || $current_files ne $previous_files || ($doCOG && !-s $cogblas
         next if($include_file && !$included_input_files{$infile});
 
         $blastout   = $newDIR ."/_". $new_infile ."_". $blastDBfile.".blast";
-        #$blastout   = $newDIR ."/_". $new_infile ."_". $blastDBfile.".blast.norm"; # for tests with length-normalized bits
         $clusteroutfile = $newDIR ."/_". $new_infile ."_". $blastDBfile.".queue";
         push(@to_be_deleted,$clusteroutfile);
 
