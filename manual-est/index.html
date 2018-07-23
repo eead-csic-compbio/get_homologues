@@ -1,10 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 
-<!--Converted with LaTeX2HTML 2008 (1.71)
-original version by:  Nikos Drakos, CBLU, University of Leeds
-* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
-* with significant contributions from:
-  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<!--Converted with LaTeX2HTML 2018.2 (Released May 16, 2018) -->
 <HTML>
 <HEAD>
 <TITLE>get_homologues-est manual</TITLE>
@@ -13,7 +9,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
 
-<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2018.2">
 <META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
 
 <LINK REL="STYLESHEET" HREF="manual-est.css">
@@ -305,8 +301,7 @@ $ make
 </PRE>
 
 <P>
-To compile <SPAN  CLASS="textit">COGtriangles</SPAN> the GNU <SPAN  CLASS="textit">g++</SPAN> compiler is required. 
-You should obtain it by any of the alternatives listed in section <A HREF="#perlmods">2.1</A>.
+To compile <SPAN  CLASS="textit">COGtriangles</SPAN> the GNU <SPAN  CLASS="textit">g++</SPAN> compiler is required. You should obtain it by any of the alternatives listed in section <A HREF="#perlmods">2.1</A>.
 The compilation would then include several steps:
 <PRE>
 $cd bin/COGsoft;
@@ -337,10 +332,12 @@ BLAST binaries, which are respectively <SPAN  CLASS="textit">blastall</SPAN> and
 </H2>
 
 <P>
-It is possible to make use of <SPAN  CLASS="textit">get_homologues-est</SPAN> on a computer farm or high-performance computing cluster
+It is possible to make use of <SPAN  CLASS="textit">get_homologues-est</SPAN> on a computer farm or high-performance computing (HPC) cluster
 managed by <A NAME="tex2html17"
   HREF="http://gridscheduler.sourceforge.net/">gridengine</A>. In particular we have tested this feature with 
-versions GE 6.0u8, 6.2u4, 2011.11p1 invoking the program with option <code>-m cluster</code>.For this command to work it might be necessary to edit the <SPAN  CLASS="textit">get_homologues-est.pl</SPAN> file and add the right 
+versions GE 6.0u8, 6.2u4, 2011.11p1 
+invoking the program with option <code>-m cluster</code>.
+For this command to work it might be necessary to edit the <SPAN  CLASS="textit">get_homologues-est.pl</SPAN> file and add the right 
 path to set global variable <code>$SGEPATH</code>. To find out the installation path of your SGE installation
 you might try the next terminal command: <code>$ which qsub</code>
 <BR>
@@ -349,15 +346,15 @@ to set up your own Grid Engine cluster and speed up your calculations:
 
 <P>
 <BR>
-<PRE  CLASS="verbatim"># updated 02032017
+<PRE  CLASS="verbatim"># updated 23072018
 
-# 1) go to http://arc.liv.ac.uk/downloads/SGE/releases , 
+# 1) go to https://arc.liv.ac.uk/downloads/SGE/releases/ , 
 # create user 'sgeadmin' and download the latest binary packages
 # (Debian-like here) matching your architecture (amd64 here):
 
-wget -c http://arc.liv.ac.uk/downloads/SGE/releases/8.1.9/sge-common_8.1.9_all.deb
-wget -c http://arc.liv.ac.uk/downloads/SGE/releases/8.1.9/sge_8.1.9_amd64.deb
-wget -c http://arc.liv.ac.uk/downloads/SGE/releases/8.1.9/sge-dbg_8.1.9_amd64.deb
+wget -c https://arc.liv.ac.uk/downloads/SGE/releases/8.1.9/sge-common_8.1.9_all.deb
+wget -c https://arc.liv.ac.uk/downloads/SGE/releases/8.1.9/sge_8.1.9_amd64.deb
+wget -c https://arc.liv.ac.uk/downloads/SGE/releases/8.1.9/sge-dbg_8.1.9_amd64.deb
 
 sudo useradd sgeadmin
 sudo dpkg -i sge-common_8.1.9_all.deb 
@@ -802,6 +799,7 @@ as explained in
 <A NAME="tex2html40"
   HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>,
 as well as <code>$QUEUESETTINGS</code>, that specificies for instance a particular queue name for your cluster jobs.
+
 <P>
 </LI>
 <LI><code>-n</code> sets the number of threads/CPUs to dedicate to each BLAST/HMMER/mcl job run locally, which by default is 2.
@@ -2391,7 +2389,8 @@ Universidad Nacional Aut&#243;noma de M&#233;xico (CCG/UNAM).
 The code was written mostly by Bruno Contreras-Moreira and Pablo Vinuesa, but it also includes 
 code and binaries from <A NAME="tex2html79"
   HREF="http://www.orthomcl.org">OrthoMCL v1.4</A>
-(algorithm OMCL, <code>-M</code>),<A NAME="tex2html80"
+(algorithm OMCL, <code>-M</code>),
+<A NAME="tex2html80"
   HREF="http://blast.ncbi.nlm.nih.gov">NCBI Blast+</A>, <A NAME="tex2html81"
   HREF="https://github.com/desmid/mview">MVIEW</A>,
 <A NAME="tex2html82"
@@ -2489,7 +2488,7 @@ About this document ...</A>
 </H1>
  <STRONG>get_homologues-est manual</STRONG><P>
 This document was generated using the
-<A HREF="http://www.latex2html.org/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 2008 (1.71)
+<A HREF="http://www.latex2html.org/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 2018.2 (Released May 16, 2018)
 <P>
 Copyright &#169; 1993, 1994, 1995, 1996,
 Nikos Drakos, 
@@ -2502,7 +2501,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>manual-est -no_antialias_text -split 0 -dir manual-est -no_navigation -show_section_numbers</TT>
 <P>
-The translation was initiated by Bruno Contreras Moreira on 2018-05-24
+The translation was initiated on 2018-07-23
 <BR><HR>
 <ADDRESS>
 Bruno Contreras-Moreira and Pablo Vinuesa<br><a href="https://github.com/eead-csic-compbio/get_homologues">https://github.com/eead-csic-compbio/get_homologues</a>

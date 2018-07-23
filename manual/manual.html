@@ -1,10 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 
-<!--Converted with LaTeX2HTML 2008 (1.71)
-original version by:  Nikos Drakos, CBLU, University of Leeds
-* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
-* with significant contributions from:
-  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<!--Converted with LaTeX2HTML 2018.2 (Released May 16, 2018) -->
 <HTML>
 <HEAD>
 <TITLE>get_homologues manual</TITLE>
@@ -13,7 +9,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
 
-<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2018.2">
 <META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
 
 <LINK REL="STYLESHEET" HREF="manual.css">
@@ -284,8 +280,7 @@ $ make
 </PRE>
 
 <P>
-To compile <SPAN  CLASS="textit">COGtriangles</SPAN> the GNU <SPAN  CLASS="textit">g++</SPAN> compiler is required. 
-You should obtain it by any of the alternatives listed in section <A HREF="#perlmods">2.1</A>.
+To compile <SPAN  CLASS="textit">COGtriangles</SPAN> the GNU <SPAN  CLASS="textit">g++</SPAN> compiler is required. You should obtain it by any of the alternatives listed in section <A HREF="#perlmods">2.1</A>.
 The compilation would then include several steps:
 <PRE>
 $cd bin/COGsoft;
@@ -316,10 +311,12 @@ BLAST binaries, which are respectively <SPAN  CLASS="textit">blastall</SPAN> and
 </H2>
 
 <P>
-It is possible to make use of <SPAN  CLASS="textit">get_homologues</SPAN> on a computer farm or high-performance computing cluster
+It is possible to make use of <SPAN  CLASS="textit">get_homologues</SPAN> on a computer farm or high-performance computing (HPC) cluster
 managed by <A NAME="tex2html18"
   HREF="http://gridscheduler.sourceforge.net/">gridengine</A>. In particular we have tested this feature with 
-versions GE 6.0u8, 6.2u4, 2011.11p1 invoking the program with option <code>-m cluster</code>.For this command to work it might be necessary to edit the <SPAN  CLASS="textit">get_homologues.pl</SPAN> file and add the right 
+versions GE 6.0u8, 6.2u4, 2011.11p1 
+invoking the program with option <code>-m cluster</code>.
+For this command to work it might be necessary to edit the <SPAN  CLASS="textit">get_homologues.pl</SPAN> file and add the right 
 path to set global variable <code>$SGEPATH</code>. To find out the installation path of your SGE installation
 you might try the next terminal command: <code>$ which qsub</code>
 <BR>
@@ -328,15 +325,15 @@ to set up your own Grid Engine cluster and speed up your calculations:
 
 <P>
 <BR>
-<PRE  CLASS="verbatim"># updated 02032017
+<PRE  CLASS="verbatim"># updated 23072018
 
-# 1) go to http://arc.liv.ac.uk/downloads/SGE/releases , 
+# 1) go to https://arc.liv.ac.uk/downloads/SGE/releases/ , 
 # create user 'sgeadmin' and download the latest binary packages
 # (Debian-like here) matching your architecture (amd64 here):
 
-wget -c http://arc.liv.ac.uk/downloads/SGE/releases/8.1.9/sge-common_8.1.9_all.deb
-wget -c http://arc.liv.ac.uk/downloads/SGE/releases/8.1.9/sge_8.1.9_amd64.deb
-wget -c http://arc.liv.ac.uk/downloads/SGE/releases/8.1.9/sge-dbg_8.1.9_amd64.deb
+wget -c https://arc.liv.ac.uk/downloads/SGE/releases/8.1.9/sge-common_8.1.9_all.deb
+wget -c https://arc.liv.ac.uk/downloads/SGE/releases/8.1.9/sge_8.1.9_amd64.deb
+wget -c https://arc.liv.ac.uk/downloads/SGE/releases/8.1.9/sge-dbg_8.1.9_amd64.deb
 
 sudo useradd sgeadmin
 sudo dpkg -i sge-common_8.1.9_all.deb 
@@ -508,9 +505,7 @@ This section describes the available options for the <SPAN  CLASS="textit">get_h
 
 <P>
 The input required to run <SPAN  CLASS="textit">get_homologues</SPAN> can be of two types: 
-<DL COMPACT>
-<DT>1</DT>
-<DD>A single file with amino acid sequences in FASTA format, 
+<table width="90%"><tr><td align="right" valign="top">1</td><td valign="top">&nbsp;A single file with amino acid sequences in FASTA format, 
 in which headers include a taxon name between square brackets, including at least two words 
 and a first capital letter, as shown in the example:
 <PRE>
@@ -523,17 +518,14 @@ PEKFVINSYFEKMIMSVRNNCDRVCGFQFHPESILTTHGDQILEKIIHWASLKYITNKKQ
 ...
 </PRE>
 
-<P>
-</DD>
-<DT>2</DT>
-<DD>A directory or folder containing several files in either FASTA format (extensions '.faa' or '.fasta', 
+<P></td></tr>
+<tr><td align="right" valign="top">2</td><td valign="top">&nbsp;A directory or folder containing several files in either FASTA format (extensions '.faa' or '.fasta', 
 containing amino acid sequences) or GenBank files (extension '.gbk', one file per organism). 
 The advantage of this option is that new files can be added to the input folder in the future and 
 previous calculations will be conserved. This might be useful to study a group of organisms for 
 which a few genomes are available, and then keep adding new genomes as they become available. 
 This directory can actually contain a mixture of FASTA and GenBank files.
-</DD>
-</DL>
+</td></tr></table>
 
 <P>
 
@@ -589,8 +581,7 @@ For their use with <SPAN  CLASS="textit">get_homologues</SPAN>,
 GenBank files for the same species (for example, from the main chromosome and from a couple of plasmids)
 must be concatenated. For instance, the genomic sequences of <SPAN  CLASS="textit">Rhizobium etli CFN 42</SPAN> comprise
 <A NAME="tex2html33"
-  HREF="<"><</A>947>>http://www.ncbi.nlm.nih.gov/genome?Db=genome&amp;term=rhizobium
-which can be concatenated into a single <SPAN  CLASS="textit">_Rhizobium_etli_CFN42.gbk</SPAN> file.
+  HREF="<"><</A>947>>http://www.ncbi.nlm.nih.gov/genome?Db=genome&amp;term=rhizobiumwhich can be concatenated into a single <SPAN  CLASS="textit">_Rhizobium_etli_CFN42.gbk</SPAN> file.
 
 <P>
 In order to assist in this task this software package includes the accompanying script
@@ -628,7 +619,8 @@ as does the bundled file <code>sample_genome_list.txt</code>.
 
 <BR>
 <BR>
-First, it can be seen that completed genomes have NC accession numbers, and can be added to the list as follows:
+First, it can be seen that completed genomes have NC accession numbers, and 
+can be added to the list as follows:
 <PRE>
 NC_010159                   Yersinia_pestis_Angola
 </PRE>
@@ -961,9 +953,11 @@ this might be the only way to complete a job.
 <LI><code>-m</code> allows the choice of runmode, which can be either <code>-m local</code> (the default) or 
 <code>-m cluster</code>. In the second case global variable <code>$SGEPATH</code> might need to be appropriately set, as explained in section <A HREF="#dependencies">2.3</A>,
 as well as <code>$QUEUESETTINGS</code>, that specificies for instance a particular queue name for your cluster jobs.
+
 <P>
 </LI>
 <LI><code>-n</code> sets the number of threads/CPUs to dedicate to each BLAST/HMMER job run locally, which by default is 2.
+
 <P>
 </LI>
 <LI><code>-I list_file.txt</code> allows the user to restrict a <SPAN  CLASS="textit">get_homologues</SPAN> job to a subset of the genomes included in the input <code>-d </code> folder. 
@@ -1417,8 +1411,7 @@ and the accompanying scripts with provided sample input data.
 This example takes the provided sample input folder <code>sample_buch_fasta</code>,
 which contains the proteins sets of four 
 <A NAME="tex2html60"
-  HREF="<"><</A>948>>http://en.wikipedia.org/wiki/Buchnera_
-and compiles clusters of BDBH sequences, which are candidates to be orthologues, with this command:
+  HREF="<"><</A>948>>http://en.wikipedia.org/wiki/Buchnera_and compiles clusters of BDBH sequences, which are candidates to be orthologues, with this command:
 <BR><code>$ ./get_homologues.pl -d sample_buch_fasta </code> . 
 
 <P>
@@ -2090,6 +2083,7 @@ K_pneumoniae_KP96_plasmid_pKP96.gb
 <P>
 We can now execute 
 <BR><code>$ ./get_homologues.pl -d sample_plasmids_gbk -g -I sample_plasmids_gbk/include_list.txt</code>:
+
 <P>
 <PRE>
 # results_directory=sample_plasmids_gbk_homologues
@@ -2188,6 +2182,7 @@ By enforcing this option we are actually asking for all possible clusters, inclu
 contain sequences from all input genomes (taxa). For this reason the use of this option usually means
 that a large number of clusters are reported. This is particularly true for COG runs, since this algorithm
 does not resolve clusters involving less than 3 genomes. The default algorithm BDBH is not available with this option.
+
 <BR>
 For instance, by calling
 <code>$ ./get_homologues.pl -d sample_plasmids_gbk -t 0 -G</code> we obtain 199 clusters:
@@ -3369,6 +3364,7 @@ in the corresponding GenBank files. Miscellaneous features report on diverse thi
 in replicon replication,  and many more "miscellaneous" features. Note that there is great heterogeneity both in the format and detail of annotating 
 genome features. By default, <SPAN  CLASS="textit">get_homologues.pl</SPAN> will extract only the 'CDS' feature (i.e. the sequences for protein-coding sequences) from the 
 GenBank file. By using option <code>-a</code> the user can select which features to parse, such as 'tRNA' or 'rRNA'. 
+
 <P>
 </LI>
 <LI>Could you explain what the inflation parameter of orthoMCL is and how to decide what value to use?
@@ -3639,8 +3635,7 @@ which means that protein sequences with <!-- MATH
 <SPAN CLASS="MATH"><IMG
  WIDTH="111" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
  SRC="img5.png"
- ALT="$ coverage \ge 50\% &amp; $"></SPAN> and 
-<!-- MATH
+ ALT="$ coverage \ge 50\% &amp; $"></SPAN> and <!-- MATH
  $identity  \ge 50\%$
  -->
 <SPAN CLASS="MATH"><IMG
@@ -3971,7 +3966,7 @@ About this document ...</A>
 </H1>
  <STRONG>get_homologues manual</STRONG><P>
 This document was generated using the
-<A HREF="http://www.latex2html.org/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 2008 (1.71)
+<A HREF="http://www.latex2html.org/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 2018.2 (Released May 16, 2018)
 <P>
 Copyright &#169; 1993, 1994, 1995, 1996,
 Nikos Drakos, 
@@ -3984,7 +3979,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>manual -no_antialias_text -split 0 -dir manual -no_navigation -show_section_numbers</TT>
 <P>
-The translation was initiated by Bruno Contreras Moreira on 2018-05-24
+The translation was initiated on 2018-07-23
 <BR><HR>
 <ADDRESS>
 Bruno Contreras-Moreira and Pablo Vinuesa<br><a href="https://github.com/eead-csic-compbio/get_homologues">https://github.com/eead-csic-compbio/get_homologues</a>
