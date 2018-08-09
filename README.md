@@ -20,7 +20,8 @@ bundled with [GET_PHYLOMARKERS](https://github.com/vinuesa/get_phylomarkers), re
 The GET_PHYLOMARKERS [manual](https://vinuesa.github.io/get_phylomarkers/#get_phylomarkers-tutorial) 
 explains how to use clusters from with GET_HOMOLOGUES to compute robust multi-gene and pangenome phylogenies.
 
-The code is regularly patched (see [CHANGES.txt](./CHANGES.txt) in each release), and has been used in a variety of studies 
+The code is regularly patched (see [CHANGES.txt](./CHANGES.txt) in each release and [TODO.txt](./TODO.txt)), 
+and has been used in a variety of studies 
 (see citing papers [here](https://scholar.google.es/scholar?start=0&hl=en&as_sdt=2005&cites=5259912818944685430) and 
 [here](https://scholar.google.es/scholar?oi=bibs&hl=en&cites=14330917787074873427&as_sdt=5), respectively).
 
