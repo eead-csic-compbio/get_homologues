@@ -91,12 +91,12 @@ which indicates these may be miss-clustered after normalization. However, some o
 increase cluster mean identity when moved to singleton clusters, indicating the use of the normalization process 
 for building high quality clusters of long sequences to be used in phylogenetic analyses (Figure 2).
 
-![diff_identity](images/effect_prot.png)
+![diff_identity](images/effect_prot_id.png)
 
-Figure 2. Difference in cluster % sequence identity before and after removing sequences because of
+_**Figure 2. Difference in cluster % sequence identity before and after removing sequences because of
 the normalization process in different length regions. Positive values indicate an increase in identity
 after removing a sequence after normalization. Length was measured as the mean alignment length
-reported by BLASTP for sequences within the cluster.
+reported by BLASTP for sequences within the cluster.**_
 
 2) Nucleotide datasets
 
