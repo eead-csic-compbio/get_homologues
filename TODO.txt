@@ -1,0 +1,36 @@
+Current list of ideas to improve/update GET_HOMOLOGUES:
+
+* Speed-up/paralellize marfil_homology::blast_parse. This can be done by:
+  a) port sub to C++
+  b) do parsing in parallel splitting (sorted) infile in chunks without braking consecutive HSPs
+  Read: http://blogs.perl.org/users/kirk_kimmel/2012/09/text-processing-divide-and-conquer.html
+
+* Add slurm support to -m cluster
+  Read: https://github.com/mauranolab/sge2slurm , http://hpc.mines.edu/bluem/interactive.html ,
+  https://srcc.stanford.edu/sge-slurm-conversion , https://srcc.stanford.edu/sge-slurm-conversion ,
+  http://genomics.princeton.edu/support/grids/slurm.shtml
+  
+* Add flag to assume synteny/gene order in input FASTA files for EST, so that neighborhood info can be used
+
+* Print clusters in pangenome matrix (PGM) sorted by their (consensus) physical/genetic position
+
+* Compute tree determinants of PGM
+
+* Delete empty last row in PGM .tab file produced by compare_clusters.pl (Felipe Lira)
+
+* Script to produce VCF/MFA after parsing sorted DNA clusters 
+
+* Add alternatives to NCBI blastn: minimap2 simulating bitscore & E-value
+
+* Add taxon names to tmp/blast.bpo file 
+
+* Add evidences to produced clusters
+
+* Improve graphical output and help users with external users
+  Read: https://bmcgenomics.biomedcentral.com/track/pdf/10.1186/1471-2164-15-8 , 
+  http://higlass.io/
+
+* Consider other clustering algorithms
+  OrthoFinder: local tests so far @ https://github.com/eead-csic-compbio/get_homologues/tree/master/user_utils/normalize
+  Read: https://academic.oup.com/bioinformatics/advance-article/doi/10.1093/bioinformatics/bty669/5063405
+
