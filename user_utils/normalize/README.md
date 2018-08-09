@@ -82,8 +82,8 @@ to the standard and normalized set up, respectively. The number of clusters cont
 
 ![singleton_dist_prot](images/singleton_len_prot.png)
 
-Figure 1. Length distribution of singletons in the original and normalized clustering. Singleton
-sequence length after normalization is more evenly distributed across peptide length.
+_**Figure 1. Length distribution of singletons in the original and normalized clustering. Singleton
+sequence length after normalization is more evenly distributed across peptide length.**_
 
 Some sequences originally found in clusters were clasified as singletons after normalization. 
 Subtracting those sequences did not have any effect on the overall percentage of sequence identity of the clusters,
@@ -110,8 +110,8 @@ normalization step (Figure 3).
 
 ![singleton_dist_nucl](images/singleton_len_nucl.png)
 
-Figure 3. Length distribution of singletons in the original and normalized clustering. Singleton
-sequence length after normalization is more evenly distributed across peptide length.
+_**Figure 3. Length distribution of singletons in the original and normalized clustering. Singleton
+sequence length after normalization is more evenly distributed across peptide length.**_
 
 The mean BLAST coverage values of the clusters usually increased after the subtraction of
 sequences because of the normalization. Manual inspection of some cases revealed that long sequences 
@@ -124,7 +124,7 @@ the overall indentity of the clusters.
 
 ![effect_cov_nucl](images/effect_nucl_cov.png)
 
-Figure 4. Coverage of the clusters before (x-axis) and after (y-axis) new singletons were sunstracted
-from original clusters because of the normalization process.
+_**Figure 4. Coverage of the clusters before (x-axis) and after (y-axis) new singletons were sunstracted
+from original clusters because of the normalization process.**_
 
 
