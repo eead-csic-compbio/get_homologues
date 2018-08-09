@@ -80,7 +80,7 @@ There were 23,249 identical clusters in both runs, but 1,190 and 1,359 clusters 
 to the standard and normalized set up, respectively. The number of clusters containing a single sequence 
 (singletons) was greater (329 vs 225) and more distributed across peptide length after the normalization step (Figure 3). 
 
-[singleton_dist_prot](images/singleton_len_prot.png)
+![singleton_dist_prot](images/singleton_len_prot.png)
 Figure 3. Length distribution of singletons in the original and normalized clustering. Singleton
 sequence length after normalization is more evenly distributed across peptide length.
 
@@ -90,7 +90,7 @@ which indicates these may be miss-clustered after normalization. However, some o
 increase cluster mean identity when moved to singleton clusters, indicating the use of the normalization process 
 for building high quality clusters of long sequences to be used in phylogenetic analyses (Figure 4).
 
-[diff_identity](images/effect_prot.png)
+![diff_identity](images/effect_prot.png)
 Figure 4. Difference in cluster % sequence identity before and after removing sequences because of
 the normalization process in different length regions. Positive values indicate an increase in identity
 after removing a sequence after normalization. Length was measured as the mean alignment length
@@ -106,7 +106,7 @@ program was 612, whereas after normalization it increased to 18,126. The number 
 was, as in the protein dataset example, more distributed across nucleotide length after the
 normalization step (Figure 5).
 
-[singleton_dist_nucl](images/singleton_len_nucl.png)
+![singleton_dist_nucl](images/singleton_len_nucl.png)
 Figure 5. Length distribution of singletons in the original and normalized clustering. Singleton
 sequence length after normalization is more evenly distributed across peptide length.
 
@@ -119,7 +119,7 @@ share some particular regions, such as exons, but not other regions such as intr
 in transcripts. In most cases, susbtracting sequences because of normalization did not have an effect on 
 the overall indentity of the clusters.
 
-[effect_cov_nucl](images/effect_nucl_cov.png)
+![effect_cov_nucl](images/effect_nucl_cov.png)
 Figure 6. Coverage of the clusters before (x-axis) and after (y-axis) new singletons were sunstracted
 from original clusters because of the normalization process.
 
