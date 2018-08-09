@@ -72,7 +72,7 @@ perl compare_clusters.pl -m -o intersection -d \
 
 ## Effect on the clustering
 
-_1) Protein datasets_
+__1) Protein datasets__
 
 Sequence clusters produced by the standard and the normalized version of GET_HOMOLOGUES-EST
 on the peptides of 119 isolates of the bacterial Streptophomonas genus showed some differences. 
@@ -98,7 +98,7 @@ the normalization process in different length regions. Positive values indicate 
 after removing a sequence after normalization. Length was measured as the mean alignment length
 reported by BLASTP for sequences within the cluster.*
 
-_2) Nucleotide datasets_
+__2) Nucleotide datasets__
 
 The clusters sets produced by the standard and normalized predictions by the
 GET_HOMOLOGUES-EST protocol were very different with the transcripts of 11 species of the genus Oryza. 
