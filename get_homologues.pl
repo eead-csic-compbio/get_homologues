@@ -1441,10 +1441,18 @@ if(!-s $bpo_file || $current_files ne $previous_files || ($doCOG && !-s $cogblas
         if(!-s $blast_file){ push(@tmp_blast_output_files,$blastout); }
         next;
       }
-      elsif($COMPRESSBLAST && -s $blastout.'.gz' && $current_files eq $previous_files) 
+      elsif($COMPRESSBLAST && -s $blastout.'.gz') 
       {
-        if(!-s $blast_file){ push(@tmp_blast_output_files,$blastout); }
-        next;
+        if($current_files eq $previous_files) # check previous runs
+        {
+          if(!-s $blast_file){ push(@tmp_blast_output_files,$blastout); }
+          next;
+        }
+        else
+        {
+          print "# delete previous output $blastout.gz\n";
+          unlink($blastout.'.gz');
+        }  
       }
         
       $command = format_DIAMONDblastp_command("$newDIR/$new_infile",
