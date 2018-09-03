@@ -265,3 +265,4 @@
 06062018: fixed POCS computation; now it is [100(C1 + C2)/(T1 + T2)] and T1/T2 are #nr seqs
 23072018: updated Grid Engine instructions in manuals
 28082018: bug fixed: get_homologues-pl -X now removes previous DIAMOND results of one vs others when new genomes are added (thanks alexweisberg)
+03092018: added section 'Output files explained' to EST manual (thanks Lior Glick)
