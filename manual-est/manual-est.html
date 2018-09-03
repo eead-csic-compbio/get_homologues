@@ -39,52 +39,54 @@ Contents</A>
 <!--Table of Contents-->
 
 <UL CLASS="TofC">
-<LI><A NAME="tex2html105"
+<LI><A NAME="tex2html107"
   HREF="manual-est.html#SECTION00020000000000000000">1 Description</A>
-<LI><A NAME="tex2html106"
+<LI><A NAME="tex2html108"
   HREF="manual-est.html#SECTION00030000000000000000">2 Requirements and installation</A>
 <UL>
-<LI><A NAME="tex2html107"
-  HREF="manual-est.html#SECTION00031000000000000000">2.1 Perl modules</A>
-<LI><A NAME="tex2html108"
-  HREF="manual-est.html#SECTION00032000000000000000">2.2 Required binaries</A>
 <LI><A NAME="tex2html109"
+  HREF="manual-est.html#SECTION00031000000000000000">2.1 Perl modules</A>
+<LI><A NAME="tex2html110"
+  HREF="manual-est.html#SECTION00032000000000000000">2.2 Required binaries</A>
+<LI><A NAME="tex2html111"
   HREF="manual-est.html#SECTION00033000000000000000">2.3 Optional software dependencies</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html110"
+<LI><A NAME="tex2html112"
   HREF="manual-est.html#SECTION00040000000000000000">3 User manual</A>
 <UL>
-<LI><A NAME="tex2html111"
-  HREF="manual-est.html#SECTION00041000000000000000">3.1 Input data</A>
-<LI><A NAME="tex2html112"
-  HREF="manual-est.html#SECTION00042000000000000000">3.2 Program options</A>
 <LI><A NAME="tex2html113"
+  HREF="manual-est.html#SECTION00041000000000000000">3.1 Input data</A>
+<LI><A NAME="tex2html114"
+  HREF="manual-est.html#SECTION00042000000000000000">3.2 Program options</A>
+<LI><A NAME="tex2html115"
   HREF="manual-est.html#SECTION00043000000000000000">3.3 Accompanying scripts</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html114"
+<LI><A NAME="tex2html116"
   HREF="manual-est.html#SECTION00050000000000000000">4 A few examples</A>
 <UL>
-<LI><A NAME="tex2html115"
-  HREF="manual-est.html#SECTION00051000000000000000">4.1 Extracting coding sequences (CDS) from transcripts</A>
-<LI><A NAME="tex2html116"
-  HREF="manual-est.html#SECTION00052000000000000000">4.2 Clustering orthologous transcripts from FASTA files, one per strain</A>
 <LI><A NAME="tex2html117"
-  HREF="manual-est.html#SECTION00053000000000000000">4.3 Producing a nucleotide-based pangenome matrix</A>
+  HREF="manual-est.html#SECTION00051000000000000000">4.1 Extracting coding sequences (CDS) from transcripts</A>
 <LI><A NAME="tex2html118"
-  HREF="manual-est.html#SECTION00054000000000000000">4.4 Estimating protein domain enrichment of some sequence clusters</A>
+  HREF="manual-est.html#SECTION00052000000000000000">4.2 Clustering orthologous transcripts from FASTA files, one per strain</A>
 <LI><A NAME="tex2html119"
-  HREF="manual-est.html#SECTION00055000000000000000">4.5 Making and annotating a non-redundant pangenome matrix</A>
+  HREF="manual-est.html#SECTION00053000000000000000">4.3 Producing a nucleotide-based pangenome matrix</A>
 <LI><A NAME="tex2html120"
+  HREF="manual-est.html#SECTION00054000000000000000">4.4 Estimating protein domain enrichment of some sequence clusters</A>
+<LI><A NAME="tex2html121"
+  HREF="manual-est.html#SECTION00055000000000000000">4.5 Making and annotating a non-redundant pangenome matrix</A>
+<LI><A NAME="tex2html122"
   HREF="manual-est.html#SECTION00056000000000000000">4.6 Annotating a sequence cluster</A>
+<LI><A NAME="tex2html123"
+  HREF="manual-est.html#SECTION00057000000000000000">4.7 Output files explained</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html121"
+<LI><A NAME="tex2html124"
   HREF="manual-est.html#SECTION00060000000000000000">5 A step-by-step protocol with barley assembled transcripts</A>
-<LI><A NAME="tex2html122"
+<LI><A NAME="tex2html125"
   HREF="manual-est.html#SECTION00070000000000000000">6 Frequently asked questions (FAQs)</A>
-<LI><A NAME="tex2html123"
+<LI><A NAME="tex2html126"
   HREF="manual-est.html#SECTION00080000000000000000">7 Credits and references</A>
 </UL>
 <!--End of Table of Contents-->
@@ -126,7 +128,7 @@ although most have been backported.
 
 <P>
 <BR><P></P>
-<DIV ALIGN="CENTER"><A NAME="554"></A>
+<DIV ALIGN="CENTER"><A NAME="579"></A>
 <TABLE>
 <CAPTION><STRONG>Table 1:</STRONG>
 List of novel scripts/features in <SPAN  CLASS="textit">get_homologues-est</SPAN>.</CAPTION>
@@ -1302,9 +1304,10 @@ and can then also be used to calculate enrichment as explained in
 
 <P>
 
-<H2><A NAME="SECTION00052000000000000000">
-<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">2</SPAN> Clustering orthologous transcripts from FASTA files, one per strain</A>
-</H2> 
+<H2><A NAME="SECTION00052000000000000000"></A> <A NAME="clustering"></A>
+<BR>
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">2</SPAN> Clustering orthologous transcripts from FASTA files, one per strain
+</H2>
 
 <P>
 This example takes the sample input folder <code>sample_transcripts_fasta</code>,
@@ -1434,7 +1437,7 @@ are installed, this matrix can be plotted with the following command:
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:ANImat"></A><A NAME="351"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:ANImat"></A><A NAME="352"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 5:</STRONG>
 Heatmap of Average Nucleotide Identity.</CAPTION>
@@ -1486,7 +1489,7 @@ Both matrices can be plotted with script <SPAN  CLASS="textit">plot_pancore_matr
 <BR>
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:pant0"></A><A NAME="fig:pant2"></A><A NAME="372"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:pant0"></A><A NAME="fig:pant2"></A><A NAME="373"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 6:</STRONG>
 Pan-transcriptome size estimates (-t 0, left) and (-t 2,  right) based on random samples of 4 transcriptome sets. 
@@ -1526,7 +1529,7 @@ in PubMed=<A NAME="tex2html59"
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:pangenomet"></A><A NAME="556"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:pangenomet"></A><A NAME="581"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 7:</STRONG>
 
@@ -1561,7 +1564,7 @@ The next Figure show some of this snapshots:
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:snapshot"></A><A NAME="392"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:snapshot"></A><A NAME="393"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 8:</STRONG>
 
@@ -1615,7 +1618,7 @@ are installed, such a pangenome matrix can be used to hierarchically cluster str
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:hclustpange"></A><A NAME="404"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:hclustpange"></A><A NAME="405"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 9:</STRONG>
 Hierarchical grouping of strains based on pangenome matrix.</CAPTION>
@@ -1934,7 +1937,7 @@ CCTGCTGGTGCATTTTTTTACAAACAGTTGGCACAGAGTATTTGTTGCTAATTGTGTTCGTTTTCTTGAA...
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:annotcluster"></A><A NAME="557"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:annotcluster"></A><A NAME="582"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 10:</STRONG>
 Fragment of alignment produced by annotate_cluster.pl, 
@@ -1987,6 +1990,123 @@ other sequences of the clusters and are thus not included in the produced multip
                       ....    &lt;= sequences not included in MSA
                        ..
 </PRE>
+
+<P>
+
+<H2><A NAME="SECTION00057000000000000000">
+<SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">7</SPAN> Output files explained</A>
+</H2>
+
+<P>
+The primary output of <SPAN  CLASS="textit">get_homologues-est</SPAN> is a set of clusters of sequences in FASTA format.
+These are stored in a folder named according to the input data and the choice of parameters.
+For instance, a test run with command
+
+<P>
+<code>./get_homologues-est.pl -d sample_transcripts_fasta/ -m cluster -M -A -t 0</code>
+
+<P>
+will produce an output folder named <code>Esterel_alltaxa_algOMCL_e0_</code>. 
+The contents of this folder are summarized in file <code>Esterel_alltaxa_algOMCL_e0_.cluster_list</code>, 
+which looks like this:
+
+<P>
+<PRE>
+cluster 1_TR2804-c0_g1_i1 size=2 taxa=2 file: 1_TR2804-c0_g1_i1.fna aminofile: void
+: Esterel.trinity.fna.bz2.nucl
+: Franka.trinity.fna.bz2.nucl
+cluster 2_TR1554-c0_g1_i1 size=3 taxa=2 file: 2_TR1554-c0_g1_i1.fna aminofile: void
+: Esterel.trinity.fna.bz2.nucl
+: Esterel.trinity.fna.bz2.nucl
+: flcdnas_Hnijo.fna.gz.nucl
+cluster 4_TR593-c0_g2_i1 size=2 taxa=1 file: 4_TR593-c0_g2_i1.fna aminofile: void
+: Esterel.trinity.fna.bz2.nucl
+: Esterel.trinity.fna.bz2.nucl
+cluster 6_TR3918-c0_g1_i1 size=2 taxa=2 file: 6_TR3918-c0_g1_i1.fna aminofile: void
+: Esterel.trinity.fna.bz2.nucl
+: flcdnas_Hnijo.fna.gz.nucl
+cluster 7_TR1297-c0_g1_i3 size=4 taxa=2 file: 7_TR1297-c0_g1_i3.fna aminofile: void
+: Esterel.trinity.fna.bz2.nucl
+: Esterel.trinity.fna.bz2.nucl
+: Esterel.trinity.fna.bz2.nucl
+: flcdnas_Hnijo.fna.gz.nucl
+</PRE>
+
+<P>
+This excerpt describes the first resulting clusters, the number of sequences in each (size) and their respective genomes/strains (taxa).
+Note that in this case there are only nucleotide clusters; if twin peptides files are provided as input then protein clusters should also be produced.
+Each cluster name name is followed by a list of taxa matching the order of sequences contained in it. For instance, if we check the first
+cluster (<code>Esterel_0taxa_algOMCL_e0_/1_TR2804-c0_g1_i1.fna</code>), it looks like this:
+
+<P>
+<PRE>
+&gt;TR2804|c0_g1_i1 [Esterel.trinity.fna.bz2] | aligned:9590-15261 (15270)
+ATCTACGTATCCGAAACAATCCCGAGCAAAAGCAGAAAGAAACTTTAAAAAAAATGCGGCAACAGGAG...
+&gt;TR3086|c0_g1_i1 [Franka.trinity.fna.bz2] | aligned:1-5672 (5672)
+GCATCTTTCACCAAGACTGTGTCAGTCAATGTTTTGGCACCGACATCGCCTGCCAATACAAT...
+</PRE>
+
+<P>
+Besides clusters, there are other output files that can be produced by <SPAN  CLASS="textit">get_homologues-est</SPAN>;
+let's review some of them:
+
+<P>
+
+<UL>
+<LI><SPAN  CLASS="textbf">Pan-genome composition matrices</SPAN> (<code>pan_genome_algOMCL.tab, core_genome_algOMCL.tab</code>, see section <A HREF="#clustering">4.2</A>)
+contain the results of composition analyses, first described in the 
+<A NAME="tex2html68"
+  HREF="http://eead-csic-compbio.github.io/get_homologues/manual/manual.html#SECTION00058400000000000000">get_homologues</A>
+manual.
+These are tab-separated text files which contain estimates of core and pan-genome growth when input genomes are sampled one by one
+in random order. There is also a relaxed soft-core version (<code>soft-core_genome_algOMCL.tab</code>) 
+which requires a cluster to be supported by 95% of the input strains/genomes in order to be considered.
+Let's see the first five lines of <code>core_genome_algOMCL.tab</code>:
+<PRE>
+g1	g2	g3	g4	
+4668	491	85	67	
+4668	433	308	67	
+4668	2000	344	67	
+4668	491	344	67	
+20010	1749	290	67
+</PRE>
+
+<P>
+This example file contains the results of sampling 20 times (see global variable <code>$NOFSAMPLESREPORT</code>) 
+4 input sequence sets/transcriptomes. Columns <code>g1</code> to <code>g4</code> indicate the current genome size after adding one genome (from first to fourth).
+These files can be used to produce plots with script <SPAN  CLASS="textit">plot_pancore_matrix.pl</SPAN>.
+In fact, each row in these files can be plotted as a replicate/snapshot by invoking option <code>-a</code>, as shown in Figure <A HREF="#fig:snapshot">4.2</A>.
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Average Nucleotide Identity matrices</SPAN> (<code>Esterel_alltaxa_algOMCL_e0_Avg_identity.tab</code>, see section <A HREF="#clustering">4.2</A>) 
+summarize the average identity among nucleotides sequences clustered together among pairs of genomes/strains (taxa). 
+These are tab-separated text files. Note that <code>.fna.*.nucl</code> suffixes have been removed for brevity:
+<PRE>
+genomes	Esterel.trinity	Franka.trinity	Hs_Turkey-19-24.trinity	flcdnas_Hnijo
+Esterel.trinity	100	99.15	98.89	99.30
+Franka.trinity	99.15	100	98.79	99.22
+Hs_Turkey-19-24.trinity	98.89	98.79	100	99.18
+flcdnas_Hnijo	99.30	99.22	99.18	100
+</PRE>
+
+<P>
+</LI>
+<LI><SPAN  CLASS="textbf">Percent Conserved Sequences files</SPAN> (<code>Esterel_0taxa_algOMCL_e0_POCS.tab</code>)
+contain the percentage of conserved sequence clusters among pairs of genomes/strains (taxa). 
+In other words, POCP/POCS values summarize how many clusters of one genome contain also sequences from another.
+These are tab-separated text files. Note that <code>.fna.*.nucl</code> suffixes have been removed for brevity:
+<PRE>
+genomes	Esterel.trinity	Franka.trinity	Hs_Turkey-19-24.trinity	flcdnas_Hnijo
+Esterel.trinity	100	11.15	9.90	17.87
+Franka.trinity	11.15	100	9.60	17.55
+Hs_Turkey-19-24.trinity	9.90	9.60	100	15.77
+flcdnas_Hnijo	17.87	15.55	15.77	100
+</PRE>
+
+<P>
+</LI>
+</UL>
 
 <P>
 
@@ -2136,7 +2256,7 @@ Rscript suppl_scripts/_plot_heatmap.R
 
 <P>
 Please see also the FAQs in
-<A NAME="tex2html71"
+<A NAME="tex2html72"
   HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>. 
 
 <P>
@@ -2151,7 +2271,7 @@ in the figure, which combines data from the original benchmark and new data gene
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:RAMtimev2"></A><A NAME="473"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:RAMtimev2"></A><A NAME="498"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 11:</STRONG>
 Computing time and RAM requirements of the original algorithm (OMCL, measured on 6 sequence sets) 
@@ -2179,7 +2299,7 @@ These three common situations are illustrated in the figure.
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:ESTcaveats"></A><A NAME="482"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:ESTcaveats"></A><A NAME="507"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 12:</STRONG>
 Common problems faced when clustering transcripts/CDS sequences.</CAPTION>
@@ -2256,7 +2376,7 @@ to analyze conserved non-coding sequences among <SPAN  CLASS="textit">Brachypodi
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:CNS"></A><A NAME="497"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:CNS"></A><A NAME="522"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 13:</STRONG>
 Core-genome composition analysis of conserved non-coding sequences (CNS) from 56 Brachypodium distachyon ecotypes and rice.</CAPTION>
@@ -2285,10 +2405,10 @@ Regarding the bootstrapping, you could write some R code (or in any other langua
 in the pangenome matrix with replacement to construct a new, bootstrapped matrix with the same number of columns 
 as the original one. You should generate 100 or 500 of these matrices and then run <code>pars</code> on each one of them. 
 Then run consense to obtain the mjr consensus tree and associated split frequencies (bootstrap support values for each bipartition).
-An easy way of achieving this would be with R's <A NAME="tex2html72"
+An easy way of achieving this would be with R's <A NAME="tex2html73"
   HREF="https://cran.r-project.org/web/packages/boot/boot.pdf">boot</A>
 package 
-(see <A NAME="tex2html73"
+(see <A NAME="tex2html74"
   HREF="http://www.statmethods.net/advstats/bootstrapping.html">example</A>).
 
 <P>
@@ -2304,16 +2424,16 @@ The node labels correspond to the number of bootstrap pseudoreplicates in which 
 <LI>How can I produce a maximum likelihood (ML) tree with bootstrap values from a pangenome matrix?
 
 <P>
-We recommend script <code>estimate_pangenome_trees.sh</code> from the <A NAME="tex2html74"
+We recommend script <code>estimate_pangenome_trees.sh</code> from the <A NAME="tex2html75"
   HREF="https://github.com/vinuesa/get_phylomarkers">GET_PHYLOMARKERS</A>
 pipeline. 
 
 <P>
 Another alternative is to use the <code>.fasta</code> version of the pangenome matrix produced by script <code>./compare_clusters.pl -m </code> ,
 next to the <code>.tab</code> and <code>.phy</code> files. 
-This FASTA file can be analyzed with ML software such as <A NAME="tex2html75"
+This FASTA file can be analyzed with ML software such as <A NAME="tex2html76"
   HREF="http://iqtree.cibiv.univie.ac.at">IQ-TREE</A>
-(PubMed=<A NAME="tex2html76"
+(PubMed=<A NAME="tex2html77"
   HREF="https://www.ncbi.nlm.nih.gov/pubmed/25371430">25371430</A>) both online or in the terminal with a command such as:
 <BR><code>path_to_iqtree -s pangenome_matrix_t0.fasta -st BIN -m TEST -bb 1000 -alrt 1000</code>
 <BR>
@@ -2376,26 +2496,26 @@ Then, in GET_PHYLOMARKERS make sure to set option -f EST.
 
 <P>
 <SPAN  CLASS="textit">get_homologues-est.pl</SPAN> is designed, created and maintained at the 
-<A NAME="tex2html77"
+<A NAME="tex2html78"
   HREF="http://www.eead.csic.es/compbio">Laboratory of Computational Biology</A>
 at 
 Estaci&#243;n Experimental de Aula Dei/CSIC in Zaragoza (Spain) and at the 
-<A NAME="tex2html78"
+<A NAME="tex2html79"
   HREF="http://www.ccg.unam.mx/~vinuesa">Center for Genomic Sciences</A>
 of 
 Universidad Nacional Aut&#243;noma de M&#233;xico (CCG/UNAM).
 
 <P>
 The code was written mostly by Bruno Contreras-Moreira and Pablo Vinuesa, but it also includes 
-code and binaries from <A NAME="tex2html79"
+code and binaries from <A NAME="tex2html80"
   HREF="http://www.orthomcl.org">OrthoMCL v1.4</A>
 (algorithm OMCL, <code>-M</code>),
-<A NAME="tex2html80"
-  HREF="http://blast.ncbi.nlm.nih.gov">NCBI Blast+</A>, <A NAME="tex2html81"
+<A NAME="tex2html81"
+  HREF="http://blast.ncbi.nlm.nih.gov">NCBI Blast+</A>, <A NAME="tex2html82"
   HREF="https://github.com/desmid/mview">MVIEW</A>,
-<A NAME="tex2html82"
+<A NAME="tex2html83"
   HREF="https://github.com/bbuchfink/diamond">DIAMOND</A>
-and <A NAME="tex2html83"
+and <A NAME="tex2html84"
   HREF="http://www.bioperl.org">BioPerl 1.5.2</A>.
 
 <P>
@@ -2501,7 +2621,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>manual-est -no_antialias_text -split 0 -dir manual-est -no_navigation -show_section_numbers</TT>
 <P>
-The translation was initiated on 2018-07-23
+The translation was initiated on 2018-09-03
 <BR><HR>
 <ADDRESS>
 Bruno Contreras-Moreira and Pablo Vinuesa<br><a href="https://github.com/eead-csic-compbio/get_homologues">https://github.com/eead-csic-compbio/get_homologues</a>
