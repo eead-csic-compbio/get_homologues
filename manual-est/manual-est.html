@@ -128,7 +128,7 @@ although most have been backported.
 
 <P>
 <BR><P></P>
-<DIV ALIGN="CENTER"><A NAME="579"></A>
+<DIV ALIGN="CENTER"><A NAME="577"></A>
 <TABLE>
 <CAPTION><STRONG>Table 1:</STRONG>
 List of novel scripts/features in <SPAN  CLASS="textit">get_homologues-est</SPAN>.</CAPTION>
@@ -160,7 +160,7 @@ It can also annotate Pfam domains and find private sequence variants private to 
 </TABLE>
 </DIV>
 
-<A NAME="tab:algs"></A></TD></TR>
+<A NAME="tab:scripts"></A></TD></TR>
 </TABLE>
 </DIV><P></P>
 <BR>
@@ -1489,7 +1489,7 @@ Both matrices can be plotted with script <SPAN  CLASS="textit">plot_pancore_matr
 <BR>
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:pant0"></A><A NAME="fig:pant2"></A><A NAME="373"></A>
+<DIV ALIGN="CENTER"><A NAME="371"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 6:</STRONG>
 Pan-transcriptome size estimates (-t 0, left) and (-t 2,  right) based on random samples of 4 transcriptome sets. 
@@ -1529,7 +1529,7 @@ in PubMed=<A NAME="tex2html59"
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:pangenomet"></A><A NAME="581"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:pangenomet"></A><A NAME="579"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 7:</STRONG>
 
@@ -1564,7 +1564,7 @@ The next Figure show some of this snapshots:
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:snapshot"></A><A NAME="393"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:snapshot"></A><A NAME="391"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 8:</STRONG>
 
@@ -1618,7 +1618,7 @@ are installed, such a pangenome matrix can be used to hierarchically cluster str
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:hclustpange"></A><A NAME="405"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:hclustpange"></A><A NAME="403"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 9:</STRONG>
 Hierarchical grouping of strains based on pangenome matrix.</CAPTION>
@@ -1937,7 +1937,7 @@ CCTGCTGGTGCATTTTTTTACAAACAGTTGGCACAGAGTATTTGTTGCTAATTGTGTTCGTTTTCTTGAA...
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:annotcluster"></A><A NAME="582"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:annotcluster"></A><A NAME="580"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 10:</STRONG>
 Fragment of alignment produced by annotate_cluster.pl, 
@@ -2058,7 +2058,7 @@ contain the results of composition analyses, first described in the
 <A NAME="tex2html68"
   HREF="http://eead-csic-compbio.github.io/get_homologues/manual/manual.html#SECTION00058400000000000000">get_homologues</A>
 manual.
-These are tab-separated text files which contain estimates of core and pan-genome growth when input genomes are sampled one by one
+These tab-separated text files contain estimates of core and pan-genome growth when input genomes are sampled one by one
 in random order. There is also a relaxed soft-core version (<code>soft-core_genome_algOMCL.tab</code>) 
 which requires a cluster to be supported by 95% of the input strains/genomes in order to be considered.
 Let's see the first five lines of <code>core_genome_algOMCL.tab</code>:
@@ -2075,7 +2075,7 @@ g1	g2	g3	g4
 This example file contains the results of sampling 20 times (see global variable <code>$NOFSAMPLESREPORT</code>) 
 4 input sequence sets/transcriptomes. Columns <code>g1</code> to <code>g4</code> indicate the current genome size after adding one genome (from first to fourth).
 These files can be used to produce plots with script <SPAN  CLASS="textit">plot_pancore_matrix.pl</SPAN>.
-In fact, each row in these files can be plotted as a replicate/snapshot by invoking option <code>-a</code>, as shown in Figure <A HREF="#fig:snapshot">4.2</A>.
+In fact, each row in these files can be plotted as a replicate/snapshot by invoking option <code>-a</code>, as shown in Figure <A HREF="#fig:snapshot">8</A>.
 
 <P>
 </LI>
@@ -2271,7 +2271,7 @@ in the figure, which combines data from the original benchmark and new data gene
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:RAMtimev2"></A><A NAME="498"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:RAMtimev2"></A><A NAME="496"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 11:</STRONG>
 Computing time and RAM requirements of the original algorithm (OMCL, measured on 6 sequence sets) 
@@ -2299,7 +2299,7 @@ These three common situations are illustrated in the figure.
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:ESTcaveats"></A><A NAME="507"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:ESTcaveats"></A><A NAME="505"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 12:</STRONG>
 Common problems faced when clustering transcripts/CDS sequences.</CAPTION>
@@ -2376,7 +2376,7 @@ to analyze conserved non-coding sequences among <SPAN  CLASS="textit">Brachypodi
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig:CNS"></A><A NAME="522"></A>
+<DIV ALIGN="CENTER"><A NAME="fig:CNS"></A><A NAME="520"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 13:</STRONG>
 Core-genome composition analysis of conserved non-coding sequences (CNS) from 56 Brachypodium distachyon ecotypes and rice.</CAPTION>

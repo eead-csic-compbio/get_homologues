@@ -110,6 +110,10 @@ $key = q/tab:evcodes/;
 $ref_files{$key} = "$dir".q|manual-est.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/tab:scripts/;
+$ref_files{$key} = "$dir".q|manual-est.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/transcripts2cds/;
 $ref_files{$key} = "$dir".q|manual-est.html|; 
 $noresave{$key} = "$nosave";

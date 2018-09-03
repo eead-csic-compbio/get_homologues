@@ -110,6 +110,10 @@ $key = q/tab:evcodes/;
 $external_labels{$key} = "$URL/" . q|manual-est.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/tab:scripts/;
+$external_labels{$key} = "$URL/" . q|manual-est.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/transcripts2cds/;
 $external_labels{$key} = "$URL/" . q|manual-est.html|; 
 $noresave{$key} = "$nosave";
@@ -146,7 +150,7 @@ $external_latex_labels{$key} = q|2.3|;
 $noresave{$key} = "$nosave";
 
 $key = q/fig:ANImat/;
-$external_latex_labels{$key} = q|4.2|; 
+$external_latex_labels{$key} = q|5|; 
 $noresave{$key} = "$nosave";
 
 $key = q/fig:CNS/;
@@ -162,31 +166,23 @@ $external_latex_labels{$key} = q|11|;
 $noresave{$key} = "$nosave";
 
 $key = q/fig:annotcluster/;
-$external_latex_labels{$key} = q|4.6|; 
+$external_latex_labels{$key} = q|10|; 
 $noresave{$key} = "$nosave";
 
 $key = q/fig:flow/;
-$external_latex_labels{$key} = q|3.2|; 
+$external_latex_labels{$key} = q|1|; 
 $noresave{$key} = "$nosave";
 
 $key = q/fig:hclustpange/;
-$external_latex_labels{$key} = q|4.3|; 
+$external_latex_labels{$key} = q|9|; 
 $noresave{$key} = "$nosave";
 
 $key = q/fig:pangenomet/;
-$external_latex_labels{$key} = q|4.2|; 
-$noresave{$key} = "$nosave";
-
-$key = q/fig:pant0/;
-$external_latex_labels{$key} = q|4.2|; 
-$noresave{$key} = "$nosave";
-
-$key = q/fig:pant2/;
-$external_latex_labels{$key} = q|4.2|; 
+$external_latex_labels{$key} = q|7|; 
 $noresave{$key} = "$nosave";
 
 $key = q/fig:snapshot/;
-$external_latex_labels{$key} = q|4.2|; 
+$external_latex_labels{$key} = q|8|; 
 $noresave{$key} = "$nosave";
 
 $key = q/input/;
@@ -223,6 +219,10 @@ $noresave{$key} = "$nosave";
 
 $key = q/tab:algs/;
 $external_latex_labels{$key} = q|2|; 
+$noresave{$key} = "$nosave";
+
+$key = q/tab:scripts/;
+$external_latex_labels{$key} = q|1|; 
 $noresave{$key} = "$nosave";
 
 $key = q/transcripts2cds/;
