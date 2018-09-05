@@ -16,6 +16,7 @@
 $|=1;
 
 use strict;
+use warnings;
 use Getopt::Std;
 use FileHandle;
 use File::Temp qw/tempfile/;

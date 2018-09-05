@@ -2,9 +2,10 @@
 
 # Script that checks/compiles software required by get_homologues[-est] and checks dependencies
 # for first-time users.
-# last checked Feb2018
+# last checked Sep2018
 
 use strict;
+use warnings;
 use Cwd;
 use FindBin '$Bin';
 use lib "$Bin/lib";

@@ -1,10 +1,11 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 
-# May2013 Bruno Contreras, Pablo Vinuesa, updated Jan2016
+# May2013 Bruno Contreras, Pablo Vinuesa, updated Sep2018
 # Script to take advantage of multicore machines when running hmmer3,
 # which seems to scale up to the number of physical cores in our tests.
 
 use strict;
+use warnings;
 use Benchmark;
 use File::Temp qw/tempfile/;
 use FindBin '$Bin';

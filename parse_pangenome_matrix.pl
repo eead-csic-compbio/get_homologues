@@ -1,6 +1,6 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 
-# 2017 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2017-8 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -15,6 +15,7 @@
 $|=1;
 
 use strict;
+use warnings;
 use Getopt::Std;
 use File::Basename;
 use FindBin '$Bin';

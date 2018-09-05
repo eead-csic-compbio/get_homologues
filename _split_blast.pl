@@ -1,11 +1,12 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 
-# Mar2013 Bruno Contreras
+# 2013-8 Bruno Contreras
 # Script to take advantage of multicore machines when running BLAST,
 # which seems to scale up to the number of physical cores in our tests.
 # Supports old BLAST (blastall) and new BLAST+ binaries.
 
 use strict;
+use warnings;
 use Benchmark;
 use File::Temp qw/tempfile/;
 use FindBin '$Bin';

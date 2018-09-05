@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# 2015-17 Bruno Contreras-Moreira (1)
+# 2015-18 Bruno Contreras-Moreira (1)
 # 1: http://www.eead.csic.es/compbio (Laboratory of Computational Biology, EEAD/CSIC, Spain)
 
 # This script can be used to extract coding sequences encoded in input transcripts
@@ -12,6 +12,7 @@
 $|=1;
 
 use strict;
+use warnings;
 use Getopt::Std;
 use File::Basename;
 use Cwd;

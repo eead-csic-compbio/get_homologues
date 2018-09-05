@@ -13,6 +13,7 @@
 $|=1;
 
 use strict;
+use warnings;
 use Getopt::Std;
 use Fcntl qw(:flock);
 use File::Temp qw(tempfile);

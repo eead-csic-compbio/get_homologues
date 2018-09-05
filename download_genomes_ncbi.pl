@@ -1,5 +1,6 @@
-#!/usr/bin/perl -w
-# 2013-7 Bruno Contreras-Moreira, Pablo Vinuesa
+#!/usr/bin/env perl
+
+# 2013-8 Bruno Contreras-Moreira, Pablo Vinuesa
 # download_genomes_ncbi.pl
 
 # Attempts to download a list of genomes from the NCBI.
@@ -8,6 +9,7 @@
 # Uses wget and zcat binaries, which should be installed on most systems.
 
 use strict;
+use warnings;
 use File::Fetch;
 
 my $VERSION  = 2.1;
@@ -35,7 +37,7 @@ my ($genome,$dir,$n_of_files,$single_file,$n_of_downloaded_files,$n_of_wanted_fi
 
 if(!$ARGV[0])
 {
-  die "# usage: $0 v.$VERSION: <genome_list.txt>\n\n".
+  die "# v.$VERSION usage: $0 <genome_list.txt>\n\n".
     "File <genome_list.txt> must contain names of genomes to be downloaded, one per row, as explained in the manual.\n".
     "Only the first column is required. Example:\n\n".
     "NC_010159                   Yersinia_pestis_Angola      # known accession\n".

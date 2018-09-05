@@ -266,3 +266,4 @@
 23072018: updated Grid Engine instructions in manuals
 28082018: bug fixed: get_homologues-pl -X now removes previous DIAMOND results of one vs others when new genomes are added (thanks alexweisberg)
 03092018: added section 'Output files explained' to EST manual (thanks Lior Glick)
+05092018: updated shebangs of some scripts and added use warnings instead of -w (thanks morgansobol)

@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 
 # 2013-8 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Laboratory of Computational Biology, EEAD-CSIC/Fundacion ARAID, Spain)
@@ -16,6 +16,7 @@
 $|=1;
 
 use strict;
+use warnings;
 use Getopt::Std;
 use File::Basename;
 use File::Spec;

@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 
 # 2012 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)
@@ -10,6 +10,7 @@
 $|=1;
 
 use strict;
+use warnings;
 use File::Basename;
 use Getopt::Std;
 use FindBin '$Bin';
