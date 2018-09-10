@@ -1120,7 +1120,8 @@ for($taxon=0;$taxon<scalar(@taxa);$taxon++)
   $proteome_size = $psize{$taxa[$taxon]};
 
   # update minimal proteome size
-  if($min_proteome_size == -1 || $proteome_size < $min_proteome_size)
+  if((defined($min_proteome_size) && $min_proteome_size== -1) || 
+    (defined($min_proteome_size) && defined($proteome_size) && $proteome_size < $min_proteome_size))
   {
     $min_proteome_size = $proteome_size;
     $smallest_proteome_name = $taxa[$taxon];
@@ -2645,7 +2646,7 @@ GENE: foreach $gene (sort {$a<=>$b} (keys(%orthologues)))
   # 4.3.1) print reference gene/protein
   push(@taxon_names,$gindex2[$gene]); # global set in phyTools:constructAllFasta
   $header = $sequence_data[$gene];
-  if(!$saveRAM)
+  if(!$saveRAM && defined($aligned_coords{$gene}{'first'}))
   {
     chomp($header);
     $header .= " | aligned:$aligned_coords{$gene}{'first'}-$aligned_coords{$gene}{'last'} ".
@@ -3203,11 +3204,13 @@ sub split_Pfam_clusters
     # check number of Pfam domain strings in this cluster
     my (%Pfam_strings);
 
-    $pfam = "$pfam_hash{$cluster}" || '';
+    if(defined($pfam_hash{$cluster})){ $pfam = "$pfam_hash{$cluster}" }
+    else{ $pfam = '' }
     push(@{$Pfam_strings{$pfam}},$cluster);
     foreach $orth (@{$ref_hash_orths->{$cluster}})
     {
-      $pfam = "$pfam_hash{$orth}" || '';
+      if(defined($pfam_hash{$orth})){ $pfam = "$pfam_hash{$orth}" }
+      else{ $pfam = '' }
       push(@{$Pfam_strings{$pfam}},$orth);
     } #print "<".$#{$ref_hash_orths->{$cluster}}." ".scalar(@{$ref_hash_orths->{$cluster}})."\n";
 
