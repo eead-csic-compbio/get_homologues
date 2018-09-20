@@ -16,7 +16,7 @@ use transcripts;
 
 my $WGETEXE = 'wget'; # add path if required, likely not pre-installed in MacOS
 my $BINTGZFILE = 'bin.tgz';
-my $BINURL = "https://github.com/eead-csic-compbio/get_homologues/releases/download/v3/$BINTGZFILE";
+my $BINURL = "https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.1/$BINTGZFILE";
 
 my $PFAMSERVERURL   = 'ftp.ebi.ac.uk';
 my $PFAMFOLDER      = 'pub/databases/Pfam/current_release/';

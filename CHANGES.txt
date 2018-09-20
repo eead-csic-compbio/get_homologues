@@ -269,3 +269,5 @@
 05092018: updated shebangs of some scripts and added use warnings instead of -w (thanks morgansobol)
 10092018: aligned_coords checked before being added to FASTA headers @ get_homologues* (use Warnings)
 10092018: pfam_hash keys checked before being used (use Warnings)
+20092018: added #include <unistd.h> to bin/COGsoft/COGreadblast/bc.h so that it compiles ok (thanks diaz13)
+20092018: updated bin.tgz and install.pl
