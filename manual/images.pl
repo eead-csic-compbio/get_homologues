@@ -1,4 +1,4 @@
-# LaTeX2HTML 2018.2 (Released May 16, 2018)
+# LaTeX2HTML 2018.3 (Released July 19, 2018)
 # Associate images original text with physical files.
 
 

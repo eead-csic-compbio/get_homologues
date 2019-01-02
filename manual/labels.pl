@@ -1,4 +1,4 @@
-# LaTeX2HTML 2018.2 (Released May 16, 2018)
+# LaTeX2HTML 2018.3 (Released July 19, 2018)
 # Associate labels original text with physical files.
 
 
@@ -205,7 +205,7 @@ $noresave{$key} = "$nosave";
 1;
 
 
-# LaTeX2HTML 2018.2 (Released May 16, 2018)
+# LaTeX2HTML 2018.3 (Released July 19, 2018)
 # labels from external_latex_labels array.
 
 
