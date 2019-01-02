@@ -271,3 +271,4 @@
 10092018: pfam_hash keys checked before being used (use Warnings)
 20092018: added #include <unistd.h> to bin/COGsoft/COGreadblast/bc.h so that it compiles ok (thanks diaz13)
 20092018: updated bin.tgz and install.pl
+02012019: updated BLAST+ to ncbi-blast-2.8.1+
