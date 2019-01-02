@@ -21,6 +21,7 @@ Current list of ideas to improve/update GET_HOMOLOGUES:
 * Script to produce VCF/MFA after parsing sorted DNA clusters 
 
 * Add alternatives to NCBI blastn: minimap2 simulating bitscore & E-value
+  Local tests show minimap alignments are shorter: https://bioinfoperl.blogspot.com/2018/08/minimap2-vs-blastn.html
 
 * Add taxon names to tmp/blast.bpo file 
 
