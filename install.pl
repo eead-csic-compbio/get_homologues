@@ -59,7 +59,7 @@ print "\n### 1) checking required parts: \n\n";
 
 # check whether bin dir is empty
 print "## checking whether source and binaries of dependencies are in place\n";
-if(! -e $ENV{'MARFIL'}.'/bin/COGsoft/')
+if(! -e $ENV{'MARFIL'}.'/bin/COGsoft/' || !-e $ENV{'EXE_BLASTP'})
 {
   my $userword = '';
   if(!$noDBs)
