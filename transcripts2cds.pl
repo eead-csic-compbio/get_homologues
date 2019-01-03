@@ -33,7 +33,7 @@ my @FEATURES2CHECK = ('EXE_BLASTX_EST','EXE_FORMATDB_EST','EXE_TRANSDECOD_EST','
 
 my ($n_of_cpus,$INP_minORFlength) = ($BLASTX_NOCPU,$MINORFLENGTH);
 my ($evalue_cutoff,$INP_blastdb) = ($MAXBLASTXEVALUE,$BLASTXDB);
-my ($INP_plus_strand,$INP_gencode,$INP_diamond,$input_FASTA_file,$input_reference_FASTA_file) = (0,1,0);
+my ($INP_plus_strand,$INP_gencode,$INP_diamond,$input_FASTA_file,$input_reference_FASTA_file) = (0,1,0,'','');
 my ($seq_transcod,$seq_transcod_prot,$seq_blastx,$seq_cds,$seq_prot,$besthit);
 my ($ref_blastxseqs_cds,$ref_blastxhits,$ref_transcodseqs_cds,$ref_transcodseqs_prot);
 my ($ref_gmap_cds,$ref_gmap_besthit,$gmap_besthit,$intronless_infile);
