@@ -272,3 +272,5 @@
 20092018: added #include <unistd.h> to bin/COGsoft/COGreadblast/bc.h so that it compiles ok (thanks diaz13)
 20092018: updated bin.tgz and install.pl
 02012019: updated BLAST+ to ncbi-blast-2.8.1+
+03012019: fixed argument print out in transcripts2cds[CPP].pl
+03012019: updated install.pl so that it downloads bin.tgz if blast is missing (likely to blast being updated)
