@@ -1,5 +1,8 @@
 Current list of ideas to improve/update GET_HOMOLOGUES:
 
+* add test to count number of seqs in clusters and compare it to initial
+  This might confuse users as will only make sense with -t 0, which is not default
+
 * Speed-up/paralellize marfil_homology::blast_parse. This can be done by:
   a) port sub to C++
   b) do parsing in parallel splitting (sorted) infile in chunks without braking consecutive HSPs
