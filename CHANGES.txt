@@ -274,3 +274,6 @@
 02012019: updated BLAST+ to ncbi-blast-2.8.1+
 03012019: fixed argument print out in transcripts2cds[CPP].pl
 03012019: updated install.pl so that it downloads bin.tgz if blast is missing (likely to blast being updated)
+04032019: fixed warning in check_BDBHs.pl when doing -m local .faa analyses
+05032019: improved marfil_homology::sort_blast_results to minimize sort -m temp files
+05032019: updated TODO.txt
