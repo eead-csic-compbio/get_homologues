@@ -2,7 +2,7 @@ package marfil_homology;
 
 # version 2.0
 
-# Code library created by Bruno Contreras-Moreira and Pablo Vinuesa (2006-2016)
+# Code library created by Bruno Contreras-Moreira and Pablo Vinuesa (2006-2019)
 # mainly for get_homologues.pl and get_homologues-est.pl
 
 # Contains code originally part of the following software:
@@ -730,13 +730,16 @@ sub pfam_parse
 # 3. boolean flag stating whether BLAST outfiles are to be compressed
 # 4. array of sorted blast output filenames
 # uses globals: $TMP_DIR , $SORTLIMITRAM, $SORTBIN, $GZIPBIN
-# Updated Mar2018
+# Updated Mar2019
 sub sort_blast_results
 {
   my ($sorted_outfile,$keep_secondary_hsps,$compress_blast,@blast_outfiles) = @_;
 
-  my ($file,$size,$files,$root,$cleantmpfile,$tmpfile,$sortedtmpfile);
+  my ($file,$size,$files,$n_of_files,$root,$cleantmpfile,$tmpfile,$sortedtmpfile);
   my (@tmpfiles,@roots,%cluster);
+
+  # check max file descriptors in OS
+  my $max_os_files = qx{echo `ulimit -n`};
 
   if(-s $sorted_outfile){ unlink($sorted_outfile) }
 
@@ -807,11 +810,12 @@ sub sort_blast_results
 
   foreach $root (@roots)
   {
-    ($files,$size) = ('',0);
+    ($files,$size,$n_of_files) = ('',0,0);
     foreach $file (@{$cluster{$root}})
     {
       $size += (-s $file) / (1024*1024);
       $files .= " $file";
+		$n_of_files++;
     }
     printf("# sorting %s results (%1.2gMB)\n",$root,$size);
 
@@ -826,7 +830,11 @@ sub sort_blast_results
    
     #hits are sorted by query ID and E-value
     #hits with same E-value and diff bitscore will be taken care later 
-    system("$SORTBIN --temporary-directory=$TMP_DIR -s -k1g -k11g -m $files > $sortedtmpfile"); # uses blast ordered results
+    #asumes BLAST results are ordered
+	 #tries to read & merge all individual files at once to avoid temp files
+    #https://stackoverflow.com/questions/6598573/how-to-merge-sorted-files-without-using-a-temporary-file
+    if($n_of_files > $max_os_files){ $n_of_files = $max_os_files }
+    system("$SORTBIN --temporary-directory=$TMP_DIR --batch-size=$n_of_files -s -k1g -k11g -m $files > $sortedtmpfile");
     if(!-s $sortedtmpfile) #shell sort failed
     {
       merge_BLAST_files($sortedtmpfile,@{$cluster{$root}});
