@@ -91,7 +91,7 @@ if(defined($opts{'c'}) && defined($opts{'x'}))
     next if(/^#/);
     $exp_clusters{(split)[0]} = 1; #9006_TR29928-c0_g1_i1.fna
   }
-  closedir(CLUSTERLIST);
+  close(CLUSTERLIST);
   
   die "# $0 : cannot parse 'experiment' clusters in $INP_clusterlist,\n".
     "# make sure you set -n with nucleotide clusters\n" if(!keys(%exp_clusters));
@@ -99,6 +99,7 @@ if(defined($opts{'c'}) && defined($opts{'x'}))
 else{ die "# EXIT : need -c path and -x file\n"; }
 
 if($opts{'r'}){ $reference_proteome_string = $opts{'r'}; }
+else{ $reference_proteome_string = '' }
 
 if($opts{'t'})
 { 
@@ -311,7 +312,7 @@ printf("# total control    sequence ids = %d\n\n",scalar(@control_ids));
 
 foreach $full_id (keys(%cluster_full_ids))
 {
-  print "# cannot find id of: $full_id\n" if($cluster_full_ids{$full_id} == 1 && $VERBOSE);
+  print "# cannot find id of: $full_id\n" if(!defined($cluster_full_ids{$full_id}) && $VERBOSE);
 }
 
 

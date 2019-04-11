@@ -277,3 +277,4 @@
 04032019: fixed warning in check_BDBHs.pl when doing -m local .faa analyses
 05032019: improved marfil_homology::sort_blast_results to minimize sort -m temp files
 05032019: updated TODO.txt
+11042019: fixed two bugs in pfam_enrich.pl that caused runtime warnings 
