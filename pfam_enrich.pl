@@ -367,6 +367,7 @@ if($INP_fasta)
 my ($fh1,$filename1) = tempfile(SUFFIX => '.dat', UNLINK => 1); # experiment (query in R)
 my ($fh2,$filename2) = tempfile(SUFFIX => '.dat', UNLINK => 1); # control (reference in R)
 my ($fh3,$filename3) = tempfile(SUFFIX => '.dat', UNLINK => 1); # enrichment results
+my ($fh4,$filename4) = tempfile(SUFFIX => '.dat', UNLINK => 1); # sort output
 
 foreach $pfam (sort (keys(%$ref_pfam1)))
 {
@@ -470,8 +471,13 @@ print "# multi-testing p-value adjustment: $ADJUST\n";
 print "# adjusted p-value threshold: $INP_pcutoff\n\n";
 printf("# total annotated domains: experiment=%d control=%d\n\n",$total_exp,$total_ctr);
 
+system("$SORTBIN -n -k3,3 -k2,2 $filename3 > $filename4");
+if($? != 0)
+{
+  die "# ERROR: failed running $SORTBIN -n -k3,3 -k2,2 $filename3 > $filename4 \n";
+}
 
-open(ENRICH,"$SORTBIN -n -k3,3 -k2,2 $filename3 |") || die "# $0 : cannot read enrichment results file $filename3\n";
+open(ENRICH,"<",$filename4) || die "# $0 : cannot read enrichment results file $filename4\n";
 print "#PfamID\tcounts(exp)\tcounts(ctr)\tfreq(exp)\tfreq(ctr)\tp-value\tp-value(adj)\tdescription\n";
 while(<ENRICH>)
 {
