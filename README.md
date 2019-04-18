@@ -3,11 +3,15 @@
 This software is maintained by Bruno Contreras-Moreira (bcontreras _at_ eead.csic.es) and Pablo Vinuesa (vinuesa _at_ ccg.unam.mx). 
 The original version, **suitable for bacterial genomes**, was described in:
 
+![**Legend.** Main features of GET_HOMOLOGUES.](./pics/summary.jpg)
+
 [Contreras-Moreira B, Vinuesa P (2013) Appl. Environ. Microbiol. 79:7696-7701](http://aem.asm.org/content/79/24/7696.long)
 
 [Vinuesa P, Contreras-Moreira B (2015) Methods in Molecular Biology Volume 1231, 203-232](http://link.springer.com/protocol/10.1007%2F978-1-4939-1720-4_14)
 
 The software was then adapted to the study of **intra-specific eukaryotic pan-genomes** resulting in script GET_HOMOLOGUES-EST, described in:
+
+![**Legend.** Flowchart and features of GET_HOMOLOGUES-EST.](./pics/EST.jpg)
 
 [Contreras-Moreira B, Cantalapiedra CP et al (2017) Front. Plant Sci. 10.3389/fpls.2017.00184](http://journal.frontiersin.org/article/10.3389/fpls.2017.00184/full)
 
