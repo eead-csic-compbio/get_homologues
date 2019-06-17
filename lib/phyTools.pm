@@ -1,5 +1,5 @@
 # Bruno Contreras-Moreira, Pablo Vinuesa
-# 2005-18 CCG/UNAM, Mexico, EEAD/CSIC, Zaragoza, Spain
+# 2005-19 CCG/UNAM, Mexico, EEAD/CSIC, Zaragoza, Spain
 # This is a collection of subroutines used in our projects,
 # including primers4clades and get_homologues.pl
 
@@ -425,9 +425,9 @@ sub read_FASTA_sequence
 # http://bioinfoperl.blogspot.com/2011/02/estructuras-de-datos-basicas-en-perl.html
 sub read_FASTA_file_array
 {
-	# in FASTA format
-	# returns a reference to a 2D array for 4 secondary keys: NAME,SEQ,IDENTICALS,NUMBER_IDENTICALS
-	# first valid index (first sequence) is '0'
+  # in FASTA format
+  # returns a reference to a 2D array for 4 secondary keys: NAME,SEQ,IDENTICALS,NUMBER_IDENTICALS
+  # first valid index (first sequence) is '0'
   my ( $infile, $skipamino, $skipidentical ) = @_;
   my (@FASTA,$name,$seq,$n_of_sequences,$magic);
   $n_of_sequences = -1;
@@ -636,7 +636,6 @@ sub add_labels2newick_tree
   return join(";\n",split(/;/,$fully_labelled_tree));
 }
 
-# Updated Aug2017
 sub extract_intergenic_from_genbank
 {
   # takes a genbank input file and creates a FNA file containing all intergenic sequences found
@@ -690,9 +689,9 @@ sub extract_intergenic_from_genbank
         if($f->has_tag('protein_id'))
         {
           $gi = "ID:".join(',',sort $f->each_tag_value('protein_id')); #print "$gi\n";
-        } 
-  
-        if($f->has_tag('locus_tag') && $gi eq '')
+        }
+
+        if($gi eq '' && $f->has_tag('locus_tag'))
         {
           $gi = "ID:".join(',',sort $f->each_tag_value('locus_tag'));
         }
@@ -764,7 +763,6 @@ sub extract_intergenic_from_genbank
   return $n_of_intergenic;
 }
 
-# Updated Aug 2017
 sub extract_features_from_genbank
 {
   # takes a genbank input file and creates a single FASTA nucleotide file containing all features
@@ -833,7 +831,7 @@ sub extract_features_from_genbank
           chop $taxon;
         }
       }
-      elsif($f->has_tag('strain') && $strain eq '')
+      elsif($strain eq '' && $f->has_tag('strain'))
       {
         $strain = join(',',sort $f->each_tag_value('strain'));
       }
@@ -887,11 +885,11 @@ sub extract_features_from_genbank
           $featseq = $coords->{'seq'};
         }
 
-        if($f->has_tag('locus_tag') && $gi eq '')
+        if($gi eq '' && $f->has_tag('locus_tag'))
         {
           $gi = "ID:".join(',',sort $f->each_tag_value('locus_tag'));
         }
-        elsif($f->has_tag('db_xref') && $gi eq '')
+        elsif($gi eq '' && $f->has_tag('db_xref'))
         {
           $gi = "ID:".join(',',sort $f->each_tag_value('db_xref'));
         }
@@ -907,8 +905,10 @@ sub extract_features_from_genbank
           if(length($genename)>20){ $genename = substr($genename,0,20).'..' } # avoid long product names
           $genename =~ s/\s+/_/g;
         }
+
         next if(!$coords->{'seq'});
-        $start = $f->start(); # 1..n naturals
+        
+		  $start = $f->start(); # 1..n naturals
         $end   = $f->end();
         $strand = $f->location()->strand();
         if(!$gi) # in cases such as nonCDS items in Smelilloti Jul2012
@@ -929,6 +929,7 @@ sub extract_features_from_genbank
       }
     }
   }
+
   if($out_feature_file)
   {
     close(FNA);
@@ -939,7 +940,6 @@ sub extract_features_from_genbank
   return \%already_seen;
 }
 
-# Updated Aug2017
 sub extract_CDSs_from_genbank
 {
  # takes a genbank input file and creates two FASTA files containing all CDSs in
@@ -984,12 +984,12 @@ sub extract_CDSs_from_genbank
       if($f->primary_tag() =~ /source/)
       {
         $source = $f->end();
-        if($f->has_tag('organism') && $taxon eq '')
+        if($taxon eq '' && $f->has_tag('organism'))
         {
           foreach my $element ($f->each_tag_value('organism')){ $taxon .= "[$element],"; }
           chop $taxon;
         }
-        if($f->has_tag('strain') && $strain eq '')
+        if($strain eq '' && $f->has_tag('strain'))
         {
           $strain = join(',',sort $f->each_tag_value('strain'));
         }
@@ -1132,7 +1132,6 @@ sub extract_CDSs_from_genbank
   return $n_of_CDS;
 }
 
-# Updated Aug2017
 # To to be used when extract_CDSs fails, in cases such as FN869568.gbk
 sub extract_genes_from_genbank
 {
@@ -1174,12 +1173,12 @@ sub extract_genes_from_genbank
       if($f->primary_tag() =~ /source/)
       {
         $source = $f->end();
-        if($f->has_tag('organism') && $taxon eq '')
+        if($taxon eq '' && $f->has_tag('organism'))
         {
           foreach my $element ($f->each_tag_value('organism')){ $taxon .= "[$element],"; }
           chop $taxon;
         }
-        if($f->has_tag('strain') && $strain eq '')
+        if($strain eq '' && $f->has_tag('strain'))
         {
           $strain = join(',',sort $f->each_tag_value('strain'));
         }

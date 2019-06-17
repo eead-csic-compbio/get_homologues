@@ -279,3 +279,4 @@
 05032019: updated TODO.txt
 11042019: fixed two bugs in pfam_enrich.pl that caused runtime warnings 
 12042019: sort at the end of pfam_enrich.pl saved to file to avoid pipe errors
+17062019: optimized if in subs parsing gbk files
