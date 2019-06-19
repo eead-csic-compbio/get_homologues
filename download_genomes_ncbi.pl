@@ -1,25 +1,26 @@
 #!/usr/bin/env perl
 
-# 2013-8 Bruno Contreras-Moreira, Pablo Vinuesa
+# 2013-9 Bruno Contreras-Moreira, Pablo Vinuesa
 # download_genomes_ncbi.pl
 
 # Attempts to download a list of genomes from the NCBI.
 # Queries 1) e-utils, 2) the FTP site and 3) the WGS repository.
 
-# Uses wget and zcat binaries, which should be installed on most systems.
+# Uses zcat, which should be installed on most systems
 
 use strict;
 use warnings;
 use File::Fetch;
+use Net::FTP;
 
-my $VERSION  = 2.1;
+my $VERSION  = 2.2;
 
 # http://www.ncbi.nlm.nih.gov/books/NBK25500/
 my $EFETCHEXE = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&rettype=gbwithparts&retmode=text&id=';
 my $NCBIHOST  = 'ftp://ftp.ncbi.nlm.nih.gov';
 my $WGSURL    = 'ftp://ftp.ncbi.nlm.nih.gov/sra/wgs_aux/'; 
 
-my $COMPLETE_GENOMES_DIR = '/genomes/all/'; # includes refseq GCA & GCF folders Mar2017
+my $COMPLETE_GENOMES_DIR = '/genomes/all/'; # both GenBank GCA & RefSeq GCF folders as of Jun2019
 my $LOCAL_GENOMES_DIR    = './';            # where to store downloaded files
 
 my $EXTENSION    = 'gbk';
@@ -59,7 +60,7 @@ while(<LIST>)
   $wanted_genome{$genome}{'appears'}++;
   if($wanted_genome{$genome}{'appears'} > 1)
   {
-    die "# $0: error, genome $genome seems to appear twice in input list\n";
+    die "# ERROR: genome $genome seems to appear twice in input list\n";
   }
   elsif($newname){ $new_name{$genome} = $newname }
   $n_of_wanted_files++;
@@ -93,15 +94,42 @@ foreach $dir (sort {$wanted_genome{$a}{'order'}<=>$wanted_genome{$b}{'order'}} k
   
   eval
   {
+    my $fulldir = $dir;
+    my $path = (split(/\./,$dir))[0];
+    $path =~ s/_//;
+    $path =~ s/...\K(?=.)/\//sg;
+
+    # $dir contains only GC[AF] accession, not full assembly name ie GCF_001590795.1_ASM159079v1
+    if($dir !~ /\.\d+_/){
+
+      my $ftphost = $NCBIHOST;
+      $ftphost =~ s/ftp:\/\///;
+
+      if(my $ftp = Net::FTP->new($ftphost,Debug =>0,Timeout=>60))
+      {
+        $ftp->login("anonymous",'-anonymous@') ||
+          die "# ERROR: cannot login ", $ftp->message();
+        $ftp->cwd("$COMPLETE_GENOMES_DIR$path") ||
+          die "# ERROR: cannot change working directory ", $ftp->message();
+        my @remote_files = $ftp->ls() || die "# ERROR: cannot list contents ", $ftp->message();
+        $ftp->quit();
+
+        foreach my $folder (@remote_files){
+          if($folder->[0] =~ /$dir/){
+            $fulldir = $folder->[0];
+            last;
+          }
+        }
+      }
+      else { warn "# ERROR: cannot connect to $ftphost\n" }
+    }
+
     #GCA_000016445.1_ASM1644v1_genomic.gbff.gz
-    $file = "$dir\_genomic.$WGSEXTENSION.gz"; 
+    $file = "$fulldir\_genomic.$WGSEXTENSION.gz"; 
     if(!-s $file)
     {
-      my ($ff,$content,$path);
-      $path = (split(/\./,$dir))[0];
-      $path =~ s/_//;
-      $path =~ s/...\K(?=.)/\//sg;
-      $ff = File::Fetch->new(uri =>"$NCBIHOST$COMPLETE_GENOMES_DIR$path/$dir/$file");   
+      my ($ff,$content);
+      $ff = File::Fetch->new(uri =>"$NCBIHOST$COMPLETE_GENOMES_DIR$path/$fulldir/$file");   
       if($ff->fetch( to => \$content ))
       {
         open(GBKFILE,">$file") || die "# cannot append to $file\n";
@@ -179,7 +207,8 @@ foreach $dir (sort {$wanted_genome{$a}{'order'}<=>$wanted_genome{$b}{'order'}} k
       binmode(GBKFILE);
       print GBKFILE $content;
       close(GBKFILE);
-    }else { warn "# cannot fetch $WGSURL$path$file\n" }
+    }
+	 else { warn "# cannot fetch $WGSURL$path$file\n" }
     
     if(!-s $file)
     {
