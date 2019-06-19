@@ -1,6 +1,6 @@
 #!/usr/bin/env perl 
 
-# 2018 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2019 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei-CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -935,7 +935,7 @@ if($inputDIR)
       $file_ressize += length($fasta_ref->[$seq][SEQ]);
       if(!$onlyblast)
       {
-        $sequence_data[$n_of_sequences] = $fasta_ref->[$seq][NAME];
+        $sequence_data[$n_of_sequences] = $fasta_ref->[$seq][NAME]; 
         $sequence_prot[$n_of_sequences] = $fasta_ref->[$seq][SEQ]; # with -a actually stores dna
         if($fasta_ref->[$seq][SEQ] eq '')
         {

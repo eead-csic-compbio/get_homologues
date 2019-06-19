@@ -281,3 +281,5 @@
 12042019: sort at the end of pfam_enrich.pl saved to file to avoid pipe errors
 17062019: optimized if in subs parsing gbk files
 19062019: download_genomes_ncbi.pl now can handle GCF_000261785.1 accessions, which are internally converted to GCA_000261785.1_05623
+19062019: extract_*_genbank subs now add input filename to FASTA header to disambiguate sequences with non-unique ids
+19062019: extract_gene_name adapted to new header format
