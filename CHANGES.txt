@@ -283,3 +283,5 @@
 19062019: download_genomes_ncbi.pl now can handle GCF_000261785.1 accessions, which are internally converted to GCA_000261785.1_05623
 19062019: extract_*_genbank subs now add input filename to FASTA header to disambiguate sequences with non-unique ids
 19062019: extract_gene_name adapted to new header format
+05082019: fixed bug in extract_gene_from_genbank affecting files with CDS features without /translation, thanks Christian Sanchez
+05082019: updated release.pl
