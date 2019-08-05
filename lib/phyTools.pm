@@ -1134,12 +1134,13 @@ sub extract_CDSs_from_genbank
   return $n_of_CDS;
 }
 
-# To to be used when extract_CDSs fails, in cases such as FN869568.gbk
+# To to be used when extract_CDSs fails
 sub extract_genes_from_genbank
 {
-  # takes a genbank input file and creates two FASTA files containing all genes/CDSs in
-  # aminoacid and dna sequences, respectively
+  # takes a genbank input file and creates two FASTA files containing all genes in
+  # dna and translated aminoacid sequences
   # returns number of genes found
+
   my ($infile,$out_prot_file,$out_dna_file,$verbose) = @_;
   my ($gene,$gi,$gbaccession,$header,$genelength,$CDScoords,$CDSseq,$rev);
   my ($start,$end,$strand,$source,$protsequence,$magic,$in,%already_seen,%genes);
@@ -1213,10 +1214,9 @@ sub extract_genes_from_genbank
 
         # translate CDS sequence to protein
         $seqobj->seq($CDSseq);
-        $protsequence = $seqobj->translate()->seq();chop($protsequence); # faster
-        #$protsequence = translate_dna2prot($CDScoords->{'seq'}); chop($protsequence);
-        #print "$CDScoords->{'seq'}\n$protsequence\n";
-        # check internal stop codons
+        $protsequence = $seqobj->translate()->seq();chop($protsequence); 
+        
+	# check internal stop codons
         next if($protsequence =~ /\*/);
 
         if($gi eq '' && $f->has_tag('locus_tag'))
@@ -1262,16 +1262,15 @@ sub extract_genes_from_genbank
         $header .= "$contig->[$g+1][0]($contig->[$g+1][2])|";
       }
       else{ $header .= "end()|" }
-      if($contig->[$g-1][1] || $contig->[$g+1][1])
+        
+      if($g==0){ $header .= "neighbour_genes:start(),"; }
+      else{ $header .= "neighbour_genes:$contig->[$g-1][1],"; }
+      if($g<$contig_n_of_genes-1)
       {
-        if($g==0){ $header .= "neighbour_genes:start(),"; }
-        else{ $header .= "neighbour_genes:$contig->[$g-1][1],"; }
-        if($g<$contig_n_of_genes-1)
-        {
-          $header .= "$contig->[$g+1][1]|";
-        }
-        else{ $header .= "end()|" }
+        $header .= "$contig->[$g+1][1]|";
       }
+      else{ $header .= "end()|" }
+      
       print DNA ">$header\n$contig->[$g][4]\n";
       print PROT ">$header\n$contig->[$g][5]\n";
     }
@@ -1282,6 +1281,7 @@ sub extract_genes_from_genbank
   # make final outfiles only when process finishes cleanly
   rename( "$out_prot_file.tmp" , $out_prot_file );
   rename( "$out_dna_file.tmp" , $out_dna_file );
+
   return $n_of_genes;
 }
 
