@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# 2017-8 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2017-9 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -88,7 +88,12 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   exit(-1);
 }
 
-if(defined($opts{'m'})){ $INP_matrix = $opts{'m'} }
+if(defined($opts{'m'})){ 
+  $INP_matrix = $opts{'m'};
+  if($INP_matrix =~ /.tr.tab/){
+    die "\n# $0 : cannot use a transposed -m matrix, exit\n";
+  }
+}
 else{ die "\n# $0 : need -m parameter, exit\n"; }
 
 if(defined($opts{'l'})){ $INP_list_taxa = 1 }

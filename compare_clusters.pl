@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# 2013-8 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2013-9 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Laboratory of Computational Biology, EEAD-CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -27,6 +27,8 @@ use phyTools;
 
 my $RVERBOSE = 0;  # set to 1 to see R messages, helping explain why fitting fails
 my @FEATURES2CHECK = ('EXE_R'); # cannot check EXE_PARS this way as it stalls
+
+my $TRANSPOSEXE= 'perl -F\'\t\' -ane \'$F[$#F]=~s/\n//g;$r++;for(1 .. @F){$m[$r][$_]=$F[$_-1]};$mx=@F;END{for(1 .. $mx){for $t(1 .. $r){print"$m[$t][$_]\t"}print"\n"}}\'';
 
 my $VENNCHARTLABELS = 1; # set to zero to prevent adding venn algorithm labels
 my $SKIPINTERNALSTOPS = 1;
@@ -610,9 +612,11 @@ if($INP_pange && %pangemat)
 {
   my $pangenome_phylip_file = $INP_output_dir . "/pangenome_matrix$params\.phylip";
   my $pangenome_fasta_file  = $INP_output_dir . "/pangenome_matrix$params\.fasta";
-  my $pangenome_matrix_file = $INP_output_dir . "/pangenome_matrix$params\.tab";
   my $pangenome_csv_tr_file = $INP_output_dir . "/pangenome_matrix$params\.tr.csv"; # tr = transposed
+  my $pangenome_matrix_file = $INP_output_dir . "/pangenome_matrix$params\.tab";
   my $pangenome_gene_file   = $INP_output_dir . "/pangenome_matrix_genes$params\.tab"; 
+  my $pangenome_matrix_tr   = $INP_output_dir . "/pangenome_matrix$params\.tr.tab";
+  my $pangenome_gene_tr     = $INP_output_dir . "/pangenome_matrix_genes$params\.tr.tab";
 
   # 1) sort clusters
   my @taxon_names = sort keys(%pangemat);
@@ -628,35 +632,35 @@ if($INP_pange && %pangemat)
   my @cluster_names = sort {(split(/\D/,$a,2))[0]<=>(split(/\D/,$b,2))[0]} (keys(%cluster_names));
 
   # tab-separated matrices
-  open(PANGEMATRIX,">$pangenome_matrix_file")
-    || die "# EXIT: cannot create $pangenome_matrix_file\n";
+  open(PANGEMATRIX,">$pangenome_matrix_file") || 
+    die "# EXIT: cannot create $pangenome_matrix_file\n";
     
-  open(PANGENEMATRIX,">$pangenome_gene_file")
-    || die "# EXIT: cannot create $pangenome_gene_file\n";
+  open(PANGENEMATRIX,">$pangenome_gene_file") || 
+    die "# EXIT: cannot create $pangenome_gene_file\n";
 
-  print PANGEMATRIX 'source:'.File::Spec->rel2abs($INP_output_dir)."\t";
-  foreach $cluster_name (@cluster_names){ print PANGEMATRIX "$cluster_name\t"; }
+  print PANGEMATRIX 'source:'.File::Spec->rel2abs($INP_output_dir);
+  foreach $cluster_name (@cluster_names){ print PANGEMATRIX "\t$cluster_name"; }
   print PANGEMATRIX "\n";
   
-  print PANGENEMATRIX 'source:'.File::Spec->rel2abs($INP_output_dir)."\t";
-  foreach $cluster_name (@cluster_names){ print PANGENEMATRIX "$cluster_name\t"; }
+  print PANGENEMATRIX 'source:'.File::Spec->rel2abs($INP_output_dir);
+  foreach $cluster_name (@cluster_names){ print PANGENEMATRIX "\t$cluster_name"; }
   print PANGENEMATRIX "\n";
   
   for($taxon=0;$taxon<scalar(@taxon_names);$taxon++)
   {
-    print PANGEMATRIX "$taxon_names[$taxon]\t";
-    print PANGENEMATRIX "$taxon_names[$taxon]\t";
+    print PANGEMATRIX "$taxon_names[$taxon]";
+    print PANGENEMATRIX "$taxon_names[$taxon]";
     foreach $cluster_name (@cluster_names)
     {
       if($pangemat{$taxon_names[$taxon]}{$cluster_name})
       {
-        print PANGEMATRIX "$pangemat{$taxon_names[$taxon]}{$cluster_name}\t";
-        print PANGENEMATRIX "$genemat{$taxon_names[$taxon]}{$cluster_name}\t";
+        print PANGEMATRIX "\t$pangemat{$taxon_names[$taxon]}{$cluster_name}";
+        print PANGENEMATRIX "\t$genemat{$taxon_names[$taxon]}{$cluster_name}";
       }
-      else
+      else # absent genes
       { 
-        print PANGEMATRIX "0\t"; 
-        print PANGENEMATRIX "-\t"; # absent genes
+        print PANGEMATRIX "\t0"; 
+        print PANGENEMATRIX "\t-"; 
       }
     }
     print PANGEMATRIX "\n";
@@ -667,16 +671,19 @@ if($INP_pange && %pangemat)
 
   close(PANGEMATRIX);
 
-  print "# pangenome_file = $pangenome_matrix_file\n";
-  print "# pangenome_genes = $pangenome_gene_file\n";
+  system("$TRANSPOSEXE $pangenome_matrix_file > $pangenome_matrix_tr");
+  system("$TRANSPOSEXE $pangenome_gene_file > $pangenome_gene_tr");
+
+  print "# pangenome_file = $pangenome_matrix_file transposed = $pangenome_matrix_tr\n";
+  print "# pangenome_genes = $pangenome_gene_file transposed = $pangenome_gene_tr\n";
 
   # version in phylip format http://evolution.genetics.washington.edu/phylip/doc/discrete.html
-  open(PANGEMATRIX,">$pangenome_phylip_file")
-    || die "# EXIT: cannot create $pangenome_phylip_file\n";
+  open(PANGEMATRIX,">$pangenome_phylip_file") || 
+    die "# EXIT: cannot create $pangenome_phylip_file\n";
 
   # FASTA-format file with binary data as sequence, for IQ-TREE 
-  open(PANGEMATRIX2,">$pangenome_fasta_file")
-      || die "# EXIT: cannot create $pangenome_fasta_file\n";
+  open(PANGEMATRIX2,">$pangenome_fasta_file") || 
+    die "# EXIT: cannot create $pangenome_fasta_file\n";
 
   printf PANGEMATRIX ("%10d    %d\n",scalar(@taxon_names),scalar(@cluster_names));
   for($taxon=0;$taxon<scalar(@taxon_names);$taxon++)
@@ -710,8 +717,8 @@ if($INP_pange && %pangemat)
   close(PANGEMATRIX);
 
   # transposed version in CSV format for Scoary https://github.com/AdmiralenOla/Scoary
-  open(PANGEMATRIXCSV,">$pangenome_csv_tr_file")
-    || die "# EXIT: cannot create $pangenome_csv_tr_file\n";
+  open(PANGEMATRIXCSV,">$pangenome_csv_tr_file") || 
+    die "# EXIT: cannot create $pangenome_csv_tr_file\n";
 
   # add header
   my $simple_taxon;  
@@ -745,14 +752,6 @@ if($INP_pange && %pangemat)
   print "# pangenome_FASTA file = $pangenome_fasta_file\n";
   print "# pangenome CSV file (Scoary) = $pangenome_csv_tr_file\n";
     
-  print "\n# NOTE: .tab matrices can be transposed for your convenience with:\n\n";
-  
-print <<'TRANS';
-  perl -F'\t' -ane '$r++;for(1 .. @F){$m[$r][$_]=$F[$_-1]};$mx=@F;END{for(1 .. $mx){for $t(1 .. $r){print"$m[$t][$_]\t"}print"\n"}}' \
-TRANS
-
-  print "   $pangenome_matrix_file\n\n";
-
   if($INP_tree)
   {
     my $pangenome_phylip_log = $INP_output_dir . "/pangenome_matrix$params\.phylip.log";

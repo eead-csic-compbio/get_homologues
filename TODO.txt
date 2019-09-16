@@ -13,13 +13,14 @@ Current list of ideas to improve/update GET_HOMOLOGUES:
   https://srcc.stanford.edu/sge-slurm-conversion , https://srcc.stanford.edu/sge-slurm-conversion ,
   http://genomics.princeton.edu/support/grids/slurm.shtml
   
-* Add flag to assume synteny/gene order in input FASTA files for EST, so that neighborhood info can be used
+* Add flag to assume synteny/gene order in input FASTA files for EST, so that gene order/synteny can be used
+   + Buscar segmentos synt con Blastn desde FASTA ordenados , bench con brassicas?
+	+ https://www.ensembl.org/info/genome/compara/Ortholog_qc_manual.html
+   + Si hay synt descartar los demás hits para cada seq
 
 * Print clusters in pangenome matrix (PGM) sorted by their (consensus) physical/genetic position
 
 * Compute tree determinants of PGM
-
-* Delete empty last row in PGM .tab file produced by compare_clusters.pl (Felipe Lira)
 
 * Script to produce VCF/MFA after parsing sorted DNA clusters 
 

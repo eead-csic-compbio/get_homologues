@@ -285,3 +285,6 @@
 19062019: extract_gene_name adapted to new header format
 05082019: fixed bug in extract_gene_from_genbank affecting files with CDS features without /translation, thanks Christian Sanchez
 05082019: updated release.pl
+12092019: trailing tab removed from pangenome matrices (.tab) produced by compare_clusters.pl, thanks Felipe Lira 
+12092019: compare_clusters.pl now also produces transposed matrices (.tab)
+12092019: parse_pangenome_matrix.pl now warns if you pass it a transposed matrix (.tab)
