@@ -17,7 +17,9 @@ The software was then adapted to the study of **intra-specific eukaryotic pan-ge
 
 GET_HOMOLOGUES-EST has been tested with genomes and transcriptomes of *Arabidopsis thaliana* and *Hordeum vulgare*, available at [http://floresta.eead.csic.es/plant-pan-genomes](http://floresta.eead.csic.es/plant-pan-genomes). It was also used to produce the *Brachypodium distachyon* pangenome at [https://brachypan.jgi.doe.gov](https://brachypan.jgi.doe.gov).
 
-A [tutorial](http://eead-csic-compbio.github.io/get_homologues/tutorial/pangenome_tutorial.html) is available, covering typical examples of both GET_HOMOLOGUES and GET_HOMOLOGUES-EST.
+A [tutorial](http://eead-csic-compbio.github.io/get_homologues/tutorial/pangenome_tutorial.html) is available, covering typical examples of both GET_HOMOLOGUES (bacteria) and GET_HOMOLOGUES-EST (plants). 
+
+There are also examples on how to analyze data from [Ensembl Plants](http://plants.ensembl.org) at [https://github.com/Ensembl/plant_tools/tree/master/compara](https://github.com/Ensembl/plant_tools/tree/master/compara).
 
 A [Docker image](https://hub.docker.com/r/csicunam/get_homologues) is available with GET_HOMOLOGUES 
 bundled with [GET_PHYLOMARKERS](https://github.com/vinuesa/get_phylomarkers), ready to use. 
