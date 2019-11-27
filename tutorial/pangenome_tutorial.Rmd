@@ -104,10 +104,9 @@ and [manual-EST](http://eead-csic-compbio.github.io/get_homologues/manual-est/ma
 
 software | source
 --------------| ---------------------------------------------------------------
-OrthoMCL v1.4 | <http://www.orthomcl.org> 
 mcl v14-137   | <http://micans.org/mcl> 
 COGtriangles v2.1 | <http://sourceforge.net/projects/cogtriangles>
-NCBI Blast-2.2 | <http://blast.ncbi.nlm.nih.gov>
+NCBI Blast-2.8.1+ | <http://blast.ncbi.nlm.nih.gov>
 BioPerl v1.5.2 | <http://www.bioperl.org> 
 HMMER 3.1b2 | <http://hmmer.org>
 Pfam | <http://pfam.xfam.org>
