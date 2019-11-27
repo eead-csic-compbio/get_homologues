@@ -21,7 +21,7 @@ A [tutorial](http://eead-csic-compbio.github.io/get_homologues/tutorial/pangenom
 
 A [Docker image](https://hub.docker.com/r/csicunam/get_homologues) is available with GET_HOMOLOGUES 
 bundled with [GET_PHYLOMARKERS](https://github.com/vinuesa/get_phylomarkers), ready to use. 
-The GET_PHYLOMARKERS [manual](https://vinuesa.github.io/get_phylomarkers/#get_phylomarkers-tutorial) 
+The GET_PHYLOMARKERS [manual](https://vinuesa.github.io/get_phylomarkers) 
 explains how to use nucleotide & peptide clusters produced by GET_HOMOLOGUES to compute robust multi-gene and pangenome phylogenies.
 
 The code is regularly patched (see [CHANGES.txt](./CHANGES.txt) in each release, <!--and [TODO.txt](./TODO.txt)),-->
