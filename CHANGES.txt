@@ -288,3 +288,4 @@
 12092019: trailing tab removed from pangenome matrices (.tab) produced by compare_clusters.pl, thanks Felipe Lira 
 12092019: compare_clusters.pl now also produces transposed matrices (.tab)
 12092019: parse_pangenome_matrix.pl now warns if you pass it a transposed matrix (.tab)
+28112919: updated manuals, flowcharts and tutorial
