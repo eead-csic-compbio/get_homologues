@@ -200,18 +200,17 @@ our $blastquery_ref='';
 
 # This subroutine is used to construct the directories to store
 # the intermediate files and the final files.
-# One or Two arguments:
-# 1. String Variable: `date`
-# 2. String Variable: (Optional) the existing directory, e.g. "July_21_2" where blast
-#    file and bpo files are located. This option is useful with species
-#    list unchanged (blast are already performed) but with orthomcl parameters
-#    being changed.
+# Arguments: 1 (string) name of desired directory
+# Returns:  boolean, 1 if successful, else 0
 sub constructDirectory
 {
   my ($dirname) = @_;
 
   $WORKING_DIR = $dirname . '/';
-  if(!-e $WORKING_DIR){ mkdir($WORKING_DIR); }
+  if(!-e $WORKING_DIR)
+  { 
+    mkdir($WORKING_DIR) || return 0
+  }
 
   $TMP_DIR = $WORKING_DIR."tmp/";
   if(!-e $TMP_DIR){ mkdir($TMP_DIR); }
@@ -241,6 +240,8 @@ sub constructDirectory
   $lseoutfilename          = $TMP_DIR.$lseoutfilename;
   $coglogfilename          = $TMP_DIR.$coglogfilename;
   $cogblasthits            = $TMP_DIR.$cogblasthits;
+
+  return 1;
 }
 
 # change default values of $blast_file and $bpo_file as required

@@ -436,7 +436,7 @@ my ($diff_BDBH_params,$diff_INP_params,$diff_HOM_params,$diff_OMCL_params,$lockc
 my ($diff_ISO_params,$redo_iso,$partial_sequences,$isof,%full_length_file,%redundant_isoforms,%total_redundant) = (0);
 my ($total_clustersOK,$clgene,$clorth,%ANIb_matrix,%POCP_matrix,%GIclusters,$clustersOK,%cluster_ids) = (0);
 
-constructDirectory($newDIR);
+constructDirectory($newDIR) || die "# EXIT : cannot create directory $newDIR , check permissions\n";
 
 # 0.1) try to make sure there is only 1 instance writing to $newDIR
 # http://www.perlmonks.org/?node_id=590619, flock might fail with NFS filehandles

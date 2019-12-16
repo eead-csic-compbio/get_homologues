@@ -13,10 +13,15 @@ Current list of ideas to improve/update GET_HOMOLOGUES:
   https://srcc.stanford.edu/sge-slurm-conversion , https://srcc.stanford.edu/sge-slurm-conversion ,
   http://genomics.princeton.edu/support/grids/slurm.shtml
   
-* Add flag to assume synteny/gene order in input FASTA files for EST, so that gene order/synteny can be used
+* Add flag to take into account synteny/gene order in input FASTA files for EST
+   + optionally read in .gff/.gtf file matching ids in .fna
+	+ for pairs_i,j of sequences sets with GFF remove non-syntenic BLAST hits
+		* http://dagchainer.sourceforge.net , https://academic.oup.com/bioinformatics/article/20/18/3643/202025
+		* check +-2 neighbors, will fail with indel genes 
+		* diff chr heuristic, assumes chr names are known & conserved, wont work with translocations 
+		* do dyn prog to match ids_i to ids_j allowing indels 
    + Buscar segmentos synt con Blastn desde FASTA ordenados , bench con brassicas?
 	+ https://www.ensembl.org/info/genome/compara/Ortholog_qc_manual.html
-   + Si hay synt descartar los demás hits para cada seq
 
 * Print clusters in pangenome matrix (PGM) sorted by their (consensus) physical/genetic position
 
