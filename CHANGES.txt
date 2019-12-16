@@ -291,3 +291,4 @@
 28112919: updated manuals, flowcharts and tutorial
 16122019: phyTools::constructDirectory now returns 1 if successful (thanks Ardy Kharabianmasouleh)
 16122019: get_homologues[-est].pl now check return value of phyTools::constructDirectory
+16122019: parse_pangenome_matrix.pl makes sure cloud occupancy < soft-core occupancy (thanks Sohini)

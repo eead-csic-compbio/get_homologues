@@ -662,13 +662,13 @@ if($INP_plotshell)
   foreach $s (sort {$a<=>$b} keys(%stats))
   {
     print SINP "$stats{$s}\n";
-    if($stats{$s}>$cloudmax && $s < $softcorepos)
+    if($stats{$s}>$cloudmax && $s+1 < $softcorepos)
     {
       $cloudmax = $stats{$s};
       $cloudpos = $s + 1 ; # arbitrarily take max plus next column in plot
     }
   }
-  close(SINP);
+  close(SINP); 
 
   # print lists of genomic compartments
   open(CLOUDF,">$cloudlistfile") || die "# EXIT : cannot create $cloudlistfile\n";
