@@ -12,14 +12,15 @@
 
 
 progname=${0##*/} 
-VERSION='v1.1_26Jan18' #  v1.1_26Jan18 changed fviz_dend for dendextend to plot clustering results for better control of plot params
-                       #     and proper plotting of scale-bar in gower-distances-based hclus plots, which don't render 
-		       #     correctly with fviz_dend. changed default distance back to gower. Improved documentation
-		       #     Now depends also on 
-                       #  v1.1_25Jan18; Major upgrade: added the gap- and silhouette meand width goodness of clustering statistics
-                       #  to determine the optimal number of clusters automatically.
-		       # Calls new package factoextra; fviz_dend; fviz_gap_stat
-		       # Improved/updated documentation and extended user input checking
+VERSION='v1.2_5Jan20' # fixed dendro_cut_file=$(find . -name "hclust*cut_at*k${k}*")
+         #  v1.1_26Jan18 changed fviz_dend for dendextend to plot clustering results for better control of plot params
+         #     and proper plotting of scale-bar in gower-distances-based hclus plots, which don't render 
+	 #     correctly with fviz_dend. changed default distance back to gower. Improved documentation
+	 #     Now depends also on 
+         #  v1.1_25Jan18; Major upgrade: added the gap- and silhouette meand width goodness of clustering statistics
+         #  to determine the optimal number of clusters automatically.
+	 # Calls new package factoextra; fviz_dend; fviz_gap_stat
+	 # Improved/updated documentation and extended user input checking
          # v0.6_124Dec17: remove the invariant (core-genome) and singleton columns from input table
          #v'0.5_14Oct17'; added options -A and -X to control the angle 
                       #                and character eXpansion factor of leaf labels
@@ -602,7 +603,7 @@ else
      echo ">>> ERROR: File $goodness_of_clust_plot was NOT generated!"
 fi
 
-dendro_cut_file=$(find . -name 'hclust*cut_at*')
+dendro_cut_file=$(find . -name "hclust*cut_at*k${k}*")
 if [ -s $dendro_cut_file ]
 then
      echo ">>> File $dendro_cut_file was generated"
