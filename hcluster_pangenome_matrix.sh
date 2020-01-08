@@ -206,7 +206,7 @@ function print_help()
              goodness of clustering (gap|silhouette width) dentrogram and stats plot.
      
     DEPENDENCIES:
-         R packages: ape, cluster, gplots, grDevices, dendextend and factoextra. Run $progname -N for installation instructions.
+         R packages: ape, cluster, gplots, grDevices, RColorBrewer, viridis, dendextend and factoextra. Run $progname -N for installation instructions.
 	 
     IMPORTANT NOTES: 
         1. to get the best display of your genome lables, these should be made as short as possible.
@@ -260,7 +260,7 @@ angle='NULL,NULL'
 
 subset_matrix=0
 
-palette="cvidis"
+palette="magma"
 
 # See bash cookbook 13.1 and 13.2
 while getopts ':a:A:c:d:f:i:k:t:m:M:n:o:p:s:S:v:x:X:H:W:P:R:hND?:' OPTIONS
@@ -380,9 +380,9 @@ then
     exit 1
 fi
 
-if [ $palette != "greys" -a $palette != "blues" -a $palette != "reds" -a $palette != "heat" -a $palette != "viridis" -a $palette != "cviridis" -a $palette != "inferno" -a $palette != "magma" ]
+if [ $palette != "greys" -a $palette != "blues" -a $palette != "reds" -a $palette != "heat" -a $palette != "viridis" -a $palette != "cvidis" -a $palette != "inferno" -a $palette != "magma" ]
 then
-    echo "ERROR: palette must be one of: white-black|white-blue|white-red|heat"
+    echo "ERROR: palette must be one of: greys|blues|reds|heat|viridis|cvidis|inferno|magma"
     print_help
     exit 1
 fi
