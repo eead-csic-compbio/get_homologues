@@ -293,3 +293,4 @@
 16122019: get_homologues[-est].pl now check return value of phyTools::constructDirectory
 16122019: parse_pangenome_matrix.pl makes sure cloud occupancy < soft-core occupancy (thanks Sohini)
 05012020: hcluster_pangenome_matrix.sh v5Jan2020, added option -P <palette>, added function cleanup_R_script, continuous color scale, only row dendrogram, fixed find command
+12012020: hcluster_pangenome_matrix.sh v2.0_12Jan2020, major script update, see development notes with -D
