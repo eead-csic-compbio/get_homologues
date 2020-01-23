@@ -12,7 +12,7 @@
 
 
 progname=${0##*/} 
-VERSION='v2.0_12Jan20' # 
+VERSION='v2.1_22Jan20' # minor fix (missing space) in test [ "$palette" != "greys"] && ...
 
          # v2.0_12Jan20: >>> MAJOR SCRIPT UPGRADE <<<
 	 #  * automatically generates a height_cut${cut_height}_genome_cluster_table.tsv
@@ -480,7 +480,7 @@ then
 fi
 
 
-if [ "$palette" != "greys"] && [ "$palette" != "blues" ] && [ "$palette" != "reds" ] && [ "$palette" != "heat" ] && [ "$palette" != "viridis" ] && [ "$palette" != "cvidis" ] && [ "$palette" != "inferno" ] && [ "$palette" != "magma" ]
+if [ "$palette" != "greys" ] && [ "$palette" != "blues" ] && [ "$palette" != "reds" ] && [ "$palette" != "heat" ] && [ "$palette" != "viridis" ] && [ "$palette" != "cvidis" ] && [ "$palette" != "inferno" ] && [ "$palette" != "magma" ]
 then
     echo "ERROR: palette must be one of: greys|blues|reds|heat|viridis|cvidis|inferno|magma"
     print_help
