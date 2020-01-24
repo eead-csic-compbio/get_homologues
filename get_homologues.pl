@@ -1,6 +1,6 @@
 #!/usr/bin/env perl 
 
-# 2019 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2020 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei-CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -23,18 +23,11 @@ use Cwd;
 use FindBin '$Bin';
 use lib "$Bin/lib";
 use lib "$Bin/lib/bioperl-1.5.2_102/";
+use HPCluster; 
 use phyTools; #also imports constants SEQ,NAME used as array subindices
 use marfil_homology; # includes $FASTAEXTENSION and other global variables set there such as @taxa
 
 my $VERSION = '3.x'; 
-
-## sun grid engine (computer cluster) variables, might require edition to fit your system (ignored with -m local)
-my $SGEPATH = "";
-if($ENV{'SGE_ROOT'} && $ENV{'SGE_ARCH'}){ $SGEPATH = $ENV{'SGE_ROOT'}.'/bin/'.$ENV{'SGE_ARCH'}; };
-my $SGEERRORSTATUS = 'Eqw';       # error status of failed jobs in SGE
-my $QUEUESETTINGS = '';
-my $QUEUEWAIT = 1;                # interval in seconds between qsub submissions
-my $WAITTIME  = 30;               # interval in seconds btween qstat commands
 
 ## settings for local batch blast,hmmscan jobs
 my $BATCHSIZE = 100;
@@ -266,10 +259,17 @@ if($runmode eq 'local' && defined($opts{'n'}) && $opts{'n'} > 0)
   $BLAST_NOCPU = $n_of_cpus;
 }
 
-if($runmode eq 'cluster' && !cluster_is_available())
+if($runmode eq 'cluster')
 {
-  print "# EXIT : SGE cluster is not available, please appropriately set variable \$SGEPATH ($SGEPATH)\n";
-  die "# EXIT : or choose runmode -m local\n";
+  # check whether file 'cluster.conf' exists & parse it
+  read_cluster_config( "$Bin/cluster.conf" );
+
+  if(!cluster_is_available())
+  {	  
+    print "# EXIT : cluster is not available, please create/edit file cluster.conf\n";
+	print_cluster_config();
+    die "# EXIT : or choose runmode -m local\n";
+  }
 }
 
 if(defined($opts{'o'})){ $onlyblast = 1; }
@@ -518,7 +518,8 @@ print "# $0 -i $input_FASTA_file -d $inputDIR -o $onlyblast -X $do_diamond -e $e
   
 if($runmode eq 'cluster')
 {
-  print "# computer cluster settings: $SGEPATH , $QUEUESETTINGS , $QUEUEWAIT , $WAITTIME\n\n";
+  print "# computer cluster settings\n";
+  print_cluster_config();
 }
 
 ###############################################################
@@ -1211,8 +1212,7 @@ if($do_PFAM)
 
           if($runmode eq 'cluster')
           {
-            submit_cluster_job($new_infile.$group,$command,$group_clusterfile,$newDIR,
-              $SGEPATH,$QUEUESETTINGS,$QUEUEWAIT,\%cluster_PIDs);
+            submit_cluster_job($new_infile.$group,$command,$group_clusterfile,$newDIR,\%cluster_PIDs);
           }
           else # 'local' runmode
           {
@@ -1240,10 +1240,10 @@ if($do_PFAM)
     }
   }
 
-  # wait until PBD Pfam jobs are done
+  # wait until Pfam jobs are done
   if($runmode eq 'cluster')
   {
-    check_cluster_jobs($newDIR,$SGEPATH,$QUEUEWAIT,$WAITTIME,\%cluster_PIDs);
+    check_cluster_jobs($newDIR,\%cluster_PIDs);
   }
   print "# done\n\n";
 
@@ -1409,8 +1409,7 @@ if(!-s $bpo_file || $current_files ne $previous_files || ($doCOG && !-s $cogblas
             
       if($runmode eq 'cluster')
       {
-        submit_cluster_job($new_infile,$command,$clusteroutfile,$newDIR,
-          $SGEPATH,$QUEUESETTINGS,$QUEUEWAIT,\%cluster_PIDs);
+        submit_cluster_job($new_infile,$command,$clusteroutfile,$newDIR,\%cluster_PIDs);
       }
       else # 'local' runmode -> ensure multi-core CPU use
       {
@@ -1462,8 +1461,7 @@ if(!-s $bpo_file || $current_files ne $previous_files || ($doCOG && !-s $cogblas
             
       if($runmode eq 'cluster')
       {
-        submit_cluster_job($new_infile,$command,$clusteroutfile,$newDIR,
-          $SGEPATH,$QUEUESETTINGS,$QUEUEWAIT,\%cluster_PIDs);
+        submit_cluster_job($new_infile,$command,$clusteroutfile,$newDIR,\%cluster_PIDs);
       }
       else # 'local' runmode -> ensure multi-core CPU use
       {
@@ -1531,8 +1529,7 @@ if(!-s $bpo_file || $current_files ne $previous_files || ($doCOG && !-s $cogblas
 
         if($runmode eq 'cluster')
         {
-          submit_cluster_job($new_infile,$command,$clusteroutfile,$newDIR,
-            $SGEPATH,$QUEUESETTINGS,$QUEUEWAIT,\%cluster_PIDs);
+          submit_cluster_job($new_infile,$command,$clusteroutfile,$newDIR,\%cluster_PIDs);
         }
         else # 'local' runmode -> ensure multi-core CPU use
         {
@@ -1552,7 +1549,7 @@ if(!-s $bpo_file || $current_files ne $previous_files || ($doCOG && !-s $cogblas
   # wait until cluster jobs are done
   if($runmode eq 'cluster')
   {
-    check_cluster_jobs($newDIR,$SGEPATH,$QUEUEWAIT,$WAITTIME,\%cluster_PIDs);
+    check_cluster_jobs($newDIR,\%cluster_PIDs);
   }
   print "# done\n\n";
 
@@ -1565,7 +1562,7 @@ if(!-s $bpo_file || $current_files ne $previous_files || ($doCOG && !-s $cogblas
     {
       if(!-e $blastout && !-e $blastout.'.gz')
       {
-        sleep($QUEUEWAIT); # give disk extra time
+        sleep(1); # give disk extra time
         if(!-e $blastout && !-e $blastout.'.gz')
         {
           die "# EXIT, $blastout does not exist, BLAST/DIAMOND search might failed ".
@@ -1737,13 +1734,12 @@ if($do_genome_composition)
           "-S $pi_cutoff -C $pmatch_cutoff -N $neighbor_corr_cutoff -f $redo_inp "; #die "$command\n";
         $clusterlogfile = $clusteroutfile.'.queue';
         push(@to_be_deleted,$clusterlogfile);
-        submit_cluster_job($taxa[$j],$command,$clusterlogfile,$newDIR,
-          $SGEPATH,$QUEUESETTINGS,$QUEUEWAIT,\%cluster_PIDs);
+        submit_cluster_job($taxa[$j],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
       }
       if(@to_be_deleted)
       {
         print "# submitting inparalogues jobs to cluster ...\n";
-        check_cluster_jobs($newDIR,$SGEPATH,$QUEUEWAIT,$WAITTIME,\%cluster_PIDs);
+        check_cluster_jobs($newDIR,\%cluster_PIDs);
         print "\n";
         unlink(@to_be_deleted);
         %cluster_PIDs = @to_be_deleted = ();
@@ -1765,15 +1761,14 @@ if($do_genome_composition)
             " -j $tmptaxa[$k] -E $evalue_cutoff -S $MIN_PERSEQID_HOM ".
             " -C $MIN_COVERAGE_HOM -f $redo_inp ";
           push(@to_be_deleted,$clusterlogfile);
-          submit_cluster_job('h'.$tmptaxa[$j].'-'.$tmptaxa[$k],$command,$clusterlogfile,
-            $newDIR,$SGEPATH,$QUEUESETTINGS,$QUEUEWAIT,\%cluster_PIDs);
+          submit_cluster_job('h'.$tmptaxa[$j].'-'.$tmptaxa[$k],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
         }
       }
     }
     if(@to_be_deleted)
     {
       print "# submitting homologues jobs to cluster ...\n";
-      check_cluster_jobs($newDIR,$SGEPATH,$QUEUEWAIT,$WAITTIME,\%cluster_PIDs);
+      check_cluster_jobs($newDIR,\%cluster_PIDs);
       print "\n";
       unlink(@to_be_deleted);
     }
@@ -1810,14 +1805,13 @@ if($do_genome_composition)
             " -N $neighbor_corr_cutoff -f $redo_inp -n 1 -l 0 -B 0"; #die "$command\n";
           $clusterlogfile = $clusteroutfile.'.queue';
           push(@to_be_deleted,$clusterlogfile);
-          submit_cluster_job($taxa[$i].'-'.$taxa[$j],$command,$clusterlogfile,
-            $newDIR,$SGEPATH,$QUEUESETTINGS,$QUEUEWAIT,\%cluster_PIDs);
+          submit_cluster_job($taxa[$i].'-'.$taxa[$j],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
         }
       }
       if(@to_be_deleted)
       {
         print "# submitting orthologues jobs to cluster ...\n";
-        check_cluster_jobs($newDIR,$SGEPATH,$QUEUEWAIT,$WAITTIME,\%cluster_PIDs);
+        check_cluster_jobs($newDIR,\%cluster_PIDs);
         print "\n";
         unlink(@to_be_deleted);
       }
@@ -1913,14 +1907,13 @@ if($do_genome_composition)
             " -j $tmptaxa[$j] -E $evalue_cutoff -D $do_PFAM -S $pi_cutoff -C $pmatch_cutoff".
             " -N $neighbor_corr_cutoff -f $redo_inp -n 0 -l 1 -B 1";
           push(@to_be_deleted,$clusterlogfile);
-          submit_cluster_job($tmptaxa[0].'-'.$tmptaxa[$j],$command,$clusterlogfile,
-            $newDIR,$SGEPATH,$QUEUESETTINGS,$QUEUEWAIT,\%cluster_PIDs);
+          submit_cluster_job($tmptaxa[0].'-'.$tmptaxa[$j],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
         }
       }
       if(@to_be_deleted)
       {
         print "# submitting orthologues jobs to cluster ...\n";
-        check_cluster_jobs($newDIR,$SGEPATH,$QUEUEWAIT,$WAITTIME,\%cluster_PIDs);
+        check_cluster_jobs($newDIR,\%cluster_PIDs);
         print "\n";
         unlink(@to_be_deleted);
       }
@@ -2285,13 +2278,12 @@ if($runmode eq 'cluster')
         "-S $pi_cutoff -C $pmatch_cutoff -N $neighbor_corr_cutoff -f $redo_inp ";
       $clusterlogfile = $clusteroutfile.'.queue';
       push(@to_be_deleted,$clusterlogfile);
-      submit_cluster_job($taxa[$j],$command,$clusterlogfile,$newDIR,
-        $SGEPATH,$QUEUESETTINGS,$QUEUEWAIT,\%cluster_PIDs);
+      submit_cluster_job($taxa[$j],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
     }
     if(@to_be_deleted)
     {
       print "\n# submitting inparalogues jobs to cluster ...\n";
-      check_cluster_jobs($newDIR,$SGEPATH,$QUEUEWAIT,$WAITTIME,\%cluster_PIDs);
+      check_cluster_jobs($newDIR,\%cluster_PIDs);
       unlink(@to_be_deleted);
       %cluster_PIDs = @to_be_deleted = ();
     }
@@ -2333,14 +2325,13 @@ if($doMCL)
             " -N $neighbor_corr_cutoff -f $redo_inp -n 1 -l 0 -B 0"; #die "$command\n";
           $clusterlogfile = $clusteroutfile.'.queue';
           push(@to_be_deleted,$clusterlogfile);
-          submit_cluster_job($taxa[$i].'-'.$taxa[$j],$command,$clusterlogfile,
-            $newDIR,$SGEPATH,$QUEUESETTINGS,$QUEUEWAIT,\%cluster_PIDs);
+          submit_cluster_job($taxa[$i].'-'.$taxa[$j],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
         }
       }
       if(@to_be_deleted)
       {
         print "\n# submitting orthologues jobs to cluster ...\n";
-        check_cluster_jobs($newDIR,$SGEPATH,$QUEUEWAIT,$WAITTIME,\%cluster_PIDs);
+        check_cluster_jobs($newDIR,\%cluster_PIDs);
         unlink(@to_be_deleted);
       }
       if($diff_INP_params){ $diff_INP_params = -1 }
@@ -2441,13 +2432,12 @@ else # BDBH
         " -N $neighbor_corr_cutoff -f $redo_inp -n 0 -l 1 -B 1"; #die "$command\n";
       $clusterlogfile = $clusteroutfile.'.queue';
       push(@to_be_deleted,$clusterlogfile);
-      submit_cluster_job($taxa[$reference_proteome].'-'.$taxa[$j],$command,$clusterlogfile,
-        $newDIR,$SGEPATH,$QUEUESETTINGS,$QUEUEWAIT,\%cluster_PIDs);
+      submit_cluster_job($taxa[$reference_proteome].'-'.$taxa[$j],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
     }
     if(@to_be_deleted)
     {
       print "\n# submitting orthologues jobs to cluster ...\n";
-      check_cluster_jobs($newDIR,$SGEPATH,$QUEUEWAIT,$WAITTIME,\%cluster_PIDs);
+      check_cluster_jobs($newDIR,\%cluster_PIDs);
       unlink(@to_be_deleted);
     }
   }
@@ -3146,261 +3136,3 @@ print "\n# runtime: ".timestr(timediff($end_time,$start_time),'all')."\n";
 print "# RAM use: ".calc_memory_footprint()."\n";
 exit(0);
 
-#################################################################################
-
-# based on http://www.unix.org.ua/orelly/perl/cookbook/ch04_18.htm
-# generates a random permutation of @array in place
-sub fisher_yates_shuffle
-{
-  my $array = shift;
-  my ($i,$j,$array_string);
-
-  for ($i = @$array; --$i; )
-  {
-    $j = int(rand($i+1));
-    next if $i == $j;
-    @$array[$i,$j] = @$array[$j,$i];
-  }
-
-  return join('',@$array);
-}
-
-# check genome files used to generate a given all.bpo file ($selected_genomes_file)
-sub get_string_with_previous_genomes
-{
-  my ($selected_genomes_file) = @_;
-
-  my ($previous_genomes,@genomes) = ('');
-
-  open(SEL,$selected_genomes_file) || die "# get_string_with_previous_genomes : cannot read $selected_genomes_file\n";
-  while(<SEL>)
-  {
-    chomp $_;
-    $_ =~ s/\s+//g;
-    push(@genomes,$_);
-  }
-  close(SEL);
-
-  $previous_genomes = join('',sort(@genomes));
-
-  return $previous_genomes;
-}
-
-# Split clusters of orths generated by OMCL, COG or PRND according to Pfam domain composition
-# Updates $ref_orth_taxa and returns \%orthologues
-# Uses globals: %pfam_hash, @gindex2
-sub split_Pfam_clusters
-{
-  my ($ref_hash_orths, $ref_orth_taxa, $verbose) = @_;
-
-  my ($pfam,$orth,$subcluster,%orthologues);
-  my ($n_of_original_clusters,$n_of_new_clusters) = (0,0);
-
-  print "# splitting clusters by Pfam domain composition\n";
-
-  foreach $cluster (keys(%$ref_hash_orths))
-  {
-
-    # check number of Pfam domain strings in this cluster
-    my (%Pfam_strings);
-
-    if(defined($pfam_hash{$cluster})){ $pfam = "$pfam_hash{$cluster}" }
-    else{ $pfam = '' }
-    push(@{$Pfam_strings{$pfam}},$cluster);
-    foreach $orth (@{$ref_hash_orths->{$cluster}})
-    {
-      if(defined($pfam_hash{$orth})){ $pfam = "$pfam_hash{$orth}" }
-      else{ $pfam = '' }
-      push(@{$Pfam_strings{$pfam}},$orth);
-    } #print "<".$#{$ref_hash_orths->{$cluster}}." ".scalar(@{$ref_hash_orths->{$cluster}})."\n";
-
-    # create as many subclusters as diff Pfam strings found
-    if(scalar(keys(%Pfam_strings)) > 1)
-    {
-      $n_of_original_clusters++;
-
-      print "# old cluster $cluster contains these Pfam strings: ".
-        join(' ; ',keys(%Pfam_strings))."\n" if($verbose);
-
-      foreach $pfam (keys(%Pfam_strings))
-      {
-        $n_of_new_clusters++;
-
-        $subcluster = shift(@{$Pfam_strings{$pfam}});
-        $taxon = $gindex2[$subcluster];
-
-        @{$orthologues{$subcluster}} = ();
-        undef(%{$ref_orth_taxa->{$subcluster}});
-        $ref_orth_taxa->{$subcluster}{$taxon}++;
-
-        foreach $orth (@{$Pfam_strings{$pfam}})
-        {
-          $taxon = $gindex2[$orth];
-          push(@{$orthologues{$subcluster}},$orth);
-          $ref_orth_taxa->{$subcluster}{$taxon}++;
-        } #print ">> $subcluster ".scalar(@{$orthologues{$subcluster}})."\n";
-      }
-    }
-    else # add cluster as is if only one domain combination
-    {
-      $orthologues{$cluster} = $ref_hash_orths->{$cluster};
-    }
-  }
-
-  printf("# created %d new clusters\n",$n_of_new_clusters-$n_of_original_clusters);
-
-  return \%orthologues;
-}
-
-sub short_path
-{
-  my ($fullpath,$base) = @_;
-  $fullpath =~ s/\/\//\//g;
-  $fullpath =~ s/$base//;
-  return $fullpath;
-}
-
-sub factorial
-{
-  my $max = int($_[0]);
-  my $f = 1;
-  for (2..$max) { $f *= $_ }
-  return $f;
-}
-
-sub calc_mean
-{
-  my ($ref_args) = @_;
-  my $mean = 0;
-  foreach (@$ref_args) { $mean += $_ }
-  return $mean / scalar(@$ref_args);
-}
-
-sub calc_std_deviation
-{
-  my ($ref_args) = @_;
-  my $mean = calc_mean($ref_args);
-  my @squares;
-
-  foreach (@$ref_args){ push (@squares, ($_ **2)) }
-  return sqrt( calc_mean(\@squares) - ($mean ** 2));
-}
-
-# works only in Linux systems, which have 'ps'
-sub calc_memory_footprint
-{
-  my ($pid,$KB) = ($$,0);
-  my $ps = `ps -o rss $pid 2>&1`; #`ps -o rss,vsz $pid 2>&1`
-  while($ps =~ /(\d+)/g){ $KB += $1 }
-
-  if($KB){ return sprintf("%3.1f MB",$KB/1024); }
-  else
-  {
-    return "WARNING: cannot read memory footprint:\n$ps";
-  }
-}
-
-# uses globasl: $0
-sub warn_missing_soft
-{
-  my ($soft) = @_;
-  print "# cannot run $soft as required software is not in place,\n";
-  die "# EXIT : run $0 -v to check all required binares and data sources\n";
-}
-
-# checks whether SGE binaries are present and available in the system
-# uses global $SGEPATH
-sub cluster_is_available
-{
-  my $path = $SGEPATH;
-  if($path eq '')
-  {
-    $path = `which qsub`;
-    chomp($path);
-    if($path eq '' || $path =~ /no qsub in/)
-    {
-      return 0;
-    }
-    else
-    {
-      $path =~ s/\/qsub$//;
-      $SGEPATH = $path;
-    }
-  }
-
-  for my $bin ('qstat','qsub','qdel')
-  {
-    my $output = `$path/$bin -help 2>&1`;
-    if(!$output || $output !~ /usage:/){ return 0 }
-  }
-
-  return 1;
-}
-
-# submits jobs to a SGE queue, this subroutine should be edited for other cluster systems
-sub submit_cluster_job
-{
-  my ($jobname,$command,$outfile,$dir,$pathbin,$queuesets,$queuetime,$ref_cluster_PIDs) = @_;
-
-  my $qsubcommand = " -N n$jobname -j y -o $outfile -S /bin/bash";
-  my $qPID = `$pathbin/qsub $queuesets $qsubcommand <<EOF
-        cd $dir
-        $command
-EOF`;
-
-  if($qPID =~ /^(\d+)\./ || $qPID =~ /^Your job (\d+)/){ $qPID = $1 }
-  $ref_cluster_PIDs->{$qPID}{'command'} = $qsubcommand;
-  $ref_cluster_PIDs->{$qPID}{'executable'} = $command;
-  $ref_cluster_PIDs->{$qPID}{'status'} = 'sent';
-  sleep($queuetime);
-}
-
-# waits until launched cluster jobs terminate and handles failed jobs
-sub check_cluster_jobs
-{
-  my ($dir,$pathbin,$queuetime,$waittime,$ref_PIDs) = @_;
-
-  my ($waiting,$qPID,$newqPID,$qout) = (1);
-
-  while($waiting)
-  {
-    $waiting=0;
-    foreach $qPID (sort {$a<=>$b} (keys(%$ref_PIDs)))
-    {
-      next if($ref_PIDs->{$qPID}{'status'} eq 'deleted');
-      $qout = `$pathbin/qstat | grep $qPID`;
-      if($qout)
-      {
-        if($qout =~ /\s+$SGEERRORSTATUS\s+/)
-        {
-
-          # resubmit failed jobs
-          $newqPID = `$pathbin/qsub $ref_PIDs->{$qPID}{'command'} <<EOF
-            cd $dir
-            $ref_PIDs->{$qPID}{'executable'}
-EOF`;
-
-          #Your job 108381 ("n_Bartonella_quintana_Toulouse.gbk.fasta") has been submitted
-          #edit this regular expression if needed to suit your SGE cluster
-          if($newqPID =~ /^(\d+)\./ || $newqPID =~ /^Your job (\d+)/){ $newqPID = $1 }
-          $ref_PIDs->{$newqPID}{'command'} = $ref_PIDs->{$qPID}{'command'};
-          $ref_PIDs->{$newqPID}{'executable'} = $ref_PIDs->{$qPID}{'executable'};
-          $ref_PIDs->{$newqPID}{'status'} = 'sent';
-          sleep($queuetime);
-
-          # remove failed job
-          system("$pathbin/qdel $qPID");
-          $ref_PIDs->{$qPID}{'status'} = 'deleted';
-          print "# check_cluster_jobs: deleted job $qPID , resubmitted as $newqPID\n";
-          $waiting++;
-        }
-        else{ $waiting++; last; }
-      }
-    }
-    if($waiting)
-    {
-      print "# check_cluster_jobs: waiting ...\n";
-      sleep $waittime;
-    }
-  }
-}
