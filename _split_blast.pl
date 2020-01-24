@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# 2013-8 Bruno Contreras
+# 2013-20 Bruno Contreras
 # Script to take advantage of multicore machines when running BLAST,
 # which seems to scale up to the number of physical cores in our tests.
 # Supports old BLAST (blastall) and new BLAST+ binaries.
@@ -32,7 +32,8 @@ if(!$ARGV[2])
   print "Please escape any quotes in your BLAST command. For instance:\n\n";
   print "blastall -p blastp -i input.faa -d nr.fasta -m 8 -F 'm S' -o out.blast\n\n";
   print "should be escaped like this:\n\n";
-  die "blastall -p blastp -i input.faa -d nr.fasta -m 8 -F \\'m\\ S\\' -o out.blast\n";
+  print "blastall -p blastp -i input.faa -d nr.fasta -m 8 -F \\'m\\ S\\' -o out.blast\n";
+  exit(0);
 }
 else ## parse command-line arguments
 {

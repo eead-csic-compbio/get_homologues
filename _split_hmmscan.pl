@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# May2013 Bruno Contreras, Pablo Vinuesa, updated Sep2018
+# 2013-2020 Bruno Contreras, Pablo Vinuesa
 # Script to take advantage of multicore machines when running hmmer3,
 # which seems to scale up to the number of physical cores in our tests.
 
@@ -26,12 +26,8 @@ if(!$ARGV[2])
   print "<number of processors/cores> : while 1 is accepted, at least 2 should be requested\n";
   print "<batch size> : is the number of sequences to be scanned in each batch, $DEFAULTBATCHSIZE works well in our tests\n";
   print "<hmmscan command> : is the explicit hmmscan command that you would run in your terminal\n\n";
-  die "Example: split_hmmscan.pl 8 50 hmmscan --noali --acc db/Pfam-A.hmm seqs.faa > out.hmmscan\n\n";
-
-#print "Please escape any quotes in your command. For instance:\n\n";
-#print "blastall -p blastp -i input.faa -d nr.fasta -m 8 -F 'm S' -o out.blast\n\n";
-#print "should be escaped like this:\n\n";
-#die "blastall -p blastp -i input.faa -d nr.fasta -m 8 -F \\'m\\ S\\' -o out.blast\n";
+  print "Example: split_hmmscan.pl 8 50 hmmscan --noali --acc db/Pfam-A.hmm seqs.faa > out.hmmscan\n\n";
+  exit(0);
 }
 else ## parse command-line arguments
 {
