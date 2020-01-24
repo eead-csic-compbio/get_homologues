@@ -1,5 +1,5 @@
 # Bruno Contreras-Moreira, Pablo Vinuesa
-# 2005-19 CCG/UNAM, Mexico, EEAD/CSIC, Zaragoza, Spain
+# 2005-20 CCG/UNAM, Mexico, EEAD/CSIC, Zaragoza, Spain
 # This is a collection of subroutines used in our projects,
 # including primers4clades and get_homologues.pl
 
@@ -9,9 +9,12 @@ require Exporter;
 @ISA = qw(Exporter);
 @EXPORT = qw(
   set_phyTools_env $ERROR read_FASTA_sequence feature_is_installed check_installed_features
-  extract_gene_name extract_CDSs_from_genbank extract_intergenic_from_genbank extract_features_from_genbank extract_genes_from_genbank
+  extract_gene_name extract_CDSs_from_genbank extract_intergenic_from_genbank 
+  extract_features_from_genbank extract_genes_from_genbank
   find_taxa_FASTA_headers find_taxa_FASTA_array_headers read_FASTA_file_array run_PARS 
   check_variants_FASTA_alignment collapse_taxon_alignments
+  fisher_yates_shuffle short_path factorial calc_mean calc_std_deviation 
+  calc_memory_footprint warn_missing_soft
   NAME SEQ 
   );
 
@@ -1754,6 +1757,80 @@ sub collapse_taxon_alignments
   
   return \@FASTAcons;
 }
+
+# based on http://www.unix.org.ua/orelly/perl/cookbook/ch04_18.htm
+# generates a random permutation of @array in place
+sub fisher_yates_shuffle
+{
+  my $array = shift;
+  my ($i,$j,$array_string);
+
+  for ($i = @$array; --$i; )
+  {
+    $j = int(rand($i+1));
+    next if $i == $j;
+    @$array[$i,$j] = @$array[$j,$i];
+  }
+
+  return join('',@$array);
+}
+
+sub short_path
+{
+  my ($fullpath,$base) = @_;
+  $fullpath =~ s/\/\//\//g;
+  $fullpath =~ s/$base//;
+  return $fullpath;
+}
+
+sub factorial
+{
+  my $max = int($_[0]);
+  my $f = 1;
+  for (2..$max) { $f *= $_ }
+  return $f;
+}
+
+sub calc_mean
+{
+  my ($ref_args) = @_;
+  my $mean = 0;
+  foreach (@$ref_args) { $mean += $_ }
+  return $mean / scalar(@$ref_args);
+}
+
+sub calc_std_deviation
+{
+  my ($ref_args) = @_;
+  my $mean = calc_mean($ref_args);
+  my @squares;
+
+  foreach (@$ref_args){ push (@squares, ($_ **2)) }
+  return sqrt( calc_mean(\@squares) - ($mean ** 2));
+}
+
+# works only on Linux/macOS systems, which have 'ps'
+sub calc_memory_footprint
+{
+  my ($pid,$KB) = ($$,0);
+  my $ps = `ps -o rss $pid 2>&1`; #`ps -o rss,vsz $pid 2>&1`
+  while($ps =~ /(\d+)/g){ $KB += $1 }
+
+  if($KB){ return sprintf("%3.1f MB",$KB/1024); }
+  else
+  {
+    return "WARNING: cannot read memory footprint:\n$ps";
+  }
+}
+
+# uses globals: $0
+sub warn_missing_soft
+{
+  my ($soft) = @_;
+  print "# cannot run $soft as required software is not in place,\n";
+  die "# EXIT : run $0 -v to check all required binares and data sources\n";
+}
+
 
 
 1;
