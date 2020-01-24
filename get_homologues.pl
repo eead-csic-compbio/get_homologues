@@ -262,7 +262,7 @@ if($runmode eq 'local' && defined($opts{'n'}) && $opts{'n'} > 0)
 if($runmode eq 'cluster')
 {
   # check whether file 'cluster.conf' exists & parse it
-  read_cluster_config( "$Bin/cluster.conf" );
+  read_cluster_config( "$Bin/HPC.conf" );
 
   if(!cluster_is_available())
   {	  
