@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# 2013-9 Bruno Contreras-Moreira, Pablo Vinuesa
+# 2013-20 Bruno Contreras-Moreira, Pablo Vinuesa
 # download_genomes_ncbi.pl
 
 # Attempts to download a list of genomes from the NCBI.
@@ -13,7 +13,7 @@ use warnings;
 use File::Fetch;
 use Net::FTP;
 
-my $VERSION  = 2.2;
+my $VERSION  = 2.3;
 
 # http://www.ncbi.nlm.nih.gov/books/NBK25500/
 my $EFETCHEXE = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&rettype=gbwithparts&retmode=text&id=';
@@ -46,6 +46,14 @@ if(!$ARGV[0])
     "AAYU01                      Yersinia_pestis_B42003004   # WGS genome, possibly a draft\n\n"
 }
 else{ $listfile = $ARGV[0] }
+
+# 0) test URLs if requested ############################
+
+if($ARGV[0] eq 'test')
+{
+  if( Net::FTP->new( (split(/\/\//,$NCBIHOST))[1], Debug => 0) ){ print "# \$NCBIHOST ok\n" }
+  exit(0);
+}
 
 # 1) parse list file ###################################
 $n_of_wanted_files = 0;
