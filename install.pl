@@ -51,6 +51,11 @@ if(defined($ARGV[0]))
     $noDBs = 1;   
     print "# \$no_databases=$noDBs\n\n";
   }
+  elsif($ARGV[0] eq 'test')
+  {
+    print "# testing only\n";
+	exit(0);
+  }
 }
 
 ##############################################################################################
