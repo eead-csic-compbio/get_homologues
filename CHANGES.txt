@@ -304,3 +304,4 @@
 24012020: updated help message of _split_blast.pl and _split_hmmscan.pl
 24012020: added download_genomes_ncbi.pl test
 24012020: added test t/get_homologues.t
+24012020: hcluster_pangenome_matrix.sh v2.2_22Jan20, removes intermediate silhouette-width genome table
