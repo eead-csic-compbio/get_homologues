@@ -12,7 +12,8 @@
 
 
 progname=${0##*/} 
-VERSION='v2.1_22Jan20' # minor fix (missing space) in test [ "$palette" != "greys"] && ...
+VERSION='v2.2_24Jan20' # v2.2_22Jan20; remove intermediate silhouette-width genome table
+         # v2.1_22Jan20 minor fix (missing space) in test [ "$palette" != "greys"] && ...
 
          # v2.0_12Jan20: >>> MAJOR SCRIPT UPGRADE <<<
 	 #  * automatically generates a height_cut${cut_height}_genome_cluster_table.tsv
@@ -772,6 +773,9 @@ genome_cluster_dfr_filt <- filter(genome_cluster_dfr, cluster %in% c(relevant_cl
 write.table(genome_cluster_dfr_filt, file="height_cut${cut_height}_genome_cluster_table.tsv", sep="\t", row.names = FALSE, quote = FALSE)
 
 RCMD
+
+# cleanup intermediate files
+[ -s genome_cluster_table.tsv ] && rm genome_cluster_table.tsv
 
 if [ -s "$tree_file" ]
 then
