@@ -12,7 +12,8 @@
 
 
 progname=${0##*/} 
-VERSION='v2.2_24Jan20' # v2.2_22Jan20; remove intermediate silhouette-width genome table
+VERSION='v2.3_26Jan20' #v2.3_26Jan20, fixed typo in help meny: -c <float>
+         # v2.2_24Jan20; remove intermediate silhouette-width genome table
          # v2.1_22Jan20 minor fix (missing space) in test [ "$palette" != "greys"] && ...
 
          # v2.0_12Jan20: >>> MAJOR SCRIPT UPGRADE <<<
@@ -287,7 +288,7 @@ function print_help()
      * Clustering
        -a <string> algorithm/method for clustering 
              [ward.D|ward.D2|single|complete|average(=UPGMA)]      [def: $algorithm]
-       -c <string> <real> height (dist) to cut clusters            [def: $cut_height]
+       -c <real> height (dist) to cut clusters                     [def: $cut_height]
        -d <string> distance type [euclidean|manhattan|gower]       [def: $distance]
        -l <flag> write Lists of genomes in clusters to file        [def: $print_cluster_lists]
 
@@ -365,7 +366,7 @@ distance=gower
 clust_stat=none   #sil
 cut_height=0.04
 print_cluster_lists=0
-k=50
+k=100
 
 text="Pan-genome clusters"
 width=14
@@ -733,7 +734,6 @@ if("$clust_stat" == "sil"){
    genome_cluster_dfr_filt <- filter(genome_cluster_dfr, cluster %in% c(relevant_clusters_tibble\$cluster)) %>% arrange(cluster)
    
    write.table(genome_cluster_dfr_filt, file="silhouette_genome_cluster_table.tsv", sep="\t", row.names = FALSE, quote = FALSE)
- 
 }
 
 # 10. plot the dendextend dengrogram cut at $cut_height and generate the corresponding height_cut${cut_height}_genome_cluster_table.tsv
@@ -776,6 +776,7 @@ RCMD
 
 # cleanup intermediate files
 [ -s genome_cluster_table.tsv ] && rm genome_cluster_table.tsv
+[ -s Rplots.pdf ] && rm Rplots.pdf
 
 if [ -s "$tree_file" ]
 then
