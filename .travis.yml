@@ -7,3 +7,8 @@ perl:
 before_install:
   # Inline::CPP is optional, required by transcripts2cdsCPP.pl
   - cpanm --sudo -v --installdeps --notest --cpanfile cpanfile .
+
+notifications:
+  email:
+    on_success: always
+    on_failure: always

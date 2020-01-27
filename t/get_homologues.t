@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 28;
+use Test::More tests => 26;
 use FindBin '$Bin';
 use lib "$Bin/../lib";
 use lib "$Bin/../lib/bioperl-1.5.2_102/";
@@ -39,7 +39,7 @@ ok( eval{ `perl $Bin/../compare_clusters.pl` } =~ /\[options\]/ , 'compare_clust
 
 ok( eval{ `perl $Bin/../download_genomes_ncbi.pl test` } =~ /\$NCBIHOST ok/ , 'download_genomes_ncbi.pl test' );
 
-ok( eval{ `$Bin/../hcluster_pangenome_matrix.sh` } =~ /check_dependencies/ , 'hcluster_pangenome_matrix.sh' );
+#ok( eval{ `$Bin/../hcluster_pangenome_matrix.sh` } =~ /check_dependencies/ , 'hcluster_pangenome_matrix.sh' );
 
 ok( eval{ `perl $Bin/../install.pl test` } =~ /testing only/ , 'install.pl test' );
 
@@ -49,7 +49,7 @@ ok( eval{ `perl $Bin/../parse_pangenome_matrix.pl` } =~ /\[options\]/ , 'parse_p
 
 ok( eval{ `perl $Bin/../pfam_enrich.pl` } =~ /\[options\]/ , 'pfam_enrich.pl' );
 
-ok( eval{ `$Bin/../plot_matrix_heatmap.sh` } =~ /check_dependencies/ , 'plot_matrix_heatmap.sh' );
+#ok( eval{ `$Bin/../plot_matrix_heatmap.sh` } =~ /check_dependencies/ , 'plot_matrix_heatmap.sh' );
 
 ok( eval{ `perl $Bin/../plot_pancore_matrix.pl` } =~ /\[options\]/ , 'plot_pancore_matrix.pl' );
 
