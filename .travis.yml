@@ -5,6 +5,5 @@ perl:
   - "5.26"
 
 before_install:
-  # required by transcripts2cdsCPP.pl
-  - "cpanm Inline::C" 
-  - "cpanm Inline::CPP"
+  # Inline::CPP is optional, required by transcripts2cdsCPP.pl
+  - cpanm --sudo -v --installdeps --notest --cpanfile cpanfile .
