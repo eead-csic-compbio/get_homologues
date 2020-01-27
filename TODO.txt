@@ -1,15 +1,15 @@
 Current list of ideas to improve/update GET_HOMOLOGUES:
 
+* Add slurm support to -m cluster -> see lib/HPCluster.pm , sub submit_cluster_job
+  Read: https://github.com/mauranolab/sge2slurm , http://hpc.mines.edu/bluem/interactive.html ,
+  https://srcc.stanford.edu/sge-slurm-conversion , https://srcc.stanford.edu/sge-slurm-conversion ,
+  http://genomics.princeton.edu/support/grids/slurm.shtml , https://hub.docker.com/r/giovtorres/docker-centos7-slurm
+
 * Speed-up/paralellize marfil_homology::blast_parse. This can be done by:
   a) port sub to C++
   b) do parsing in parallel splitting (sorted) infile in chunks without braking consecutive HSPs
   Read: http://blogs.perl.org/users/kirk_kimmel/2012/09/text-processing-divide-and-conquer.html
 
-* Add slurm support to -m cluster
-  Read: https://github.com/mauranolab/sge2slurm , http://hpc.mines.edu/bluem/interactive.html ,
-  https://srcc.stanford.edu/sge-slurm-conversion , https://srcc.stanford.edu/sge-slurm-conversion ,
-  http://genomics.princeton.edu/support/grids/slurm.shtml , https://hub.docker.com/r/giovtorres/docker-centos7-slurm
-  
 * Add flag to take into account synteny/gene order in input FASTA files for EST
    + optionally read in .gff/.gtf file matching ids in .fna
 	+ for pairs_i,j of sequences sets with GFF remove non-syntenic BLAST hits
