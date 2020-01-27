@@ -3,3 +3,8 @@ dist: xenial
 language: perl
 perl:
   - "5.26"
+
+before_install:
+  # required by transcripts2cdsCPP.pl
+  - "cpanm Inline::C" 
+  - "cpanm Inline::CPP"

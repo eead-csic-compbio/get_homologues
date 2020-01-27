@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 27;
+use Test::More tests => 28;
 use FindBin '$Bin';
 use lib "$Bin/../lib";
 use lib "$Bin/../lib/bioperl-1.5.2_102/";
@@ -59,4 +59,6 @@ ok( eval{ `perl $Bin/../_split_hmmscan.pl` } =~ /Usage/ , '_split_hmmscan.pl' );
 
 ok( eval{ `perl $Bin/../transcripts2cds.pl` } =~ /\[options\]/ , 'transcripts2cds.pl' );
 # this implicitly  tests modules in libs/est/
-# transcripts2cdsCPP.pl not tested as Inline::CPP is only optional and can be tricky to install
+
+ok( eval{ `perl $Bin/../transcripts2cdsCPP.pl` } =~ /\[options\]/ , 'transcripts2cdsCPP.pl' );
+# this needs optional module Inline::CPP
