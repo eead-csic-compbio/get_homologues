@@ -1,7 +1,5 @@
 Current list of ideas to improve/update GET_HOMOLOGUES:
 
-* add tests to check new commits : blog.urth.org/2019/11/18/my-new-ci-helpers-for-perl/
-
 * Speed-up/paralellize marfil_homology::blast_parse. This can be done by:
   a) port sub to C++
   b) do parsing in parallel splitting (sorted) infile in chunks without braking consecutive HSPs
@@ -10,7 +8,7 @@ Current list of ideas to improve/update GET_HOMOLOGUES:
 * Add slurm support to -m cluster
   Read: https://github.com/mauranolab/sge2slurm , http://hpc.mines.edu/bluem/interactive.html ,
   https://srcc.stanford.edu/sge-slurm-conversion , https://srcc.stanford.edu/sge-slurm-conversion ,
-  http://genomics.princeton.edu/support/grids/slurm.shtml
+  http://genomics.princeton.edu/support/grids/slurm.shtml , https://hub.docker.com/r/giovtorres/docker-centos7-slurm
   
 * Add flag to take into account synteny/gene order in input FASTA files for EST
    + optionally read in .gff/.gtf file matching ids in .fna
@@ -36,10 +34,4 @@ Current list of ideas to improve/update GET_HOMOLOGUES:
 * Add evidences to produced clusters
 
 * Improve graphical output and help users with external users
-  Read: https://bmcgenomics.biomedcentral.com/track/pdf/10.1186/1471-2164-15-8 , 
-  http://higlass.io/
-
-* Consider other clustering algorithms
-  OrthoFinder: local tests so far @ https://github.com/eead-csic-compbio/get_homologues/tree/master/user_utils/normalize
-  Read: https://academic.oup.com/bioinformatics/advance-article/doi/10.1093/bioinformatics/bty669/5063405
-
+  Read: https://bmcgenomics.biomedcentral.com/track/pdf/10.1186/1471-2164-15-8 , http://higlass.io

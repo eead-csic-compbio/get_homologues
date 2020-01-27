@@ -307,3 +307,4 @@
 24012020: hcluster_pangenome_matrix.sh v2.2_22Jan20, removes intermediate silhouette-width genome table
 27012020: added to Travis (Makefile, .travis.yml) 
 27012020: added transcripts2cdsCPP.pl to t/get_homologues.t
+27012020: automatic Travis builds already in place, check badge in README.md
