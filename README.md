@@ -1,5 +1,7 @@
 ## GET_HOMOLOGUES: a versatile software package for pan-genome analysis
 
+[![Build Status](https://travis-ci.com/eead-csic-compbio/get_homologues.svg?branch=master)](https://travis-ci.com/eead-csic-compbio/get_homologues)
+
 This software is maintained by Bruno Contreras-Moreira (bcontreras _at_ eead.csic.es) and Pablo Vinuesa (vinuesa _at_ ccg.unam.mx). 
 The original version, **suitable for bacterial genomes**, was described in:
 
