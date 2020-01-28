@@ -308,3 +308,8 @@
 27012020: added to Travis (Makefile, .travis.yml) 
 27012020: added transcripts2cdsCPP.pl to t/get_homologues.t
 27012020: automatic Travis builds already in place, check badge in README.md
+28012020: fixed stderr message printed out by warn_missing_soft
+28012020: moved t/get_homologues.t to test_get_homologues.t
+28012020: added sample_plasmids_gbk_homologues to support real tests with precomputed BLAST output
+28012020: Travis tests now do real tests of get_homologues.pl, compare_clusters.pl & parse_pangenome_matrix.pl
+28012020: Makefile removes tmp output of tests and also supports install target
