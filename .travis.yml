@@ -2,13 +2,14 @@ os: linux
 dist: xenial
 language: perl
 perl:
+  - "5.14"
   - "5.26"
 
 before_install:
-  # Inline::CPP is optional, required by transcripts2cdsCPP.pl
-  - cpanm --sudo -v --installdeps --notest --cpanfile cpanfile .
+  - "sudo apt-get update"
+  - "sudo apt-get install -y r-base"
+  - "cpanm --sudo -v --installdeps --notest --cpanfile cpanfile ."
 
 notifications:
   email:
-    on_success: always
     on_failure: always
