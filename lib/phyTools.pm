@@ -1823,12 +1823,13 @@ sub calc_memory_footprint
   }
 }
 
+# called from get_homologues*.pl to terminate warning that a software requirement is not met
 # uses globals: $0
 sub warn_missing_soft
 {
   my ($soft) = @_;
-  print "# cannot run $soft as required software is not in place,\n";
-  die "# EXIT : run $0 -v to check all required binares and data sources\n";
+  die "# ERROR: cannot run $soft as required software is not in place\n".
+  	"# EXIT : run $0 -v to check all required binares and data sources\n";
 }
 
 
