@@ -2,13 +2,18 @@ os: linux
 dist: xenial
 language: perl
 perl:
-  - "5.14"
   - "5.26"
 
 before_install:
   - "sudo apt-get update"
   - "sudo apt-get install -y r-base"
   - "cpanm --sudo -v --installdeps --notest --cpanfile cpanfile ."
+
+before_script:
+  - "make install_auto"
+
+script:
+  - "make test"
 
 notifications:
   email:
