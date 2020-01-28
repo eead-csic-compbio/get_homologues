@@ -1,0 +1,12 @@
+0	E_coli_ST131_plasmid_pKC394.gb
+1	E_coli_plasmid_pMUR050.gb
+2	IncN_plasmid_R46.gb
+3	K_oxytoca_plasmid_pKOX105.gb
+4	K_pneumoniae_12_plasmid_12.gb
+5	K_pneumoniae_9_plasmid_9.gb
+6	K_pneumoniae_KP96_plasmid_pKP96.gb
+7	S_enterica_subsp_enterica_serovar_Dublin_plasmid_pMAK2.gb
+8	Uncultured_bacterium_plasmid_pRSB201.gb
+9	Uncultured_bacterium_plasmid_pRSB203.gb
+10	Uncultured_bacterium_plasmid_pRSB205.gb
+11	Uncultured_bacterium_plasmid_pRSB206.gb
