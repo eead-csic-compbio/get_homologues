@@ -133,7 +133,7 @@ For this you might need to install *git* in your system, as explained earlier. N
 ```{r, engine='bash', eval=FALSE}
 cd soft
 git clone https://github.com/eead-csic-compbio/get_homologues.git
-cd soft/get_homologues
+cd get_homologues
 perl install.pl
 ```
 Note this will create a folder called *get_homologues*.
@@ -159,6 +159,10 @@ Note that this script will also tell you of missing dependencies.
 
 A way to use GET_HOMOLOGUES with all software dependencies pre-installed is the Docker image available at 
 [dockerhub](https://hub.docker.com/r/csicunam/get_homologues). This container includes also [GET_PHYLOMARKERS](https://github.com/vinuesa/get_phylomarkers). 
+
+## HPC cluster
+
+See the manual for instructions on how to run GET_HOMOLOGUES in a gridengine or LSF cluster.
 
 # Analysis of bacterial pan-genomes
 

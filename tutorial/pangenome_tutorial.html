@@ -11,7 +11,7 @@
 
 
 
-<meta name="date" content="2019-11-28" />
+<meta name="date" content="2020-01-31" />
 
 <title>From genomes to pangenomes: understanding variation among individuals and species</title>
 
@@ -250,7 +250,7 @@ div.tocify {
 <h1 class="title toc-ignore">From genomes to pangenomes: understanding variation among individuals and species</h1>
 <h4 class="author">Bruno Contreras Moreira &amp; Pablo Vinuesa</h4>
 <address class="author_afil">
-ARAID, EMBL-EBI &amp; <a href="http://www.eead.csic.es/compbio">Estación Experimental de Aula Dei-CSIC</a> (Spain) and <a href="http://www.ccg.unam.mx/%7Evinuesa">UNAM</a> (Mexico)<br><h4 class="date">2019-11-28</h4>
+ARAID, EMBL-EBI &amp; <a href="http://www.eead.csic.es/compbio">Estación Experimental de Aula Dei-CSIC</a> (Spain) and <a href="http://www.ccg.unam.mx/%7Evinuesa">UNAM</a> (Mexico)<br><h4 class="date">2020-01-31</h4>
 
 </div>
 
@@ -426,7 +426,7 @@ sudo cpan -i Inline::C Inline::CPP</code></pre>
 <p>A more space-efficient way of getting the software is to use <a href="https://en.wikipedia.org/wiki/Git">git</a>. For this you might need to install <em>git</em> in your system, as explained earlier. Note also that the <em>git</em> protocol requires to open port 9418, which might be blocked by your firewall. This method does not include the binary dependencies, which must downloaded during installation:</p>
 <pre class="bash"><code>cd soft
 git clone https://github.com/eead-csic-compbio/get_homologues.git
-cd soft/get_homologues
+cd get_homologues
 perl install.pl</code></pre>
 <p>Note this will create a folder called <em>get_homologues</em>.</p>
 <p>This approach makes future updates very simple, after moving to the git repository:</p>
@@ -444,6 +444,10 @@ perl install.pl</code></pre>
 <div id="docker-container" class="section level2">
 <h2><span class="header-section-number">2.2</span> Docker container</h2>
 <p>A way to use GET_HOMOLOGUES with all software dependencies pre-installed is the Docker image available at <a href="https://hub.docker.com/r/csicunam/get_homologues">dockerhub</a>. This container includes also <a href="https://github.com/vinuesa/get_phylomarkers">GET_PHYLOMARKERS</a>.</p>
+</div>
+<div id="hpc-cluster" class="section level2">
+<h2><span class="header-section-number">2.3</span> HPC cluster</h2>
+<p>See the manual for instructions on how to run GET_HOMOLOGUES in a gridengine or LSF cluster.</p>
 </div>
 </div>
 <div id="analysis-of-bacterial-pan-genomes" class="section level1">
