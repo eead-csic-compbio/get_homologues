@@ -2,8 +2,8 @@ package HPCluster;
 
 # Package to manage cluster jobs from get_homologues.pl & get_homologues-est.pl
 
-# Currently supports SGE and LSF clusters, 
-# Help is appreciated to add support for other systems such as SLURM, etc
+# Currently supports SGE, SLURM and LSF clusters, 
+# but it should not be too dificult to add support for other systems (help welcome)
 
 # Bruno Contreras-Moreira, Pablo Vinuesa
 # 2020 CCG/UNAM, Mexico, EEAD/CSIC, Zaragoza, Spain
@@ -33,14 +33,7 @@ $CLUSTER_CONF{'QARGS'}  = '';     # queue name, resources, etc
 $CLUSTER_CONF{'STIME'}  = 1;      # interval in seconds between sub commands
 $CLUSTER_CONF{'CTIME'}  = 30;     # interval in seconds between stat commands
 
-# suggestions for a LSF cluster
-# PATH	/lsf/ebi/10.1/linux3.10-glibc2.17-x86_64/bin/
-# TYPE	lsf
-# SUBEXE	bsub
-# CHKEXE	bjobs
-# DELEXE	bkill
-# ERROR	EXIT
-
+# check sample.HPC.conf for suggested LSF & slurm parameters
 
 # Checks whether cluster config file exists and parses it.
 # input: 
@@ -92,7 +85,8 @@ sub cluster_is_available
 	else 
     {
       $output = `$CLUSTER_CONF{"PATH"}$CLUSTER_CONF{$bin} -help 2>&1`;
-      if(!$output || ($output !~ /usage:/i && $output !~ /use/i))
+      if(!$output || 
+        ($output !~ /usage:/i && $output !~ /use/i && $output !~ /invalid option/))
       { 
         print "# ERROR: wrong cluster binary $bin\n";
         print "$CLUSTER_CONF{'PATH'}$CLUSTER_CONF{$bin} -help\n";
@@ -121,21 +115,29 @@ sub submit_cluster_job
   {
     $qsubcommand = " -J n$jobname -o $outfile ";
   }
+  elsif($CLUSTER_CONF{'TYPE'} eq 'slurm')
+  {
+    $qsubcommand = " --job-name=n$jobname -o $outfile ";
+  }
+
   # other cluster management types could be added here with elsif
+
   else # default SGE
   {
     $qsubcommand = " -N n$jobname -j y -o $outfile -S /bin/bash";
   }
 
   $qPID = `$CLUSTER_CONF{'PATH'}$CLUSTER_CONF{'SUBEXE'} $CLUSTER_CONF{'QARGS'} $qsubcommand <<EOF
-             cd $dir
-             $command
+#!/bin/env bash
+cd $dir
+$command
 EOF`;
 
   # parse and save process id   
   if($qPID =~ /^(\d+)\./ || 
     $qPID =~ /^Your job (\d+)/ ||
-    $qPID =~ /^Job <(\d+)> is submitted/){ $qPID = $1 } 
+    $qPID =~ /^Job <(\d+)> is submitted/ ||
+    $qPID =~ /^Submitted batch job (\d+)/ ){ $qPID = $1 } 
 
   # save job details associated to process id
   $ref_cluster_PIDs->{$qPID}{'command'} = $qsubcommand;

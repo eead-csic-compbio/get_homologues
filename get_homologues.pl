@@ -6,7 +6,7 @@
 
 # This program uses BLAST (and DIAMOND/HMMER/Pfam) to define clusters of 'orthologous' ORF/intergenic
 # sequences and pan/core-genome gene sets. Several algorithms are available and search parameters
-# are customizable. It is designed to process (in a SGE computer cluster) files contained in a
+# are customizable. It is designed to process (in a HPC computer cluster) files contained in a
 # directory (-d), so that new .faa/.gbk files can be added while conserving previous BLAST results.
 # In general the program tries to re-use previous results when run with the same input directory.
 
@@ -177,7 +177,7 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   print "\n".
     " This program uses BLAST (and optionally HMMER/Pfam) to define clusters of 'orthologous'\n".
     " genomic sequences and pan/core-genome gene sets. Several algorithms are available\n".
-    " and search parameters are customizable. It is designed to process (in a SGE computer\n".
+    " and search parameters are customizable. It is designed to process (in a HPC computer\n".
     " cluster) files contained in a directory (-d), so that new .faa/.gbk files can be added\n".
     " while conserving previous BLAST results. In general the program will try to re-use\n".
     " previous results when run with the same input directory.\n\n";

@@ -6,7 +6,7 @@
 
 # This program uses BLASTN to define clusters of 'orthologous' gene/transcript DNA sequences
 # and pan-transcriptome & pan-genome sets. Several algorithms are available and search parameters
-# are customizable. It is designed to process (in a multicore computer or SGE cluster) files contained in a
+# are customizable. It is designed to process (in a multicore computer or HPC cluster) files contained in a
 # directory (-d), so that new .fna files can be added while conserving previous BLASTN/Pfam results.
 # In general the program tries to re-use previous results when run with the same input directory.
 
@@ -160,7 +160,7 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   print "\n".
     "This program uses BLASTN/HMMER to define clusters of 'orthologous' transcripts\n".
     "and pan/core-trancriptome sets. Different algorithm choices are available\n".
-    "and search parameters are customizable. It is designed to process (in a SGE computer\n".
+    "and search parameters are customizable. It is designed to process (in a HPC computer\n".
     "cluster) files contained in a directory (-d), so that new .fna/.faa files can be added\n".
     "while conserving previous BLASTN/HMMER results. In general the program will try to re-use\n".
     "previous results when run with the same input directory.\n";
