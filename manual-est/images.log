@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.1.23)  31 JAN 2020 11:36
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.1.23)  5 FEB 2020 11:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -475,30 +475,30 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7.4> not available
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 176.
 
-:tex2html_wrap_inline2382:lthtmlCropMarkHeight:=16.67496pt
+:tex2html_wrap_inline2392:lthtmlCropMarkHeight:=16.67496pt
 
-:tex2html_wrap_inline2382:lthtmlCropMarkDepth:=6.05234pt:1ex:=4.49998pt
+:tex2html_wrap_inline2392:lthtmlCropMarkDepth:=6.05234pt:1ex:=4.49998pt
 Preview: Tightpage -32891 -32891 32891 32891
 [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
 
-:tex2html_wrap_inline2384:lthtmlCropMarkHeight:=12.7199pt
+:tex2html_wrap_inline2394:lthtmlCropMarkHeight:=12.7199pt
 
-:tex2html_wrap_inline2384:lthtmlCropMarkDepth:=1.58131pt:1ex:=4.49998pt
+:tex2html_wrap_inline2394:lthtmlCropMarkDepth:=1.58131pt:1ex:=4.49998pt
 [2]
 
-:tex2html_wrap_inline2386:lthtmlCropMarkHeight:=12.7199pt
+:tex2html_wrap_inline2396:lthtmlCropMarkHeight:=12.7199pt
 
-:tex2html_wrap_inline2386:lthtmlCropMarkDepth:=3.04655pt:1ex:=4.49998pt
+:tex2html_wrap_inline2396:lthtmlCropMarkDepth:=3.04655pt:1ex:=4.49998pt
 [3]
 
-:tex2html_wrap_inline2388:lthtmlCropMarkHeight:=12.88493pt
+:tex2html_wrap_inline2398:lthtmlCropMarkHeight:=12.88493pt
 
-:tex2html_wrap_inline2388:lthtmlCropMarkDepth:=1.58131pt:1ex:=4.49998pt
+:tex2html_wrap_inline2398:lthtmlCropMarkDepth:=1.58131pt:1ex:=4.49998pt
 [4]
 
-:tex2html_wrap_inline2390:lthtmlCropMarkHeight:=12.88493pt
+:tex2html_wrap_inline2400:lthtmlCropMarkHeight:=12.88493pt
 
-:tex2html_wrap_inline2390:lthtmlCropMarkDepth:=3.04655pt:1ex:=4.49998pt
+:tex2html_wrap_inline2400:lthtmlCropMarkDepth:=3.04655pt:1ex:=4.49998pt
 [5]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 216.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 216.
