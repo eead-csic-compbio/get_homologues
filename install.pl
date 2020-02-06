@@ -102,7 +102,7 @@ if(! -e $ENV{'MARFIL'}.'/bin/COGsoft/' || !-e $ENV{'EXE_BLASTP'})
        $BINURL = $BINOSXURL;
 
        # check wget is available
-       if(`which $WGETEXE`)
+       if(!`which $WGETEXE`)
        {
          die "# need wget, install it with 'brew install wget' and re-run\n";
        }
