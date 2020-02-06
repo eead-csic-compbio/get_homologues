@@ -2,7 +2,7 @@
 
 # Script that checks/compiles software required by get_homologues[-est] and checks dependencies
 # for first-time users.
-# last checked Jan2020
+# last checked Feb2020
 
 use strict;
 use warnings;
@@ -16,7 +16,9 @@ use transcripts;
 
 my $WGETEXE = 'wget'; # add path if required, likely not pre-installed in MacOS
 my $BINTGZFILE = 'bin.tgz';
-my $BINURL = "https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.2/$BINTGZFILE";
+my $BINOSXTGZFILE = 'binosx.tgz';
+my $BINURL = "https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.3/$BINTGZFILE";
+my $BINOSXURL = "https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.3/$BINOSXTGZFILE";
 
 my $PFAMSERVERURL   = 'ftp.ebi.ac.uk';
 my $PFAMFOLDER      = 'pub/databases/Pfam/current_release/';
@@ -62,6 +64,21 @@ if(defined($ARGV[0]))
 
 print "\n### 1) checking required parts: \n\n";
 
+# find out OS
+if($^O =~ /darwin/){ $SOguess = $#supportedOS }
+else
+{
+  foreach my $os (0 .. $#supportedOS)
+  {
+    $output = `$manager{$supportedOS[$os]} 2>&1`; 
+    if($output && $output !~ /command not found/)
+    {
+      $SOguess = $os;  
+      last;
+    }
+  }
+}
+
 # check whether bin dir is empty
 print "## checking whether source and binaries of dependencies are in place\n";
 if(! -e $ENV{'MARFIL'}.'/bin/COGsoft/' || !-e $ENV{'EXE_BLASTP'})
@@ -77,7 +94,20 @@ if(! -e $ENV{'MARFIL'}.'/bin/COGsoft/' || !-e $ENV{'EXE_BLASTP'})
   {
     chdir($ENV{'MARFIL'}.'/bin/');
     my ($ff,$fpath);
-    
+  
+    # check OS
+    if($supportedOS[$SOguess] eq 'macOSX')
+    {
+       $BINTGZFILE =  $BINOSXTGZFILE;
+       $BINURL = $BINOSXURL;
+
+       # check wget is available
+       if(`which $WGETEXE`)
+       {
+         die "# need wget, install it with 'brew install wget' and re-run\n";
+       }
+    }
+
     if(! -s $BINTGZFILE)
     {
       print "# retrieving $BINURL ...\n";
@@ -394,21 +424,6 @@ else
 
 if(@missing_packages)
 {
-  # find out OS
-  if($^O =~ /darwin/){ $SOguess = $#supportedOS }
-  else
-  {
-    foreach my $os (0 .. $#supportedOS)
-    {
-      $output = `$manager{$supportedOS[$os]} 2>&1`;
-      if($output && $output !~ /command not found/)
-      {
-        $SOguess = $os;
-        last;
-      }
-    }
-  }
-
   if(defined($SOguess))
   {
     print "\n# operating system guess: $supportedOS[$SOguess]\n";
