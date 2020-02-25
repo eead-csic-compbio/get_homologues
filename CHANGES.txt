@@ -316,3 +316,5 @@
 31012020: Brexit, added LSF and updated gridengine documentation in manuals
 05022020: added slurm support and updated documentation
 06022020: fixed macosx binaries and updated install.pl accordingly
+21022020: removed repeated test
+25022020: local BLAST jobs in get_homologues.pl are not splitted if proteomes < $BATCHSIZE; 2x speedup

@@ -525,18 +525,18 @@ if($runmode eq 'cluster')
 ###############################################################
 
 ## 0) declare most important vars
-my ($infile,$new_infile,$p2oinfile,$seq,$comma_input_files,@newfiles,%ressize,%intergenic_FNA_files);
+my ($infile,$new_infile,$total,$total_blast,$p2oinfile,$seq,$comma_input_files,$n_of_residues);
 my ($label,%orthologues,$gene,$orth,$orth2,$para,%inparalogues,%paralogues,$FASTAresultsDIR,$order,$minlog);
 my ($n_of_similar_length_orthologues,$clusterfile,$dna_clusterfile,$previous_files,$current_files,$inpara);
 my ($min_proteome_size,$reference_proteome,$smallest_proteome,$proteome_size,%seq_length,$cluster,$annot);
-my ($smallest_proteome_name,$reference_proteome_name,%psize,$taxon,$taxon2,$n_of_clusters,$n_of_taxa,$n_of_residues);
+my ($smallest_proteome_name,$reference_proteome_name,%psize,$taxon,$taxon2,$n_of_clusters,$n_of_taxa);
 my ($pname,$n_of_sequences,$refOK,$genbankOK,$cluster_size,$dna_cluster_size,$dna_cluster,$prot_cluster);
 my (%orth_registry,%LSE_registry,$LSE_reference,$LSE_t,$redo_inp,$redo_orth,%idclusters,%names,$generef);
 my ($reparse_all,$total_genbankOK,$n_of_similar_length_paralogues,$pfam_annot,$dnaOK,$n_of_taxa_cluster) = (0,0);
 my ($BDBHdone,$PARANOIDdone,$orthoMCLdone,$COGdone,$n_of_parsed_lines,$n_of_pfam_parsed_lines) = (0,0,0,0,0,0);
 my ($diff_BDBH_params,$diff_INP_params,$diff_HOM_params,$diff_OMCL_params,$lockcapableFS) = (0,0,0,0,0);
 my ($total_clustersOK,$clgene,$clorth,%ANIb_matrix,%POCP_matrix,%GIclusters,$clustersOK,%cluster_ids) = (0);
-my (@sorted_clusters,%taxa_clusters,%orth_taxa);
+my (@sorted_clusters,%taxa_clusters,%orth_taxa,@newfiles,%ressize,%intergenic_FNA_files);
 
 constructDirectory($newDIR) || die "# EXIT : cannot create directory $newDIR , check permissions\n";
 
@@ -1155,6 +1155,13 @@ $output_mask = $reference_proteome_name."\_" . $output_mask;
 
 print "# mask=$output_mask ($pancore_mask)\n" if(!$onlyblast);
 
+# adjust $BATCHSIZE for local multi-core jobs if proteomes are small, not worth it
+#if($runmode ne 'cluster' && $min_proteome_size < $BATCHSIZE && $BLAST_NOCPU > 1){   
+#	$BATCHSIZE = 50;
+#	print "$min_proteome_size $BATCHSIZE\n"; 
+#}
+
+
 # 1.6) check previously processed input files to decide whether blast parsing
 # is needed again and update $selected_genomes_file
 if($do_minimal_BDBHs){ $minlog = "minimal_BDBHs$reference_proteome" } # reference is crucial for -b runs
@@ -1486,6 +1493,8 @@ if(!-s $bpo_file || $current_files ne $previous_files || ($doCOG && !-s $cogblas
       if($do_features){ $infile = (split(/_features\.$FASTAEXTENSION/,$new_infile))[0]; }
       next if($include_file && !$included_input_files{$infile});
 
+      $total  = $psize{ $infile };
+
       foreach my $bfile2 (0 .. $#newfiles)
       {
         $blastDBfile = $newfiles[$bfile2];
@@ -1493,7 +1502,8 @@ if(!-s $bpo_file || $current_files ne $previous_files || ($doCOG && !-s $cogblas
         if($do_features){ $infile = (split(/_features\.$FASTAEXTENSION/,$new_infile))[0]; }
         next if($include_file && !$included_input_files{$infile});
 
-        $blastout   = $newDIR ."/_". $new_infile ."_". $blastDBfile.".blast";
+        $total_blast = $psize{ $infile };
+        $blastout = $newDIR ."/_". $new_infile ."_". $blastDBfile.".blast";
         $clusteroutfile = $newDIR ."/_". $new_infile ."_". $blastDBfile.".queue";
         push(@to_be_deleted,$clusteroutfile);
 
@@ -1533,7 +1543,16 @@ if(!-s $bpo_file || $current_files ne $previous_files || ($doCOG && !-s $cogblas
         }
         else # 'local' runmode -> ensure multi-core CPU use
         {
-          $command = format_SPLITBLAST_command()."$BATCHSIZE $command > /dev/null"; 
+          if($total > $BATCHSIZE || $total_blast > $BATCHSIZE) 
+          {
+            $command = format_SPLITBLAST_command()."$BATCHSIZE $command > /dev/null";
+          }
+          else # don't bother splitting small FASTA files
+          {
+            $command = "$command > /dev/null";
+            $command =~ s/\\//g; 
+          }
+
           system("$command");
           if($? != 0)
           {

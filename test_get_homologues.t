@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 28;
+use Test::More tests => 26;
 use lib "lib";
 use lib "lib/bioperl-1.5.2_102/";
 
@@ -9,10 +9,6 @@ BEGIN { use_ok('ForkManager') };
 BEGIN { use_ok('HPCluster') };
 
 BEGIN { use_ok('phyTools') };
-
-BEGIN { use_ok('marfil_homology') };
-
-BEGIN { use_ok('marfil_homology') };
 
 BEGIN { use_ok('marfil_homology') };
 
