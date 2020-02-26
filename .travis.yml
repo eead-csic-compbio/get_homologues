@@ -6,7 +6,7 @@ perl:
 
 before_install:
   - "sudo apt-get update"
-  - "sudo apt-get install -y r-base"
+  - "sudo apt-get install -y r-base libgd3"
   - "cpanm --sudo -v --installdeps --notest --cpanfile cpanfile ."
 
 before_script:
