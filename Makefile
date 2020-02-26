@@ -6,7 +6,9 @@ test:
 	rm -rf sample_plasmids_gbk_homologues/tmp/ 
 	rm -rf sample_plasmids_gbk_homologues/UnculturedbacteriumplasmidpRSB203_f0_0taxa_algOMCL_e0_
 	rm -f sample_plasmids_gbk_homologues/UnculturedbacteriumplasmidpRSB203_f0_0taxa_algOMCL_e0_.cluster_list
-	rm -rf tmpclusters
+	rm -rf sample_plasmids_gbk_homologues/UnculturedbacteriumplasmidpRSB203_f0_0taxa_algCOG_e0_
+	rm -f sample_plasmids_gbk_homologues/UnculturedbacteriumplasmidpRSB203_f0_0taxa_algCOG_e0_.cluster_list
+	rm -f sample_intersection/*.png
 
 install:
 	perl install.pl
