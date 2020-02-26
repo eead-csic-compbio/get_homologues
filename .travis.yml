@@ -6,8 +6,7 @@ perl:
 
 before_install:
   - "sudo apt-get update"
-  - "sudo apt-get install -y r-base"
-  - "sudo apt-get install -y libgd-gd2-perl" 
+  - "sudo apt-get install -y r-base libgd-dev"
   - "cpanm --sudo -v --installdeps --notest --cpanfile cpanfile ."
 
 before_script:
