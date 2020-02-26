@@ -10,4 +10,3 @@ requires 'Benchmark';
 requires 'Storable';
 requires 'Inline';
 requires 'Inline::CPP';
-requires 'GD';
