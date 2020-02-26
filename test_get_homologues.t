@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 26;
+use Test::More tests => 28;
 use lib "lib";
 use lib "lib/bioperl-1.5.2_102/";
 
@@ -54,6 +54,12 @@ ok( eval{ `perl ./get_homologues-est.pl -v ` } =~ /Checking required binaries/ ,
 
 ok( eval{ `perl ./get_homologues.pl -d sample_plasmids_gbk -M -t 0` } =~ /number_of_clusters = 19\d+/, 'get_homologues.pl -d sample_plasmids_gbk -M' );
 
-ok( eval{ `perl ./compare_clusters.pl -d sample_plasmids_gbk_homologues/UnculturedbacteriumplasmidpRSB203_f0_0taxa_algOMCL_e0_ -o tmpclusters -m` } =~ /pangenome_matrix_t0.tab/ , 'compare_clusters.pl -d sample_plasmids_gbk_homologues/...' );
+ok( eval{ `perl ./get_homologues.pl -d sample_plasmids_gbk -G -t 0` } =~ /number_of_clusters = 19\d+/, 'get_homologues.pl -d sample_plasmids_gbk -G' );
 
-ok( eval{ `perl ./parse_pangenome_matrix.pl -m tmpclusters/pangenome_matrix_t0.tab -s` } =~ /pan-genome size estimates/, 'parse_pangenome_matrix.pl' );
+ok( eval{ `perl ./compare_clusters.pl -d sample_plasmids_gbk_homologues/UnculturedbacteriumplasmidpRSB203_f0_0taxa_algOMCL_e0_,sample_plasmids_gbk_homologues/UnculturedbacteriumplasmidpRSB203_f0_0taxa_algCOG_e0_ -o sample_intersection -m` } =~ /pangenome_matrix_t0.tab/ , 'compare_clusters.pl ' );
+
+ok( eval{ `perl ./parse_pangenome_matrix.pl -m sample_intersection/pangenome_matrix_t0.tab -s` } =~ /sample_intersection\/pangenome_matrix_t0__shell.png/, 'parse_pangenome_matrix.pl -s' );
+
+# requires optional module GD
+ok( eval{ `perl ./parse_pangenome_matrix.pl -m sample_intersection/pangenome_matrix_t0.tab -A sample_plasmids_gbk/A.txt -B sample_plasmids_gbk/B.txt -g -p 'Klebsiella oxytoca KOX105'` } =~ /chromosome\/contig/, 'parse_pangenome_matrix.pl -p' );
+
