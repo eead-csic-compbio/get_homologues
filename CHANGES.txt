@@ -318,3 +318,5 @@
 06022020: fixed macosx binaries and updated install.pl accordingly
 21022020: removed repeated test
 25022020: local BLAST jobs in get_homologues.pl are not splitted if proteomes < $BATCHSIZE; 2x speedup
+26022020: fixed parse_pangenome_matrix.pl -p which was not parsing contig names correctly, thanks Nemanja kuzman1306
+26022020: added parse_pangenome_matrix.pl -p to test suite 
