@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# 2017-9 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2017-20 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -540,20 +540,20 @@ if($INP_refgenome)
   # my $ref_sources_features = extract_features_from_genbank($INP_refgenome,0,$DEFAULTGBKFEATURES);
 
   # find reference genes contained in @pansetA clusters
-  my $taxonOK = 0;
+  my $taxonOK = 0; 
   foreach $pancluster (@pansetA)
   {
-    my $fasta_ref = read_FASTA_file_array( $cluster_dir.'/'.$pancluster );
+    my $fasta_ref = read_FASTA_file_array( $cluster_dir.'/'.$pancluster ); 
     foreach my $seq ( 0 .. $#{$fasta_ref} )
     {
-
-      # escapa posibles caracteres especiales como [ del nombre del taxon
+      # escape special chars such as [taxon name]
       if($fasta_ref->[$seq][NAME] =~ /\Q$INP_refgenome\E/)
       {
         $taxonOK++;
 
         #|NC_002528(640681):579687-580265:-1
-        $feat = (split(/\|/,$fasta_ref->[$seq][NAME]))[5];
+        #|rho61_2(1942384):5601-6167:-1 prokka style
+        $feat = (split(/\|/,$fasta_ref->[$seq][NAME]))[6]; # was 5 in previous versions
         if($feat && $feat =~ /(\S+)?\((\d+)\):(\d+)-(\d+):(-*1)/)
         {
           $contig{$1}{'size'} = $2;
