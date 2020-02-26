@@ -1,0 +1,20 @@
+>ID:ADH29965.1 |[Escherichia coli O25b:H4-ST131 str. EC958]|ST131|E_coli_ST131_plasmid_pKC394.gb|hypothetical protein|198|HM138652(53207):5784-5981:-1 ^GI:296537945^ Escherichia coli strain ST131 plasmid pKC394, complete sequence.|neighbours:ID:ADH29964.1(-1),ID:ADH29966.1(-1)|neighbour_genes:EcoRII modification ..,restriction endonucl..|
+MKSVTIEAKTFAEMLGITEGELIFAIKKTGTFKNKTIPQPHEPHKSNNRFLYSDVMRFIESLKDK
+>ID:ABG33802.1 |[Escherichia coli]||E_coli_plasmid_pMUR050.gb|hypothetical protein|198|AY522431(56634):27502-27699:-1 ^GI:109390500^ Escherichia coli plasmid pMUR050, complete sequence.|neighbours:ID:ABG33801.1(1),ID:ABG33803.1(-1)|neighbour_genes:transposase,hypothetical protein|
+MKSVTIEAKTFAEMLGITEGELIFAIKKTGTFKNKTIPQPHEPHKSNNRFLYSDVMRFIESLKDK
+>ID:AAL13427.1 |[IncN plasmid R46]||IncN_plasmid_R46.gb|hypothetical protein|198|AY046276(50969):830-1027:-1 ^GI:17342670^ IncN plasmid R46, complete sequence.|neighbours:ID:AAL13426.1(1),ID:AAL13428.1(-1)|neighbour_genes:tnpA,hypothetical protein|
+MKSVTIEAKTFAEMLGITEGELIFAIKKTGTFKNKTIPQPHEPHKSNNRFLYSDVMRFIESLKDK
+>ID:ACI63073.1 |[Klebsiella pneumoniae]|12|K_pneumoniae_12_plasmid_12.gb|conserved hypothetic..|207|FJ223605(75617):72862-73068:1 ^GI:209574185^ Klebsiella pneumoniae strain 12 plasmid 12, complete sequence.|neighbours:ID:ACI63072.1(1),ID:ACI63074.1(-1)|neighbour_genes:restriction endonucl..,InsB|
+MKSVTIEAKTFAEMLGITEGELIFAIKKTGTFKNKTIPQPHEPHKSNNRFLYSDVMRFIESLKDKENR
+>ID:ACI63182.1 |[Klebsiella pneumoniae]|9|K_pneumoniae_9_plasmid_9.gb|conserved hypothetic..|168|FJ223607(70655):67061-67228:1 ^GI:209574296^ Klebsiella pneumoniae strain 9 plasmid 9, complete sequence.|neighbours:ID:ACI63181.1(1),ID:ACI63183.1(-1)|neighbour_genes:restriction endonucl..,InsB|
+MLGITEGELIFAIKKTGTFKNKTIPQPHEPHKSNNRFLYSDVMRFIESLKDKENR
+>ID:ABY74378.1 |[Klebsiella pneumoniae]|KP96|K_pneumoniae_KP96_plasmid_pKP96.gb|hypothetical protein|207|EU195449(67850):17234-17440:-1 ^GI:165928610^ Klebsiella pneumoniae strain KP96 plasmid pKP96, complete sequence.|neighbours:ID:ABY74380.1(-1),ID:ABY74366.1(-1)|neighbour_genes:EcoRIIm,tnpA|
+MKSVTIEAKTFAEMLGITEGELIFAIKKTGTFKNKTIPQPHEPHKSNNRFLYSDVMRFIESLKDKENR
+>ID:BAF93083.1 |[Salmonella enterica subsp. enterica serovar Dublin]|L-789|S_enterica_subsp_enterica_serovar_Dublin_plasmid_pMAK2.gb|MAK2.03c|198|AB366441(61571):5805-6002:-1 ^GI:159885480^ Salmonella enterica subsp. enterica serovar Dublin plasmid pMAK2 DNA, complete genome, strain: L-789.|neighbours:ID:BAF93082.1(-1),ID:BAF93084.1(-1)|neighbour_genes:EcoRIIm,MAK2.04c|
+MKSVTIEAKTFAEMLGITEGELIFAIKKTGTFKNKTIPQPHEPHKSNNRFLYSDVMRFIESLKDK
+>ID:AEW28799.1 |[uncultured bacterium]||Uncultured_bacterium_plasmid_pRSB203.gb|hypothetical protein|198|JN102342(42875):6572-6769:-1 ^GI:363585788^ Uncultured bacterium plasmid pRSB203, complete sequence.|neighbours:ID:AEW28798.1(-1),ID:AEW28800.1(-1)|neighbour_genes:dcm,type IV restriction ..|
+MKSVTIEAKTFAEMLGITEGELIFAIKKTGTFKNKTIPQPHEPHKSNNRFLYSDVMRFIESLKDK
+>ID:AEW28848.1 |[uncultured bacterium]||Uncultured_bacterium_plasmid_pRSB205.gb|hypothetical protein|198|JN102343(47905):5967-6164:-1 ^GI:363585838^ Uncultured bacterium plasmid pRSB205, complete sequence.|neighbours:ID:AEW28847.1(-1),ID:AEW28849.1(-1)|neighbour_genes:dcm,type IV restriction ..|
+MKSVTIEAKTFAEMLGITEGELIFAIKKTGTFKNKTIPQPHEPHKSNNRFLYSDVMRFIESLKDK
+>ID:AEW28900.1 |[uncultured bacterium]||Uncultured_bacterium_plasmid_pRSB206.gb|hypothetical protein|198|JN102344(52809):6455-6652:-1 ^GI:363585891^ Uncultured bacterium plasmid pRSB206, complete sequence.|neighbours:ID:AEW28899.1(-1),ID:AEW28901.1(-1)|neighbour_genes:dcm,type IV restriction ..|
+MKSVTIEAKTFAEMLGITEGELIFAIKKTGTFKNKTIPQPHEPHKSNNRFLYSDVMRFIESLKDK

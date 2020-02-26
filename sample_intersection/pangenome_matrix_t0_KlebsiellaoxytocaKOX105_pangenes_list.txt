@@ -1,0 +1,23 @@
+# ./parse_pangenome_matrix.pl -m sample_intersection/pangenome_matrix_t0.tab -A sample_plasmids_gbk/A.txt -B sample_plasmids_gbk/B.txt -g 1 -e 0 -p Klebsiella oxytoca KOX105 -P 100 -S 0
+# genes present in set A and absent in B (21):
+198_TnpA.faa
+201_VIM-1.faa
+225_delta-FipA.faa
+226_TnpA.faa
+228_truncated_TnpA.faa
+230_hypothetical_protein.faa
+231_hypothetical_protein.faa
+232_hypothetical_protein.faa
+233_YdaA.faa
+234_hypothetical_protein.faa
+235_hypothetical_protein.faa
+236_putative_DeoR-type_t...faa
+238_TnpA.faa
+240_putative_invertase-r...faa
+241_PilT.faa
+242_TnpA.faa
+243_TnpM.faa
+245_dfrA14.faa
+246_hypothetical_protein.faa
+606_type_IV_restriction_...faa
+619_traA.faa

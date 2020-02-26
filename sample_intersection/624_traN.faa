@@ -1,0 +1,20 @@
+>ID:ADH29985.1 |[Escherichia coli O25b:H4-ST131 str. EC958]|ST131|E_coli_ST131_plasmid_pKC394.gb|traN|147|HM138652(53207):23590-23736:1 ^GI:296537965^ Escherichia coli strain ST131 plasmid pKC394, complete sequence.|neighbours:ID:ADH29984.1(1),ID:ADH29986.1(1)|neighbour_genes:traD,traE|
+MRSLLLMGVLLISACSSGHKPPPEPDWSNTVPVNKTIPVDTQGGANES
+>ID:ABG33816.1 |[Escherichia coli]||E_coli_plasmid_pMUR050.gb|traN|147|AY522431(56634):36231-36377:1 ^GI:109390514^ Escherichia coli plasmid pMUR050, complete sequence.|neighbours:ID:ABG33815.1(1),ID:ABG33817.1(1)|neighbour_genes:traD,traE|
+MRSLLLMGVLLISACSSGHKPPPEPDWSNTVPVNKTIPVDTQGGANES
+>ID:AAL13390.1 |[IncN plasmid R46]||IncN_plasmid_R46.gb|traN|147|AY046276(50969):9558-9704:1 ^GI:17342633^ IncN plasmid R46, complete sequence.|neighbours:ID:AAL13389.1(1),ID:AAL13391.1(1)|neighbour_genes:traD,traE|
+MRSLLLMGVLLISACSSGHKPPPEPDWSNTVPVNKTIPVDTQGGRNES
+>ID:ACI63050.1 |[Klebsiella pneumoniae]|12|K_pneumoniae_12_plasmid_12.gb|conserved domain pro..|159|FJ223605(75617):55371-55529:-1 ^GI:209574162^ Klebsiella pneumoniae strain 12 plasmid 12, complete sequence.|neighbours:ID:ACI63049.1(-1),ID:ACI63051.1(-1)|neighbour_genes:TraE,TraD|
+MDAVMRSLLLMGVLLISACSSGHKPPPEPDWSNTVPVNKTIPVDTQGGANES
+>ID:ABY74355.1 |[Klebsiella pneumoniae]|KP96|K_pneumoniae_KP96_plasmid_pKP96.gb|traN|147|EU195449(67850):40404-40550:1 ^GI:165928587^ Klebsiella pneumoniae strain KP96 plasmid pKP96, complete sequence.|neighbours:ID:ABY74356.1(1),ID:ACG49257.1(1)|neighbour_genes:traD,traE|
+MRSLLLMGVLLISACSSGHKPPPEPDWSNTVPVNKTIPVDTQGGANES
+>ID:BAF93107.1 |[Salmonella enterica subsp. enterica serovar Dublin]|L-789|S_enterica_subsp_enterica_serovar_Dublin_plasmid_pMAK2.gb|traN|147|AB366441(61571):32053-32199:1 ^GI:159885504^ Salmonella enterica subsp. enterica serovar Dublin plasmid pMAK2 DNA, complete genome, strain: L-789.|neighbours:ID:BAF93106.1(1),ID:BAF93108.1(1)|neighbour_genes:traD,traE|
+MRSLLLMGVLLISACSSGHKPPPEPDWSNTVPVNKTIPVDTQGGANES
+>ID:AEW28766.1 |[uncultured bacterium]||Uncultured_bacterium_plasmid_pRSB201.gb|traN|147|JN102341(56488):29390-29536:1 ^GI:363585754^ Uncultured bacterium plasmid pRSB201, complete sequence.|neighbours:ID:AEW28765.1(1),ID:AEW28767.1(1)|neighbour_genes:traD,traE|
+MRSLLLMGVLLISACSSGHKPPPEPDWSNTVPVNKTIPVDTQGGANES
+>ID:AEW28818.1 |[uncultured bacterium]||Uncultured_bacterium_plasmid_pRSB203.gb|traN|147|JN102342(42875):20669-20815:1 ^GI:363585807^ Uncultured bacterium plasmid pRSB203, complete sequence.|neighbours:ID:AEW28817.1(1),ID:AEW28819.1(1)|neighbour_genes:traD,traE|
+MRSLLLMGVLLISACSSGHKPPPEPDWSNTVPVNKTIPVDTQGGANES
+>ID:AEW28862.1 |[uncultured bacterium]||Uncultured_bacterium_plasmid_pRSB205.gb|traN|147|JN102343(47905):14696-14842:1 ^GI:363585852^ Uncultured bacterium plasmid pRSB205, complete sequence.|neighbours:ID:AEW28861.1(1),ID:AEW28863.1(1)|neighbour_genes:traD,traE|
+MRSLLLMGVLLISACSSGHKPPPEPDWSNTVPVNKTIPVDTQGGANES
+>ID:AEW28914.1 |[uncultured bacterium]||Uncultured_bacterium_plasmid_pRSB206.gb|traN|147|JN102344(52809):15184-15330:1 ^GI:363585905^ Uncultured bacterium plasmid pRSB206, complete sequence.|neighbours:ID:AEW28913.1(1),ID:AEW28915.1(1)|neighbour_genes:traD,traE|
+MRSLLLMGVLLISACSSGHKPPPEPDWSNTVPVNKTIPVDTQGGANES
