@@ -46,8 +46,8 @@ sub read_cluster_config
     while(<CONF>)
     {
       next if(/^#/);
-      chomp; 
-      if(/^(\S+)\s+(\S+)/){ $CLUSTER_CONF{$1} = $2 }
+      chomp;
+      if(/^(\S+)\s+([^\n]+)/){ $CLUSTER_CONF{$1} = $2 }
     }
     close(CONF);
   }
