@@ -342,7 +342,7 @@ sub read_FASTA_sequence
         print "# read_FASTA_sequence : skipped CDS sequence (inframe STOP codon) $FASTA{$seq}{'NAME'}\n";
         next;
       }
-      if($FASTA{$seq}{'SEQ'} !~ /[QEIPDFHKLMV]/ && length($FASTA{$seq}{'SEQ'})%3)
+      if($FASTA{$seq}{'SEQ'} !~ /[QEIPDFHLV]/ && length($FASTA{$seq}{'SEQ'})%3)
       {
         my $choppednts = 0;
         while(length($FASTA{$seq}{'SEQ'})%3){ chop $FASTA{$seq}{'SEQ'}; $choppednts++; }
@@ -501,7 +501,7 @@ sub read_FASTA_file_array
     foreach $seq ( 0 .. $n_of_sequences )
     {
       # skip protein sequences
-      if($FASTA[$seq][SEQ] =~ /[QEYIDFHKLVM]/i)
+      if($FASTA[$seq][SEQ] =~ /[QEIPDFHLV]/i)
       {
         print "# read_FASTA_sequence_array : skipped amino acid sequence ($FASTA[$seq][NAME])\n";
         next;

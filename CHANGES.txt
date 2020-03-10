@@ -323,3 +323,4 @@
 26022020: added parse_pangenome_matrix.pl -p to test suite 
 03032020: improved regex at sub read_cluster_config (lib/HPCluster.pm)
 10032020: fixed annotate_cluster.pl -D in cases with no Pfam hits
+10032020: updated regex to detect peptide sequences in lib/phyTools.pm
