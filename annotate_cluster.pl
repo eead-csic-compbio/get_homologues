@@ -130,7 +130,7 @@ printf(STDERR "\n# %s -f %s -r %s -o %s -P %s -b %s -D %s -c %d -A %s -B %s\n",
 
 my ($maxlength,$longest_seq,$length,$start,$end,$seq,$fh,$seqname) = (0,-1);
 my ($ext_seq,$ext_seqname,$taxon,$seqid,$align_seq) = ('','');
-my ($command,$Pfam_string,$Pfam_full);
+my ($command,$Pfam_string,$Pfam_full) = ('','','');
 my (@trash,%short_names,%intaxa,%id2taxon);
 my (%included_input_filesA,%included_input_filesB,@listA,@listB);
 
