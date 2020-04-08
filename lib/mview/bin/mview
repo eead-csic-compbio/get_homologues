@@ -1,1497 +1,382 @@
 #!/usr/bin/env perl
 
-# Copyright (C) 1997-2015 Nigel P. Brown
-# $Id: mview,v 1.79 2015/06/18 20:26:00 npb Exp $
+# Copyright (C) 1997-2020 Nigel P. Brown
 
-my $VERSION  = '1.60';
-my $PATCH    = '1';
+# This file is part of MView.
+# MView is released under license GPLv2, or any later version.
 
+###########################################################################
+# Release information
+###########################################################################
+my $VERSION  = '1.67';
+my $PATCH    = '';
 my $PROJECT  = 'MView';
 my $AUTHOR   = "Nigel P. Brown";
-my $VERSION  = $VERSION . ($PATCH?".$PATCH":"");
-my $COPYYRS  = "1997-2015";
+my $VERSION  = $VERSION . ($PATCH ? ".$PATCH" : "");
+my $COPYYRS  = "1997-2020";
 my $PROJPTH  = 'https://desmid.github.io/mview/';
 my $AUTHMAIL = 'biomview@gmail.com';
 
 ###########################################################################
 require 5.004;
 
-$^W=1;
-BEGIN {$::COMPILE_ERROR=0}  #catch compile time method call failure
+$^W = 1;
 
-use FindBin '$Bin'; # added Bruno Feb2015
+BEGIN {
+    $MVIEW_HOME = "/home/brown/HOME/work/MView/dev";
+    $MVIEW_HOME = $ENV{'MVIEW_HOME'}  if exists $ENV{'MVIEW_HOME'};
+    $MVIEW_LIB = "$MVIEW_HOME/lib";
+}
+
+use lib $MVIEW_LIB;
+
+use FindBin '$Bin'; # added Bruno Apr2020
 use lib "$Bin/../lib";
-use Getopt;
+use Bio::Util::File qw(basename tmpfile);
+use Bio::Util::System qw(vmstat);
+use Bio::MView::Option::Arguments;
+use Bio::MView::Option::Parser;
+use Bio::MView::Display::Display;
 use Bio::MView::Manager;
 use strict;
 
-exit 1  if $::COMPILE_ERROR;
+###########################################################################
+my $PROG = basename($0);
+my $TMPFILE = tmpfile();
+my $INVOCATION = "$PROG @ARGV";
 
 ###########################################################################
-my $PROG    = Universal::basename($0);
-my $SCRATCH = Universal::tmpfile("mview_$$");
-my $INVOKE  = "$PROG @ARGV";
+my ($VERB_NONE, $VERB_FILE, $VERB_ARGV, $VERB_FORM, $VERB_OPTS) =
+    (0,1,2,4,8);
 
-my $DOCTYPE = '<!DOCTYPE html>';
-my $DOCMETA = '<META http-equiv="Content-Type" content="text/html; charset=utf-8"/>';
+sub verbose_echo_file       { return $_[0]->{'verbose'} & $VERB_FILE }
+sub verbose_echo_argv       { return $_[0]->{'verbose'} & $VERB_ARGV }
+sub verbose_echo_informat   { return $_[0]->{'verbose'} & $VERB_FORM }
+sub verbose_dump_parameters { return $_[0]->{'verbose'} & $VERB_OPTS }
 
-my %KNOWN_FORMAT =
-    (
-     #search formats
-     'blast'    => 1,
-     'uvfasta'  => 1,
+sub want_text               { return $_[0]->{'html'} == $HTML_NONE }
+sub want_html               { return $_[0]->{'html'} != $HTML_NONE }
+sub want_html_body          { return $_[0]->{'html'} &  $HTML_BODY }
+sub want_html_head          { return $_[0]->{'html'} &  $HTML_HEAD }
+sub want_html_full          { return $_[0]->{'html'} &  $HTML_FULL }
+sub only_want_html_data     { return $_[0]->{'html'} == $HTML_DATA }
 
-     #flatfile formats
-     'plain'   	=> 1,
-     'clustal' 	=> 1,
-     'msf'     	=> 1,
-     'fasta'   	=> 1,
-     'pir'     	=> 1,
-     'hssp'    	=> 1,
-     'maf'     	=> 1,
-     'multas'  	=> 1,
-     'mips'    	=> 1,
-     'jnetz'   	=> 1,
-    );
+sub want_convert_rdb        { return $_[0]->{'outfmt'} eq 'rdb' }
+sub want_mview_layout       { return $_[0]->{'outfmt'} eq 'mview' }
 
-my ($HTML_NULL, $HTML_DATA, $HTML_CSS, $HTML_BODY, $HTML_HTML, $HTML_MIME) =
-    (0,1,2,4,8,16);
-my ($VERB_NULL, $VERB_FILE, $VERB_ARGV, $VERB_FORM, $VERB_OPTS) = (0,1,2,4,8);
-my ($stm, $com, $opt, $par) = (\*STDOUT);
+sub want_leading_copyright  { return want_convert_rdb(@_) }
+sub want_trailing_copyright { return (want_mview_layout(@_) and
+                                      ! only_want_html_data(@_)) }
 
-###########################################################################
-$SIG{'INT'} = sub { warn "$PROG: exiting on interrupt\n"; &cleanup(); exit 1 };
-
-$com = new Getopt($PROG, \*DATA)->getoptions(\@ARGV);
-$opt = $com->get_option_hash;
-$par = $com->get_parameter_hash;
-rationalise_parameters($opt, $par);
-dump_options($opt, $par)      if $opt->{'verbose'} & $VERB_OPTS;
-usage($com, $opt, $par, 0)    if $opt->{'help'};
-
-#CSS listing request: no alignment, no HTML
-if ($opt->{'listcss'}) {
-    #http://www.w3.org/TR/REC-CSS1#containment-in-html
-    print $stm Bio::MView::Manager::list_css(
-	'alncolor' => $par->{'alncolor'},
-	'labcolor' => $par->{'labcolor'},
-	'symcolor' => $par->{'symcolor'},
-	'gapcolor' => $par->{'gapcolor'},
-	);
-    exit 0;
-}
-
-html_head($opt, $par, $stm);
-
-#echo command line?
-if ($opt->{'verbose'} & $VERB_ARGV) {
-    my $s = $com->argv_string;
-    $s =~ s/\-+v[a-z]*[=\s]+\S+\s*//g;
-    if ($opt->{'html'}) {
-	print $stm "<H4>command line:</H4>\n<CODE>";
-	print $stm "$PROG $s";
-	print $stm "</CODE>\n<H4>produced:</H4>\n";
-    } else {
-	print $stm "command line:\n";
-	print $stm "$PROG $s\n";
-	print $stm "produced:\n\n";
-    }
-}
-
-#leading copyright?
-print $stm copyright($opt)    if $opt->{'out'} eq 'rdb';
-
-#colormap listing request: no alignment
-if ($opt->{'listcolors'}) {
-    print $stm "<HR><PRE>\n"       if $opt->{'html'};
-    print $stm Bio::MView::Manager::list_colormaps($opt->{'html'});
-    print $stm "</PRE><HR>\n"      if $opt->{'html'};
-    print $stm copyright($opt);
-    html_foot($opt, $par, $stm);
-    exit 0;
-}
-
-#groupmap listing request: no alignment
-if ($opt->{'listgroups'}) {
-    print $stm "<HR><PRE>\n"       if $opt->{'html'};
-    print $stm Bio::MView::Manager::list_groupmaps($opt->{'html'});
-    print $stm "</PRE><HR>\n"      if $opt->{'html'};
-    print $stm copyright($opt);
-    html_foot($opt, $par, $stm);
-    exit 0;
-}
-
-#read from stdin?
-unless (@ARGV or $opt->{'noparse'}) {
-    warn "$PROG: reading from standard input (Ctrl-C to cancel)\n";
-    open(TMP, ">$SCRATCH") or die "$PROG: nothing on stdin - exiting!\n";
-    while (<>) { print TMP }
-    close TMP;
-    push @ARGV, $SCRATCH;
-}
-
-#do the real work
-if (mview($opt, $par, $stm, @ARGV)) {
-    print $stm copyright($opt)  if $opt->{'html'} != $HTML_DATA and
-        $opt->{'out'} =~ /^new/;
-} else {
-    my $s = "$PROG: no alignments found\n";
-    print $s  if $opt->{'html'} and $opt->{'html'} != $HTML_DATA;
-    warn $s;
-}
-html_foot($opt, $par, $stm);
-
-#Universal::vmstat("FINISHED.");
-
-cleanup();
-
+sub want_help               { return $_[0]->{'help'} }
+sub want_dump_css           { return $_[0]->{'listcss'} }
+sub want_dump_colors        { return $_[0]->{'listcolors'} }
+sub want_dump_groups        { return $_[0]->{'listgroups'} }
+sub want_title              { return $_[0]->{'title'} ne '' }
+sub want_srs                { return $_[0]->{'srs'} }
+sub want_css                { return $_[0]->{'css1'} }
+sub want_in_register        { return $_[0]->{'register'} }
 
 ###########################################################################
-sub mview {
-    my ($opt, $par, $stm) = (shift, shift, shift);
-    my ($mgr, $file, $format);
+sub cleanup { unlink "$TMPFILE"  if -f "$TMPFILE" }
 
-    #Universal::vmstat("Manager constructor");
-
-    $mgr = new Bio::MView::Manager($PROG, %$par);
-
-    foreach $file (@_) {
-	unless (-e $file) {
-	    warn "$PROG: '$file' does not exist\n";
-	    next;
-	}
-	unless (-f $file) {
-	    warn "$PROG: '$file' is not a file\n";
-	    next;
-	}
-	unless (-r $file) {
-	    warn "$PROG: '$file' is not readable\n";
-	    next;
-	}
-        warn "$PROG: processing '$file'\n"  if $opt->{'verbose'} & $VERB_FILE;
-
-	#try to choose a format if one wasn't specified
-	$format = (defined $opt->{'in'} ? $opt->{'in'} :
-		   check_format($file, 'file'));
-        warn "$PROG: format is probably '$format'\n"
-	    if !defined $opt->{'in'} and $opt->{'verbose'} & $VERB_FORM;
-	
-	print $stm "<PRE>\n"    if $opt->{'pre'};
-
-	if (! defined $mgr->parse($file, $format)) {
-	    warn "$PROG: can't parse file '$file'\n";
-	}
-
-	print $stm "</PRE>\n"   if $opt->{'pre'};
+sub abort {
+    foreach my $e (@_) {
+        warn "$PROG: $e\n";
     }
-    #Universal::vmstat("Manager constructor done");
-
-    #colormap/groupmap listing request: no alignment
-    return 0  if $par->{'noparse'};
-
-    #save printing until end?
-    if ($par->{'register'} and $opt->{'out'} eq 'new') {
-	$mgr->print;
-	#Universal::vmstat("print done (mview)");
-    }
-    return $mgr->alignment_count;
-}
-
-sub cleanup { unlink "$SCRATCH"    if -f "$SCRATCH" }
-
-sub rationalise_parameters {
-    my ($o, $p) = @_;
-
-    #ignore HTML if RDB output
-    ($o->{'html'}, $p->{'html'}) = (0, 0)  if $p->{'mode'} eq 'rdb';
-
-    #ignore HTML if CLUSTAL output
-    ($o->{'html'}, $p->{'html'}) = (0, 0)  if $p->{'mode'} eq 'clustal';
-
-    #ignore HTML if PIR output
-    ($o->{'html'}, $p->{'html'}) = (0, 0)  if $p->{'mode'} eq 'pir';
-
-    #ignore HTML if MSF output
-    ($o->{'html'}, $p->{'html'}) = (0, 0)  if $p->{'mode'} eq 'msf';
-
-    #ignore HTML if fasta/pearson output
-    ($o->{'html'}, $p->{'html'}) = (0, 0)  if $p->{'mode'} eq 'fasta';
-
-    #ignore HTML if plain output
-    ($o->{'html'}, $p->{'html'}) = (0, 0)  if $p->{'mode'} eq 'plain';
-
-    #switch off preformatted flag if HTML is off
-    $o->{'pre'} = 0  unless $o->{'html'};
-
-    #ignore style sheets if HTML off
-    ($o->{'css'}, $p->{'css1'}) = ('off', 0)  if $o->{'html'} == 0;
-
-    #ignore style sheets in HTML if css is unset
-    $o->{'html'} &= ($HTML_MIME|$HTML_HTML|$HTML_BODY|$HTML_DATA)
-    	if $o->{'css'} eq 'off';
-
-    #ignore coloring if HTML is off!
-    unless ($o->{'html'}) {
-	$p->{'aln_coloring'} = 'none';
-	$p->{'con_coloring'} = 'none';
-    }
-
-    #switch off parsing if color/groupmap listing requested
-    if ($o->{'listcolors'} or $o->{'listgroups'}) {
-	$o->{'noparse'} = $p->{'noparse'} = 1;
-	$o->{'pre'} = 0;
-    } else {
-	$o->{'noparse'} = $p->{'noparse'} = 0;
-    }
-}
-
-sub html_head {
-    my ($o, $p, $stm) = (@_, *STDOUT);
-
-    #warn "HTML=$o->{'html'}\n";
-
-    return    unless $o->{'html'};
-    return    if $o->{'html'} == $HTML_DATA;
-
-    #want MIME type?
-    if ($o->{'html'} & $HTML_MIME) {
-	print $stm "Content-Type: text/html\n\n";
-    }
-
-    #want HTML HEAD?
-    if ($o->{'html'} & $HTML_HTML) {
-        my $s = "$DOCMETA\n";
-
-	#want STYLE?
-	if ($o->{'html'} & $HTML_CSS) {
-	    #link styles
-	    $s .= "<STYLE TYPE=\"text/css\">\n<!--\n";
-	    $s .= "A:link{background:transparent;color:$o->{'linkcolor'}}\n";
-	    $s .= "A:active{background:transparent;color:$o->{'alinkcolor'}}\n";
-	    $s .= "A:visited{background:transparent;color:$o->{'vlinkcolor'}}\n";
-	    $s .= "-->\n</STYLE>\n";
-
-	    #alignment styles
-	    if ($o->{'css'} =~ /^(?:file|http):/i) {
-		#link to style sheet
-	        $s .= "<LINK REL=STYLESHEET HREF=\"$o->{'css'}\">\n";
-	    } else {
-		#style sheet in situ
-		$s .= "<STYLE TYPE=\"text/css\">\n<!--\n";
-		$s .= Bio::MView::Align::list_css1_colormaps
-		    ('alncolor' => $p->{'alncolor'},
-		     'labcolor' => $p->{'labcolor'},
-		     'symcolor' => $p->{'symcolor'},
-		     'gapcolor' => $p->{'gapcolor'},
-		    );
-		$s .= "-->\n</STYLE>\n";
-	    }
-	}
-
-        #page TITLE
-        if (defined $o->{'title'} and $o->{'title'} ne "") {
-            $s .= "<TITLE>$o->{'title'}</TITLE>\n";
-        } else {
-            $s .= "<TITLE>MView</TITLE>\n";
-        }
-
-        print $stm "$DOCTYPE\n<HTML>\n";
-        print $stm "<HEAD>\n$s</HEAD>\n"  if $s;
-    }
-
-    #want BODY?
-    if ($o->{'html'} & $HTML_BODY) {
-        print $stm "<BODY style=\"background-color:$o->{'pagecolor'}; color:$o->{'textcolor'}";
-        unless ($o->{'html'} & $HTML_CSS) {
-            print $stm "; a:link:$o->{'linkcolor'}; a:active:$o->{'alinkcolor'}; a:visited:$o->{'vlinkcolor'}";
-        }
-        print $stm "\">\n";
-    }
-
-    #want TITLE? (in document)
-    if (defined $o->{'title'} and $o->{'title'} ne "") {
-	print $stm "<H4>$o->{'title'}</H4>\n";
-    }
-}
-
-sub html_foot {
-    my ($o, $p, $stm) = (@_, *STDOUT);
-    return    unless $o->{'html'};
-    return    if $o->{'html'} == $HTML_DATA;
-    print $stm "</BODY>\n"    if $o->{'html'} & $HTML_BODY;
-    print $stm "</HTML>\n"    if $o->{'html'} & $HTML_HTML;
-}
-
-sub check_format {
-
-    sub FASTA {
-	return 'Pearson'  unless $_[1] eq 'file';
-	local $_, *TMP;
-	my $guess = 'Pearson';
-	open(TMP, "< $_[0]") or die "$PROG: can't open '$_[0]'\n";
-	while (<TMP>) {
-	    next  if /^\s*$/;
-	    $guess = 'FASTA'  unless /^\s*>/;
-	    last;
-	}
-	close TMP;
-	return $guess;
-    }
-
-    return map { lc $_ } sort keys %KNOWN_FORMAT    unless @_;
-
-    my ($base, $ext) = ($_[0], '');
-    ($base, $ext) = Universal::fileparts($_[0])  if $_[1] eq 'file';
-    #warn "($base, $ext)";
-
-    foreach ($ext) {  #final extension starts with:
-	return 'CLUSTAL'  if $_ =~ /^aln/i;
-	return 'CLUSTAL'  if $_ =~ /^clu/i;
-	return 'HSSP'     if $_ =~ /^hss/i;
-	return 'JNETZ'    if $_ =~ /^jnt/i;
-	return 'JNETZ'    if $_ =~ /^jne/i;
-	return 'MAF'      if $_ =~ /^maf/i;
-	return 'MIPS'     if $_ =~ /^mip/i;
-	return 'MSF'      if $_ =~ /^msf/i;
-	return 'MULTAS'   if $_ =~ /^mul/i;
-	return 'PIR'      if $_ =~ /^pir/i;
-	return 'Plain'    if $_ =~ /^txt/i;
-	return 'Plain'    if $_ =~ /^pla/i;
-	return 'Plain'    if $_ =~ /^pln/i;
-	return 'BLAST'    if $_ =~ /^bla/i;
-	return 'BLAST'    if $_ =~ /^tbl/i;
-	return 'BLAST'    if $_ =~ /^phi/i;
-	return 'BLAST'    if $_ =~ /^psi/i;
-	return 'FASTA'    if $_ =~ /^tfa/i;
-	return 'FASTA'    if $_ =~ /^ggs/i;
-	return 'FASTA'    if $_ =~ /^gls/i;
-	return 'FASTA'    if $_ =~ /^ss/i;
-	return FASTA(@_)  if $_ =~ /^fa/i;
-    }
-
-    foreach ($base) {  #basename contains:
-        return 'CLUSTAL'  if $_ =~ /aln/i;
-        return 'CLUSTAL'  if $_ =~ /clu/i;
-        return 'HSSP'     if $_ =~ /hssp/i;
-        return 'JNETZ'    if $_ =~ /jnet/i;
-        return 'MAF'      if $_ =~ /maf/i;
-        return 'MIPS'     if $_ =~ /mips/i;
-        return 'MSF'      if $_ =~ /msf/i;
-        return 'MULTAS'   if $_ =~ /multal/i;
-        return 'MULTAS'   if $_ =~ /multas/i;
-        return 'PIR'      if $_ =~ /pir/i;
-        return 'Plain'    if $_ =~ /plain/i;
-        return 'BLAST'    if $_ =~ /blast/i;
-        return 'BLAST'    if $_ =~ /tblast/i;
-        return 'BLAST'    if $_ =~ /phi.*blast/i;
-        return 'BLAST'    if $_ =~ /psi.*blast/i;
-        return 'FASTA'    if $_ =~ /ggsearch/i;
-        return 'FASTA'    if $_ =~ /glsearch/i;
-        return 'FASTA'    if $_ =~ /ssearch/i;
-        return 'FASTA'    if $_ =~ /uvf/i;
-        return 'FASTA'    if $_ =~ /tfast/i;
-        return 'FASTA'    if $_ =~ /fast[fmsxy]/i;
-	return FASTA(@_)  if $_ =~ /fasta/i;
-        return 'Pearson'  if $_ =~ /pear/i;
-    }
-
-    #unknown format
-    warn "$PROG: can't determine format of '$_[0]'\n";
-    cleanup();
+    warn "$PROG: aborting\n";
+    cleanup;
     exit 1;
 }
 
-sub usage {
-    my ($com, $opt, $par, $exit, $stm) = (@_, *STDOUT);
-    $opt->{'title'} = 'MView command line options';
-    html_head($opt, $par, $stm);
-    print $stm "<HR><PRE>\n"       if $opt->{'html'};
-    $com->usage($stm);
-    print $stm "</PRE><HR>\n"      if $opt->{'html'};
-    print $stm copyright($opt);
-    html_foot($opt, $par, $stm);
-    exit $exit    if defined $exit;
+$SIG{'INT'} = sub { abort("interrupted") };
+
+###########################################################################
+#parse default options and command line
+my $com = new Bio::MView::Option::Parser($PROG);
+my @err = $com->parse_argv(\@ARGV);
+my $par = $com->get_parameters;
+
+dump_parameters($par)  if verbose_dump_parameters($par);
+
+print(usage($com, $par)), exit 0     if want_help($par);
+
+abort(@err)                          if @err;
+
+print(dump_colormaps($par)), exit 0  if want_dump_colors($par);
+print(dump_groupmaps($par)), exit 0  if want_dump_groups($par);
+print(dump_css($par)), exit 0        if want_dump_css($par);
+
+print(html_head($par))               if want_html($par);
+
+print(echo_argv($par))               if verbose_echo_argv($par);
+
+print(copyright($par))               if want_leading_copyright($par);
+
+capture_stdin($TMPFILE)              unless @ARGV;
+
+my $count = mview($par, @ARGV);
+
+if ($count) {  #got something
+    print copyright($par)            if want_trailing_copyright($par);
+} else {
+    my $s = "$PROG: no alignments found\n";
+    print $s                         unless only_want_html_data($par);
+    warn $s;
 }
 
-sub dump_options {
-    my ($opt, $par) = @_;
-    warn "Input options:\n";
-    map { warn sprintf("%-25s => %s\n", $_, (defined $opt->{$_}?$opt->{$_}:'undef')) } sort keys %$opt;
-    warn "\nPassed parameters:\n";
-    map { warn sprintf("%-25s => %s\n", $_, (defined $par->{$_}?$par->{$_}:'undef')) } sort keys %$par;
-    warn "\n";
+print html_foot($par)                if want_html($par);
+
+cleanup;
+
+exit 0;
+
+###########################################################################
+sub mview {
+    my $par = shift;
+
+    my $labelflags = consolidate_labelflags($par);
+
+    #vmstat("mview: call Manager constructor");
+    my $dis = new Bio::MView::Display::Display(
+        'html'       => $par->{'html'},
+        'bold'       => $par->{'bold'},
+        'width'      => $par->{'width'},
+        'css1'       => $par->{'css1'},
+        'alncolor'   => $par->{'alncolor'},
+        'labcolor'   => $par->{'labcolor'},
+        'linkcolor'  => $par->{'linkcolor'},
+        'alinkcolor' => $par->{'alinkcolor'},
+        'vlinkcolor' => $par->{'vlinkcolor'},
+        'register'   => $par->{'register'},
+        'sequences'  => $par->{'sequences'},
+        'labelflags' => $labelflags,
+        'stream'     => \*STDOUT,
+        );
+
+    my $mgr = new Bio::MView::Manager($dis);
+
+    my $check_format = $par->{'infmt'} ? 0 : 1;
+
+    foreach my $file (@_) {
+        warn("$PROG: file '$file' does not exist\n"),  next  unless -e $file;
+        warn("$PROG: file '$file' is not a file\n"),   next  unless -f $file;
+        warn("$PROG: file '$file' is not readable\n"), next  unless -r $file;
+
+        warn "$PROG: processing '$file'\n"  if verbose_echo_file($par);
+
+        #try to choose a format if one wasn't specified
+        if ($check_format) {
+            my $format = Bio::MView::Manager::check_input_file($file);
+            warn("$PROG: can't determine format\n"), next
+                unless defined $format;
+            warn "$PROG: format is probably '$format'\n"
+                if verbose_echo_informat($par);
+            $par->{'infmt'} = $format;
+        }
+
+        unless ($mgr->parse($file, $par->{'infmt'})) {
+            warn "$PROG: can't parse file '$file'\n";
+        }
+        #vmstat("mview: Manager.parse file '$file' done");
+    }
+    #vmstat("mview: Manager.parse all files done");
+
+    #saved output until end?
+    if (want_in_register($par) and want_mview_layout($par)) {
+        $dis->render;
+        #vmstat("mview: in register render done");
+    }
+    return $mgr->get_alignment_count;
+}
+
+sub usage {
+    my ($com, $par) = @_;
+    $par->{'title'} = 'MView command line options';
+    my $data = $com->usage();
+    my $s = '';
+    if (want_html($par)) {
+        $s .= html_head($par);
+        $s .= "<HR><PRE>\n$data</PRE><HR>\n";
+        $s .= copyright($par);
+        $s .= html_foot($par);
+    } else {
+        $s .= $data;
+        $s .= copyright($par);
+    }
+    return $s;
+}
+
+sub capture_stdin {
+    my $file = shift;
+    warn "$PROG: reading from standard input (Ctrl-C to cancel)\n";
+    open(TMP, "> $file") or abort("can't save to temporary file");
+    while (<>) { print TMP }
+    close TMP;
+    push @ARGV, $file;
+}
+
+sub consolidate_labelflags {
+    my $par = shift;
+    my @labelflags = ();
+    for (my $i=0; 1; $i++) {
+        my $key = "label$i";
+        last  unless defined $par->{$key};
+        push @labelflags, $par->{$key};
+    }
+    return \@labelflags;
+}
+
+sub dump_css {
+    my $par = shift;
+    return Bio::MView::Manager::dump_css($par);
+}
+
+sub dump_colormaps {
+    my $par = shift;
+    my $data = Bio::MView::Manager::dump_colormaps(want_html($par));
+    my $s = '';
+    if (want_html($par)) {
+        $s .= html_head($par);
+        $s .= "<HR><PRE>\n$data</PRE><HR>\n";
+        $s .= copyright($par);
+        $s .= html_foot($par);
+    } else {
+        $s .= $data;
+        $s .= copyright($par);
+    }
+    return $s;
+}
+
+sub dump_groupmaps {
+    my $par = shift;
+    my $data = Bio::MView::Manager::dump_groupmaps(want_html($par));
+    my $s = '';
+    if (want_html($par)) {
+        $s .= html_head($par);
+        $s .= "<HR><PRE>\n$data</PRE><HR>\n";
+        $s .= copyright($par);
+        $s .= html_foot($par);
+    } else {
+        $s .= $data;
+        $s .= copyright($par);
+    }
+    return $s;
+}
+
+sub echo_argv {
+    my ($par) = @_;
+    my $data = $par->{'argv'};
+    $data =~ s/\-+v[a-z]*[=\s]+\S+\s*//g;
+    my $s = '';
+    if (want_html($par)) {
+        $s .= "<H4>command line:</H4>\n<CODE>";
+        $s .= "$PROG @$data";
+        $s .= "</CODE>\n<H4>produced:</H4>\n";
+    } else {
+        $s .= "command line:\n";
+        $s .= "$PROG @$data\n";
+        $s .= "produced:\n\n";
+    }
+    return $s;
 }
 
 sub copyright {
-    my ($opt) = @_;
-    my $s = '';
-    no strict;
+    my $par = shift;
+    my $message = "$PROJECT $VERSION, Copyright (C) $COPYYRS $AUTHOR";
 
-    if ($opt->{'out'} eq 'rdb') {    #rdb files
-        $s .= "# $PROJECT $VERSION, Copyright (C) $COPYYRS $AUTHOR\n";
-	$s .= "# $INVOKE\n";
-	return $s;
-    }
+    return "# $message\n"                 if want_dump_colors($par);
+    return "# $message\n"                 if want_dump_groups($par);
+    return "# $message\n# $INVOCATION\n"  if want_convert_rdb($par);
+    return "$message\n\n"                 if want_text($par);
 
-    if ($opt->{'html'}) {    #any HTML
-        $s .= "<P><SMALL><A HREF=\"$PROJPTH\">$PROJECT</A> ";
-        $s .= "$VERSION, Copyright \&copy; ";
-        $s .= "$COPYYRS <A HREF=\"mailto:$AUTHMAIL\">$AUTHOR</A>";
-        $s .= "</SMALL></P>\n";
-	return $s;
-    }
-
-    if ($opt->{'noparse'}) {    #listcolor/listgroups without HTML
-        $s .= "# $PROJECT $VERSION, Copyright (C) $COPYYRS $AUTHOR\n";
-	return $s;
-    }
-
-    $s = "\n$PROJECT $VERSION, Copyright (C) $COPYYRS $AUTHOR\n\n";
-    $s;
+    my $s = "<P><SMALL><A HREF=\"$PROJPTH\">$PROJECT</A> ";
+    $s .= "$VERSION, Copyright \&copy; ";
+    $s .= "$COPYYRS <A HREF=\"mailto:$AUTHMAIL\">$AUTHOR</A>";
+    $s .= "</SMALL></P>\n";
+    return $s;
 }
 
-
-###########################################################################
-__DATA__
-
-text:     "usage: __PROG [options] [file...]\n\n
-Option names and parameter values can generally be abbreviated. Alternative\n
-parameter values are listed in braces {}, followed by the default value in\n
-square brackets [].\n\n
-Some options take multiple arguments which must be supplied as a comma\n
-separated list, like '1,8,9,10'. Subranges are allowed, so you could also\n
-write that as '1,8:10' or even '1,8..10'. Any argument must be quoted if it\n
-contains whitespace or a wildcard that might be expanded by the shell\n"
-
-
-###########################################################################
-#silent options because no 'usage:' field.
-[SILENT]
-
-#force @ARGV to be examined for '-help' first.
-OPTION:   help
-default:  0
-action:   sub { __ARGS; __OPTION{__ON} = 1    if __OV }
-
-#force @ARGV to be examined for '-listcolors' first.
-OPTION:   listcolors
-default:  0
-action:   sub { __ARGS; __OPTION{__ON} = 1    if __OV }
-
-#force @ARGV to be examined for '-listgroups' first.
-OPTION:   listgroups
-default:  0
-action:   sub { __ARGS; __OPTION{__ON} = 1    if __OV }
-
-#force @ARGV to be examined for '-listcss' first.
-OPTION:   listcss
-default:  0
-action:   sub { __ARGS; __OPTION{__ON} = 1    if __OV }
-
-#force @ARGV to be examined for '-colorfile' first.
-OPTION:   colorfile
-type:     s
-action:   sub { __ARGS;
-              local *TMP;
-              if (defined __OV) {
-                  open(TMP, "< __OV") or CORE::die "__PROG: can't open colormap file '__OV'\n";
-                  Bio::MView::Manager::load_colormaps(\*TMP);
-                  close TMP;
-              }
-          }
-
-#force @ARGV to be examined for '-groupfile' first.
-OPTION:   groupfile
-type:     s
-action:   sub { __ARGS;
-              local *TMP;
-              if (defined __OV) {
-                  open(TMP, "< __OV") or CORE::die "__PROG: can't open consensus group file '__OV'\n";
-                  Bio::MView::Manager::load_groupmaps(\*TMP);
-                  close TMP;
-              }
-          }
-
-#set the default colormaps and groupmaps (assume protein)
-OPTION:   aa
-action:   sub { __ARGS;
-		(__PARAM{'def_aln_colormap'},
-                 __PARAM{'def_con_colormap'}) =
-		   Bio::MView::Manager::get_default_colormaps('aa');
-		__PARAM{'def_aln_groupmap'} = __PARAM{'def_con_groupmap'} =
-		  Bio::MView::Manager::get_default_groupmap('aa');
-                __PARAM{'moltype'} = 'aa';
-                return 0;
-          }
-
-#verbosity level, normally 0 to keep quiet
-OPTION:   verbose
-type:     i
-default:  0
-
-#obsolete options: report fact to user
-OPTION:   dna
-action:   sub { __ARGS; __WARN("obsolete option '-__ON' replaced by '-moltype dna'") if defined __OV; }
-
-OPTION:   keep
-action:   sub { __ARGS; __WARN("obsolete option '-__ON' renamed as '-show'") if defined __OV; }
-
-OPTION:   disc
-action:   sub { __ARGS; __WARN("obsolete option '-__ON' renamed as '-hide'") if defined __OV; }
-
-
-###########################################################################
-[FORMATS]
-
-text:     "Input/output formats:"
-
-OPTION:   in
-usage:    "Input __CHOOSE(main::check_format)"
-type:     s
-action:   sub { __ARGS;
-		return __OPTION{__ON} = main::check_format(__OV, 'par')
-		    if defined __OV;
-		return;
-	  }
-
-OPTION:   out
-usage:    "Output __CHOOSE(Bio::MView::Manager::check_convert_mode)"
-type:     s
-default:  new
-param:    mode
-convert:  sub { __ARGS;
-		__OPTION{'pre'} = 1;
-		if (__OV =~ /^n/i) {        #default
-		    __PV = 'new'; __OPTION{'pre'} = 0;
-                } elsif (__OV =~ /^pl/i) {  #plain
-		    __PV = 'plain';
-		} elsif (__OV =~ /^fa/i) {  #Pearson/FASTA
-		    __PV = 'pearson';
-		} elsif (__OV =~ /^pe/i) {  #Pearson/FASTA
-		    __PV = 'pearson';
-		} elsif (__OV =~ /^pi/i) {  #PIR
-		    __PV = 'pir';
-		} elsif (__OV =~ /^ms/i) {  #MSF
-		    __PV = 'msf';
-		} elsif (__OV =~ /^cl/i) {  #CLUSTAL/aln
-		    __PV = 'clustal';
-		} elsif (__OV =~ /^al/i) {  #CLUSTAL/aln
-		    __PV = 'clustal';
-		} elsif (__OV =~ /^rd/i) {  #RDB
-		    __PV = 'rdb'; __OPTION{'pre'} = 0;
-		} else {
-		    __WARN("unknown output format '-__ON=__OV'.");
-		}
-		__PV;
-	  }
-
-
-###########################################################################
-[CONTENT]
-
-text:     "Main formatting options:"
-
-OPTION:   ruler
-usage:    "Show ruler"
-type:     b
-default:  off
-param:
-
-OPTION:   alignment
-usage:    "Show alignment"
-type:     b
-default:  on
-param:
-
-OPTION:   conservation
-usage:    "Show clustal conservation line"
-type:     b
-default:  off
-param:
-
-OPTION:   consensus
-usage:    "Show consensus"
-type:     b
-default:  off
-param:
-
-OPTION:   width
-usage:    "Paginate alignment in blocks of N columns {N,flat}"
-type:     s
-default:  flat
-param:
-convert:  sub { __ARGS;
-            if (__OV eq 'flat') {
-              return 0;
-	    } else {
-              return __TEST('i', __ON, __OV);
-	    }
-	  }
-
-
-###########################################################################
-[IDENTITY]
-
-text: "Percent identity calculations"
-
-OPTION:   pcid
-usage:    "Compute percent identities with respect to __CHOOSE(Bio::MView::Manager::check_identity_mode)"
-type:     s
-default:  'aligned'
-param:
-convert:  sub { __ARGS;
-		return 'reference' if __OV =~ /^r/;
-		return 'aligned'   if __OV =~ /^a/;
-	        return 'hit'       if __OV =~ /^h/;
-		__WARN("bad setting '-__ON=__OV'.");
-		__WARN("known percent identity methods are: ", join(",",
-		Bio::MView::Manager::check_identity_mode), "\n");
-	      }
-
-OPTION:   reference
-usage:    "Use row N or row identifier as %identity reference"
-type:     s
-default:  query
-param:    ref_id
-
-
-###########################################################################
-[FILTER]
-
-text:     "General row/column filters:"
-
-OPTION:   top
-usage:    "Report top N hits"
-type:     s
-default:  all
-param:    topn
-convert:  sub { __ARGS;
-            return 0    if __OV eq 'all';
-	    return __TEST('i', __ON, __OV);
-	  }
-
-OPTION:   maxident
-usage:    "Only report sequences with percent identity <= N"
-type:     f
-default:  100
-param:
-convert:  sub { __ARGS;
-		if (__OV < 0 or __OV > 100) {
-		    __WARN("bad setting '-__ON=__OV', want range 0..100.");
-		}
-		__OV;
-	  }
-
-OPTION:   minident
-usage:    "Only report sequences with percent identity >= N"
-type:     f
-default:  0
-param:
-convert:  sub { __ARGS;
-		if (__OV < 0 or __OV > 100) {
-		    __WARN("bad setting '-__ON=__OV', want range 0..100.");
-		}
-		__OV;
-	  }
-
-OPTION:   show
-usage:    "Keep rows 1..N or identifiers"
-type:     @s
-param:    keeplist
-
-OPTION:   hide
-usage:    "Hide rows 1..N or identifiers"
-type:     @s
-param:    skiplist
-
-OPTION:   nops
-usage:    "No operation: exclude rows 1..N or identifiers from calculatons"
-type:     @s
-param:    nopslist
-
-OPTION:   range
-usage:    "Display column range M:N as numbered by ruler"
-type:     s
-default:  all
-param:
-convert:  sub { __ARGS;
-            my @tmp = ();
-            if (__OV ne 'all') {
-		@tmp = split(/:/, __OV);
-		if (@tmp != 2) {
-		    __WARN("bad range setting '-__ON=__OV', want M:N.");
-		} else {
-		    __TEST('i', __ON, $tmp[0]);
-		    __TEST('i', __ON, $tmp[1]);
-		    #ignore range order, but check for negative values
-		    if ($tmp[0] < 1 or $tmp[1] < 1) {
-			__WARN("bad range setting '-__ON=__OV', want M:N.");
-		    }
-		}
-            }
-	    return [ @tmp ];
-	  }
-
-
-###########################################################################
-[MOLTYPE]
-
-text:     "Molecule type:"
-
-OPTION:   moltype
-usage:    "Affects coloring and format converions __CHOOSE(Bio::MView::Manager::check_molecule_type)"
-type:     s
-default:  aa
-param:    moltype
-convert:  sub { __ARGS;
-              if (__OV =~ /^aa/i) {
-	      	   __PV = 'aa';
-	      } elsif (__OV =~ /^na/i) {
-	      	   __PV = 'na';
-	      } elsif (__OV =~ /^dna/i) {
-	      	   __PV = 'dna';
-	      } elsif (__OV =~ /^rna/i) {
-	      	   __PV = 'rna';
-              }
-              unless (defined __PV and defined
-	      	       Bio::MView::Manager::check_molecule_type(__PV)) {
-	      	   __WARN("unknown molecule type '-__ON=__OV'.");
-	      	   __WARN("known types are: ", join(",",
-	      	     Bio::MView::Manager::check_molecule_type), "\n");
-	      }
-	      (__PARAM{'def_aln_colormap'},
-	       __PARAM{'def_con_colormap'}) =
-	    	   Bio::MView::Manager::get_default_colormaps(__PV);
-	      __PARAM{'def_aln_groupmap'} = __PARAM{'def_con_groupmap'} =
-	    	 Bio::MView::Manager::get_default_groupmap(__OV);
-              __PARAM{'moltype'} = __PV;
-              __PV;
-          }
-
-
-###########################################################################
-[ALN]
-
-text:     "Alignment coloring:"
-
-OPTION:   coloring
-usage:    "Basic style of coloring __CHOOSE(Bio::MView::Manager::check_alignment_color_scheme)"
-type:     s
-default:  none
-param:    aln_coloring
-convert:  sub { __ARGS;
-              if (__OV =~ /^n/i) {
-	      	   __PV = 'none';
-	      } elsif (__OV =~ /^a/i) {
-	      	   __PV = 'any';
-	      } elsif (__OV =~ /^i/i) {
-	      	   __PV = 'identity';
-	      } elsif (__OV =~ /^c/i) {
-	      	   __PV = 'consensus';
-	      } elsif (__OV =~ /^g/i) {
-	      	   __PV = 'group';
-              }
-              unless (defined __PV and defined
-	      	       Bio::MView::Manager::check_alignment_color_scheme(__PV)) {
-	      	   __WARN("unknown coloring scheme '-__ON=__OV'.");
-	      	   __WARN("known color schemes are: ", join(",",
-	      	   Bio::MView::Manager::check_alignment_color_scheme), "\n");
-	      }
-              __PV;
-          }
-
-OPTION:   colormap
-usage:    "Name of colormap to use"
-type:     s
-param:    aln_colormap
-convert:  sub { __ARGS;
-              if (defined __OV) {
-                  __PV = __OV;
-              } else {
-                  __PV = __PARAM{'def_aln_colormap'};
-              }
-              __PV = Bio::MView::Manager::check_colormap(__PV);
-              unless (defined __PV) {
-                  __WARN("unknown colormap '-__ON=__OV'.");
-		  __WARN("known maps are: ", join(",",
-			 Bio::MView::Manager::check_colormap), "\n");
-              }
-	      __DELETE_PARAM('def_aln_colormap');
-              __PV;
-          }
-
-OPTION:   groupmap
-usage:    "Name of groupmap to use if coloring by consensus"
-type:     s
-param:    aln_groupmap
-convert:  sub { __ARGS;
-              if (defined __OV) {
-                  __PV = __OV;
-              } else {
-                  __PV = __PARAM{'def_aln_groupmap'};
-              }
-              __PV = Bio::MView::Manager::check_groupmap(__PV);
-              unless (defined __PV) {
-                  __WARN("unknown groupmap '-__ON=__OV'.");
-		  __WARN("known maps are: ", join(",",
-			 Bio::MView::Manager::check_groupmap), "\n");
-              }
-              __DELETE_PARAM('def_aln_groupmap');
-              __PV;
-          }
-
-OPTION:   threshold
-usage:    "Threshold percentage for consensus coloring"
-type:     f
-default:  70
-param:    aln_threshold
-convert:  sub { __ARGS;
-              if (__OV < 50 or __OV > 100) {
-                  __WARN("bad value for '-__ON=__OV' must be in range 50..100.");
-              }
-              [ __OV ];
-          }
-
-OPTION:   ignore
-usage:    "Ignore singleton or class groups __CHOOSE(Bio::MView::Manager::check_ignore_class)"
-type:     s
-default:  none
-param:    aln_ignore
-convert:  sub { __ARGS;
-            __PV = Bio::MView::Manager::check_ignore_class(__OV);
-            if (!defined __PV) {
-              __WARN("unknown alignment ignore mode '-__ON=__OV'.");
-              __WARN("known ignore classes are: ", join(",",
-                     Bio::MView::Manager::check_ignore_class), "\n");
-            }
-            __PV;
-          }
-
-
-###########################################################################
-[CON]
-
-text:     "Consensus coloring:"
-
-OPTION:   con_coloring
-usage:    "Basic style of coloring __CHOOSE(Bio::MView::Manager::check_consensus_color_scheme)"
-type:     s
-default:  none
-param:    con_coloring
-convert:  sub { __ARGS;
-	       if (__OV =~ /^n/i) {
-		   __PV = 'none';
-	       } elsif (__OV =~ /^a/i) {
-		   __PV = 'any';
-	       } elsif (__OV =~ /^i/i) {
-		   __PV = 'identity';
-	       } elsif (__OV =~ /^c/i) {
-		   __PV = 'consensus';
-	       } elsif (__OV =~ /^g/i) {
-		   __PV = 'group';
-               }
-               unless (defined __PV and defined
-		       Bio::MView::Manager::check_consensus_color_scheme(__PV)) {
-		  __WARN("unknown coloring scheme '-__ON=__OV'.");
-		  __WARN("known color schemes are: ", join(",",
-			 Bio::MView::Manager::check_consensus_color_scheme), "\n");
-	       }
-               __PV;
-          }
-
-OPTION:   con_colormap
-usage:    "Name of colormap to use"
-type:     s
-param:    con_colormap
-convert:  sub { __ARGS;
-              if (defined __OV) {
-                  __PV = __OV;
-              } else {
-                  __PV = __PARAM{'def_con_colormap'};
-              }
-              __PV = __PARAM{'def_con_colormap'} unless defined __OV;
-              __PV = Bio::MView::Manager::check_colormap(__PV);
-              unless (defined __PV) {
-                  __WARN("unknown colormap '-__ON=__OV'.");
-		  __WARN("known maps are: ", join(",",
-			 Bio::MView::Manager::check_colormap), "\n");
-              }
-              __DELETE_PARAM('def_con_colormap');
-              __PV;
-          }
-
-OPTION:   con_groupmap
-usage:    "Name of groupmap to use if coloring by consensus"
-type:     s
-param:    con_groupmap
-convert:  sub { __ARGS;
-              if (defined __OV) {
-                  __PV = __OV;
-              } else {
-                  __PV = __PARAM{'def_con_groupmap'};
-              }
-              __PV = Bio::MView::Manager::check_groupmap(__PV);
-              unless (defined __PV) {
-                  __WARN("unknown groupmap '-__ON=__OV'.");
-		  __WARN("known maps are: ", join(",",
-			 Bio::MView::Manager::check_groupmap), "\n");
-              }
-              __DELETE_PARAM('def_con_groupmap');
-              __PV;
-          }
-
-OPTION:   con_threshold
-usage:    "Consensus line thresholds"
-type:     @f
-default:  '100,90,80,70'
-param:    con_threshold
-convert:  sub { __ARGS;
-              local $_;
-              foreach (@{__PV}) {
-                if ($_ < 50 or $_ > 100) {
-                  __WARN("bad range for '-__ON=$_' must be in range 50..100.");
-                }
-              }
-              __PV;
-          }
-
-OPTION:   con_ignore
-usage:    "Ignore singleton or class groups __CHOOSE(Bio::MView::Manager::check_ignore_class)"
-type:     s
-default:  none
-param:    con_ignore
-convert:  sub { __ARGS;
-            __PV = Bio::MView::Manager::check_ignore_class(__OV);
-            if (!defined __PV) {
-              __WARN("unknown consensus ignore mode '-__ON=__OV'.");
-              __WARN("known ignore classes are: ", join(",",
-                     Bio::MView::Manager::check_ignore_class), "\n");
-            }
-            __PV;
-          }
-
-
-###########################################################################
-[HYBRID]
-
-text:     "Hybrid alignment and consensus:"
-
-OPTION:   con_gaps
-usage:    "Count gaps during consensus computations if set to 'on'"
-type:     b
-default:  on
-param:
-
-
-###########################################################################
-[MAPS]
-
-text:     "User defined colormap and consensus group definition:"
-
-OPTION:   colorfile
-usage:    "Load more colormaps from file"
-
-OPTION:   groupfile
-usage:    "Load more groupmaps from file"
-
-
-###########################################################################
-[GENERALFORMAT]
-
-text:     "Miscellaneous formatting:"
-
-OPTION:   gap
-usage:    "Use this gap character"
-type:     s
-default:  -
-param:
-
-OPTION:   label0
-usage:    "Switch off label {0= row number}"
-default:  0
-param:
-convert:  sub { __ARGS; (__OV ? 0 : 1) }
-
-OPTION:   label1
-usage:    "Switch off label {1= identifier}"
-default:  0
-param:
-convert:  sub { __ARGS; (__OV ? 0 : 1) }
-
-OPTION:   label2
-usage:    "Switch off label {2= description}"
-default:  0
-param:
-convert:  sub { __ARGS; (__OV ? 0 : 1) }
-
-OPTION:   label3
-usage:    "Switch off label {3= scores}"
-default:  0
-param:
-convert:  sub { __ARGS; (__OV ? 0 : 1) }
-
-OPTION:   label4
-usage:    "Switch off label {4= percent identity}"
-default:  0
-param:
-convert:  sub { __ARGS; (__OV ? 0 : 1) }
-
-OPTION:   label5
-usage:    "Switch off label {5= first sequence positions: query}"
-default:  0
-param:
-convert:  sub { __ARGS; (__OV ? 0 : 1) }
-
-OPTION:   label6
-usage:    "Switch off label {6= second sequence positions: hit}"
-default:  0
-param:
-convert:  sub { __ARGS; (__OV ? 0 : 1) }
-
-OPTION:   register
-usage:    "Output multi-pass alignments with columns in register"
-type:     b
-default:  on
-param:
-
-###########################################################################
-[HTML]
-
-text:     "HTML markup:"
-
-OPTION:   html
-usage:    "Controls amount of HTML markup {head,body,data,full,off}"
-type:     s
-default:  off
-param:
-convert:  sub { __ARGS;
-		if (__OV =~ /^full/i) {
-		    __OPTION{__ON} = (16|8|4|2|1);
-		    return 1;
-		}
-		if (__OV =~ /^head/i) {
-		    __OPTION{__ON} = (8|4|2|1);
-		    return 1;
-		}
-		if (__OV =~ /^body/i) {
-		    __OPTION{__ON} = (4|2|1);
-		    return 1;
-		}
-		if (__OV =~ /^data/i) {
-		    __OPTION{__ON} = (1);
-		    return 1;
-		}
-		if (__OV =~ /^off/i) {
-		    __OPTION{__ON} = 0;
-		    return 0;
-		}
-		__WARN ("unknown setting '-__ON=__OV'");
-	    }
-
-OPTION:   title
-usage:    "Page title string"
-type:     s
-default:  ""
-
-OPTION:   pagecolor
-usage:    "Page backgound color"
-type:     s
-default:  white
-
-OPTION:   textcolor
-usage:    "Page text color"
-type:     s
-default:  black
-
-OPTION:   linkcolor
-usage:    "Link color"
-type:     s
-default:  blue
-param:
-
-OPTION:   alinkcolor
-usage:    "Active link color"
-type:     s
-default:  red
-param:
-
-OPTION:   vlinkcolor
-usage:    "Visited link color"
-type:     s
-default:  purple
-param:
-
-OPTION:   alncolor
-usage:    "Alignment background color"
-type:     s
-default:  white
-param:
-
-OPTION:   labcolor
-usage:    "Alignment label color"
-type:     s
-default:  black
-param:
-
-OPTION:   symcolor
-usage:    "Alignment symbol default color"
-type:     s
-default:  #666666
-param:
-
-OPTION:   gapcolor
-usage:    "Alignment gap color"
-type:     s
-default:  #666666
-param:
-
-OPTION:   css
-usage:    "Use Cascading Style Sheets {off,on,URL}"
-type:     s
-default:  off
-param:    css1
-convert:  sub { __ARGS;
-		#supplied style sheet URL
-		return 1    if __OV =~ /^(?:file|http):/i;
-		if (__OV ne 'on' and __OV ne 'off' and __OV ne '0' and __OV ne '1') {
-		    __WARN("bad value for '-__ON=__OV' want {on,off,URL} or {0,1,URL}");
-		}
-		return 1    if __OV eq 'on' or __OV eq '1';
-		return 0;
-          }
-
-OPTION:   bold
-usage:    "Use bold emphasis for coloring sequence symbols"
-default:  0
-param:
-convert:  sub { __ARGS; __OV > 0 ? 1 : 0 }
-
-OPTION:   srs
-usage:    "Try to use SRS links {off,on}"
-type:     s
-default:  off
-action:   sub { __ARGS;
-		if (__OV eq 'off') {
-		    return $Bio::SRS::Type = 0;
-		} elsif (__OV eq 'on') {
-		    return $Bio::SRS::Type = 1;
-		} else {
-		    __WARN("bad SRS setting, want {off,on}.");
-		}
-		return $Bio::SRS::Type = 1;    #default
-	    }
-
-OPTION:   find
-usage:    "Find and highlight exact string or simple regular expression or ':' delimited set of patterns"
-type:     s
-default:  ""
-param:
-action:   sub { __ARGS;
-                if (__OV) {
-		    __PARAM{'aln_coloring'} = 'find';
-		    __PARAM{'aln_colormap'} =
-			Bio::MView::Manager::get_default_find_colormap();
-                }
-          }
-
-###########################################################################
-[GENERICBLAST]
-
-OPTION:   hsp
-type:     s
-default:  ranked
-param:
-convert:  sub { __ARGS;
-		return 'all'      if __OV =~ /^a/;
-		return 'discrete' if __OV =~ /^d/;
-	        return 'ranked'   if __OV =~ /^r/;
-		__WARN("bad setting '-__ON=__OV'.");
-		__WARN("known hsp methods are: ", join(",",
-		Bio::MView::Manager::check_hsp_tiling), "\n");
-	      }
-
-OPTION:   maxeval
-type:     s
-default:  unlimited
-param:
-convert:  sub { __ARGS;
-		return undef    if __OV eq 'unlimited';
-		__TEST('f', __ON, __OV);
-		__WARN("bad setting '-__ON=__OV', want > 0.") if __OV < 0;
-		__OV;
-	  }
-
-OPTION:   minbits
-type:     s
-default:  unlimited
-param:
-convert:  sub { __ARGS;
-		return undef    if __OV eq 'unlimited';
-		__TEST('f', __ON, __OV);
-		__WARN("bad setting '-__ON=__OV', want > 0.") if __OV < 0;
-		__OV;
-	  }
-
-OPTION:   strand
-type:     @s
-default:  both
-param:
-convert:  sub { __ARGS;
-		local $_;
-		foreach (@{__PV}) {
-		    if (lc $_ eq 'p') {
-			return ['+'];
-		    } elsif (lc $_ eq 'm') {
-			return ['-'];
-		    } elsif (lc $_ eq 'both') {
-			return [];
-		    } elsif ($_ eq '*') {
-			return [];
-		    } else {
-			__WARN("bad value for '-__ON=$_' choose from '{p,m,both,*}'");
-		    }
-		}
-            }
-
-
-###########################################################################
-[BLAST1]
-
-text:     "NCBI BLAST (series 1):"
-
-#generic
-OPTION:   hsp
-usage:    "HSP tiling method __CHOOSE(Bio::MView::Manager::check_hsp_tiling)"
-type:     s
-default:  ranked
-
-OPTION:   maxpval
-usage:    "Ignore hits with p-value greater than N"
-type:     s
-default:  unlimited
-param:
-convert:  sub { __ARGS;
-		return undef    if __OV eq 'unlimited';
-		__TEST('f', __ON, __OV);
-		__WARN("bad setting '-__ON=__OV', want > 0.") if __OV < 0;
-		__OV;
-	  }
-
-OPTION:   minscore
-usage:    "Ignore hits with score less than N"
-type:     s
-default:  unlimited
-param:
-convert:  sub { __ARGS;
-		return undef    if __OV eq 'unlimited';
-		__TEST('f', __ON, __OV);
-		__WARN("bad setting '-__ON=__OV', want > 0.") if __OV < 0;
-		__OV;
-	  }
-
-#generic
-OPTION:   strand
-usage:    "Report only these query strand orientations {p,m,both,*}"
-type:     @s
-default:  both
-
-
-###########################################################################
-[BLAST2]
-
-text:     "NCBI BLAST (series 2), NCBI BLAST+, WashU-BLAST:"
-
-#generic
-OPTION:   hsp
-usage:    "HSP tiling method __CHOOSE(Bio::MView::Manager::check_hsp_tiling)"
-type:     s
-default:  ranked
-
-#generic
-OPTION:   maxeval
-usage:    "Ignore hits with e-value greater than N"
-type:     s
-default:  unlimited
-
-#generic
-OPTION:   minbits
-usage:    "Ignore hits with bits less than N"
-type:     s
-default:  unlimited
-
-#generic
-OPTION:   strand
-usage:    "Report only these query strand orientations {p,m,both,*}"
-type:     @s
-default:  both
-
-
-###########################################################################
-[PSIBLAST]
-
-text:     "NCBI PSI-BLAST:"
-
-#generic
-OPTION:   hsp
-usage:    "HSP tiling method __CHOOSE(Bio::MView::Manager::check_hsp_tiling)"
-type:     s
-default:  ranked
-
-#generic
-OPTION:   maxeval
-usage:    "Ignore hits with e-value greater than N"
-type:     s
-default:  unlimited
-
-#generic
-OPTION:   minbits
-usage:    "Ignore hits with bits less than N"
-type:     s
-default:  unlimited
-
-OPTION:   cycle
-usage:    "Process the N'th cycle of a multipass search {1..N,first,last,all,*}"
-type:     @s
-default:  last
-param:
-convert:  sub { __ARGS;
-		local $_; my @tmp=();
-		foreach (@{__PV}) {
-		    if ($_ eq 'first') {
-			push @tmp, 1;
-		    } elsif ($_ eq 'last') {
-			push @tmp, 0;
-		    } elsif ($_ eq 'all') {
-			@tmp = ();
-			last;
-		    } elsif ($_ eq '*') {
-			@tmp = ();
-			last;
-		    } elsif (/^\d+$/) {
-			push @tmp, $_;
-		    } else {
-			__WARN("bad value for '-__ON=$_' choose from '{1..N,first,last,all,*}'");
-		    }
-		}
-                return [ @tmp ];
-            }
-
-
-###########################################################################
-[FASTA]
-
-text:     "FASTA (U. of Virginia):"
-
-OPTION:   minopt
-usage:    "Ignore hits with opt score less than N"
-type:     s
-default:  unlimited
-param:
-convert:  sub { __ARGS;
-		return undef    if __OV eq 'unlimited';
-		__TEST('f', __ON, __OV);
-		__WARN("bad setting '-__ON=__OV', want > 0.") if __OV < 0;
-		__OV;
-	  }
-
-#generic
-OPTION:   strand
-usage:    "Report only these query strand orientations {p,m,both,*}"
-type:     @s
-default:  both
-
-
-###########################################################################
-[HSSP]
-
-text:     "HSSP/Maxhom:"
-
-OPTION:   chain
-usage:    "Report only these chainnames/numbers {A..B,1..N,first,last,all,*}"
-type:     @s
-default:  *
-param:
-convert:  sub { __ARGS;
-		local $_; my @tmp=();
-		foreach (@{__PV}) {
-		    if ($_ eq 'first') {
-			push @tmp, 1;
-		    } elsif ($_ eq 'last') {
-			push @tmp, 0;
-		    } elsif ($_ eq 'all') {
-			@tmp = ();
-			last;
-		    } elsif ($_ eq '*') {
-			@tmp = ();
-			last;
-		    } else {
-			push @tmp, $_;
-		    }
-		}
-                return [ @tmp ];
-            }
-
-
-###########################################################################
-[MAF]
-
-text:     "UCSC MAF:"
-
-OPTION:   block
-usage:    "Report only these blocks {1..N,first,last,all,*}"
-type:     @s
-default:  first
-param:
-convert:  sub { __ARGS;
-		local $_; my @tmp=();
-		foreach (@{__PV}) {
-		    if ($_ eq 'first') {
-			push @tmp, 1;
-		    } elsif ($_ eq 'last') {
-			push @tmp, 0;
-		    } elsif ($_ eq 'all') {
-			@tmp = ();
-			last;
-		    } elsif ($_ eq '*') {
-			@tmp = ();
-			last;
-		    } elsif (/^\d+$/) {
-			push @tmp, $_;
-		    } else {
-			__WARN("bad value for '-__ON=$_' choose from '{1..N,first,last,all,*}'");
-		    }
-		}
-                return [ @tmp ];
-            }
-
-
-###########################################################################
-[MULTAL]
-
-text:     "MULTAL/MULTAS:"
-
-#share
-OPTION:   block
-usage:    "Report only these blocks {1..N,first,last,all,*}"
-type:     @s
-default:  first
-
-###########################################################################
-[HELP]
-
-text:     "More information and help:"
-
-OPTION:   help
-usage:    "This help"
-
-OPTION:   listcolors
-usage:    "Print listing of known colormaps"
-
-OPTION:   listgroups
-usage:    "Print listing of known consensus groups"
-
-OPTION:   listcss
-usage:    "Print style sheet"
+sub html_head {
+    my $par = shift;
+    my $s = '';
+    return $s  if only_want_html_data($par);
+
+    my $DOCTYPE = '<!DOCTYPE html>';
+    my $DOCMETA = '<META http-equiv="Content-Type" content="text/html; charset=utf-8"/>';
+
+    my $title = want_title($par) ? $par->{'title'} : "MView";
+
+    $s .= "Content-Type: text/html\n\n"  if want_html_full($par);
+
+    #http://www.w3.org/TR/REC-CSS1#containment-in-html
+    if (want_html_head($par)) {
+        $s .= "$DOCTYPE\n<HTML>\n";
+        my $m = "$DOCMETA\n";
+        $m .= html_head_stylesheet_links($par)  if want_srs($par);
+        $m .= html_head_stylesheet_css($par)    if want_css($par);
+        $m .= "<TITLE>$title</TITLE>\n";        #in tab/titlebar
+        $s .= "<HEAD>\n$m</HEAD>\n";
+    }
+
+    if (want_html_body($par)) {
+        my $pagecolor = $par->{'pagecolor'};
+        my $textcolor = $par->{'textcolor'};
+        $s .= "<BODY style=\"background-color:$pagecolor;color:$textcolor\">\n";
+    }
+
+    $s .= "<H4>$title</H4>\n"  if want_title($par);  #in document
+
+    return $s;
+}
+
+sub html_head_stylesheet_links {
+    my $par = shift;
+    my $linkcolor  = $par->{'linkcolor'};
+    my $alinkcolor = $par->{'alinkcolor'};
+    my $vlinkcolor = $par->{'vlinkcolor'};
+    my $s .= "<STYLE TYPE=\"text/css\">\n<!--\n";
+    $s .= "A:link{background:transparent;color:$linkcolor}\n";
+    $s .= "A:active{background:transparent;color:$alinkcolor}\n";
+    $s .= "A:visited{background:transparent;color:$vlinkcolor}\n";
+    $s .= "-->\n</STYLE>\n";
+    return $s;
+}
+
+sub html_head_stylesheet_css {
+    my $par = shift;
+    my $css1 = $par->{'css1'};
+    my $s = '';
+    if ($css1 =~ /^(?:file|http):/i) {  #link to style sheet
+        $s .= "<LINK REL=STYLESHEET HREF=\"$css1\">\n";
+    } else {  #style sheet in situ
+        $s .= "<STYLE TYPE=\"text/css\">\n<!--\n";
+        $s .= dump_css($par);
+        $s .= "-->\n</STYLE>\n";
+    }
+    return $s;
+}
+
+sub html_foot {
+    my $par = shift;
+    my $s = '';
+    return $s  if only_want_html_data($par);
+    $s .= "</BODY>\n"  if want_html_body($par);
+    $s .= "</HTML>\n"  if want_html_head($par);
+    return $s;
+}
+
+sub dump_parameters {
+    my $par = shift;
+    warn "\nProcessed parameters:\n";
+    foreach my $k (sort keys %$par) {
+        my $v = 'undef';
+        $v = $par->{$k}  if defined $par->{$k};
+        $v = "[" . join(",", @$v) . "]"  if ref $v eq 'ARRAY';
+        warn sprintf("%-20s => %s\n", $k, $v);
+    }
+    warn "\n";
+}
 
 
 ###########################################################################

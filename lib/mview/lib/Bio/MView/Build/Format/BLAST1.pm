@@ -1,5 +1,7 @@
-# Copyright (C) 1997-2015 Nigel P. Brown
-# $Id: BLAST1.pm,v 1.22 2015/06/14 17:09:04 npb Exp $
+# Copyright (C) 1997-2018 Nigel P. Brown
+
+# This file is part of MView.
+# MView is released under license GPLv2, or any later version.
 
 ###########################################################################
 #
@@ -10,6 +12,7 @@
 ###########################################################################
 package Bio::MView::Build::Format::BLAST1;
 
+use Bio::MView::Option::Parameters;  #for $PAR
 use Bio::MView::Build::Format::BLAST0;
 
 use strict;
@@ -26,14 +29,16 @@ sub begin_parse {
     ($s, $h, $r);
 }
 
-sub end_parse { $_[0]->{'entry'}->free(qw(HEADER RANK MATCH)) }
+sub end_parse { $_[0]->{'entry'}->free_parsers(qw(HEADER RANK MATCH)) }
 
 #sub str { join ", ", map { defined $_ ? $_ : 'undef' } @_ }
 
 sub parse_record {
     my ($self, $k, $hdr, $sum, $aln) = @_;
     #warn "[@{[str($k, $hdr, $sum, $aln)]}]\n";
+
     my ($id, $desc, $score, $p, $n) = ('','','','','');
+
     $k = ''  unless defined $k;  #row number = rank
 
     if (defined $hdr) {
@@ -46,8 +51,16 @@ sub parse_record {
     if (defined $aln) {
         ($score, $p, $n) = ($aln->{'score'}, $aln->{'p'}, $aln->{'n'});
     }
-    #warn "[$k, $id, $desc, $score, $p, $n]\n";
-    ($k, $id, $desc, $score, $p, $n);
+
+    my $info = {
+        'score' => $score,
+        'p'     => $p,
+        'n'     => $n,
+    };
+
+    #use Bio::Util::Object qw(dump_hash); warn dump_hash($info);
+
+    return ($k, $id, $desc, $info);
 }
 
 sub get_scores {
@@ -72,9 +85,9 @@ sub get_scores {
 sub skip_hsp {
     my ($self, $hsp) = @_;
     return 1  if
-        defined $self->{'minscore'} and $hsp->{'score'} < $self->{'minscore'};
+        defined $PAR->get('minscore') and $hsp->{'score'} < $PAR->get('minscore');
     return 1  if
-        defined $self->{'maxpval'}  and $hsp->{'p'} > $self->{'maxpval'};
+        defined $PAR->get('maxpval')  and $hsp->{'p'} > $PAR->get('maxpval');
     return 0;
 }
 
@@ -92,7 +105,7 @@ use vars qw(@ISA);
 sub schema {[
     # use? rdb?  key              label         format   default
     [ 1,   1,    'score',         'score',      '5N',      ''  ],
-    [ 2,   2,    'p',             'P(N)',       '9S',      ''  ],
+    [ 2,   2,    'p',             'P(N)',       '8N',      ''  ],
     [ 3,   3,    'n',             'N',          '2N',      ''  ],
     [ 4,   4,    'query_orient',  'qy',         '2S',      '?' ],
     [ 5,   5,    'sbjct_orient',  'ht',         '2S',      '?' ],
@@ -111,7 +124,7 @@ use vars qw(@ISA);
 sub schema {[
     # use? rdb?  key              label         format   default
     [ 1,   1,    'score',         'score',      '5N',      ''  ],
-    [ 2,   2,    'p',             'P(N)',       '9S',      ''  ],
+    [ 2,   2,    'p',             'P(N)',       '8N',      ''  ],
     [ 3,   3,    'n',             'N',          '2N',      ''  ],
     [ 0,   0,    'query_orient',  'qy',         '2S',      '?' ],
     [ 0,   0,    'sbjct_orient',  'ht',         '2S',      '?' ],

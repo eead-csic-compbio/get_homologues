@@ -1,0 +1,930 @@
+; -*- mode: Text; eval: (set-fill-column 75); -*-
+
+Version 1.67 2020-02-14
+
+Changes:
+
+- Added PHIBLAST parser for BLAST+
+- Added cross-platform installer script 'install.pl'.
+- Added 'Makefile.PL' as alternative installer.
+
+Input formats:
+
+- Tested with BLAST 2.10.0+
+- Tested with FASTA 36.3.8h [2020-02 build]
+
+Bug fix:
+
+- MS Windows gave parse error and lost initial alignment lines when reading
+  from stdin.
+
+
+Version 1.66 2019-09-01
+
+Changes:
+
+- Added '-sort cov | pid | cov:pid | pid:cov' option to resort sequences by
+  (1) coverage, (2) percent identity, (3) coverage then percent identity,
+  (4) percent identity then coverage, with respect to the reference
+  sequence.
+
+Input formats:
+
+- Tested with BLAST 2.9.0+
+- Tested with FASTA 36.3.8h [2019-08 build]
+
+Bug fix:
+
+- FASTA 36 parser omitted database hits with very short identifiers.
+
+
+Version 1.65  2019-04-22
+
+Changes:
+
+- Speed improvement.
+- MAF format now outputs all blocks instead of just the first.
+- Format conversions add newline between separate alignment blocks.
+
+Input formats:
+
+- Tested with BLAST 2.8.1+
+- Tested with FASTA 36.3.8g [2018-10-23 build]
+
+Bug fixes:
+
+- Replaced option range processing 1..N, lost in version 1.63.
+
+Other:
+- Refactoring of parsers.
+
+
+Version 1.64  2018-05-14
+
+Input formats:
+
+- Tested with BLAST 2.8.0+ [alpha]
+
+New features:
+
+- Speed improvement.
+
+- Added '-sequences on|off' option to disable processing and output of
+  sequences for faster analysis (issue #13).
+
+- Added pass-through of extra 'blast -outfmt 7' sbjct fields (staxid,
+  ssciname, scomname, sblastname, sskingdom, staxids, sscinames, scomnames,
+  sblastnames, sskingdoms). These can be switched off using new label
+  control option '-label8' (issue #14).
+
+Bug fixes:
+
+- Fixed regression in output format conversion since v1.62, whereby
+  unaligned input sequences were truncated instead of being passed through
+  unchanged.
+
+Other:
+
+- Complete rewrite of display mechanism.
+- Ongoing refactoring.
+
+
+Version: 1.63  2018-03-25
+
+Input formats:
+
+- Tested with BLAST 2.7.1+
+- Tested with FASTA 36.3.8f, 36.3.8g [2018-01-01 build]
+
+Changes:
+
+- Changed option '-width flat' to '-width full'.
+  WARNING! BACKWARDS INCOMPATIBILITY: the default setting, so probably not
+  an issue.
+- Changed name of output format '-outfmt new' to '-outfmt mview'.
+  WARNING! BACKWARDS INCOMPATIBILITY: the default setting, so probably not
+  an issue.
+
+New features:
+
+- Added "comment" mode for rows starting with hash, '#'.
+- Added "comment" row colouring mode that reads a colormap name embedded in
+  the row comment identifier, like '#DSSP:id'
+- Added 'DSSP' colormap for protein secondary structure rows.
+- Added GNU-style '--' end of command line options flag.
+
+Bug fixes:
+
+- Fixed undefined variable warnings when using '-groupfile' option.
+- Fixed JNETZ parser warnings.
+- Fixed JNETZ reporting colours even when no colouring set.
+- Fixed clustal conservation line bug losing some '.' symbols.
+
+Other:
+
+- Complete rewrite of option parsing mechanism.
+- Ongoing refactoring.
+
+
+Version 1.62  2017-08-06
+
+Changes:
+
+- Added new column reporting percent coverage of hits with respect to
+  reference sequence.
+  WARNING! BACKWARDS INCOMPATIBILITY: the additional data column is
+  inserted as label4 before the percent identity column, so label numbers 4
+  through 6 are now 5 through 7.
+
+- Added new '-keepinserts on|off' option for BLAST to preserve hit
+  insertions relative to the query. This is useful when dumping a search to
+  an unaligned output format (fasta, pir) and the full length HSPs are
+  needed. Note: the default behaviour is to cut hit insertions to make the
+  query contiguous.
+
+- Added/moved column header information to ruler line in default and html
+  output modes; changed default behaviour to display ruler (-ruler on is
+  now the default).
+
+- Changed percent identity filtering from all pairwise comparisons to
+  simple pairwise comparison with reference row. WARNING! BACKWARDS
+  INCOMPATIBILITY: changes meaning of '-minident' and '-maxident' options.
+
+Colouring:
+
+- Changed to allow 'find' colouring independently of 'alignment' colouring,
+  so both can be applied (formerly 'find' colouring overrode any
+  other).
+
+- Added single colour colormap capability to consensus line colouring.
+
+Input formats:
+
+- Updated to handle BLAST 2.6.0+ '-outfmt 7' changes.
+
+Output formats (clustal, fasta, msf, pir, plain, rdb):
+
+- Added percent coverage, percent identity to output format converters.
+
+- Added search row number to output format converters as a prefix to the
+  sequence identifier:
+
+     0:test                     (query row)
+     8:emb|AL021726|DMC171E4    (search hit 8)
+     8.2:emb|AL021726|DMC171E4  (search hit 8, discrete HSP 2).
+
+- rdb output mode now reports search query as row 0 (was empty before).
+
+Bugs fixed:
+
+- Fixed bug in output format converters that replaced unknown 'X' residues
+  in blast query with gaps.
+
+- Fixed bug in propagation of symcolor and gapcolor options in the absence
+  of an explicit coloring scheme.
+
+- Fixed bug in minident/maxident truncating search listings.
+
+
+Version 1.61  2016-11-14
+
+- Added '-coloring mismatch' mode, which behaves like '-coloring identity',
+  but highlights the mismatches instead of the identities. Using this you
+  can see blocks of misalignment and individuate particular misaligned
+  residue types by colour.
+
+- Changed colormap and consensus group 'mismatch' pattern from '*' to '.':
+  (1) if you use your own colormaps or consensus maps, the wildcard
+  effect in a colormap map is now obtained with . instead of *, and (2)
+  the * character now explicitly matches * in the input sequences
+  (typically a translated stop codon) so these can now be coloured
+  independently like a normal residue.
+
+- Added colouring by single named colour; added X11 and Web 4.0 colours:
+  list them with 'mview -listcolors'.
+
+- Updated to handle BLAST 2.5.0+ change in '-outfmt 7' standard field
+  names: 'query /sbjct id' became 'query/sbjct acc.'
+
+- Tested with BLAST 2.4.0+, 2.5.0+, FASTA 36.3.8e.
+
+
+Version 1.60.1  2015-10-13
+
+- Fixed error in get_hsp_groups calling keys(); affects BLAST, but only
+  triggered under older versions of perl (seen with 5.10, fine with 5.18).
+
+
+Version 1.60  2015-10-09
+
+- Changed HTML output to HTML5: added DOCTYPE html, removed FONT tags.
+
+- Added BLAST+ PSIBLAST parser.
+
+- Added BLAST+ '-outfmt 7' support.
+
+- Changed BLAST '-hsp discrete' mode to always set HSP count, N = 1.
+
+- Fixed 'plain' output format to not truncate long identifiers.
+
+
+Version 1.59  2015-07-17 (GitHub)
+
+- This is a re-release with only documentation changes.
+
+- Code base moved to GitHub.
+
+
+Version 1.59  2015-07-06 (SourceForge)
+
+- Improved algorithm for assembly of alternative search alignment fragments
+  with stricter constraints on selection of fragments that maintain query
+  and hit sequence orderings; affects all BLAST and FASTA searches when
+  the number of search result fragments is greater than 1.
+
+- Changed BLAST scoring information to report number of HSPs, best score
+  and significance for the HSPs used in the assembly, rather than those
+  stated in the parsed BLAST ranking; affects all BLAST searches.
+
+- Updated FASTA parsers to recognise '>--' alternative alignments.
+
+- Added FASTA family support for TFASTM, TFASTF, TFASTS (experimental).
+
+- Modified code to work on Windows: fixed problems with filepaths
+  containing backslashes; added low-level handling of line endings to
+  allow UNIX (LF) and Windows/DOS (CRLF) data files to be read on either
+  system. Tested with Strawberry Perl 5.22.0.1 64bit under Wine.
+
+- Fixed bug in CLUSTAL conservation line that sometimes miscalculated
+  column positions; affects BLAST and FASTA searches.
+
+- Fixed bug in PIR output that inserted wrong terminal gap character.
+
+- Fixed bug in percent identity calculation: now case-insensitive and
+  treats unknown 'X' characters as mismatches.
+
+- Fixed bug in FASTA/Pearson parser that could skip description field.
+
+- Major refactoring of components and discontinued CVS on SourceForge.
+
+
+Version 1.58  2015-06-14
+  Added CLUSTAL/aln output mode.
+  Added new '-conservation' option to produce CLUSTAL-style '*:.' line for
+    any alignment.
+  Added new molecule type option: -moltype { aa | na | dna | rna } and
+    removed old '-dna' option.
+  Tidied output conversion formatters: now use molecule type.
+  Extended MAF parser and added column header text to Ruler, currently
+    used by MAF output.
+  Extended bin/mview check_format() to better guess input format from
+    filename.
+  Fixed bug in Sequence.pm to recognise '~' gap characters; affects MSF.
+  Fixed bug in UV FASTA handling of peptide tuple matches: each query tuple
+    now processed and output separately; affects FASTM, FASTF, FASTS.
+  Fixed bugs in UV FASTA translated nucleotide sequence numbering;
+    frameshift symbols '/' and '\' now elided and treated like gaps;
+    affects FASTX, FASTY, TFASTX, TFASTY, TFASTXY.
+  Switched from CVS to git version control.
+
+
+Version 1.57.1  2015-05-21
+  Fixed bug in bin/mview which always set 'find' colour scheme, reported on
+  SourceForge.
+
+
+Version 1.57  2015-01-24
+  WARNING! BACKWARDS INCOMPATIBILITY: Changed FASTA-related input format
+  names to avoid long-standing confusion, as follows:
+    1. FASTA multiple alignment file format:
+         old name "pearson"
+         new name "fasta".
+    2. FASTA family of sequence database search tools from Uni. Virginia:
+         old name "fasta"
+         new name "uvfasta"
+  Added MAF parser (experimental).
+  Extended the pattern search mechanism to assign a different colour to
+    each input sub-pattern; see command line option '-find' in the manual.
+  Added small change to Pearson/Fasta parser to strip description fields
+    comprising a single '.' from GeneDoc output.
+  Fixed CLUSTAL parser failure when input file uses CRLF line terminators.
+  Fixed bug in MSF parser so that sequence identifies can contain spaces.
+
+
+Version 1.56  2013-10-20
+  Updated FASTA suite GGSEARCH, GLSEARCH, SSEARCH, FASTM parsers and added
+    support for FASTF, FASTS.
+
+
+Version 1.55  2013-09-27
+  Converted documentation to Sphinx and rewrote and extended the manual.
+  Changed HTML output to place the header text within the alignment table.
+  Reading from stdin via scratch file on /tmp fixed.
+  Added -listcss option; removed -html css; changed CSS layout.
+  Added R and Y to D1 consensus for nucleotide alignments.
+  Pattern search mechanism now sets own colormap.
+  Consensus lines missing '.' characters in partial gaps fixed.
+
+
+Version 1.54  2013-08-27
+  New FASTA parser; old parser retained in legacy FASTA versions.
+  Added FASTA family SSEARCH, GGSEARCH, GLSEARCH support.
+  Added FASTA family FASTM support (experimental).
+
+
+Version 1.53  2013-08-21
+  BLAST parsers modified to remove trailing junk from identifiers.
+  BLAST parsers modified to handle score summaries with empty description
+    field.
+  WU-BLAST parser modified to handle EMBOSS header content containing
+    leading '>' characters.
+  Removed spurious cursor increment in main loop of
+    Bio::MView::Display::Reverse_Ruler.
+  Clustal parser supports trailing numbers for clustal 2.1 FASTA parsers
+    extended to handle some more FASTA3 formats.
+  Sequence assembly mechanism changed to preserve earlier fragments at the
+    expense of overlapping ones seen later by the parser; this only visibly
+    affects blast/fasta searches involving sequence fragments in mixed
+    reading frames.
+
+
+Version 1.52  2011-01-20
+  Fasta parsing extended to handle versions 34,35,36. Only tested for fasta
+  itself on protein sequences and not for other members of the fasta suite.
+  Bug fixes:
+  - SRS.pm did not truncate trailing garbage on identifiers correctly.
+  - EBI SRS wgetz URL templates updated.
+  - HSSP.pm parser now refers to uniprot instead of swiss in identifiers.
+
+
+Version 1.51.1  2009-10-24
+  HSSP output no longer produces the chain discontinuity symbol '!' in
+  unaligned regions.
+
+
+Version 1.51  2008-05-20
+  Extended SRS links to handle NCBI identifiers of form "ref|accession|".
+
+  Added 'pcid' option to control normalisation method for all percent
+  identity calculations: 'reference' (normalises with respect to the query
+  or reference sequence, 'aligned' (was the only option, normalises with
+  respect to the length of the aligned region), and 'hit' (normalises with
+  respect to the length of the matched or hit sequence).
+
+  Added 'minident' option to allow filtering on sequences over some
+  threshold of percent identity.
+
+  Changed output header text to give information on percent identity
+  normalisation method unless disabled with 'label4' or 'minident' or
+  'maxident' in operation.
+
+  Fixed syntax problem in some parsers for perl v5.10.0.
+
+
+Version 1.50  2008-04-20
+  Added 'find' option to search for strings and regexps.
+
+  Renamed old 'clustal' colourmap to 'nardi' (its author) and added new
+  'clustal' colourmap based on clustalx2. The 'cclustal' consensus
+  colourmap still uses the old nardi clustal colour scheme.
+
+  Tidied SRS sequence identifier link code: now contains NCBI entrez
+  protein link and EBI protein and nucleotide link patterns.
+
+
+Version 1.49.0  2005-12-03
+  SourceForge relocation
+  Switched to GPL.
+
+
+Version 1.48.3  2005-11-14
+  Refactored parser tree.
+
+
+Version 1.48.2  2005-07-13
+
+  Added T-COFFEE 1.37 parser.
+
+
+Version 1.48.1  2004-11-04
+
+  Minor change to BLAST2 family parser delimiting hits more accurately in
+  special case that hit description section contains leading 'Score='
+  referring to some cross-reference.
+
+  Minor change to generic alignment BLAST parser to work around space
+  padding inserted in mid-alignment by psiblast 2.2.9 in rare cases.
+
+
+Version 1.48  2004-04-27
+
+  Relaxed fasta 3.3 parsing of bits field in rank (was integer, now
+  string).
+
+  Fixed bug in discrete HSP processing for blastx,tblastn,tblastx where
+  known HSP frames were being truncated to orientation only.
+
+  Parsers extended and tested for:
+    o ncbi blast 2.2.6
+    o wu-blast 2.0 [13-Apr-2004]
+    o fasta 3.4t23
+    0 clustalw 1.83
+
+  Relocated CVS tree to Unibas.
+
+  Better input file checking.
+
+
+Version 1.47.5  1-4-03
+
+  Fixed plain output format which did not correctly process '#identifier'
+  lines (user-supplied rows such as annotation that should not be processed
+  in the normal way).
+
+
+Version 1.47.4  1-1-03
+
+  Changes to blast processing code; minor parser change for blastn 2.0.14;
+  minor parser change for MSF; fixed missing percent identity calculation!
+  As usual, this label is switched off with '-label4'.
+
+
+Version 1.47.3  31-5-02
+
+  Fixed 'exists' bug in Sequence.pm.
+
+
+Version 1.47.2  29-4-02
+
+  Minor changes and tidying of html documentation.
+
+
+Version 1.47.1  23-4-02
+
+  Fixed fasta family parse error caused by a short sequence stub on the
+  first line of alignment, which gave negative sequence positions for the
+  query (or subject).
+
+
+Version 1.47  21-4-02
+
+  o  Blast and fasta processing now always outputs strand
+     orientations/frames as a part of the score data field controllable
+     with '-label3' (except for blastp, since strand orientations are
+     always '+'.
+  o  Blast and fasta processing now outputs query and hit sequence
+     positions as reported in those formats. This can be switched off
+     with '-label5' option (no query positions) and '-label6' (no hit
+     positions).
+  o  Pearson, PIR, RDB, HTML output formats now report rank, description,
+     score information, strand orientations, and query/hit positional
+     data.
+  o  Fixed inoperative '-minopt' bug for fasta.
+  o  Colormap now uses a palette of colors by name, run with -listcolors to
+     see the extended syntax. Backwards compatible with previous versions.
+  o  Input sequences having sequence identifiers that start with a hash
+     character '#' will be treated as special rows for coloring
+     purposes. The user can supply corresponding colormaps using
+     '-colorfile FILENAME'. For example, if the input alignment contains a
+     line identified by '#sec-struct' then a colormap called [sec-struct]
+     would apply to any rows containing that string in their identifier.
+  o  Options -disc/-keep/-nops now accept '*' meaning all rows.
+  o  New option '-labcolor' to specify the color for the label portion of
+     the output alignment.
+  o  JNET secondary structure prediction parser added, with own color
+     scheme, specified with '-in jnet'. This only reads the 'jnet -z'
+     (columnar) style output.
+  o  CLUSTAL-like colormaps added.
+  o  New neural network derived colour scheme added (-colormap kxlin).
+  o  Option '-out plain' added for completeness.
+
+
+Version 1.41.11  12-5-01
+
+  Fixed Substring.pm _close() which gave warning in perl5.6.0 when called
+  more than once.
+
+
+Version 1.41.10  9-3-01
+
+  Fasta version 3.3t07 'fasta' format added percent identity ungapped.
+
+
+Version 1.41.9  20-10-00
+
+  Start of some support for NCBI psi-blast web page (text-only) output.
+
+
+Version 1.41.8  1-12-99
+
+  Parser for FASTA suite 'fasta' version 3.3 added.
+
+
+Version 1.41.7
+
+22-11-99  GPCRdb colour scheme added, selected with command line option
+          '-colormap gpcr' as for other coloring schemes.
+
+
+Version 1.41.6
+
+13-9-99   PHI-BLAST 2.0.9 supported.
+
+
+Version 1.41.5
+
+31-8-99   o Modified BLAST2 parser to recognise ungapped (blastall -g F)
+            output. Note, the default behaviour of MView when processing
+            BLAST2 output is to display only the first sequence fragment
+            found, which is reasonable for gapped output. If you want to
+            use BLAST2 ungapped output and see the HSPs merged (the default
+            behaviour of MView with old BLAST1 output) use the '-hsp all'
+            option. Likewise to see all HSPs separately use '-hsp discrete'.
+          o Modified BLAST2 BLAST[NX] parsers to recognise strand and frame
+            orientation fields added in (or before?) BLAST2.0.9.
+          o Modified FASTA3 parsers for multi-line descriptions
+            (fasta... -L) output.
+
+
+Version 1.41.4
+
+30-7-99   Options -help, -listcolors, -listgroups now output on stdout
+          rather than stderr; use of -html option adds markup to these -
+          in particular with -listcolors, the output is marked up in colour
+          (useful for documentation Web pages). Comments within each
+          colormap or groupmap definition are now retained for output with
+          the corresponding -list options.
+
+
+Version 1.41.3
+
+1-7-99    o Coloring by identity now uses the colormap's '*' color (if
+            defined) preferentially instead of 'symcolor', defaulting to
+            the latter if '*' is undefined in the colormap: if coloring by
+            identity is selected, symbols matching the reference sequence
+            will receive their given colors from the colormap, while
+            mismatches will receive the wildcard '*' color, if defined in
+            the colormap, otherwise the 'symcolor'.
+          o New DNA colormap 'D2' for use with coloring by identity:
+            blue/red for match/mismatch.
+
+
+Version 1.41.2
+
+18-5-99   o Fixed bug in FASTA 32t05 parser.
+
+
+Version 1.41.1
+
+13-5-99   o Parser modification for newly released FASTA 32t05.
+          o New parser for MIPS-ALN format (experimental).
+
+
+Version 1.41
+
+15-4-99   o Condensed CSS HTML output so loading pages should be faster.
+          o Added limited experimental support for GCG 9.1 versions of
+            BLAST and FASTA suites: known to work for: blastp (1.4.8),
+            fasta (2).
+          o Added support for fasta (3.2) with strand orientations.
+          o Changed -disc/-keep policy again! List precedence is:
+              -keep > -disc
+            ie., -keep list overrides the -disc list. Regular expressions
+            can now be used in -keep/-disc/-nop lists, so something like:
+              -disc '/.*/'  -keep '2,3,6..10,/^pdb/'
+            would discard everything except rows 2, 3, 6 through 10, and
+            any hits beginning with the string 'pdb'. Regular expressions
+            inside a list must be enclosed by '/' characters and matches
+            are case-insensitive.
+          o The currently set reference row is still used for percent
+            identity and colouring operations, but the row will be
+            invisible if excluded by the -disc list, so you must explicitly
+            keep it in that situation if desired. This is arguably a more
+            useful behaviour that still satisfies the need addressed in
+            version 1.39.1 (see above) allowing '-disc query'.
+          o Use of a reference row can be completely switched off by
+            specifying any non-existent value, eg., -ref -1, thereby
+            disabling percent identity column calculation and identity
+            coloring schemes.
+          o The keeplist is no-longer reported in the output.
+          o Memory use extensively reduced in various places; essential for
+            massive psi-blast jobs that process all cycles.
+          o New option '-register on|off' to control registration of
+            columns in multi-pass output (eg., blastn strands, psi-blast
+            cycles). With the default setting 'on', MView saves all output
+            in memory until the end to ensure alignments and labels are
+            output in register. Much memory can be saved by setting to
+            'off'.
+
+
+Version 1.40.5
+
+18-3-99   Fixed: -strand {+,-,*} options failed with new Getopt.pm because
+          of +/- character conflicts: now use -strand {p,m,*}.
+
+
+Version 1.40.4
+
+9-3-99    Fixed: -colormap/-groupmap failed to recognise maps loaded by
+          -colorfile/-groupfile; -srs option had no effect.
+
+
+Version 1.40.3
+
+2-3-99    Fixed: -groupfile called missing method.
+
+
+Version 1.40.2
+
+1-3-99    Fixed: -label switches were being ignored; -listgroups called
+          missing method; -minbits called missing mehod; SRS.pm built-in
+          URLs now refer to SRS version 5 sites.
+
+
+Version 1.40.1
+
+18-2-99   Added explicit CORE::{warn,die} for perl 5.005. Default alignment
+          color '-symcolor' set to #222222 (dark grey) instead of #000000
+          (black).
+
+
+Version 1.40
+
+12-2-99   Added Cascading Style Sheets for blocked coloured backgrounds.
+          Colour palettes changed to use Netscape 216 cross-platform
+          colours.
+          New HTML markup options: -html, -title, -pagecolor, -textcolor,
+          -linkcolor, -alinkcolor, -vlinkcolor, -alncolor, -symcolor,
+          -gapcolor. New option -dna for selecting default nucleotide
+          colours and consensus group definitions, -css for switching on
+          style sheets. Colouring schemes augmented with '-coloring
+          group'. Built-in palette and consensus group names changed. Old
+          options -contrast -body removed. New Getopt.pm class. Colouring
+          mode methods clearer.
+
+
+Version 1.39.5
+
+1-12-98   Minor parser change for PSI-BLAST 2.0.6.
+
+
+Version 1.39.4
+
+18-11-98  Fixed bug in -con_gaps option which left blanks in the consensus
+          sequence when the number of gaps in the column dominated non-gaps.
+
+
+Version 1.39.3
+
+16-11-98  Perl 5.003 problem fixed for backward compatibility. This
+          concerned use lexically scoped $a (or $b) inside a function
+          passed to the sort() builtin; solved by renaming the my()
+          variable(s).
+
+
+Version 1.39.2
+
+11-11-98  Blast filters -maxpval, -maxeval, -minscore, -minbits were broken
+          as access methods were missing.
+
+
+Version 1.39.1
+
+11-11-98  Changed interoperation of -keep and -disc options: formerly,
+          -keep overrode -disc where an id was present in both. Now, the
+          converse is true. This allows the query sequence to be discarded
+          from a search, which was not possible before.
+
+
+Version 1.39
+
+11-11-98  Added -con_gaps option to control use of gaps in consensus
+          calculation. The default behaviour is equivalent to '-con_gaps
+          on' which computes consensus colours and consensus lines counting
+          gaps. This often results in columns of alignment that are
+          uncoloured or have no consensus because they contain too many
+          gaps that force the consensus below the threshold. Setting
+          '-con_gaps off' causes gaps to be ignored for consensus
+          calculations.
+
+
+Version 1.38.2
+
+11-11-98  Fixed bug in Plain.pm causing parse failure on trailing white
+          space in alignments.
+
+
+Version 1.38.1
+
+04-11-98  Changed default consensus calcualtion threshold to 70% (from 75%)
+          to match the 70% line available by default when consensus lines
+          are switched on.
+
+
+Version 1.38
+
+02-11-98  Added -hsp {ranked,all,discrete} option allowing some control of
+          ungapped BLAST HSP or gapped BLAST alignments for processing.
+
+
+Version 1.37.1,1.37.2
+
+          Minor bug fixes and omissions in 1.37.
+
+
+Version 1.37
+
+12-10-98  Ftp/Web site relocated to NIMR.
+          Parsers extended to cover the full BLAST program suite (*=new) :
+             NCBI BLAST (2.0 series)
+               blastp, blastn, (*)blastx, (*)tblastn, (*)tblastx, psi-blast
+             NCBI BLAST (1.4 series)
+               blastp, blastn, (*)blastx, (*)tblastn, (*)tblastx
+             WashU BLAST2 (2.0)
+               blastp, blastn, (*)blastx, (*)tblastn, (*)tblastx
+          BLAST (1.4 series) HSP stacking mechanism is now more
+          conservative: only the HSPs forming the set reported in the hit
+          ranking are stacked (where this can be determined). Other HSPs
+          are ignored. Input format detection using preferentially 1) -in
+          option, 2) filename extension, 3) non-directory part of filename
+          prefix to infer format. Multiple files in different formats can
+          thus be processed as one. Column names added to numeric fields
+          (score, expect, etc) for search programs in BLAST/FASTA
+          suites. Added -minopt to for FASTA filtering (was -minscore, but
+          this was ambiguous). Added -range M:N option giving limited
+          output sequence number range control from command line.
+          Bug fixes: Ordering of HSPs in reverse complemented query strands
+          was wrong for blastn (series 1.4). Better memory usage. Rulers
+          now decrement for reverse oriented query sequences (BLASTN, etc).
+
+
+Version 1.36.2
+
+3-9-98    Fixed empty psi-blast iteration bug: if no hits are found MView
+          skips that iteration.
+
+
+Version 1.36.1
+
+1-9-98    Added GCG style checksums to MSF output format for Name lines.
+
+
+Version 1.36
+
+24-8-98   OPERATIONAL changes:
+          Support for HTML TABLE output dropped (too complex and
+          compromising efficiency). BLASTP/BLASTN parser minor bug
+          fix. BLAST2 parser supports choice of one or more search cycles
+          to be processed using -cycle option. Selective exclusion of
+          alignment rows from colour or identity calculations added through
+          -nop (no process) option. Complete removal of explicit rows and
+          ranges of rows through -disc (discard) option. Same ability to
+          handle row ranges (eg., 10..15) added to existing -keep (force
+          retention of rows despite other filters) option. New PIR format
+          parser added (-in option). New output formats PIR and MSF added
+          (-out option). The MSF output does not presenty; compute
+          checksums, so this may cause a problem for those programs that
+          are fussy about this.
+
+          MAJOR PERFORMANCE changes:
+          The memory footprint has been massively reduced for large
+          alignments through closure or several memory leaks concerning
+          (lack of) garbage collection of circular references in perl. The
+          input file is no longer read into memory for parsing, but is read
+          on demand using seek(), which also saves memory.
+
+
+Version 1.35.1
+
+27-7-98   MSF parser modified. -help text use of -threshold corrected.
+
+
+Version 1.35
+
+16-6-98   Added consensus colouring/line code. Added MULTAS parser. Added
+          new output mode 'pearson' which allows any valid input format to
+          be dumped as a Pearson/FASTA library for import to other tools.
+
+
+Version 1.33/34  Experimental - not released.
+
+
+Version 1.32.1
+
+5-6-98    Fixed TFASTX parser to differentiate from FASTA when no
+          interactive header is present.
+
+
+Version 1.32
+
+4-6-98    Added TFASTX parser; BLASTN parser splits alignments on strand
+          orientations, but this is a memory hog - only works for small
+          alignments or with limiting -topn.
+
+
+Version 1.31.1
+
+27-5-98   Changed calculation of percent identities reported in alignments
+          to follow that used by BLAST:
+
+                         number of identical residues
+                   --------------------------------------  x 100
+                     length of query over aligned region,
+                           excluding gaps in the query
+
+          In the case of BLAST MView output, deviations from the
+          percentages reported by BLAST are due to 1) different rounding,
+          and 2) the was MView assembles a single pseudo-sequence for a hit
+          composed of multiple HSPs, giving an averaged percent identity.
+
+
+Version 1.31
+
+18-3-98   New/changed command line options:
+
+          OLD                   NEW
+          -ruler                -ruler on|off
+                                -alignment on|off
+          -color scheme         -coloring scheme
+                                -colormap mapname
+                                -listcolors
+
+          Fixed '-contrast' option ignored by '-coloring any'.
+          Changed COPYING file explicitly to allow free use of MView output.
+
+
+Version 1.30
+
+17-3-98   Added user control of coloring. Setting maxident is no longer
+          overridden by topn: -maxident 75 -topn 10 now gives the top 10
+          hits with maximum identity of 75%. Formerly, it gave the maximum
+          75% identity hits of the top 10.
+
+
+Version 1.29.1
+
+20-3-98   Added BLASTN (NCBI 2.0.4) parser.
+
+
+Version 1.29
+
+12-3-98   Added CLUSTAL parser. Various small changes.
+
+
+Version 1.28  Experimental - not released.
+
+
+Version 1.27.3
+
+6-3-98    Removed old PSI-BLAST parser (PBlastp.pm). Added NCBI BLAST2
+          parser (Blast2.pm), which parses both new NCBI BLAST2 and
+          PSI-BLAST formats.
+          Added -minbits filtering to mview command line for use with
+          these.
+
+
+Version 1.27.2
+
+3-3-98    Fixed Fasta.pm bug.
+
+
+Version 1.27.1
+
+26-2-98   Fixed MSF.pm bug.
+
+
+Version 1.27
+
+10-2-98   Various compiler bugs under perl5.004 corrected. JOB parsing
+          removed.
+
+
+Version 1.26
+
+29-1-98   Added Pearson/Fasta parser for multiple alignments.
+
+8-2-98    Minor changes to COPYING document.
+
+
+Version 1.25
+
+22-1-98   Added MSF parser for multiple alignments.
+
+          build_old_alignment() now checks new 'class' attribute of Manager
+          set by Search or Align constructors - this is used to control
+          sequence numbering in left column. As conceived, this routine
+          only numbered properly for searches, not for alignments. Obsolete
+          routine anyway, but fixed for completeness.
+
+
+Version 1.24.2
+
+20-1-98   Fixed bug in colouring when an excised gap region was lowercased:
+          identical residues weren't being coloured.
+
+
+Version 1.24
+
+Log started.
+
+###########################################################################

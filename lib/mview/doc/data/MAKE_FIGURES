@@ -1,0 +1,168 @@
+#!/bin/sh
+
+#2018-03-22: extracts from manual.rst
+
+PATH=/home/brown/HOME/work/MView/dev/bin:$PATH
+
+txt () {
+    echo "###########################################################################"
+    echo "# $*"
+    echo "###########################################################################"
+}
+
+run () {
+    echo "% $*"
+    shift #discard "mview"
+    mview -width 80 $*
+}
+
+###########################################################################
+echo "<HTML><BODY><PRE>"
+echo -n "PATH:    "; which mview
+echo -n "VERSION: "; mview -h | tail -2
+
+###########################################################################
+txt "Getting started"
+run mview -in fasta data.dat
+
+txt "The ruler line"
+run mview -in fasta -ruler off data.dat
+
+txt "By default MView outputs sequences in the same order they were read in"
+run mview -in fasta -ruler off data.dat
+run mview -in fasta -ruler off data.dat -sort cov:pid -ref 2
+
+txt "Here is an example where one line of input data began with a dummy identifier``#comment``:"
+run mview -in fasta commented.dat
+
+txt "Basic HTML"
+run mview -in fasta -html head -coloring any data.dat
+
+txt "To make the letters stand out use the ``-bold`` option::"
+run mview -in fasta -html head -bold -coloring any data.dat
+
+txt "Or change the colouring to use blocked letters with ``-css on`` instead::"
+run mview -in fasta -html head -css on -coloring any data.dat
+
+txt "If your data are DNA or RNA, add the option ``-moltype dna`` "
+run mview -in blast -html head -css on -coloring identity -moltype dna -top 5 -range 250:310 blastn.dat
+
+txt "Clustal conservation line"
+run mview -in fasta data.dat -conservation on
+
+txt "Consensus lines"
+run mview -in fasta data.dat -consensus on
+
+txt "Consensus pattern definitions"
+txt "dump default protein P1"
+txt "dump default dna D1"
+run mview -listgroups -html data
+
+txt "Showing conserved residues or conserved classes"
+txt "Consider the following alignment:"
+run mview -in fasta data.dat
+
+txt "The default consensus pattern for proteins, with these options::"
+run mview -in fasta data.dat -consensus on -con_threshold 80
+
+txt "If you just want to see the conserved physicochemical classes, use ``-con_ignore singleton``:"
+run mview -in fasta data.dat -consensus on -con_threshold 80 -con_ignore singleton
+
+txt "Alternatively, to see just the conserved residues, use ``-con_ignore class``:"
+run mview -in fasta data.dat -consensus on -con_threshold 80 -con_ignore class
+
+txt "Lastly, the default consensus computation counts gap characters in each"
+run mview -in fasta data.dat -consensus on -con_threshold 80 -con_ignore class -con_gaps off
+
+txt "Alignment colouring"
+txt "**Mode** ``any``"
+run mview -in fasta data.dat -html head -css on -coloring any
+
+txt "**Mode** ``identity``"
+run mview -in fasta data.dat -html head -css on -coloring identity
+
+txt "or with respect to another row \(let's use row 4\)::"
+run mview -in fasta data.dat -html head -css on -coloring identity -ref 4
+
+txt "**Mode** ``mismatch``"
+run mview -in fasta data.dat -html head -css on -coloring mismatch
+
+txt "**Using a single colour**"
+run mview -in fasta data.dat -html head -css on -coloring mismatch -colormap red
+
+txt "**Mode** ``consensus``"
+run mview -in fasta data.dat -html head -css on -coloring consensus -threshold 90  -consensus on -con_threshold 90
+
+txt "**Mode** ``group``"
+run mview -in fasta data.dat -html head -css on -coloring group -threshold 90  -consensus on -con_threshold 90
+
+txt "Conserved residue colouring"
+run mview -in fasta data.dat -html head -css on -coloring group -threshold 90  -consensus on -con_threshold 90  -ignore class
+
+txt "Finding and colouring motifs"
+txt "**Exact strings** ::"
+run mview -in fasta data.dat -html head -css on -find VAIK
+
+txt "**Regular expressions**"
+run mview -in fasta data.dat -html head -css on -find 'VA[IV]K'
+
+txt "**Patterns can span gaps in the sequence**"
+run mview -in fasta data.dat -html head -css on -find '.{5}VA'
+
+txt "**Patterns find the longest match**"
+run mview -in fasta data.dat -html head -css on -find 'V.*G'
+
+txt "**Alternative patterns**"
+run mview -in fasta data.dat -html head -css on -find 'VAIK|VAVK|[LI]G.G|[DKER]E[AI]..M|[VIL]V[QR]L'
+
+txt "**Alternative patterns with different colours**"
+run mview -in fasta data.dat -html head -css on -find 'VAIK:VAVK:[LI]G.G:[DKER]E[AI]..M:[VIL]V[QR]L'
+
+txt "**Combining both types of alternative pattern**"
+run mview -in fasta data.dat -html head -css on -find 'VAIK|VAVK|[LI]G.G:[DKER]E[AI]..M|[VIL]V[QR]L'
+
+txt "Combining alignment and motif coloring"
+run mview -in fasta data.dat -html head -css on -coloring mismatch -colormap gray5 -find 'G.G.FG.V:VA.K'
+
+txt "Special row colouring"
+run mview dssp.dat -in plain -html head -css on -width 80
+
+txt "Consensus pattern colouring"
+txt "**Mode** ``any``"
+run mview -in fasta data.dat -html head -css on -consensus on -con_coloring any
+
+txt "Alternative colourmaps can be set using the ``-con_colormap`` option."
+run mview -in fasta data.dat -html head -css on -consensus on -con_coloring any -con_colormap brown
+
+txt "**Mode** ``identity``"
+run mview -in fasta data.dat -html head -css on -consensus on -con_coloring identity
+
+txt "**Make consensus span low coverage regions**"
+run mview -in fasta data.dat -html head -css on -consensus on -con_coloring any -con_gaps off
+
+txt "**Make consensus span low coverage regions, switch off conserved residues**"
+run mview -in fasta data.dat -html head -css on -consensus on -con_coloring any -con_gaps off -con_ignore singleton
+
+txt "**Switch off consensus classes, show only conserved residues**"
+run mview -in fasta data.dat -html head -css on -consensus on -con_coloring any -con_ignore class
+
+txt "Colourmaps"
+txt "**Alignments**"
+txt "dump default protein P1"
+txt "dump default dna D1"
+txt "dump default protein consensus group PC1"
+txt "dump default dna consensus group DC1"
+run mview -listcolors -html data
+
+txt "Creating new colourmaps"
+txt "dump first 8 r/g/b/c/m/y"
+
+txt "Here's an example of a short protein colouring scheme using the built-in"
+txt "dump CYS colormap"
+
+txt "Linking identifiers to external resources"
+run mview -in fasta -html head -css on -coloring id -colormap clustal -srs on data_srs.dat
+
+###########################################################################
+echo "</PRE></BODY></HTML>"
+###########################################################################

@@ -1,8 +1,9 @@
 TREE = lib/Bio/MView/Align
-DIRS = 
+DIRS =
 FILE =
-EXES = 
-SRCS = Consensus.pm Conservation.pm Header.pm Row.pm Ruler.pm Sequence.pm
-HTML = 
+EXES =
+SRCS = Alignment.pm ColorMixin.pm Consensus.pm Conservation.pm Row.pm \
+       Ruler.pm Sequence.pm Special.pm
+HTML =
 
 include $(HOME)/etc/MAKEFILE.templ

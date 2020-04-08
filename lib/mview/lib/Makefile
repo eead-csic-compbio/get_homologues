@@ -1,8 +1,8 @@
 TREE = lib
-DIRS = Bio NPB
+DIRS = Bio
 FILE =
-EXES = 
-SRCS = Getopt.pm Universal.pm
-HTML = 
+EXES =
+SRCS =
+HTML =
 
 include $(HOME)/etc/MAKEFILE.templ

@@ -1,114 +1,244 @@
-TD{font-family:Fixed,Courier,monospace;background-color:white;color:black;}
-FONT.S0{background-color:#000000;color:#FFFFFF} FONT.T0{color:#000000} /* black */
-FONT.S1{background-color:#ffffff;color:#000000} FONT.T1{color:#ffffff} /* white */
-FONT.S2{background-color:#ff0000;color:#FFFFFF} FONT.T2{color:#ff0000} /* red */
-FONT.S3{background-color:#00ff00;color:#000000} FONT.T3{color:#00ff00} /* green */
-FONT.S4{background-color:#0000ff;color:#FFFFFF} FONT.T4{color:#0000ff} /* blue */
-FONT.S5{background-color:#00ffff;color:#000000} FONT.T5{color:#00ffff} /* cyan */
-FONT.S6{background-color:#ff00ff;color:#FFFFFF} FONT.T6{color:#ff00ff} /* magenta */
-FONT.S7{background-color:#ffff00;color:#000000} FONT.T7{color:#ffff00} /* yellow */
-FONT.S8{background-color:#6600cc;color:#FFFFFF} FONT.T8{color:#6600cc} /* purple */
-FONT.S9{background-color:#0099ff;color:#FFFFFF} FONT.T9{color:#0099ff} /* dull-blue */
-FONT.S10{background-color:#33cccc;color:#000000} FONT.T10{color:#33cccc} /* dark-green-blue */
-FONT.S11{background-color:#00ffcc;color:#000000} FONT.T11{color:#00ffcc} /* medium-green-blue */
-FONT.S12{background-color:#0033ff;color:#FFFFFF} FONT.T12{color:#0033ff} /* bright-blue */
-FONT.S13{background-color:#009900;color:#FFFFFF} FONT.T13{color:#009900} /* dark-green */
-FONT.S14{background-color:#33cc00;color:#000000} FONT.T14{color:#33cc00} /* bright-green */
-FONT.S15{background-color:#ff3333;color:#FFFFFF} FONT.T15{color:#ff3333} /* orange */
-FONT.S16{background-color:#cc6600;color:#FFFFFF} FONT.T16{color:#cc6600} /* orange-brown */
-FONT.S17{background-color:#cc0000;color:#FFFFFF} FONT.T17{color:#cc0000} /* bright-red */
-FONT.S18{background-color:#999999;color:#FFFFFF} FONT.T18{color:#999999} /* light-gray */
-FONT.S19{background-color:#666666;color:#FFFFFF} FONT.T19{color:#666666} /* dark-gray */
-FONT.S20{background-color:#ffffff;color:#000000} FONT.T20{color:#ffffff} /* gray0 */
-FONT.S21{background-color:#eeeeee;color:#000000} FONT.T21{color:#eeeeee} /* gray1 */
-FONT.S22{background-color:#dddddd;color:#000000} FONT.T22{color:#dddddd} /* gray2 */
-FONT.S23{background-color:#cccccc;color:#000000} FONT.T23{color:#cccccc} /* gray3 */
-FONT.S24{background-color:#bbbbbb;color:#FFFFFF} FONT.T24{color:#bbbbbb} /* gray4 */
-FONT.S25{background-color:#aaaaaa;color:#FFFFFF} FONT.T25{color:#aaaaaa} /* gray5 */
-FONT.S26{background-color:#999999;color:#FFFFFF} FONT.T26{color:#999999} /* gray6 */
-FONT.S27{background-color:#888888;color:#FFFFFF} FONT.T27{color:#888888} /* gray7 */
-FONT.S28{background-color:#777777;color:#FFFFFF} FONT.T28{color:#777777} /* gray8 */
-FONT.S29{background-color:#666666;color:#FFFFFF} FONT.T29{color:#666666} /* gray9 */
-FONT.S30{background-color:#555555;color:#FFFFFF} FONT.T30{color:#555555} /* gray10 */
-FONT.S31{background-color:#444444;color:#FFFFFF} FONT.T31{color:#444444} /* gray11 */
-FONT.S32{background-color:#333333;color:#FFFFFF} FONT.T32{color:#333333} /* gray12 */
-FONT.S33{background-color:#222222;color:#FFFFFF} FONT.T33{color:#222222} /* gray13 */
-FONT.S34{background-color:#111111;color:#FFFFFF} FONT.T34{color:#111111} /* gray14 */
-FONT.S35{background-color:#000000;color:#FFFFFF} FONT.T35{color:#000000} /* gray15 */
-FONT.S36{background-color:#e53319;color:#FFFFFF} FONT.T36{color:#e53319} /* clustal-red */
-FONT.S37{background-color:#197fe5;color:#FFFFFF} FONT.T37{color:#197fe5} /* clustal-blue */
-FONT.S38{background-color:#19cc19;color:#000000} FONT.T38{color:#19cc19} /* clustal-green */
-FONT.S39{background-color:#19b2b2;color:#FFFFFF} FONT.T39{color:#19b2b2} /* clustal-cyan */
-FONT.S40{background-color:#e57f7f;color:#FFFFFF} FONT.T40{color:#e57f7f} /* clustal-pink */
-FONT.S41{background-color:#cc4ccc;color:#FFFFFF} FONT.T41{color:#cc4ccc} /* clustal-magenta */
-FONT.S42{background-color:#cccc00;color:#000000} FONT.T42{color:#cccc00} /* clustal-yellow */
-FONT.S43{background-color:#e5994c;color:#FFFFFF} FONT.T43{color:#e5994c} /* clustal-orange */
-FONT.S44{background-color:#ffffff;color:#000000} FONT.T44{color:#ffffff} /* clustal-white */
-FONT.S45{background-color:#999999;color:#FFFFFF} FONT.T45{color:#999999} /* clustal-light-gray */
-FONT.S46{background-color:#666666;color:#FFFFFF} FONT.T46{color:#666666} /* clustal-dark-gray */
-FONT.S47{background-color:#000000;color:#FFFFFF} FONT.T47{color:#000000} /* clustal-black */
-FONT.S48{background-color:#ffffff;color:#000000} FONT.T48{color:#ffffff} /* clustal-white-print */
-FONT.S49{background-color:#ffff00;color:#000000} FONT.T49{color:#ffff00} /* clustal-yellow-print */
-FONT.S50{background-color:#6619e5;color:#FFFFFF} FONT.T50{color:#6619e5} /* clustal-violet-print */
-FONT.S51{background-color:#e57f66;color:#FFFFFF} FONT.T51{color:#e57f66} /* clustal-red-print */
-FONT.S52{background-color:#66e5e5;color:#000000} FONT.T52{color:#66e5e5} /* clustal-blue-print */
-FONT.S53{background-color:#b299e5;color:#FFFFFF} FONT.T53{color:#b299e5} /* clustal-purple-print */
-FONT.S54{background-color:#000000;color:#FFFFFF} FONT.T54{color:#000000} /* clustal-black-print */
-FONT.S55{background-color:#e57f7f;color:#FFFFFF} FONT.T55{color:#e57f7f} /* clustal-pink-print */
-FONT.S56{background-color:#19b2b2;color:#FFFFFF} FONT.T56{color:#19b2b2} /* clustal-cyan-print */
-FONT.S57{background-color:#cc4ccc;color:#FFFFFF} FONT.T57{color:#cc4ccc} /* clustal-magenta-print */
-FONT.S58{background-color:#e5994c;color:#FFFFFF} FONT.T58{color:#e5994c} /* clustal-orange-print */
-FONT.S59{background-color:#19cc19;color:#000000} FONT.T59{color:#19cc19} /* clustal-green-print */
-FONT.S60{background-color:#999999;color:#FFFFFF} FONT.T60{color:#999999} /* clustal-light-gray-print */
-FONT.S61{background-color:#99b2b2;color:#FFFFFF} FONT.T61{color:#99b2b2} /* clustal-dark-gray-print */
-FONT.S62{background-color:#ff1111;color:#FFFFFF} FONT.T62{color:#ff1111} /* nardi-red */
-FONT.S63{background-color:#1155ff;color:#FFFFFF} FONT.T63{color:#1155ff} /* nardi-blue */
-FONT.S64{background-color:#11dd11;color:#000000} FONT.T64{color:#11dd11} /* nardi-green */
-FONT.S65{background-color:#11ffff;color:#000000} FONT.T65{color:#11ffff} /* nardi-cyan */
-FONT.S66{background-color:#ffff11;color:#000000} FONT.T66{color:#ffff11} /* nardi-yellow */
-FONT.S67{background-color:#ff7f11;color:#FFFFFF} FONT.T67{color:#ff7f11} /* nardi-orange */
-FONT.S68{background-color:#ff11ff;color:#FFFFFF} FONT.T68{color:#ff11ff} /* nardi-pink */
-FONT.S69{background-color:#6611cc;color:#FFFFFF} FONT.T69{color:#6611cc} /* nardi-purple */
-FONT.S70{background-color:#197fe5;color:#FFFFFF} FONT.T70{color:#197fe5} /* nardi-dull-blue */
-FONT.S71{background-color:#666666;color:#FFFFFF} FONT.T71{color:#666666} /* nardi-dark-gray */
-FONT.S72{background-color:#999999;color:#FFFFFF} FONT.T72{color:#999999} /* nardi-light-gray */
-FONT.S73{background-color:#90fe23;color:#000000} FONT.T73{color:#90fe23} /* lin-A */
-FONT.S74{background-color:#fe5e2d;color:#FFFFFF} FONT.T74{color:#fe5e2d} /* lin-R */
-FONT.S75{background-color:#2e3d2d;color:#FFFFFF} FONT.T75{color:#2e3d2d} /* lin-N */
-FONT.S76{background-color:#00903b;color:#FFFFFF} FONT.T76{color:#00903b} /* lin-D */
-FONT.S77{background-color:#004baa;color:#FFFFFF} FONT.T77{color:#004baa} /* lin-C */
-FONT.S78{background-color:#864b00;color:#FFFFFF} FONT.T78{color:#864b00} /* lin-Q */
-FONT.S79{background-color:#3fa201;color:#FFFFFF} FONT.T79{color:#3fa201} /* lin-E */
-FONT.S80{background-color:#10fe68;color:#000000} FONT.T80{color:#10fe68} /* lin-G */
-FONT.S81{background-color:#b2063b;color:#FFFFFF} FONT.T81{color:#b2063b} /* lin-H */
-FONT.S82{background-color:#04ced9;color:#000000} FONT.T82{color:#04ced9} /* lin-I */
-FONT.S83{background-color:#4972fe;color:#FFFFFF} FONT.T83{color:#4972fe} /* lin-L */
-FONT.S84{background-color:#c4a100;color:#FFFFFF} FONT.T84{color:#c4a100} /* lin-K */
-FONT.S85{background-color:#2a84dd;color:#FFFFFF} FONT.T85{color:#2a84dd} /* lin-M */
-FONT.S86{background-color:#a60ade;color:#FFFFFF} FONT.T86{color:#a60ade} /* lin-F */
-FONT.S87{background-color:#fe61fe;color:#FFFFFF} FONT.T87{color:#fe61fe} /* lin-P */
-FONT.S88{background-color:#f7e847;color:#000000} FONT.T88{color:#f7e847} /* lin-S */
-FONT.S89{background-color:#fefeb3;color:#000000} FONT.T89{color:#fefeb3} /* lin-T */
-FONT.S90{background-color:#4a007f;color:#FFFFFF} FONT.T90{color:#4a007f} /* lin-W */
-FONT.S91{background-color:#e903a8;color:#FFFFFF} FONT.T91{color:#e903a8} /* lin-Y */
-FONT.S92{background-color:#5bfdfd;color:#000000} FONT.T92{color:#5bfdfd} /* lin-V */
-FONT.S93{background-color:#90fe23;color:#000000} FONT.T93{color:#90fe23} /* find-A */
-FONT.S94{background-color:#fe5e2d;color:#FFFFFF} FONT.T94{color:#fe5e2d} /* find-B */
-FONT.S95{background-color:#2e3d2d;color:#FFFFFF} FONT.T95{color:#2e3d2d} /* find-C */
-FONT.S96{background-color:#00903b;color:#FFFFFF} FONT.T96{color:#00903b} /* find-D */
-FONT.S97{background-color:#004baa;color:#FFFFFF} FONT.T97{color:#004baa} /* find-E */
-FONT.S98{background-color:#864b00;color:#FFFFFF} FONT.T98{color:#864b00} /* find-F */
-FONT.S99{background-color:#3fa201;color:#FFFFFF} FONT.T99{color:#3fa201} /* find-G */
-FONT.S100{background-color:#10fe68;color:#000000} FONT.T100{color:#10fe68} /* find-H */
-FONT.S101{background-color:#b2063b;color:#FFFFFF} FONT.T101{color:#b2063b} /* find-I */
-FONT.S102{background-color:#04ced9;color:#000000} FONT.T102{color:#04ced9} /* find-J */
-FONT.S103{background-color:#4972fe;color:#FFFFFF} FONT.T103{color:#4972fe} /* find-K */
-FONT.S104{background-color:#c4a100;color:#FFFFFF} FONT.T104{color:#c4a100} /* find-L */
-FONT.S105{background-color:#2a84dd;color:#FFFFFF} FONT.T105{color:#2a84dd} /* find-M */
-FONT.S106{background-color:#a60ade;color:#FFFFFF} FONT.T106{color:#a60ade} /* find-N */
-FONT.S107{background-color:#fe61fe;color:#FFFFFF} FONT.T107{color:#fe61fe} /* find-O */
-FONT.S108{background-color:#f7e847;color:#000000} FONT.T108{color:#f7e847} /* find-P */
-FONT.S109{background-color:#fefeb3;color:#000000} FONT.T109{color:#fefeb3} /* find-Q */
-FONT.S110{background-color:#4a007f;color:#FFFFFF} FONT.T110{color:#4a007f} /* find-R */
-FONT.S111{background-color:#e903a8;color:#FFFFFF} FONT.T111{color:#e903a8} /* find-S */
-FONT.S112{background-color:#5bfdfd;color:#000000} FONT.T112{color:#5bfdfd} /* find-T */
+TD {font-family:Fixed,Courier,monospace; background-color:white; color:black}
+SPAN.S0 {background-color:#000000;color:#FFFFFF} SPAN.T0 {color:#000000} /* black */
+SPAN.S1 {background-color:#ffffff;color:#000000} SPAN.T1 {color:#ffffff} /* white */
+SPAN.S2 {background-color:#ff0000;color:#FFFFFF} SPAN.T2 {color:#ff0000} /* red */
+SPAN.S3 {background-color:#00ff00;color:#000000} SPAN.T3 {color:#00ff00} /* green */
+SPAN.S4 {background-color:#0000ff;color:#FFFFFF} SPAN.T4 {color:#0000ff} /* blue */
+SPAN.S5 {background-color:#00ffff;color:#000000} SPAN.T5 {color:#00ffff} /* cyan */
+SPAN.S6 {background-color:#ff00ff;color:#FFFFFF} SPAN.T6 {color:#ff00ff} /* magenta */
+SPAN.S7 {background-color:#ffff00;color:#000000} SPAN.T7 {color:#ffff00} /* yellow */
+SPAN.S8 {background-color:#6600cc;color:#FFFFFF} SPAN.T8 {color:#6600cc} /* purple */
+SPAN.S9 {background-color:#0099ff;color:#FFFFFF} SPAN.T9 {color:#0099ff} /* dull-blue */
+SPAN.S10 {background-color:#33cccc;color:#000000} SPAN.T10 {color:#33cccc} /* dark-green-blue */
+SPAN.S11 {background-color:#00ffcc;color:#000000} SPAN.T11 {color:#00ffcc} /* medium-green-blue */
+SPAN.S12 {background-color:#0033ff;color:#FFFFFF} SPAN.T12 {color:#0033ff} /* bright-blue */
+SPAN.S13 {background-color:#009900;color:#FFFFFF} SPAN.T13 {color:#009900} /* dark-green */
+SPAN.S14 {background-color:#33cc00;color:#000000} SPAN.T14 {color:#33cc00} /* bright-green */
+SPAN.S15 {background-color:#ff3333;color:#FFFFFF} SPAN.T15 {color:#ff3333} /* orange */
+SPAN.S16 {background-color:#cc6600;color:#FFFFFF} SPAN.T16 {color:#cc6600} /* orange-brown */
+SPAN.S17 {background-color:#8b4513;color:#FFFFFF} SPAN.T17 {color:#8b4513} /* brown */
+SPAN.S18 {background-color:#cc0000;color:#FFFFFF} SPAN.T18 {color:#cc0000} /* bright-red */
+SPAN.S19 {background-color:#999999;color:#FFFFFF} SPAN.T19 {color:#999999} /* light-gray */
+SPAN.S20 {background-color:#666666;color:#FFFFFF} SPAN.T20 {color:#666666} /* dark-gray */
+SPAN.S21 {background-color:#ffffff;color:#000000} SPAN.T21 {color:#ffffff} /* gray0 */
+SPAN.S22 {background-color:#eeeeee;color:#000000} SPAN.T22 {color:#eeeeee} /* gray1 */
+SPAN.S23 {background-color:#dddddd;color:#000000} SPAN.T23 {color:#dddddd} /* gray2 */
+SPAN.S24 {background-color:#cccccc;color:#000000} SPAN.T24 {color:#cccccc} /* gray3 */
+SPAN.S25 {background-color:#bbbbbb;color:#FFFFFF} SPAN.T25 {color:#bbbbbb} /* gray4 */
+SPAN.S26 {background-color:#aaaaaa;color:#FFFFFF} SPAN.T26 {color:#aaaaaa} /* gray5 */
+SPAN.S27 {background-color:#999999;color:#FFFFFF} SPAN.T27 {color:#999999} /* gray6 */
+SPAN.S28 {background-color:#888888;color:#FFFFFF} SPAN.T28 {color:#888888} /* gray7 */
+SPAN.S29 {background-color:#777777;color:#FFFFFF} SPAN.T29 {color:#777777} /* gray8 */
+SPAN.S30 {background-color:#666666;color:#FFFFFF} SPAN.T30 {color:#666666} /* gray9 */
+SPAN.S31 {background-color:#555555;color:#FFFFFF} SPAN.T31 {color:#555555} /* gray10 */
+SPAN.S32 {background-color:#444444;color:#FFFFFF} SPAN.T32 {color:#444444} /* gray11 */
+SPAN.S33 {background-color:#333333;color:#FFFFFF} SPAN.T33 {color:#333333} /* gray12 */
+SPAN.S34 {background-color:#222222;color:#FFFFFF} SPAN.T34 {color:#222222} /* gray13 */
+SPAN.S35 {background-color:#111111;color:#FFFFFF} SPAN.T35 {color:#111111} /* gray14 */
+SPAN.S36 {background-color:#000000;color:#FFFFFF} SPAN.T36 {color:#000000} /* gray15 */
+SPAN.S37 {background-color:#e53319;color:#FFFFFF} SPAN.T37 {color:#e53319} /* clustal-red */
+SPAN.S38 {background-color:#197fe5;color:#FFFFFF} SPAN.T38 {color:#197fe5} /* clustal-blue */
+SPAN.S39 {background-color:#19cc19;color:#000000} SPAN.T39 {color:#19cc19} /* clustal-green */
+SPAN.S40 {background-color:#19b2b2;color:#FFFFFF} SPAN.T40 {color:#19b2b2} /* clustal-cyan */
+SPAN.S41 {background-color:#e57f7f;color:#FFFFFF} SPAN.T41 {color:#e57f7f} /* clustal-pink */
+SPAN.S42 {background-color:#cc4ccc;color:#FFFFFF} SPAN.T42 {color:#cc4ccc} /* clustal-magenta */
+SPAN.S43 {background-color:#cccc00;color:#000000} SPAN.T43 {color:#cccc00} /* clustal-yellow */
+SPAN.S44 {background-color:#e5994c;color:#FFFFFF} SPAN.T44 {color:#e5994c} /* clustal-orange */
+SPAN.S45 {background-color:#ffffff;color:#000000} SPAN.T45 {color:#ffffff} /* clustal-white */
+SPAN.S46 {background-color:#999999;color:#FFFFFF} SPAN.T46 {color:#999999} /* clustal-light-gray */
+SPAN.S47 {background-color:#666666;color:#FFFFFF} SPAN.T47 {color:#666666} /* clustal-dark-gray */
+SPAN.S48 {background-color:#000000;color:#FFFFFF} SPAN.T48 {color:#000000} /* clustal-black */
+SPAN.S49 {background-color:#ffffff;color:#000000} SPAN.T49 {color:#ffffff} /* clustal-white-print */
+SPAN.S50 {background-color:#ffff00;color:#000000} SPAN.T50 {color:#ffff00} /* clustal-yellow-print */
+SPAN.S51 {background-color:#6619e5;color:#FFFFFF} SPAN.T51 {color:#6619e5} /* clustal-violet-print */
+SPAN.S52 {background-color:#e57f66;color:#FFFFFF} SPAN.T52 {color:#e57f66} /* clustal-red-print */
+SPAN.S53 {background-color:#66e5e5;color:#000000} SPAN.T53 {color:#66e5e5} /* clustal-blue-print */
+SPAN.S54 {background-color:#b299e5;color:#FFFFFF} SPAN.T54 {color:#b299e5} /* clustal-purple-print */
+SPAN.S55 {background-color:#000000;color:#FFFFFF} SPAN.T55 {color:#000000} /* clustal-black-print */
+SPAN.S56 {background-color:#e57f7f;color:#FFFFFF} SPAN.T56 {color:#e57f7f} /* clustal-pink-print */
+SPAN.S57 {background-color:#19b2b2;color:#FFFFFF} SPAN.T57 {color:#19b2b2} /* clustal-cyan-print */
+SPAN.S58 {background-color:#cc4ccc;color:#FFFFFF} SPAN.T58 {color:#cc4ccc} /* clustal-magenta-print */
+SPAN.S59 {background-color:#e5994c;color:#FFFFFF} SPAN.T59 {color:#e5994c} /* clustal-orange-print */
+SPAN.S60 {background-color:#19cc19;color:#000000} SPAN.T60 {color:#19cc19} /* clustal-green-print */
+SPAN.S61 {background-color:#999999;color:#FFFFFF} SPAN.T61 {color:#999999} /* clustal-light-gray-print */
+SPAN.S62 {background-color:#99b2b2;color:#FFFFFF} SPAN.T62 {color:#99b2b2} /* clustal-dark-gray-print */
+SPAN.S63 {background-color:#ff1111;color:#FFFFFF} SPAN.T63 {color:#ff1111} /* nardi-red */
+SPAN.S64 {background-color:#1155ff;color:#FFFFFF} SPAN.T64 {color:#1155ff} /* nardi-blue */
+SPAN.S65 {background-color:#11dd11;color:#000000} SPAN.T65 {color:#11dd11} /* nardi-green */
+SPAN.S66 {background-color:#11ffff;color:#000000} SPAN.T66 {color:#11ffff} /* nardi-cyan */
+SPAN.S67 {background-color:#ffff11;color:#000000} SPAN.T67 {color:#ffff11} /* nardi-yellow */
+SPAN.S68 {background-color:#ff7f11;color:#FFFFFF} SPAN.T68 {color:#ff7f11} /* nardi-orange */
+SPAN.S69 {background-color:#ff11ff;color:#FFFFFF} SPAN.T69 {color:#ff11ff} /* nardi-pink */
+SPAN.S70 {background-color:#6611cc;color:#FFFFFF} SPAN.T70 {color:#6611cc} /* nardi-purple */
+SPAN.S71 {background-color:#197fe5;color:#FFFFFF} SPAN.T71 {color:#197fe5} /* nardi-dull-blue */
+SPAN.S72 {background-color:#999999;color:#FFFFFF} SPAN.T72 {color:#999999} /* nardi-light-gray */
+SPAN.S73 {background-color:#666666;color:#FFFFFF} SPAN.T73 {color:#666666} /* nardi-dark-gray */
+SPAN.S74 {background-color:#90fe23;color:#000000} SPAN.T74 {color:#90fe23} /* lin-a */
+SPAN.S75 {background-color:#fe5e2d;color:#FFFFFF} SPAN.T75 {color:#fe5e2d} /* lin-r */
+SPAN.S76 {background-color:#2e3d2d;color:#FFFFFF} SPAN.T76 {color:#2e3d2d} /* lin-n */
+SPAN.S77 {background-color:#00903b;color:#FFFFFF} SPAN.T77 {color:#00903b} /* lin-d */
+SPAN.S78 {background-color:#004baa;color:#FFFFFF} SPAN.T78 {color:#004baa} /* lin-c */
+SPAN.S79 {background-color:#864b00;color:#FFFFFF} SPAN.T79 {color:#864b00} /* lin-q */
+SPAN.S80 {background-color:#3fa201;color:#FFFFFF} SPAN.T80 {color:#3fa201} /* lin-e */
+SPAN.S81 {background-color:#10fe68;color:#000000} SPAN.T81 {color:#10fe68} /* lin-g */
+SPAN.S82 {background-color:#b2063b;color:#FFFFFF} SPAN.T82 {color:#b2063b} /* lin-h */
+SPAN.S83 {background-color:#04ced9;color:#000000} SPAN.T83 {color:#04ced9} /* lin-i */
+SPAN.S84 {background-color:#4972fe;color:#FFFFFF} SPAN.T84 {color:#4972fe} /* lin-l */
+SPAN.S85 {background-color:#c4a100;color:#FFFFFF} SPAN.T85 {color:#c4a100} /* lin-k */
+SPAN.S86 {background-color:#2a84dd;color:#FFFFFF} SPAN.T86 {color:#2a84dd} /* lin-m */
+SPAN.S87 {background-color:#a60ade;color:#FFFFFF} SPAN.T87 {color:#a60ade} /* lin-f */
+SPAN.S88 {background-color:#fe61fe;color:#FFFFFF} SPAN.T88 {color:#fe61fe} /* lin-p */
+SPAN.S89 {background-color:#f7e847;color:#000000} SPAN.T89 {color:#f7e847} /* lin-s */
+SPAN.S90 {background-color:#fefeb3;color:#000000} SPAN.T90 {color:#fefeb3} /* lin-t */
+SPAN.S91 {background-color:#4a007f;color:#FFFFFF} SPAN.T91 {color:#4a007f} /* lin-w */
+SPAN.S92 {background-color:#e903a8;color:#FFFFFF} SPAN.T92 {color:#e903a8} /* lin-y */
+SPAN.S93 {background-color:#5bfdfd;color:#000000} SPAN.T93 {color:#5bfdfd} /* lin-v */
+SPAN.S94 {background-color:#90fe23;color:#000000} SPAN.T94 {color:#90fe23} /* find-a */
+SPAN.S95 {background-color:#fe5e2d;color:#FFFFFF} SPAN.T95 {color:#fe5e2d} /* find-b */
+SPAN.S96 {background-color:#2e3d2d;color:#FFFFFF} SPAN.T96 {color:#2e3d2d} /* find-c */
+SPAN.S97 {background-color:#00903b;color:#FFFFFF} SPAN.T97 {color:#00903b} /* find-d */
+SPAN.S98 {background-color:#004baa;color:#FFFFFF} SPAN.T98 {color:#004baa} /* find-e */
+SPAN.S99 {background-color:#864b00;color:#FFFFFF} SPAN.T99 {color:#864b00} /* find-f */
+SPAN.S100 {background-color:#3fa201;color:#FFFFFF} SPAN.T100 {color:#3fa201} /* find-g */
+SPAN.S101 {background-color:#10fe68;color:#000000} SPAN.T101 {color:#10fe68} /* find-h */
+SPAN.S102 {background-color:#b2063b;color:#FFFFFF} SPAN.T102 {color:#b2063b} /* find-i */
+SPAN.S103 {background-color:#04ced9;color:#000000} SPAN.T103 {color:#04ced9} /* find-j */
+SPAN.S104 {background-color:#4972fe;color:#FFFFFF} SPAN.T104 {color:#4972fe} /* find-k */
+SPAN.S105 {background-color:#c4a100;color:#FFFFFF} SPAN.T105 {color:#c4a100} /* find-l */
+SPAN.S106 {background-color:#2a84dd;color:#FFFFFF} SPAN.T106 {color:#2a84dd} /* find-m */
+SPAN.S107 {background-color:#a60ade;color:#FFFFFF} SPAN.T107 {color:#a60ade} /* find-n */
+SPAN.S108 {background-color:#fe61fe;color:#FFFFFF} SPAN.T108 {color:#fe61fe} /* find-o */
+SPAN.S109 {background-color:#f7e847;color:#000000} SPAN.T109 {color:#f7e847} /* find-p */
+SPAN.S110 {background-color:#fefeb3;color:#000000} SPAN.T110 {color:#fefeb3} /* find-q */
+SPAN.S111 {background-color:#4a007f;color:#FFFFFF} SPAN.T111 {color:#4a007f} /* find-r */
+SPAN.S112 {background-color:#e903a8;color:#FFFFFF} SPAN.T112 {color:#e903a8} /* find-s */
+SPAN.S113 {background-color:#5bfdfd;color:#000000} SPAN.T113 {color:#5bfdfd} /* find-t */
+SPAN.S114 {background-color:#c0c0c0;color:#FFFFFF} SPAN.T114 {color:#c0c0c0} /* silver */
+SPAN.S115 {background-color:#808080;color:#FFFFFF} SPAN.T115 {color:#808080} /* gray */
+SPAN.S116 {background-color:#800000;color:#FFFFFF} SPAN.T116 {color:#800000} /* maroon */
+SPAN.S117 {background-color:#808000;color:#FFFFFF} SPAN.T117 {color:#808000} /* olive */
+SPAN.S118 {background-color:#00ff00;color:#000000} SPAN.T118 {color:#00ff00} /* lime */
+SPAN.S119 {background-color:#00ffff;color:#000000} SPAN.T119 {color:#00ffff} /* aqua */
+SPAN.S120 {background-color:#008080;color:#FFFFFF} SPAN.T120 {color:#008080} /* teal */
+SPAN.S121 {background-color:#000080;color:#FFFFFF} SPAN.T121 {color:#000080} /* navy */
+SPAN.S122 {background-color:#ff00ff;color:#FFFFFF} SPAN.T122 {color:#ff00ff} /* fuchsia */
+SPAN.S123 {background-color:#ffc0cb;color:#FFFFFF} SPAN.T123 {color:#ffc0cb} /* pink */
+SPAN.S124 {background-color:#ffb6c1;color:#FFFFFF} SPAN.T124 {color:#ffb6c1} /* lightpink */
+SPAN.S125 {background-color:#ff69b4;color:#FFFFFF} SPAN.T125 {color:#ff69b4} /* hotpink */
+SPAN.S126 {background-color:#ff1493;color:#FFFFFF} SPAN.T126 {color:#ff1493} /* deeppink */
+SPAN.S127 {background-color:#db7093;color:#FFFFFF} SPAN.T127 {color:#db7093} /* palevioletred */
+SPAN.S128 {background-color:#c71585;color:#FFFFFF} SPAN.T128 {color:#c71585} /* mediumvioletred */
+SPAN.S129 {background-color:#ffa07a;color:#FFFFFF} SPAN.T129 {color:#ffa07a} /* lightsalmon */
+SPAN.S130 {background-color:#fa8072;color:#FFFFFF} SPAN.T130 {color:#fa8072} /* salmon */
+SPAN.S131 {background-color:#e9967a;color:#FFFFFF} SPAN.T131 {color:#e9967a} /* darksalmon */
+SPAN.S132 {background-color:#f08080;color:#FFFFFF} SPAN.T132 {color:#f08080} /* lightcoral */
+SPAN.S133 {background-color:#cd5c5c;color:#FFFFFF} SPAN.T133 {color:#cd5c5c} /* indianred */
+SPAN.S134 {background-color:#dc143c;color:#FFFFFF} SPAN.T134 {color:#dc143c} /* crimson */
+SPAN.S135 {background-color:#b22222;color:#FFFFFF} SPAN.T135 {color:#b22222} /* firebrick */
+SPAN.S136 {background-color:#8b0000;color:#FFFFFF} SPAN.T136 {color:#8b0000} /* darkred */
+SPAN.S137 {background-color:#ff4500;color:#FFFFFF} SPAN.T137 {color:#ff4500} /* orangered */
+SPAN.S138 {background-color:#ff6347;color:#FFFFFF} SPAN.T138 {color:#ff6347} /* tomato */
+SPAN.S139 {background-color:#ff7f50;color:#FFFFFF} SPAN.T139 {color:#ff7f50} /* coral */
+SPAN.S140 {background-color:#ff8c00;color:#FFFFFF} SPAN.T140 {color:#ff8c00} /* darkorange */
+SPAN.S141 {background-color:#ffffe0;color:#000000} SPAN.T141 {color:#ffffe0} /* lightyellow */
+SPAN.S142 {background-color:#fffacd;color:#000000} SPAN.T142 {color:#fffacd} /* lemonchiffon */
+SPAN.S143 {background-color:#fafad2;color:#000000} SPAN.T143 {color:#fafad2} /* lightgoldenrodyellow */
+SPAN.S144 {background-color:#ffefd5;color:#000000} SPAN.T144 {color:#ffefd5} /* papayawhip */
+SPAN.S145 {background-color:#ffe4b5;color:#000000} SPAN.T145 {color:#ffe4b5} /* moccasin */
+SPAN.S146 {background-color:#ffdab9;color:#000000} SPAN.T146 {color:#ffdab9} /* peachpuff */
+SPAN.S147 {background-color:#eee8aa;color:#000000} SPAN.T147 {color:#eee8aa} /* palegoldenrod */
+SPAN.S148 {background-color:#f0e68c;color:#000000} SPAN.T148 {color:#f0e68c} /* khaki */
+SPAN.S149 {background-color:#bdb76b;color:#FFFFFF} SPAN.T149 {color:#bdb76b} /* darkkhaki */
+SPAN.S150 {background-color:#ffd700;color:#000000} SPAN.T150 {color:#ffd700} /* gold */
+SPAN.S151 {background-color:#fff8dc;color:#000000} SPAN.T151 {color:#fff8dc} /* cornsilk */
+SPAN.S152 {background-color:#ffebcd;color:#000000} SPAN.T152 {color:#ffebcd} /* blanchedalmond */
+SPAN.S153 {background-color:#ffe4c4;color:#000000} SPAN.T153 {color:#ffe4c4} /* bisque */
+SPAN.S154 {background-color:#ffdead;color:#000000} SPAN.T154 {color:#ffdead} /* navajowhite */
+SPAN.S155 {background-color:#f5deb3;color:#000000} SPAN.T155 {color:#f5deb3} /* wheat */
+SPAN.S156 {background-color:#deb887;color:#FFFFFF} SPAN.T156 {color:#deb887} /* burlywood */
+SPAN.S157 {background-color:#d2b48c;color:#FFFFFF} SPAN.T157 {color:#d2b48c} /* tan */
+SPAN.S158 {background-color:#bc8f8f;color:#FFFFFF} SPAN.T158 {color:#bc8f8f} /* rosybrown */
+SPAN.S159 {background-color:#f4a460;color:#FFFFFF} SPAN.T159 {color:#f4a460} /* sandybrown */
+SPAN.S160 {background-color:#daa520;color:#FFFFFF} SPAN.T160 {color:#daa520} /* goldenrod */
+SPAN.S161 {background-color:#b8860b;color:#FFFFFF} SPAN.T161 {color:#b8860b} /* darkgoldenrod */
+SPAN.S162 {background-color:#cd853f;color:#FFFFFF} SPAN.T162 {color:#cd853f} /* peru */
+SPAN.S163 {background-color:#d2691e;color:#FFFFFF} SPAN.T163 {color:#d2691e} /* chocolate */
+SPAN.S164 {background-color:#8b4513;color:#FFFFFF} SPAN.T164 {color:#8b4513} /* saddlebrown */
+SPAN.S165 {background-color:#a0522d;color:#FFFFFF} SPAN.T165 {color:#a0522d} /* sienna */
+SPAN.S166 {background-color:#556b2f;color:#FFFFFF} SPAN.T166 {color:#556b2f} /* darkolivegreen */
+SPAN.S167 {background-color:#6b8e23;color:#FFFFFF} SPAN.T167 {color:#6b8e23} /* olivedrab */
+SPAN.S168 {background-color:#9acd32;color:#000000} SPAN.T168 {color:#9acd32} /* yellowgreen */
+SPAN.S169 {background-color:#32cd32;color:#000000} SPAN.T169 {color:#32cd32} /* limegreen */
+SPAN.S170 {background-color:#7cfc00;color:#000000} SPAN.T170 {color:#7cfc00} /* lawngreen */
+SPAN.S171 {background-color:#7fff00;color:#000000} SPAN.T171 {color:#7fff00} /* chartreuse */
+SPAN.S172 {background-color:#adff2f;color:#000000} SPAN.T172 {color:#adff2f} /* greenyellow */
+SPAN.S173 {background-color:#00ff7f;color:#000000} SPAN.T173 {color:#00ff7f} /* springgreen */
+SPAN.S174 {background-color:#00fa9a;color:#000000} SPAN.T174 {color:#00fa9a} /* mediumspringgreen */
+SPAN.S175 {background-color:#90ee90;color:#000000} SPAN.T175 {color:#90ee90} /* lightgreen */
+SPAN.S176 {background-color:#98fb98;color:#000000} SPAN.T176 {color:#98fb98} /* palegreen */
+SPAN.S177 {background-color:#8fbc8f;color:#FFFFFF} SPAN.T177 {color:#8fbc8f} /* darkseagreen */
+SPAN.S178 {background-color:#66cdaa;color:#000000} SPAN.T178 {color:#66cdaa} /* mediumaquamarine */
+SPAN.S179 {background-color:#3cb371;color:#FFFFFF} SPAN.T179 {color:#3cb371} /* mediumseagreen */
+SPAN.S180 {background-color:#2e8b57;color:#FFFFFF} SPAN.T180 {color:#2e8b57} /* seagreen */
+SPAN.S181 {background-color:#228b22;color:#FFFFFF} SPAN.T181 {color:#228b22} /* forestgreen */
+SPAN.S182 {background-color:#006400;color:#FFFFFF} SPAN.T182 {color:#006400} /* darkgreen */
+SPAN.S183 {background-color:#e0ffff;color:#000000} SPAN.T183 {color:#e0ffff} /* lightcyan */
+SPAN.S184 {background-color:#afeeee;color:#000000} SPAN.T184 {color:#afeeee} /* paleturquoise */
+SPAN.S185 {background-color:#7fffd4;color:#000000} SPAN.T185 {color:#7fffd4} /* aquamarine */
+SPAN.S186 {background-color:#40e0d0;color:#000000} SPAN.T186 {color:#40e0d0} /* turquoise */
+SPAN.S187 {background-color:#48d1cc;color:#000000} SPAN.T187 {color:#48d1cc} /* mediumturquoise */
+SPAN.S188 {background-color:#00ced1;color:#000000} SPAN.T188 {color:#00ced1} /* darkturquoise */
+SPAN.S189 {background-color:#20b2aa;color:#FFFFFF} SPAN.T189 {color:#20b2aa} /* lightseagreen */
+SPAN.S190 {background-color:#5f9ea0;color:#FFFFFF} SPAN.T190 {color:#5f9ea0} /* cadetblue */
+SPAN.S191 {background-color:#008b8b;color:#FFFFFF} SPAN.T191 {color:#008b8b} /* darkcyan */
+SPAN.S192 {background-color:#b0c4de;color:#FFFFFF} SPAN.T192 {color:#b0c4de} /* lightsteelblue */
+SPAN.S193 {background-color:#b0e0e6;color:#000000} SPAN.T193 {color:#b0e0e6} /* powderblue */
+SPAN.S194 {background-color:#add8e6;color:#000000} SPAN.T194 {color:#add8e6} /* lightblue */
+SPAN.S195 {background-color:#87ceeb;color:#000000} SPAN.T195 {color:#87ceeb} /* skyblue */
+SPAN.S196 {background-color:#87cefa;color:#000000} SPAN.T196 {color:#87cefa} /* lightskyblue */
+SPAN.S197 {background-color:#00bfff;color:#FFFFFF} SPAN.T197 {color:#00bfff} /* deepskyblue */
+SPAN.S198 {background-color:#1e90ff;color:#FFFFFF} SPAN.T198 {color:#1e90ff} /* dodgerblue */
+SPAN.S199 {background-color:#6495ed;color:#FFFFFF} SPAN.T199 {color:#6495ed} /* cornflowerblue */
+SPAN.S200 {background-color:#4682b4;color:#FFFFFF} SPAN.T200 {color:#4682b4} /* steelblue */
+SPAN.S201 {background-color:#4169e1;color:#FFFFFF} SPAN.T201 {color:#4169e1} /* royalblue */
+SPAN.S202 {background-color:#0000cd;color:#FFFFFF} SPAN.T202 {color:#0000cd} /* mediumblue */
+SPAN.S203 {background-color:#00008b;color:#FFFFFF} SPAN.T203 {color:#00008b} /* darkblue */
+SPAN.S204 {background-color:#191970;color:#FFFFFF} SPAN.T204 {color:#191970} /* midnightblue */
+SPAN.S205 {background-color:#e6e6fa;color:#000000} SPAN.T205 {color:#e6e6fa} /* lavender */
+SPAN.S206 {background-color:#d8bfd8;color:#FFFFFF} SPAN.T206 {color:#d8bfd8} /* thistle */
+SPAN.S207 {background-color:#dda0dd;color:#FFFFFF} SPAN.T207 {color:#dda0dd} /* plum */
+SPAN.S208 {background-color:#ee82ee;color:#FFFFFF} SPAN.T208 {color:#ee82ee} /* violet */
+SPAN.S209 {background-color:#da70d6;color:#FFFFFF} SPAN.T209 {color:#da70d6} /* orchid */
+SPAN.S210 {background-color:#ba55d3;color:#FFFFFF} SPAN.T210 {color:#ba55d3} /* mediumorchid */
+SPAN.S211 {background-color:#9370db;color:#FFFFFF} SPAN.T211 {color:#9370db} /* mediumpurple */
+SPAN.S212 {background-color:#8a2be2;color:#FFFFFF} SPAN.T212 {color:#8a2be2} /* blueviolet */
+SPAN.S213 {background-color:#9400d3;color:#FFFFFF} SPAN.T213 {color:#9400d3} /* darkviolet */
+SPAN.S214 {background-color:#9932cc;color:#FFFFFF} SPAN.T214 {color:#9932cc} /* darkorchid */
+SPAN.S215 {background-color:#8b008b;color:#FFFFFF} SPAN.T215 {color:#8b008b} /* darkmagenta */
+SPAN.S216 {background-color:#4b0082;color:#FFFFFF} SPAN.T216 {color:#4b0082} /* indigo */
+SPAN.S217 {background-color:#483d8b;color:#FFFFFF} SPAN.T217 {color:#483d8b} /* darkslateblue */
+SPAN.S218 {background-color:#6a5acd;color:#FFFFFF} SPAN.T218 {color:#6a5acd} /* slateblue */
+SPAN.S219 {background-color:#7b68ee;color:#FFFFFF} SPAN.T219 {color:#7b68ee} /* mediumslateblue */
+SPAN.S220 {background-color:#fffafa;color:#000000} SPAN.T220 {color:#fffafa} /* snow */
+SPAN.S221 {background-color:#f0fff0;color:#000000} SPAN.T221 {color:#f0fff0} /* honeydew */
+SPAN.S222 {background-color:#f5fffa;color:#000000} SPAN.T222 {color:#f5fffa} /* mintcream */
+SPAN.S223 {background-color:#f0ffff;color:#000000} SPAN.T223 {color:#f0ffff} /* azure */
+SPAN.S224 {background-color:#f0f8ff;color:#000000} SPAN.T224 {color:#f0f8ff} /* aliceblue */
+SPAN.S225 {background-color:#f8f8ff;color:#000000} SPAN.T225 {color:#f8f8ff} /* ghostwhite */
+SPAN.S226 {background-color:#f5f5f5;color:#000000} SPAN.T226 {color:#f5f5f5} /* whitesmoke */
+SPAN.S227 {background-color:#fff5ee;color:#000000} SPAN.T227 {color:#fff5ee} /* seashell */
+SPAN.S228 {background-color:#f5f5dc;color:#000000} SPAN.T228 {color:#f5f5dc} /* beige */
+SPAN.S229 {background-color:#fdf5e6;color:#000000} SPAN.T229 {color:#fdf5e6} /* oldlace */
+SPAN.S230 {background-color:#fffaf0;color:#000000} SPAN.T230 {color:#fffaf0} /* floralwhite */
+SPAN.S231 {background-color:#fffff0;color:#000000} SPAN.T231 {color:#fffff0} /* ivory */
+SPAN.S232 {background-color:#faebd7;color:#000000} SPAN.T232 {color:#faebd7} /* antiquewhite */
+SPAN.S233 {background-color:#faf0e6;color:#000000} SPAN.T233 {color:#faf0e6} /* linen */
+SPAN.S234 {background-color:#fff0f5;color:#000000} SPAN.T234 {color:#fff0f5} /* lavenderblush */
+SPAN.S235 {background-color:#ffe4e1;color:#000000} SPAN.T235 {color:#ffe4e1} /* mistyrose */
+SPAN.S236 {background-color:#dcdcdc;color:#000000} SPAN.T236 {color:#dcdcdc} /* gainsboro */
+SPAN.S237 {background-color:#d3d3d3;color:#000000} SPAN.T237 {color:#d3d3d3} /* lightgray */
+SPAN.S238 {background-color:#a9a9a9;color:#FFFFFF} SPAN.T238 {color:#a9a9a9} /* darkgray */
+SPAN.S239 {background-color:#696969;color:#FFFFFF} SPAN.T239 {color:#696969} /* dimgray */
+SPAN.S240 {background-color:#778899;color:#FFFFFF} SPAN.T240 {color:#778899} /* lightslategray */
+SPAN.S241 {background-color:#708090;color:#FFFFFF} SPAN.T241 {color:#708090} /* slategray */
+SPAN.S242 {background-color:#2f4f4f;color:#FFFFFF} SPAN.T242 {color:#2f4f4f} /* darkslategray */

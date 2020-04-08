@@ -1,8 +1,8 @@
 TREE = lib/Bio/MView/Display
-DIRS = 
+DIRS = Out
 FILE =
-EXES = 
-SRCS = Any.pm Header.pm Ruler.pm
-HTML = 
+EXES =
+SRCS = Display.pm Panel.pm Ruler.pm Sequence.pm Track.pm
+HTML =
 
 include $(HOME)/etc/MAKEFILE.templ

@@ -1,18 +1,19 @@
 # Copyright (C) 1998-2015 Nigel P. Brown
-# $Id: PIR.pm,v 1.10 2005/12/12 20:42:48 brown Exp $
+
+# This file is part of MView.
+# MView is released under license GPLv2, or any later version.
 
 ###########################################################################
 package Bio::MView::Build::Format::PIR;
 
 use Bio::MView::Build::Align;
-use Bio::MView::Build::Row;
 
 use strict;
 use vars qw(@ISA);
 
 @ISA = qw(Bio::MView::Build::Align);
 
-#the name of the underlying NPB::Parse::Format parser
+#the name of the underlying Bio::Parse::Format parser
 sub parser { 'PIR' }
 
 sub parse {
@@ -23,26 +24,39 @@ sub parse {
 
     foreach $rec ($self->{'entry'}->parse(qw(SEQ))) {
 
-	$rank++;
+        $rank++;
 
         last  if $self->topn_done($rank);
         next  if $self->skip_row($rank, $rank, $rec->{'id'});
 
-	#warn "KEEP: ($rank,$id)\n";
+        #warn "KEEP: ($rank,$id)\n";
 
-	push @hit, new Bio::MView::Build::Simple_Row($rank,
-                                                     $rec->{'id'},
-                                                     $rec->{'desc'},
-                                                     $rec->{'seq'},
+        push @hit, new Bio::MView::Build::Row::PIR($rank,
+                                                   $rec->{'id'},
+                                                   $rec->{'desc'},
+                                                   $rec->{'seq'},
             );
     }
-    #map { $_->print } @hit;
+    #map { $_->dump } @hit;
 
     #free objects
-    $self->{'entry'}->free(qw(SEQ));
+    $self->{'entry'}->free_parsers(qw(SEQ));
 
     return \@hit;
 }
+
+
+###########################################################################
+package Bio::MView::Build::Row::PIR;
+
+use Bio::MView::Build::Row;
+
+use strict;
+use vars qw(@ISA);
+
+@ISA = qw(Bio::MView::Build::Simple_Row);
+
+sub ignore_columns { ['posn1', 'posn2']; }
 
 
 ###########################################################################

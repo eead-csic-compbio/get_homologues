@@ -1,11 +1,13 @@
-# Copyright (C) 1997-2015 Nigel P. Brown
-# $Id: Ruler.pm,v 1.13 2015/06/14 17:09:04 npb Exp $
+# Copyright (C) 1997-2019 Nigel P. Brown
+
+# This file is part of MView.
+# MView is released under license GPLv2, or any later version.
+
+use strict;
 
 ###########################################################################
 package Bio::MView::Align::Ruler;
 
-use Bio::MView::Align;
-use Bio::MView::Display;
 use Bio::MView::Align::Row;
 
 use vars qw(@ISA);
@@ -14,45 +16,48 @@ use vars qw(@ISA);
 
 sub new {
     my $type = shift;
+    #warn "${type}::new(@_)\n";
+    die "${type}::new: missing arguments\n"  if @_ < 2;
     my ($length, $refobj) = @_;
-    my $self = {};
+
+    my $self = new Bio::MView::Align::Row('ruler', '');
     bless $self, $type;
 
-    $self->{'type'}   = 'ruler';
-    $self->{'length'} = $length;
+    $self->{'length'} = $length;  #alignment width
 
     $self->reset_display($refobj);
 
     $self;
 }
 
-sub id     { $_[0] }
-sub string { '' }
-sub length { $_[0]->{'length'} }
+######################################################################
+# public methods
+######################################################################
+#override
+sub length { return $_[0]->{'length'} }
 
+######################################################################
+# private methods
+######################################################################
+#override
 sub reset_display {
     my ($self, $refobj) = @_;
-    my ($data, $pcid) = ('', '');
-    if (defined $refobj) {
-	$data = $refobj->head;
-	$pcid = $refobj->pcid;
-    }
-    $self->{'display'} =
-	{
-	 'type'     => $self->{type},
-	 'label0'   => '',
-	 'label1'   => '',
-	 'label2'   => '',
-	 'label3'   => $data,
-	 'label4'   => $pcid,
-	 'label5'   => '',
-	 'label6'   => '',
-	 'range'    => [],
-	 'number'   => 1,
-	};
-    $self;
+
+    my @labels = ();
+
+    @labels = $refobj->display_column_labels  if defined $refobj;
+    #warn "labels: [@{[join(',', @labels)]}]\n";
+
+    $self->SUPER::reset_display(
+        'labels' => \@labels,  #label strings
+    );
 }
 
+######################################################################
+# debug
+######################################################################
+#overrides Bio::MView::Align::Row::string
+sub string { 'ruler length= ' . $_[0]->length }
 
 ###########################################################################
 1;

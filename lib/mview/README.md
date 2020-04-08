@@ -14,70 +14,71 @@ Outputs:
 
 - HTML, FASTA, CLUSTAL, MSF, PIR, RDB (tab-separated).
 
-Full documentation can be found in the on-line
+The tool is used in molecular biology and biomedical research for data
+analyses and as a component in various bioinformatics web services. Research
+papers citing MView are indexed on [Google
+Scholar](https://scholar.google.com/citations?user=4ughzM0AAAAJ&hl=en "MView
+citations").
+
+
+### Manual
+
+Full documentation can be found in the
 [manual](https://desmid.github.io/mview/ "MView manual"), a copy of which is
-also included with the code.
+bundled with the code.
 
 
 ### Requirements
 
 MView is implemented in Perl, version 5 as a self-contained command line
-program that should run cross-platform. 
+program that should run cross-platform.
+
+[Perl](https://www.perl.org/) is generally installed on Linux and UNIX
+systems. MView is known to work on Windows with
+[Strawberry Perl](http://strawberryperl.com/).
 
 
 ### Download
 
-The [latest release](https://github.com/desmid/mview "MView at GitHub") of the
-software on GitHub can be downloaded by clicking on the 'releases' tab then
-selecting a version and archive format (zip or tar.gz).
+- The [current release](
+  https://sourceforge.net/projects/bio-mview/files/bio-mview/mview-1.67/
+  "MView current release on SourceForge") can be downloaded from SourceForge
+  as a gzip or bzip2 compressed tar archive.
+- Older [releases](
+  https://sourceforge.net/projects/bio-mview/files/bio-mview/ "MView older
+  releases on SourceForge") and historical [download statistics](
+  https://sourceforge.net/projects/bio-mview/files/stats/timeline?dates=2005-01-01+to+2025-01-01
+  "MView download statistics") can also be found on SourceForge.
+- The [latest code](https://github.com/desmid/mview "MView source") can be
+  downloaded direct from GitHub by clicking the green "Clone or download"
+  button and following the instructions to either clone the git repository or
+  download a ZIP archive.
 
-A snapshot of the (possibly unstable) development code can be downloaded using
-the 'Download ZIP' button on the main page.
 
-Tarballs and bzip2 archives of releases can also be found at the older
-[SourceForge archive](http://sourceforge.net/projects/bio-mview/ "MView at
-SourceForge").
+### Installation
+
+There are several ways to install MView:
+
+- [Linux, Apple, UNIX](README_unix.md)
+- [Windows](README_windows.md)
+- [Perl module](README_perl.md) (advanced)
 
 
-### Install
+### Testing
 
-1. Save the archive to your software area, e.g., `/usr/local`, then uncompress
-   and extract it:
-
-        tar xvzf mview-1.60.tar.gz
-
-   or
-
-        gunzip < mview-1.60.tar.gz | tar xvf -
-
-   This would create a directory called `mview-1.60` and place all the files
-   under there.
-
-2. Change to this directory and load `bin/mview` into an editor.
-
-3. Set a valid path for the Perl interpreter on your machine after the ``#!``
-   at the top of the file, for example:
-
-        #!/usr/bin/perl
-
-4. Find the `use lib '/path/to/mview/lib';` line and change it, in our
-   example, to:
-
-        use lib '/usr/local/mview-1.60/lib';
-
-   and save the file.
-
-5. Finally, make sure that the directory containing the mview script (that you
-   just edited) is on your `PATH` and rehash or login again.
+Each release of MView is regression tested against hundreds of sample data
+inputs for all the sequence database search and alignment formats and versions
+thereof that are supported, together with known edge cases. This is well over
+0.5GB of material, so it's not currently available externally.
 
 
 ### Found a bug?
 
-Please send an email to `biomview _at_ gmail.com`.
+Please open an issue on the MView [issue tracker](https://github.com/desmid/mview/issues "issue tracker") or send an email to `biomview@gmail.com`.
 
 If MView isn't able to parse your input file or produces a warning message, it
-would be very helpful if you can include/attach the data file in your email so
-that I can (1) quickly reproduce the error, and (2) add the example to the
+would be very helpful if you can include/attach the data file in your message
+so that I can (1) quickly reproduce the error, and (2) add the example to the
 test suite.
 
 
@@ -92,8 +93,10 @@ If you use MView in your work, please cite:
 
 ### Copyright and licence
 
-MView and associated libraries are Open Source Software with copyright
-protected under the GNU General Public License, version 2.
+MView is free software; you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
 
 
 ### Acknowledgements
@@ -101,6 +104,6 @@ protected under the GNU General Public License, version 2.
 People who contributed early code or suggestions include C. Leroy and other
 members of the former Sander group at EBI. Useful suggestions relating to the
 EBI sequence database search services have come from R. Lopez, W. Li and
-H. McWilliam at EBI. Many other people have suggested new features and
-reported bugs; I hope I have acknowledged them in the change log and apologise
-if I have missed anyone out.
+H. McWilliam at EBI. Thanks to the many other people who have suggested new
+features and reported bugs. Finally, thank you to everyone who has cited MView
+in their publications.

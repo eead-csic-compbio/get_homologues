@@ -1,6 +1,7 @@
-# -*- perl -*-
-# Copyright (C) 1996-2015 Nigel P. Brown
-# $Id: FASTA3X.pm,v 1.7 2015/06/18 21:26:11 npb Exp $
+# Copyright (C) 1996-2018 Nigel P. Brown
+
+# This file is part of MView.
+# MView is released under license GPLv2, or any later version.
 
 ###########################################################################
 #
@@ -259,7 +260,7 @@ use vars qw(@ISA);
 my $FASTMFS_SPACER = '\001' x 5;
 
 #called by the constructor
-sub initialise_child {
+sub initialise {
     my $self = shift;
 
     #schedule by query peptide tuple
@@ -300,12 +301,13 @@ sub makepeptup {
 sub parse_query_tuples {
     my $self = shift;
     my ($peplist, $pephash) = ([], {});
+
     foreach my $match ($self->{'entry'}->parse(qw(MATCH))) {
 
         #tfast[mfs] ALN needs to access its SUM
         my $sum = $match->parse(qw(SUM));
 
-	foreach my $aln ($match->parse(qw(ALN))) {
+        foreach my $aln ($match->parse(qw(ALN))) {
 
             my $peptup = makepeptup("$aln->{'query'}");
 
@@ -313,33 +315,44 @@ sub parse_query_tuples {
 
             push @$peplist, $peptup;
             $pephash->{$peptup}++;
+
             #warn "PEP: $peptup\n";
         }
     }
-    #free objects
-    $self->{'entry'}->free(qw(MATCH));
+
+    $self->{'entry'}->free_parsers(qw(MATCH));
+
     $peplist;
 }
 
 sub parse {
     my $self = shift;
 
+    #warn "\nfasta3X::parse: entering\n";
+
     #all peptide tuples done?
-    return  unless defined $self->{scheduler}->next;
+    if (! defined $self->{scheduler}->next) {
+        $self->{'entry'}->free_parsers();
+        #warn "fasta3X::parse: exiting at end\n";
+        return;
+    }
 
     my $ranking = $self->{'entry'}->parse(qw(RANK));
 
-    #fasta run with no hits
-    return []  unless defined $ranking;
+    #no hits
+    if (! defined $ranking) {
+        #warn "fasta3X::parse: exiting on empty parse\n";
+        return;
+    }
 
     #identify the query
     my $header = $self->{'entry'}->parse(qw(HEADER));
 
     my $query = 'Query';
     if ($header->{'query'} ne '') {
-	$query = $header->{'query'};
+        $query = $header->{'query'};
     } elsif ($header->{'queryfile'} =~ m,.*/([^\.]+)\.,) {
-	$query = $1;
+        $query = $1;
     } else {
 
     }
@@ -353,44 +366,47 @@ sub parse {
                        '',
                        $query,
                        '',
-                       '',
-                       '',
-                       '',
-                       '',
-                       '',
-                       '',
-                       '+',
-                       '',
+                       {
+                           'initn'        => '',
+                           'init1'        => '',
+                           'bits'         => '',
+                           'expect'       => '',
+                           'sn'           => '',
+                           'sl'           => '',
+                           'query_orient' => '+',
+                           'sbjct_orient' => '',
+                       }
                    )));
 
     #extract hits and identifiers from the ranking
     my $rank = 0; foreach my $hit (@{$ranking->{'hit'}}) {
 
-	$rank++;
+        $rank++;
 
         last  if $self->topn_done($rank);
         next  if $self->skip_row($rank, $rank, $hit->{'id'});
 
-	#warn "KEEP: ($rank,$hit->{'id'})\n";
+        #warn "KEEP: ($rank,$hit->{'id'})\n";
 
-	my $key1 = $coll->key($rank, $hit->{'id'}, $hit->{'expect'});
+        my $key1 = $coll->key($rank, $hit->{'id'}, $hit->{'expect'});
 
-	#warn "ADD: [$key1]\n";
+        #warn "ADD: [$key1]\n";
 
-	$coll->insert((new $class(
+        $coll->insert((new $class(
                            $rank,
                            $hit->{'id'},
                            $hit->{'desc'},
-                           $hit->{'initn'},
-                           $hit->{'init1'},
-                           $hit->{'bits'},
-                           $hit->{'expect'},
-                           $hit->{'sn'},
-                           $hit->{'sl'},
-                           '+',
-                           '',
-                       )),
-                      $key1
+                           {
+                               'initn'        => $hit->{'initn'},
+                               'init1'        => $hit->{'init1'},
+                               'bits'         => $hit->{'bits'},
+                               'expect'       => $hit->{'expect'},
+                               'sn'           => $hit->{'sn'},
+                               'sl'           => $hit->{'sl'},
+                               'query_orient' => '+',
+                               'sbjct_orient' => '',
+                           }
+                       )), $key1
             );
     }
 
@@ -399,15 +415,15 @@ sub parse {
 
         $rank++;
 
-	#first the summary
-	my $sum = $match->parse(qw(SUM));
+        #first the summary
+        my $sum = $match->parse(qw(SUM));
 
         my $key1 = $coll->key($rank, $sum->{'id'}, $sum->{'expect'});
 
         #ignore hit?
-	next  unless $coll->has($key1);
+        next  unless $coll->has($key1);
 
-	#warn "USE: [$key1]\n";
+        #warn "USE: [$key1]\n";
 
         my $aset = $self->get_ranked_frags($match, $coll, $key1, '+');
 
@@ -415,21 +431,21 @@ sub parse {
         next  unless @$aset;
 
         foreach my $aln (@$aset) {
-	    #apply score/significance filter
+            #apply score/significance filter
             next  if $self->skip_frag($sum->{'initn'});
 
             #warn "SEE: [$key1]\n";
 
-	    #$aln->print;
+            #$aln->dump;
 
             my $peptup = makepeptup("$aln->{'query'}");
 
             #ignore other peptide tuples
             next  unless $self->{scheduler}->use_item($peptup);
 
-	    #for FASTA gapped alignments
-	    $self->strip_query_gaps(\$aln->{'query'}, \$aln->{'sbjct'},
-				    $aln->{'query_leader'},
+            #for FASTA gapped alignments
+            $self->strip_query_gaps(\$aln->{'query'}, \$aln->{'sbjct'},
+                                    $aln->{'query_leader'},
                                     $aln->{'query_trailer'});
 
             my $qstop = $aln->{'query_start'} + length($aln->{'query'}) - 1;
@@ -444,8 +460,8 @@ sub parse {
                     $aln->{'sbjct_start'},
                     $aln->{'sbjct_stop'},
                 ]);
-	}
-	#override row data
+        }
+        #override row data
         $coll->item($key1)->{'desc'} = $sum->{'desc'}  if $sum->{'desc'};
 
         my ($N, $sig, $qorient, $sorient) = $self->get_scores($aset, $sum);
@@ -454,8 +470,7 @@ sub parse {
         $coll->item($key1)->set_val('sbjct_orient', $sorient);
     }
 
-    #free objects
-    $self->{'entry'}->free(qw(HEADER RANK MATCH));
+    #warn "fasta3X::parse: returning with data\n";
 
     return $coll->list;
 }
@@ -492,14 +507,14 @@ sub strip_query_gaps {
             substr($$sbjct, $pos, 0) = $FASTMFS_SPACER;
         }
     };
-    
+
     &$gapper($query, $sbjct, '-');  #mark gaps in sbjct only
 
     #strip query terminal white space
     $trailer = length($$query) - $leader - $trailer;
     $$query  = substr($$query, $leader, $trailer);
     $$sbjct  = substr($$sbjct, $leader, $trailer);
-	
+
     #replace sbjct leading/trailing white space with gaps
     $$sbjct =~ s/\s/-/g;
 
@@ -573,24 +588,33 @@ sub subheader {
 sub parse {
     my $self = shift;
 
+    #warn "\nfasta3X::parse: entering\n";
+
     #all strands done?
-    return  unless defined $self->{scheduler}->next;
+    if (! defined $self->{scheduler}->next) {
+        $self->{'entry'}->free_parsers();
+        #warn "fasta3X::parse: exiting at end\n";
+        return;
+    }
 
     my $ranking = $self->{'entry'}->parse(qw(RANK));
 
-    #fasta run with no hits
-    return []  unless defined $ranking;
+    #no hits
+    if (! defined $ranking) {
+        #warn "fasta3X::parse: exiting on empty parse\n";
+        return;
+    }
 
     #identify the query
     my $header = $self->{'entry'}->parse(qw(HEADER));
 
     my $query = 'Query';
     if ($header->{'query'} ne '') {
-	$query = $header->{'query'};
+        $query = $header->{'query'};
     } elsif ($header->{'queryfile'} =~ m,.*/([^\.]+)\.,) {
-	$query = $1;
+        $query = $1;
     } else {
-	$query = 'Query';
+        $query = 'Query';
     }
 
     my $coll = new Bio::MView::Build::Search::Collector($self);
@@ -602,38 +626,41 @@ sub parse {
                        '',
                        $query,
                        '',
-                       '',
-                       '',
-                       '',
-                       $self->strand,
-                       '',
+                       {
+                           'score'        => '',
+                           'bits'         => '',
+                           'expect'       => '',
+                           'query_orient' => $self->strand,
+                           'sbjct_orient' => '',
+                       }
                    )));
 
     #extract hits and identifiers from the ranking
     my $rank = 0; foreach my $hit (@{$ranking->{'hit'}}) {
 
-	$rank++;
+        $rank++;
 
         last  if $self->topn_done($rank);
         next  if $self->skip_row($rank, $rank, $hit->{'id'});
 
-	#warn "KEEP: ($rank,$hit->{'id'})\n";
+        #warn "KEEP: ($rank,$hit->{'id'})\n";
 
-	my $key1 = $coll->key($rank, $hit->{'id'}, $hit->{'expect'});
+        my $key1 = $coll->key($rank, $hit->{'id'}, $hit->{'expect'});
 
-	#warn "ADD: [$key1]\n";
+        #warn "ADD: [$key1]\n";
 
-	$coll->insert((new $class(
+        $coll->insert((new $class(
                            $rank,
                            $hit->{'id'},
                            $hit->{'desc'},
-                           $hit->{'score'},
-                           $hit->{'bits'},
-                           $hit->{'expect'},
-                           $self->strand,
-                           '',
-                       )),
-                      $key1
+                           {
+                               'score'        => $hit->{'score'},
+                               'bits'         => $hit->{'bits'},
+                               'expect'       => $hit->{'expect'},
+                               'query_orient' => $self->strand,
+                               'sbjct_orient' => '',
+                           }
+                       )), $key1
             );
     }
 
@@ -642,14 +669,14 @@ sub parse {
 
         $rank++;
 
-	#first the summary
-	my $sum = $match->parse(qw(SUM));
+        #first the summary
+        my $sum = $match->parse(qw(SUM));
 
         my $key1 = $coll->key($rank, $sum->{'id'}, $sum->{'expect'});
 
-	next  unless $coll->has($key1);
+        next  unless $coll->has($key1);
 
-	#warn "USE: [$key1]\n";
+        #warn "USE: [$key1]\n";
 
         my $aset = $self->get_ranked_frags($match, $coll, $key1, $self->strand);
 
@@ -657,16 +684,16 @@ sub parse {
         next  unless @$aset;
 
         foreach my $aln (@$aset) {
-	    #apply score/significance filter
+            #apply score/significance filter
             next  if $self->skip_frag($sum->{'score'});
 
             #warn "SEE: [$key1]\n";
 
-	    #$aln->print;
+            #$aln->dump;
 
-	    #for FASTA gapped alignments
-	    $self->strip_query_gaps(\$aln->{'query'}, \$aln->{'sbjct'},
-				    $aln->{'query_leader'},
+            #for FASTA gapped alignments
+            $self->strip_query_gaps(\$aln->{'query'}, \$aln->{'sbjct'},
+                                    $aln->{'query_leader'},
                                     $aln->{'query_trailer'});
 
             $coll->add_frags(
@@ -680,7 +707,7 @@ sub parse {
                     $aln->{'sbjct_stop'},
                 ]);
         }
-	#override row data
+        #override row data
         $coll->item($key1)->{'desc'} = $sum->{'desc'}  if $sum->{'desc'};
 
         my ($N, $sig, $qorient, $sorient) = $self->get_scores($aset, $sum);
@@ -689,8 +716,7 @@ sub parse {
         $coll->item($key1)->set_val('sbjct_orient', $sorient);
     }
 
-    #free objects
-    $self->{'entry'}->free(qw(HEADER RANK MATCH));
+    #warn "fasta3X::parse: returning with data\n";
 
     return $coll->list;
 }

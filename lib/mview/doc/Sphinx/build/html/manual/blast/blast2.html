@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>NCBI BLAST series 2 and NCBI BLAST+ &mdash; MView</title>
+    <title>NCBI BLAST series 2 and NCBI BLAST+ &#8212; MView</title>
     
     <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -17,20 +17,21 @@
         VERSION:     '1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="MView" href="../../index.html" />
-    <link rel="up" title="BLAST HSP processing rules" href="rules.html" />
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Frequently asked questions" href="../faq.html" />
     <link rel="prev" title="NCBI BLAST series 1 and WU-BLAST series 2" href="blast1.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -42,12 +43,12 @@
         <li class="right" >
           <a href="blast1.html" title="NCBI BLAST series 1 and WU-BLAST series 2"
              accesskey="P">previous</a> |</li>
-        <li><a href="../../index.html">MView</a> &raquo;</li>
-          <li><a href="../../contents.html" >Contents</a> &raquo;</li>
-          <li><a href="rules.html" accesskey="U">BLAST HSP processing rules</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">MView</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="rules.html" accesskey="U">BLAST HSP processing rules</a> &#187;</li> 
       </ul>
     </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="../../index.html">Table Of Contents</a></h3>
   <ul>
@@ -70,22 +71,21 @@
   <h4>Next topic</h4>
   <p class="topless"><a href="../faq.html"
                         title="next chapter">Frequently asked questions</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../../_sources/manual/blast/blast2.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/manual/blast/blast2.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -94,7 +94,7 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="ncbi-blast-series-2-and-ncbi-blast">
 <h1>NCBI BLAST series 2 and NCBI BLAST+<a class="headerlink" href="#ncbi-blast-series-2-and-ncbi-blast" title="Permalink to this headline">¶</a></h1>
@@ -165,7 +165,7 @@
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-hsp</span> <span class="pre">ranked</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">-hsp</span> <span class="pre">ranked</span></code></td>
 <td>For each ranked hit, alignments corresponding to those in
 the ranking are selected for assembly having: (i) same
 expectation, <em>E</em>, (ii) same score, <em>bits</em>. Row data
@@ -173,14 +173,14 @@ fields: (i) rank as integral <em>hitnum</em>, (ii)
 identifier, (iii) description, (iv) ranked <em>bits</em>, (v)
 ranked <em>E</em>, (vi) <em>N=1</em>, (vii) hit orientation.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-hsp</span> <span class="pre">all</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">-hsp</span> <span class="pre">all</span></code></td>
 <td>For each ranked hit, all alignments are selected for
 assembly. Row data fields: (i) rank as integral
 <em>hitnum</em>, (ii) identifier, (iii) description, (iv) highest
 <em>bits</em>, (v) lowest <em>E</em>, (vi) total number of alignments
 <em>N</em>.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-hsp</span> <span class="pre">discrete</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">-hsp</span> <span class="pre">discrete</span></code></td>
 <td>For each ranked hit, every alignment is assigned its own
 row. Row data fields: (i) alignment rank as compound rank
 <em>hitnum.alignum</em>, (ii) identifier, (iii) description, (iv)
@@ -262,7 +262,7 @@ alignment <em>bits</em>, (v) alignment <em>E</em>, (vi) <em>N=1</em>.</td>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-hsp</span> <span class="pre">ranked</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">-hsp</span> <span class="pre">ranked</span></code></td>
 <td>For each ranked hit, alignments corresponding to those in
 the ranking are selected for assembly having: (i) same
 expectation, <em>E</em>, (ii) same score, <em>bits</em>. Row data
@@ -270,14 +270,14 @@ fields: (i) rank as integral <em>hitnum</em>, (ii)
 identifier, (iii) description, (iv) ranked <em>bits</em>, (v)
 ranked <em>E</em>, (vi) <em>N=1</em>, (vii) hit orientation.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-hsp</span> <span class="pre">all</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">-hsp</span> <span class="pre">all</span></code></td>
 <td>For each ranked hit, alignments are selected for assembly
 having: (i) same hit orientation. Row data fields: (i) rank
 as compound <em>hitnum.alignum</em>, (ii) identifier, (iii)
 description, (iv) highest <em>bits</em>, (v) lowest <em>E</em>, (vi)
 total number of alignments <em>N</em>, (vii) hit orientation.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-hsp</span> <span class="pre">discrete</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">-hsp</span> <span class="pre">discrete</span></code></td>
 <td>For each ranked hit, every alignment is assigned its own
 row. Row data fields: (i) alignment rank as compound rank
 <em>hitnum.alignum</em>, (ii) identifier, (iii) description, (iv)
@@ -349,8 +349,8 @@ translating the query in all 6 reading frames.</p>
 </table>
 </div></blockquote>
 <p>The query orientation can be &#8216;+&#8217; or &#8216;&#8211;&#8217; giving two distinct alignments by
-orientation. Query reading frames of the same sign are merged unless <tt class="docutils literal"><span class="pre">-hsp</span>
-<span class="pre">discrete</span></tt> is used.</p>
+orientation. Query reading frames of the same sign are merged unless <code class="docutils literal"><span class="pre">-hsp</span>
+<span class="pre">discrete</span></code> is used.</p>
 <blockquote>
 <div><table border="1" class="docutils">
 <colgroup>
@@ -363,7 +363,7 @@ orientation. Query reading frames of the same sign are merged unless <tt class="
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-hsp</span> <span class="pre">ranked</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">-hsp</span> <span class="pre">ranked</span></code></td>
 <td>For each ranked hit, alignments corresponding to those in
 the ranking are selected for assembly having: (i) same
 expectation, <em>E</em>, (ii) same score, <em>bits</em>, (iii) same query
@@ -372,14 +372,14 @@ orientation. Row data fields: (i) rank as integral
 <em>bits</em>, (v) ranked <em>E</em>, (vi) <em>N=1</em>, (vii) query
 orientation.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-hsp</span> <span class="pre">all</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">-hsp</span> <span class="pre">all</span></code></td>
 <td>For each ranked hit, alignments are selected for assembly
 having: (i) same query orientation. Row data fields: (i)
 rank as integral <em>hitnum</em>, (ii) identifier, (iii)
 description, (iv) highest <em>bits</em>, (v) lowest <em>E</em>, (vi)
 total number of alignments, <em>N</em>, (vii) query orientation.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-hsp</span> <span class="pre">discrete</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">-hsp</span> <span class="pre">discrete</span></code></td>
 <td>For each ranked hit, every alignment is assigned its own
 row. Row data fields: (i) alignment rank as compound rank
 <em>hitnum.alignum</em>, (ii) identifier, (iii) description, (iv)
@@ -451,7 +451,7 @@ translating the hits in all 6 reading frames.</p>
 </table>
 </div></blockquote>
 <p>The query orientation is always &#8216;+&#8217; giving one alignment. Hit reading frames
-of the same sign are merged unless <tt class="docutils literal"><span class="pre">-hsp</span> <span class="pre">discrete</span></tt> is used.</p>
+of the same sign are merged unless <code class="docutils literal"><span class="pre">-hsp</span> <span class="pre">discrete</span></code> is used.</p>
 <blockquote>
 <div><table border="1" class="docutils">
 <colgroup>
@@ -464,7 +464,7 @@ of the same sign are merged unless <tt class="docutils literal"><span class="pre
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-hsp</span> <span class="pre">ranked</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">-hsp</span> <span class="pre">ranked</span></code></td>
 <td>For each ranked hit, alignments corresponding to those in
 the ranking are selected for assembly having: (i) same
 expectation, <em>E</em>, (ii) same score, <em>bits</em>, (iii) same hit
@@ -472,14 +472,14 @@ orientation. Row data fields: (i) rank as integral
 <em>hitnum</em>, (ii) identifier, (iii) description, (iv) ranked
 <em>bits</em>, (v) ranked <em>E</em>, (vi) <em>N=1</em>, (vii) hit orientation.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-hsp</span> <span class="pre">all</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">-hsp</span> <span class="pre">all</span></code></td>
 <td>For each ranked hit, alignments are selected for assembly
 having: (i) same hit orientation. Row data fields: (i) rank
 as compound <em>hitnum.alignum</em>, (ii) identifier, (iii)
 description, (iv) highest <em>bits</em>, (v) lowest <em>E</em>, (vi)
 total number of alignments, <em>N</em>, (vii) hit orientation.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-hsp</span> <span class="pre">discrete</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">-hsp</span> <span class="pre">discrete</span></code></td>
 <td>For each ranked hit, every alignment is assigned its own
 row. Row data fields: (i) alignment rank as compound rank
 <em>hitnum.alignum</em>, (ii) identifier, (iii) description, (iv)
@@ -572,7 +572,7 @@ translating both query and hit in all 6 reading frames.</p>
 </div></blockquote>
 <p>The query orientation can be &#8216;+&#8217; or &#8216;&#8211;&#8217; giving two distinct alignments by
 orientation. Query and hit reading frames of the same sign are merged,
-respectively, unless <tt class="docutils literal"><span class="pre">-hsp</span> <span class="pre">discrete</span></tt> is used.</p>
+respectively, unless <code class="docutils literal"><span class="pre">-hsp</span> <span class="pre">discrete</span></code> is used.</p>
 <blockquote>
 <div><table border="1" class="docutils">
 <colgroup>
@@ -585,7 +585,7 @@ respectively, unless <tt class="docutils literal"><span class="pre">-hsp</span> 
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-hsp</span> <span class="pre">ranked</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">-hsp</span> <span class="pre">ranked</span></code></td>
 <td>For each ranked hit, alignments corresponding to those in
 the ranking are selected for assembly having: (i) same
 expectation, <em>E</em>, (ii) same score, <em>bits</em>, (iii) same hit
@@ -593,14 +593,14 @@ orientation. Row data fields: (i) rank as integral
 <em>hitnum</em>, (ii) identifier, (iii) description, (iv) ranked
 <em>bits</em>, (v) ranked <em>E</em>, (vi) <em>N=1</em>, (vii) hit orientation.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-hsp</span> <span class="pre">all</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">-hsp</span> <span class="pre">all</span></code></td>
 <td>For each ranked hit, alignments are selected for assembly
 having: (i) same hit orientation. Row data fields: (i) rank
 as compound <em>hitnum.alignum</em>, (ii) identifier, (iii)
 description, (iv) highest <em>bits</em>, (v) lowest <em>E</em>, (vi)
 total number of alignments, <em>N</em>, (vii) hit orientation.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-hsp</span> <span class="pre">discrete</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">-hsp</span> <span class="pre">discrete</span></code></td>
 <td>For each ranked hit, every alignment is assigned its own
 row. Row data fields: (i) alignment rank as compound rank
 <em>hitnum.alignum</em>, (ii) identifier, (iii) description, (iv)
@@ -675,21 +675,21 @@ orientation is always &#8216;+&#8217; giving one alignment per cycle.</p>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-hsp</span> <span class="pre">ranked</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">-hsp</span> <span class="pre">ranked</span></code></td>
 <td>For each ranked hit, the first alignment is selected to
 form an alignment row using: (i) same expectation,
 <em>E</em>, (ii) same score, <em>bits</em>. Row data fields: (i) rank as
 integral <em>hitnum</em>, (ii) identifier, (iii) description, (iv)
 ranked <em>bits</em>, (v) ranked <em>E</em>, (vi) <em>N=1</em>.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-hsp</span> <span class="pre">all</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">-hsp</span> <span class="pre">all</span></code></td>
 <td>For each ranked hit, all alignments are selected for
 assembly. Row data fields: (i) rank as integral
 <em>hitnum</em>, (ii) identifier, (iii) description, (iv) highest
 <em>bits</em>, (v) lowest <em>E</em>, (vi) total number of alignments
 <em>N</em>.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-hsp</span> <span class="pre">discrete</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">-hsp</span> <span class="pre">discrete</span></code></td>
 <td>For each ranked hit, every alignment is assigned its own
 row. Row data fields: (i) alignment rank as compound rank
 <em>hitnum.alignum</em>, (ii) identifier, (iii) description, (iv)
@@ -784,7 +784,7 @@ the raw BLAST output.</td>
 <td>A count of HSPs which is context dependent in MView. In raw
 BLAST output it is the number of HSPs deemed by BLAST to
 belong in a coherent set of alignment fragments, but the MView
-HSP processing options (<tt class="docutils literal"><span class="pre">ranked</span></tt>, <tt class="docutils literal"><span class="pre">all</span></tt>, <tt class="docutils literal"><span class="pre">discrete</span></tt>)
+HSP processing options (<code class="docutils literal"><span class="pre">ranked</span></code>, <code class="docutils literal"><span class="pre">all</span></code>, <code class="docutils literal"><span class="pre">discrete</span></code>)
 change the precise meaning. BLAST series 2 onwards produces
 gapped alignments by default rather than separate HSPs so
 <em>N=1</em>.</td>
@@ -809,7 +809,7 @@ into account when selecting HSPs.</td>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -821,15 +821,15 @@ into account when selecting HSPs.</td>
         <li class="right" >
           <a href="blast1.html" title="NCBI BLAST series 1 and WU-BLAST series 2"
              >previous</a> |</li>
-        <li><a href="../../index.html">MView</a> &raquo;</li>
-          <li><a href="../../contents.html" >Contents</a> &raquo;</li>
-          <li><a href="rules.html" >BLAST HSP processing rules</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">MView</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="rules.html" >BLAST HSP processing rules</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2015, Nigel P. Brown.
-      Last updated on 09 Oct 2015.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015-2020, Nigel P. Brown.
+      Last updated on 19 Feb 2020.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.2.
     </div>
   </body>
 </html>

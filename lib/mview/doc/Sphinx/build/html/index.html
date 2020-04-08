@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>MView &mdash; MView</title>
+    <title>MView &#8212; MView</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -17,18 +17,20 @@
         VERSION:     '1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="MView" href="#" />
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Contents" href="contents.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -37,19 +39,22 @@
         <li class="right" >
           <a href="contents.html" title="Contents"
              accesskey="N">next</a> |</li>
-        <li><a href="#">MView</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="#">MView</a> &#187;</li> 
       </ul>
     </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">MView</a><ul>
 <li><a class="reference internal" href="#documentation">Documentation</a></li>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
 <li><a class="reference internal" href="#download">Download</a></li>
+<li><a class="reference internal" href="#installation">Installation</a></li>
 <li><a class="reference internal" href="#found-a-bug">Found a bug?</a></li>
 <li><a class="reference internal" href="#citation">Citation</a></li>
 <li><a class="reference internal" href="#copyright-and-licence">Copyright and licence</a></li>
+<li><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
 </ul>
 </li>
 </ul>
@@ -57,22 +62,21 @@
   <h4>Next topic</h4>
   <p class="topless"><a href="contents.html"
                         title="next chapter">Contents</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/index.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -81,7 +85,7 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <LINK rel="stylesheet" type="text/css" href="_static/MView.css"><div class="toctree-wrapper compound">
 </div>
@@ -92,14 +96,14 @@ a sequence database search or a multiple alignment, optionally adding HTML
 markup for web page layout. It can also be used as a filter to extract and
 convert searches or alignments to common formats.</p>
 <PRE>
-                                  1 [        .         .         .         .         :         .         .         ] 80
-1 <A HREF="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=P00533">sp|P00533.2|EGFR_HUMAN</A>  100.0%    <FONT CLASS=S37>F</FONT><FONT CLASS=S36>K</FONT><FONT COLOR="#666666">KI</FONT><FONT CLASS=S36>K</FONT><FONT COLOR="#666666">V</FONT><FONT CLASS=S37>L</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">S</FONT><FONT CLASS=S43>G</FONT><FONT CLASS=S37>AF</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">T</FONT><FONT CLASS=S37>V</FONT><FONT COLOR="#666666">YK</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">L</FONT><FONT CLASS=S37>W</FONT><FONT COLOR="#666666">IPEGEK---------VKIP</FONT><FONT CLASS=S37>VAI</FONT><FONT CLASS=S36>K</FONT><FONT CLASS=S41>E</FONT><FONT CLASS=S37>L</FONT><FONT CLASS=S36>R</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S37>A</FONT><FONT COLOR="#666666">TSPK-ANK</FONT><FONT CLASS=S41>E</FONT><FONT CLASS=S37>I</FONT><FONT COLOR="#666666">L</FONT><FONT CLASS=S41>DE</FONT><FONT CLASS=S37>A</FONT><FONT COLOR="#666666">Y</FONT><FONT CLASS=S37>VM</FONT><FONT COLOR="#666666">A</FONT><FONT CLASS=S38>S</FONT><FONT CLASS=S37>V</FONT><FONT CLASS=S41>D</FONT><FONT CLASS=S38>N</FONT><FONT COLOR="#666666">P</FONT><FONT CLASS=S39>H</FONT><FONT CLASS=S37>V</FONT><FONT CLASS=S40>C</FONT><FONT CLASS=S36>R</FONT><FONT CLASS=S37>LL</FONT><FONT CLASS=S43>G</FONT><FONT CLASS=S37>I</FONT><FONT CLASS=S40>C</FONT>
-2 <A HREF="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=Q9I7F7">sp|Q9I7F7.3|PR2_DROME</A>    35.7%    <FONT CLASS=S37>I</FONT><FONT CLASS=S38>S</FONT><FONT COLOR="#666666">VN</FONT><FONT CLASS=S36>K</FONT><FONT COLOR="#666666">Q</FONT><FONT CLASS=S37>L</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">T</FONT><FONT CLASS=S43>G</FONT><FONT CLASS=S41>E</FONT><FONT CLASS=S37>F</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">I</FONT><FONT CLASS=S37>V</FONT><FONT COLOR="#666666">QQ</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">V</FONT><FONT CLASS=S37>W</FONT><FONT COLOR="#666666">SNGNE-----------RIQ</FONT><FONT CLASS=S37>VAI</FONT><FONT CLASS=S36>K</FONT><FONT CLASS=S40>C</FONT><FONT CLASS=S37>L</FONT><FONT CLASS=S40>C</FONT><FONT COLOR="#666666">R</FONT><FONT CLASS=S41>E</FONT><FONT COLOR="#666666">RMQS-NPM</FONT><FONT CLASS=S41>E</FONT><FONT CLASS=S37>F</FONT><FONT COLOR="#666666">L</FONT><FONT CLASS=S36>K</FONT><FONT CLASS=S41>E</FONT><FONT CLASS=S37>A</FONT><FONT COLOR="#666666">A</FONT><FONT CLASS=S37>IM</FONT><FONT COLOR="#666666">H</FONT><FONT CLASS=S38>S</FONT><FONT CLASS=S37>I</FONT><FONT CLASS=S41>E</FONT><FONT CLASS=S39>H</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S38>N</FONT><FONT CLASS=S37>IV</FONT><FONT CLASS=S36>R</FONT><FONT CLASS=S37>L</FONT><FONT CLASS=S39>Y</FONT><FONT CLASS=S43>G</FONT><FONT CLASS=S37>VV</FONT>
-3 <A HREF="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=Q08881">sp|Q08881.1|ITK_HUMAN</A>    32.9%    <FONT CLASS=S37>L</FONT><FONT CLASS=S38>T</FONT><FONT COLOR="#666666">FV</FONT><FONT CLASS=S38>Q</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S37>I</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">S</FONT><FONT CLASS=S43>G</FONT><FONT CLASS=S38>Q</FONT><FONT CLASS=S37>F</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">L</FONT><FONT CLASS=S37>V</FONT><FONT COLOR="#666666">HL</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">Y</FONT><FONT CLASS=S37>W</FONT><FONT COLOR="#666666">LN--------------KDK</FONT><FONT CLASS=S37>VAI</FONT><FONT CLASS=S36>K</FONT><FONT CLASS=S38>T</FONT><FONT CLASS=S37>I</FONT><FONT CLASS=S36>R</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">AMS---EE</FONT><FONT CLASS=S41>D</FONT><FONT CLASS=S37>F</FONT><FONT COLOR="#666666">I</FONT><FONT CLASS=S41>EE</FONT><FONT CLASS=S37>A</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S37>VM</FONT><FONT COLOR="#666666">M</FONT><FONT CLASS=S36>K</FONT><FONT CLASS=S37>L</FONT><FONT CLASS=S38>S</FONT><FONT CLASS=S39>H</FONT><FONT COLOR="#666666">P</FONT><FONT CLASS=S36>K</FONT><FONT CLASS=S37>LV</FONT><FONT CLASS=S38>Q</FONT><FONT CLASS=S37>L</FONT><FONT CLASS=S39>Y</FONT><FONT CLASS=S43>G</FONT><FONT CLASS=S37>V</FONT><FONT CLASS=S40>C</FONT>
-4 <A HREF="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=Q13308">sp|Q13308.2|PTK7_HUMAN</A>   21.2%    <FONT CLASS=S37>I</FONT><FONT CLASS=S36>R</FONT><FONT COLOR="#666666">EV</FONT><FONT CLASS=S36>K</FONT><FONT COLOR="#666666">Q</FONT><FONT CLASS=S37>I</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">V</FONT><FONT CLASS=S43>G</FONT><FONT CLASS=S38>Q</FONT><FONT CLASS=S37>F</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">A</FONT><FONT CLASS=S37>V</FONT><FONT COLOR="#666666">VL</FONT><FONT CLASS=S37>A</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S37>M</FONT><FONT COLOR="#666666">TGLS-XLPKGSMNADGVAL</FONT><FONT CLASS=S37>VAV</FONT><FONT CLASS=S36>KK</FONT><FONT CLASS=S37>L</FONT><FONT CLASS=S36>K</FONT><FONT COLOR="#666666">P</FONT><FONT CLASS=S41>D</FONT><FONT COLOR="#666666">VSD-EVLQ</FONT><FONT CLASS=S38>S</FONT><FONT CLASS=S37>F</FONT><FONT COLOR="#666666">D</FONT><FONT CLASS=S36>K</FONT><FONT CLASS=S41>E</FONT><FONT CLASS=S37>I</FONT><FONT COLOR="#666666">K</FONT><FONT CLASS=S37>FM</FONT><FONT COLOR="#666666">S</FONT><FONT CLASS=S38>Q</FONT><FONT CLASS=S37>L</FONT><FONT CLASS=S38>Q</FONT><FONT CLASS=S39>H</FONT><FONT COLOR="#666666">D</FONT><FONT CLASS=S38>S</FONT><FONT CLASS=S37>IV</FONT><FONT CLASS=S38>Q</FONT><FONT CLASS=S37>LLAI</FONT><FONT CLASS=S40>C</FONT>
-5 <A HREF="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=P34265">sp|P34265.4|KIN31_CAEEL</A>  31.5%    <FONT CLASS=S37>V</FONT><FONT CLASS=S41>E</FONT><FONT COLOR="#666666">LT</FONT><FONT CLASS=S36>K</FONT><FONT COLOR="#666666">K</FONT><FONT CLASS=S37>L</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S43>G</FONT><FONT CLASS=S37>AF</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">E</FONT><FONT CLASS=S37>V</FONT><FONT COLOR="#666666">WK</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">K</FONT><FONT CLASS=S37>L</FONT><FONT COLOR="#666666">LKILDA-------NHQPVL</FONT><FONT CLASS=S37>VAV</FONT><FONT CLASS=S36>K</FONT><FONT CLASS=S38>T</FONT><FONT CLASS=S37>A</FONT><FONT CLASS=S36>K</FONT><FONT COLOR="#666666">L</FONT><FONT CLASS=S41>E</FONT><FONT COLOR="#666666">SMTKEQIK</FONT><FONT CLASS=S41>E</FONT><FONT CLASS=S37>I</FONT><FONT COLOR="#666666">M</FONT><FONT CLASS=S36>R</FONT><FONT CLASS=S41>E</FONT><FONT CLASS=S37>A</FONT><FONT COLOR="#666666">R</FONT><FONT CLASS=S37>LM</FONT><FONT COLOR="#666666">R</FONT><FONT CLASS=S38>N</FONT><FONT CLASS=S37>L</FONT><FONT CLASS=S41>D</FONT><FONT CLASS=S39>H</FONT><FONT COLOR="#666666">I</FONT><FONT CLASS=S38>N</FONT><FONT CLASS=S37>VV</FONT><FONT CLASS=S36>K</FONT><FONT CLASS=S37>FF</FONT><FONT CLASS=S43>G</FONT><FONT CLASS=S37>VA</FONT>
-  consensus/90%                     <FONT COLOR="#666666">.......</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S37>F</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S37>V</FONT><FONT COLOR="#666666">........................</FONT><FONT CLASS=S37>VA</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S36>K</FONT><FONT COLOR="#666666">.................</FONT><FONT CLASS=S41>E</FONT><FONT COLOR="#666666">...</FONT><FONT CLASS=S37>M</FONT><FONT COLOR="#666666">...............</FONT>
-  consensus/80%                     <FONT COLOR="#666666">....</FONT><FONT CLASS=S36>K</FONT><FONT COLOR="#666666">..</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S37>F</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S37>V</FONT><FONT COLOR="#666666">..</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">.....................</FONT><FONT CLASS=S37>VA</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S36>K</FONT><FONT COLOR="#666666">.................</FONT><FONT CLASS=S41>E</FONT><FONT CLASS=S37>A</FONT><FONT COLOR="#666666">..</FONT><FONT CLASS=S37>M</FONT><FONT COLOR="#666666">....</FONT><FONT CLASS=S39>H</FONT><FONT COLOR="#666666">...</FONT><FONT CLASS=S37>V</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S37>L</FONT><FONT COLOR="#666666">.</FONT><FONT CLASS=S43>G</FONT><FONT COLOR="#666666">..</FONT>
+                                1 [        .         .         .         .         :         .         .         ] 80
+1 <A HREF="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=P00533">sp|P00533.2|EGFR_HUMAN</A>  100.0%  <SPAN CLASS=S38>F</SPAN><SPAN CLASS=S37>K</SPAN><SPAN style="color:#666666">KI</SPAN><SPAN CLASS=S37>K</SPAN><SPAN style="color:#666666">V</SPAN><SPAN CLASS=S38>L</SPAN><SPAN CLASS=S44>G</SPAN><SPAN style="color:#666666">S</SPAN><SPAN CLASS=S44>G</SPAN><SPAN CLASS=S38>AF</SPAN><SPAN CLASS=S44>G</SPAN><SPAN style="color:#666666">T</SPAN><SPAN CLASS=S38>V</SPAN><SPAN style="color:#666666">YK</SPAN><SPAN CLASS=S44>G</SPAN><SPAN style="color:#666666">L</SPAN><SPAN CLASS=S38>W</SPAN><SPAN style="color:#666666">IPEGEK---------VKIP</SPAN><SPAN CLASS=S38>VAI</SPAN><SPAN CLASS=S37>K</SPAN><SPAN CLASS=S42>E</SPAN><SPAN CLASS=S38>L</SPAN><SPAN CLASS=S37>R</SPAN><SPAN style="color:#666666">E</SPAN><SPAN CLASS=S38>A</SPAN><SPAN style="color:#666666">TSPK-ANK</SPAN><SPAN CLASS=S42>E</SPAN><SPAN CLASS=S38>I</SPAN><SPAN style="color:#666666">L</SPAN><SPAN CLASS=S42>DE</SPAN><SPAN CLASS=S38>A</SPAN><SPAN style="color:#666666">Y</SPAN><SPAN CLASS=S38>VM</SPAN><SPAN style="color:#666666">A</SPAN><SPAN CLASS=S39>S</SPAN><SPAN CLASS=S38>V</SPAN><SPAN CLASS=S42>D</SPAN><SPAN CLASS=S39>N</SPAN><SPAN style="color:#666666">P</SPAN><SPAN CLASS=S40>H</SPAN><SPAN CLASS=S38>V</SPAN><SPAN CLASS=S41>C</SPAN><SPAN CLASS=S37>R</SPAN><SPAN CLASS=S38>LL</SPAN><SPAN CLASS=S44>G</SPAN><SPAN CLASS=S38>I</SPAN><SPAN CLASS=S41>C</SPAN>
+2 <A HREF="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=Q9I7F7">sp|Q9I7F7.3|PR2_DROME</A>    35.7%  <SPAN CLASS=S38>I</SPAN><SPAN CLASS=S39>S</SPAN><SPAN style="color:#666666">VN</SPAN><SPAN CLASS=S37>K</SPAN><SPAN style="color:#666666">Q</SPAN><SPAN CLASS=S38>L</SPAN><SPAN CLASS=S44>G</SPAN><SPAN style="color:#666666">T</SPAN><SPAN CLASS=S44>G</SPAN><SPAN CLASS=S42>E</SPAN><SPAN CLASS=S38>F</SPAN><SPAN CLASS=S44>G</SPAN><SPAN style="color:#666666">I</SPAN><SPAN CLASS=S38>V</SPAN><SPAN style="color:#666666">QQ</SPAN><SPAN CLASS=S44>G</SPAN><SPAN style="color:#666666">V</SPAN><SPAN CLASS=S38>W</SPAN><SPAN style="color:#666666">SNGNE-----------RIQ</SPAN><SPAN CLASS=S38>VAI</SPAN><SPAN CLASS=S37>K</SPAN><SPAN CLASS=S41>C</SPAN><SPAN CLASS=S38>L</SPAN><SPAN CLASS=S41>C</SPAN><SPAN style="color:#666666">R</SPAN><SPAN CLASS=S42>E</SPAN><SPAN style="color:#666666">RMQS-NPM</SPAN><SPAN CLASS=S42>E</SPAN><SPAN CLASS=S38>F</SPAN><SPAN style="color:#666666">L</SPAN><SPAN CLASS=S37>K</SPAN><SPAN CLASS=S42>E</SPAN><SPAN CLASS=S38>A</SPAN><SPAN style="color:#666666">A</SPAN><SPAN CLASS=S38>IM</SPAN><SPAN style="color:#666666">H</SPAN><SPAN CLASS=S39>S</SPAN><SPAN CLASS=S38>I</SPAN><SPAN CLASS=S42>E</SPAN><SPAN CLASS=S40>H</SPAN><SPAN style="color:#666666">E</SPAN><SPAN CLASS=S39>N</SPAN><SPAN CLASS=S38>IV</SPAN><SPAN CLASS=S37>R</SPAN><SPAN CLASS=S38>L</SPAN><SPAN CLASS=S40>Y</SPAN><SPAN CLASS=S44>G</SPAN><SPAN CLASS=S38>VV</SPAN>
+3 <A HREF="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=Q08881">sp|Q08881.1|ITK_HUMAN</A>    32.9%  <SPAN CLASS=S38>L</SPAN><SPAN CLASS=S39>T</SPAN><SPAN style="color:#666666">FV</SPAN><SPAN CLASS=S39>Q</SPAN><SPAN style="color:#666666">E</SPAN><SPAN CLASS=S38>I</SPAN><SPAN CLASS=S44>G</SPAN><SPAN style="color:#666666">S</SPAN><SPAN CLASS=S44>G</SPAN><SPAN CLASS=S39>Q</SPAN><SPAN CLASS=S38>F</SPAN><SPAN CLASS=S44>G</SPAN><SPAN style="color:#666666">L</SPAN><SPAN CLASS=S38>V</SPAN><SPAN style="color:#666666">HL</SPAN><SPAN CLASS=S44>G</SPAN><SPAN style="color:#666666">Y</SPAN><SPAN CLASS=S38>W</SPAN><SPAN style="color:#666666">LN--------------KDK</SPAN><SPAN CLASS=S38>VAI</SPAN><SPAN CLASS=S37>K</SPAN><SPAN CLASS=S39>T</SPAN><SPAN CLASS=S38>I</SPAN><SPAN CLASS=S37>R</SPAN><SPAN style="color:#666666">E</SPAN><SPAN CLASS=S44>G</SPAN><SPAN style="color:#666666">AMS---EE</SPAN><SPAN CLASS=S42>D</SPAN><SPAN CLASS=S38>F</SPAN><SPAN style="color:#666666">I</SPAN><SPAN CLASS=S42>EE</SPAN><SPAN CLASS=S38>A</SPAN><SPAN style="color:#666666">E</SPAN><SPAN CLASS=S38>VM</SPAN><SPAN style="color:#666666">M</SPAN><SPAN CLASS=S37>K</SPAN><SPAN CLASS=S38>L</SPAN><SPAN CLASS=S39>S</SPAN><SPAN CLASS=S40>H</SPAN><SPAN style="color:#666666">P</SPAN><SPAN CLASS=S37>K</SPAN><SPAN CLASS=S38>LV</SPAN><SPAN CLASS=S39>Q</SPAN><SPAN CLASS=S38>L</SPAN><SPAN CLASS=S40>Y</SPAN><SPAN CLASS=S44>G</SPAN><SPAN CLASS=S38>V</SPAN><SPAN CLASS=S41>C</SPAN>
+4 <A HREF="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=Q13308">sp|Q13308.2|PTK7_HUMAN</A>   21.2%  <SPAN CLASS=S38>I</SPAN><SPAN CLASS=S37>R</SPAN><SPAN style="color:#666666">EV</SPAN><SPAN CLASS=S37>K</SPAN><SPAN style="color:#666666">Q</SPAN><SPAN CLASS=S38>I</SPAN><SPAN CLASS=S44>G</SPAN><SPAN style="color:#666666">V</SPAN><SPAN CLASS=S44>G</SPAN><SPAN CLASS=S39>Q</SPAN><SPAN CLASS=S38>F</SPAN><SPAN CLASS=S44>G</SPAN><SPAN style="color:#666666">A</SPAN><SPAN CLASS=S38>V</SPAN><SPAN style="color:#666666">VL</SPAN><SPAN CLASS=S38>A</SPAN><SPAN style="color:#666666">E</SPAN><SPAN CLASS=S38>M</SPAN><SPAN style="color:#666666">TGLS-XLPKGSMNADGVAL</SPAN><SPAN CLASS=S38>VAV</SPAN><SPAN CLASS=S37>KK</SPAN><SPAN CLASS=S38>L</SPAN><SPAN CLASS=S37>K</SPAN><SPAN style="color:#666666">P</SPAN><SPAN CLASS=S42>D</SPAN><SPAN style="color:#666666">VSD-EVLQ</SPAN><SPAN CLASS=S39>S</SPAN><SPAN CLASS=S38>F</SPAN><SPAN style="color:#666666">D</SPAN><SPAN CLASS=S37>K</SPAN><SPAN CLASS=S42>E</SPAN><SPAN CLASS=S38>I</SPAN><SPAN style="color:#666666">K</SPAN><SPAN CLASS=S38>FM</SPAN><SPAN style="color:#666666">S</SPAN><SPAN CLASS=S39>Q</SPAN><SPAN CLASS=S38>L</SPAN><SPAN CLASS=S39>Q</SPAN><SPAN CLASS=S40>H</SPAN><SPAN style="color:#666666">D</SPAN><SPAN CLASS=S39>S</SPAN><SPAN CLASS=S38>IV</SPAN><SPAN CLASS=S39>Q</SPAN><SPAN CLASS=S38>LLAI</SPAN><SPAN CLASS=S41>C</SPAN>
+5 <A HREF="http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=P34265">sp|P34265.4|KIN31_CAEEL</A>  31.5%  <SPAN CLASS=S38>V</SPAN><SPAN CLASS=S42>E</SPAN><SPAN style="color:#666666">LT</SPAN><SPAN CLASS=S37>K</SPAN><SPAN style="color:#666666">K</SPAN><SPAN CLASS=S38>L</SPAN><SPAN CLASS=S44>G</SPAN><SPAN style="color:#666666">E</SPAN><SPAN CLASS=S44>G</SPAN><SPAN CLASS=S38>AF</SPAN><SPAN CLASS=S44>G</SPAN><SPAN style="color:#666666">E</SPAN><SPAN CLASS=S38>V</SPAN><SPAN style="color:#666666">WK</SPAN><SPAN CLASS=S44>G</SPAN><SPAN style="color:#666666">K</SPAN><SPAN CLASS=S38>L</SPAN><SPAN style="color:#666666">LKILDA-------NHQPVL</SPAN><SPAN CLASS=S38>VAV</SPAN><SPAN CLASS=S37>K</SPAN><SPAN CLASS=S39>T</SPAN><SPAN CLASS=S38>A</SPAN><SPAN CLASS=S37>K</SPAN><SPAN style="color:#666666">L</SPAN><SPAN CLASS=S42>E</SPAN><SPAN style="color:#666666">SMTKEQIK</SPAN><SPAN CLASS=S42>E</SPAN><SPAN CLASS=S38>I</SPAN><SPAN style="color:#666666">M</SPAN><SPAN CLASS=S37>R</SPAN><SPAN CLASS=S42>E</SPAN><SPAN CLASS=S38>A</SPAN><SPAN style="color:#666666">R</SPAN><SPAN CLASS=S38>LM</SPAN><SPAN style="color:#666666">R</SPAN><SPAN CLASS=S39>N</SPAN><SPAN CLASS=S38>L</SPAN><SPAN CLASS=S42>D</SPAN><SPAN CLASS=S40>H</SPAN><SPAN style="color:#666666">I</SPAN><SPAN CLASS=S39>N</SPAN><SPAN CLASS=S38>VV</SPAN><SPAN CLASS=S37>K</SPAN><SPAN CLASS=S38>FF</SPAN><SPAN CLASS=S44>G</SPAN><SPAN CLASS=S38>VA</SPAN>
+  consensus/90%                   <SPAN style="color:#666666">.......</SPAN><SPAN CLASS=S44>G</SPAN><SPAN style="color:#666666">.</SPAN><SPAN CLASS=S44>G</SPAN><SPAN style="color:#666666">.</SPAN><SPAN CLASS=S38>F</SPAN><SPAN CLASS=S44>G</SPAN><SPAN style="color:#666666">.</SPAN><SPAN CLASS=S38>V</SPAN><SPAN style="color:#666666">........................</SPAN><SPAN CLASS=S38>VA</SPAN><SPAN style="color:#666666">.</SPAN><SPAN CLASS=S37>K</SPAN><SPAN style="color:#666666">.................</SPAN><SPAN CLASS=S42>E</SPAN><SPAN style="color:#666666">...</SPAN><SPAN CLASS=S38>M</SPAN><SPAN style="color:#666666">...............</SPAN>
+  consensus/80%                   <SPAN style="color:#666666">....</SPAN><SPAN CLASS=S37>K</SPAN><SPAN style="color:#666666">..</SPAN><SPAN CLASS=S44>G</SPAN><SPAN style="color:#666666">.</SPAN><SPAN CLASS=S44>G</SPAN><SPAN style="color:#666666">.</SPAN><SPAN CLASS=S38>F</SPAN><SPAN CLASS=S44>G</SPAN><SPAN style="color:#666666">.</SPAN><SPAN CLASS=S38>V</SPAN><SPAN style="color:#666666">..</SPAN><SPAN CLASS=S44>G</SPAN><SPAN style="color:#666666">.....................</SPAN><SPAN CLASS=S38>VA</SPAN><SPAN style="color:#666666">.</SPAN><SPAN CLASS=S37>K</SPAN><SPAN style="color:#666666">.................</SPAN><SPAN CLASS=S42>E</SPAN><SPAN CLASS=S38>A</SPAN><SPAN style="color:#666666">..</SPAN><SPAN CLASS=S38>M</SPAN><SPAN style="color:#666666">....</SPAN><SPAN CLASS=S40>H</SPAN><SPAN style="color:#666666">...</SPAN><SPAN CLASS=S38>V</SPAN><SPAN style="color:#666666">.</SPAN><SPAN CLASS=S38>L</SPAN><SPAN style="color:#666666">.</SPAN><SPAN CLASS=S44>G</SPAN><SPAN style="color:#666666">..</SPAN>
 </PRE><p>Inputs:</p>
 <ul class="simple">
 <li>Sequence database search: BLAST, FASTA suites.</li>
@@ -109,30 +113,50 @@ convert searches or alignments to common formats.</p>
 <ul class="simple">
 <li>HTML, FASTA, CLUSTAL, MSF, PIR, RDB (tab-separated).</li>
 </ul>
+<p>The tool is used in molecular biology and biomedical research for data
+analyses and as a component in various bioinformatics web services. Research
+papers citing MView are indexed on <a class="reference external" href="https://scholar.google.com/citations?user=4ughzM0AAAAJ&amp;hl=en">Google Scholar</a>.</p>
 <div class="section" id="documentation">
 <h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>Short contents:</p>
 <ul class="simple">
-<li><a class="reference external" href="contents.html">Contents</a></li>
-<li><a class="reference external" href="manual/intro.html">Introduction</a></li>
+<li><a class="reference external" href="contents.html">Contents</a> (long)</li>
 <li><a class="reference external" href="manual/manual.html">Manual</a></li>
 <li><a class="reference external" href="manual/formats_in.html">Input formats</a></li>
 <li><a class="reference external" href="manual/formats_out.html">Output formats</a></li>
 <li><a class="reference external" href="manual/faq.html">FAQ</a></li>
 </ul>
 </div>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<p>MView is implemented in Perl, version 5 as a self-contained command line
+program that should run cross-platform.</p>
+<p><a class="reference external" href="https://www.perl.org/">Perl</a> is generally installed on Linux and UNIX
+systems. MView is known to work on Windows with <a class="reference external" href="http://strawberryperl.com/">Strawberry Perl</a>.</p>
+</div>
 <div class="section" id="download">
 <h2>Download<a class="headerlink" href="#download" title="Permalink to this headline">¶</a></h2>
-<p>The <a class="reference external" href="https://github.com/desmid/mview">latest release</a> of the software on GitHub can be downloaded by clicking
-on the &#8216;releases&#8217; tab then selecting a version and archive format (zip or
-tar.gz).</p>
-<p>A snapshot of the (possibly unstable) development code can be downloaded using
-the &#8216;Download ZIP&#8217; button on the main page.</p>
-<p>Tarballs and bzip2 archives of releases can also be found at the older
-<a class="reference external" href="http://sourceforge.net/projects/bio-mview/">SourceForge archive</a>.</p>
+<p>The <a class="reference external" href="https://sourceforge.net/projects/bio-mview/files/bio-mview/mview-1.67/">current release</a> can be downloaded from SourceForge as a gzip or bzip2
+compressed tar archive.</p>
+<p>Older <a class="reference external" href="https://sourceforge.net/projects/bio-mview/files/bio-mview/">releases</a> and historical <a class="reference external" href="https://sourceforge.net/projects/bio-mview/files/stats/timeline?dates=2005-01-01+to+2025-01-01">download statistics</a> can also be found on
+SourceForge.</p>
+<p>The <a class="reference external" href="https://github.com/desmid/mview">latest code</a> can be downloaded direct from GitHub by clicking the green
+&#8220;Clone or download&#8221; button and following the instructions to either clone the
+git repository or download a ZIP archive.</p>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>There are several ways to install MView:</p>
+<ul class="simple">
+<li><a class="reference external" href="install/unix.html">Linux, Apple, UNIX</a></li>
+<li><a class="reference external" href="install/windows.html">Windows</a></li>
+<li><a class="reference external" href="install/perl.html">Perl module</a> (advanced)</li>
+</ul>
 </div>
 <div class="section" id="found-a-bug">
 <h2>Found a bug?<a class="headerlink" href="#found-a-bug" title="Permalink to this headline">¶</a></h2>
-<p>Please send an email to <em>biomview _at_ gmail.com</em>.</p>
+<p>Please open an issue on the MView <a class="reference external" href="https://github.com/desmid/mview/issues">issue tracker</a> or send an email to
+<em>biomview&#64;gmail.com</em>.</p>
 <p>If MView isn&#8217;t able to parse your input file or produces a warning message, it
 would be very helpful if you can include/attach the data file in your email so
 that I can (1) quickly reproduce the error, and (2) add the example to the
@@ -148,8 +172,19 @@ search or multiple alignment viewer. <em>Bioinformatics</em>. <strong>14</strong
 </div>
 <div class="section" id="copyright-and-licence">
 <h2>Copyright and licence<a class="headerlink" href="#copyright-and-licence" title="Permalink to this headline">¶</a></h2>
-<p>MView and associated libraries are Open Source Software with copyright
-protected under the <a class="reference external" href="etc/Licence.html">GNU General Public License, version 2</a>.</p>
+<p>MView is free software; you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation; either <a class="reference external" href="etc/Licence.html">version 2</a> of the License, or (at your option) any later
+version.</p>
+</div>
+<div class="section" id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
+<p>People who contributed early code or suggestions include C. Leroy and other
+members of the former Sander group at EBI. Useful suggestions relating to the
+EBI sequence database search services have come from R. Lopez, W. Li and
+H. McWilliam at EBI. Thanks to the many other people who have suggested new
+features and reported bugs. Finally, thank you to everyone who has cited MView
+in their publications.</p>
 </div>
 </div>
 
@@ -159,7 +194,7 @@ protected under the <a class="reference external" href="etc/Licence.html">GNU Ge
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -168,13 +203,13 @@ protected under the <a class="reference external" href="etc/Licence.html">GNU Ge
         <li class="right" >
           <a href="contents.html" title="Contents"
              >next</a> |</li>
-        <li><a href="#">MView</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="#">MView</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2015, Nigel P. Brown.
-      Last updated on 23 Oct 2015.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015-2020, Nigel P. Brown.
+      Last updated on 19 Feb 2020.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.2.
     </div>
   </body>
 </html>

@@ -1,10 +1,3 @@
-Finally, if the first character of a "sequence" is the hash '#' character it
-will not be coloured by the prevailing colourmap. Instead, a colourmap having
-a matching name (minus the '#' character) will be used, if it exists. For
-example, if the input alignment contains a line identified by ``#sec-struct``
-then a colormap called ``sec-struct`` would apply to any rows containing
-that string in their identifier.
-
 
  ======================= ======================================================
  MView option            Behaviour

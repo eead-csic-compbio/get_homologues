@@ -1,5 +1,7 @@
-# Copyright (C) 1997-2015 Nigel P. Brown
-# $Id: BLAST.pm,v 1.12 2015/06/14 17:09:04 npb Exp $
+# Copyright (C) 1997-2018 Nigel P. Brown
+
+# This file is part of MView.
+# MView is released under license GPLv2, or any later version.
 
 ###########################################################################
 #
@@ -8,15 +10,16 @@
 ###########################################################################
 package Bio::MView::Build::Format::BLAST;
 
+use Bio::MView::Option::Parameters;  #for $PAR
 use Bio::MView::Build::Search;
-use NPB::Parse::Regexps;
+use Bio::Util::Regexp;
 
 use strict;
 use vars qw(@ISA);
 
 @ISA = qw(Bio::MView::Build::Search);
 
-#the name of the underlying NPB::Parse::Stream parser
+#the name of the underlying Bio::Parse::Stream parser
 sub parser { 'BLAST' }
 
 my $MISSING_QUERY_CHAR = 'X';  #interpolate this between query fragments
@@ -26,25 +29,23 @@ my %Known_Parameters =
      #name        => [ format       default  ]
 
      #BLAST* display various HSP selections
-     'hsp'        => [ '\S+',       'ranked' ],
+     'hsp'         => [ '\S+',       'ranked' ],
+     'keepinserts' => [ '\d+',              0 ],
 
      #BLAST* (version 1)
-     'maxpval'    => [ $RX_Ureal,   undef    ],
-     'minscore'   => [ $RX_Ureal,   undef    ],
+     'maxpval'     => [ $RX_Ureal,   undef    ],
+     'minscore'    => [ $RX_Ureal,   undef    ],
 
      #BLAST* (version 2)
-     'maxeval'    => [ $RX_Ureal,   undef    ],
-     'minbits'    => [ $RX_Ureal,   undef    ],
-     'cycle'      => [ [],          undef    ],
+     'maxeval'     => [ $RX_Ureal,   undef    ],
+     'minbits'     => [ $RX_Ureal,   undef    ],
+     'cycle'       => [ [],          undef    ],
 
      #BLASTN (version 1, version 2); BLASTX (version 2)
-     'strand'     => [ [],          undef    ],
+     'strand'      => [ [],          undef    ],
 
      #BLASTX/TBLASTX (version 1)
     );
-
-#tell the parent
-sub known_parameters { \%Known_Parameters }
 
 #standard attribute names: override
 sub attr_score { 'unknown' }
@@ -72,17 +73,16 @@ sub new {
     $self->{'attr_score'} = $self->attr_score;
     $self->{'attr_sig'}   = $self->attr_sig;
 
-    $self->initialise_parameters;
-    $self->initialise_child;
+    $self->initialise;
 
     $self;
 }
 
 #called by the constructor
-sub initialise_child {
+sub initialise {
     my $self = shift;
     my $scheduler = $self->scheduler;
-    #warn "initialise_child ($scheduler)\n";
+    #warn "initialise ($scheduler)\n";
     while (1) {
         $self->{scheduler} = new Bio::MView::Build::Scheduler,
         last if $scheduler eq 'none';
@@ -103,7 +103,7 @@ sub initialise_child {
             last;
         }
 
-        die "initialise_child: unknown scheduler '$scheduler'";
+        die "initialise: unknown scheduler '$scheduler'";
     }
     return $self;
 }
@@ -113,19 +113,23 @@ sub reset_child {
     my $self = shift;
     my $scheduler = $self->scheduler;
     #warn "reset_child ($scheduler)\n";
+
+    my $strand = $PAR->get('strand');
+    my $cycle  = $PAR->get('cycle');
+
     while (1) {
         last if $scheduler eq 'none';
 
-        #(warn "strands: [@{$self->{'strand'}}]\n"),
-        $self->{scheduler}->filter($self->{'strand'}),
+        #(warn "strands: [@{$strand}]\n"),
+        $self->{scheduler}->filter($strand),
         last if $scheduler eq 'strand';
 
-        #(warn "cycles: [@{$self->{'cycle'}}]\n"),
-        $self->{scheduler}->filter($self->{'cycle'}),
+        #(warn "cycles: [@{$cycle}]\n"),
+        $self->{scheduler}->filter($cycle),
         last if $scheduler eq 'cycle';
 
-        #(warn "cycles+strands: [@{$self->{'cycle'}}][@{$self->{'strand'}}]\n"),
-        $self->{scheduler}->filter($self->{'cycle'}, $self->{'strand'}),
+        #(warn "cycles+strands: [@{$cycle}][@{$strand}]\n"),
+        $self->{scheduler}->filter($cycle, $strand),
         last if $scheduler eq 'cycle+strand';
 
         die "reset_child: unknown scheduler '$scheduler'";
@@ -152,19 +156,20 @@ sub strand {
 #override base class method to process query row differently
 sub build_rows {
     my $self = shift;
-    my ($lo, $hi, $i);
+    my ($lo, $hi) = (0,0);
 
-    #first, compute alignment length from query sequence in row[0]
-    ($lo, $hi) = $self->get_range($self->{'index2row'}->[0]);
-
-    #warn "range ($lo, $hi)\n";
+    #compute alignment length from query sequence in row[0]
+    if (! $PAR->get('keepinserts')) {
+        ($lo, $hi) = $self->get_range($self->{'index2row'}->[0]);
+    }
+    #warn "BLAST::build_rows range[0] ($lo, $hi)\n";
 
     #query row contains missing query sequence, rather than gaps
     $self->{'index2row'}->[0]->assemble($lo, $hi, $MISSING_QUERY_CHAR);
-
     #assemble sparse sequence strings for all rows
-    for ($i=1; $i < @{$self->{'index2row'}}; $i++) {
-	$self->{'index2row'}->[$i]->assemble($lo, $hi, $self->{'gap'});
+    for (my $i=1; $i < @{$self->{'index2row'}}; $i++) {
+        #warn "BLAST::build_rows range[$i] ($lo, $hi)\n";
+        $self->{'index2row'}->[$i]->assemble($lo, $hi, $PAR->get('gap'));
     }
     $self;
 }
@@ -430,38 +435,70 @@ sub posn2 {
     return '';
 }
 
-#fragment sort, called by Row::assemble
+#Sort fragments; called by Row::assemble
+#sub sort { $_[0]->sort_none }
+#sub sort { $_[0]->sort_worst_to_best }
 sub sort { $_[0]->sort_best_to_worst }
 
-# #don't sort fragments; blast lists HSPs by decreasing score, so this would be
-# #good, but the mview fragment collecting algorithm called by get_ranked_hsps()
-# #changes the order.
+# #Don't sort fragments; blast default output lists HSPs by decreasing score,
+# #so this would be good, but the mview fragment collecting algorithm called by
+# #get_ranked_hsps() changes the order.
 # sub sort_none {$_[0]}
 
-# #sort fragments by (1) increasing score, (2) increasing length; used up to MView
-# #version 1.58.1, but inconsistent with NO OVERWRITE policy in Sequence.pm
+# #Sort fragments by (1) increasing score, (2) increasing length; used up to
+# #MView version 1.58.1, but inconsistent with NO OVERWRITE policy in
+# #Sequence.pm
 # sub sort_worst_to_best {
 #     $_[0]->{'frag'} = [
 #         sort {
-#             warn "$b->[7] <=> $a->[7]\n";
-#             my $c = $a->[7] <=> $b->[7];                 #compare score
+#             #warn "$a->[7] <=> $b->[7]\n";
+#             my $c = $a->[7] <=> $b->[7];                       #max score
 #             return $c  if $c != 0;
-#             return length($a->[0]) <=> length($b->[0]);  #compare length
+#             return length(${$a->[0]}) <=> length(${$b->[0]});  #max length
 #         } @{$_[0]->{'frag'}}
 #        ];
 #     $_[0];
 # }
 
-#sort fragments by (1) decreasing score, (2) decreasing length
+#Sort fragments by (1) decreasing score, (2) decreasing length, (3) leftmost
+#start position (arbitrary deal breaker). This is consistent with a best-first
+#painting algorithm with NO OVERWRITE in Sequence.pm. Note: query fragment
+#score is always set to 1 in the parse_* routines.
 sub sort_best_to_worst {
+
+    # warn "sort:\n";
+    # foreach my $f (@{$_[0]->{'frag'}}) { warn "@$f\n" }
+
     $_[0]->{'frag'} = [
         sort {
-            #warn "$b->[7] <=> $a->[7]\n";
-            my $c = $b->[7] <=> $a->[7];                 #compare score
+            my $c;
+
+            #warn "$a->[7] <=> $b->[7] (score)\n";
+            $c = $b->[7] <=> $a->[7];              #max score
             return $c  if $c != 0;
-            return length($b->[0]) <=> length($a->[0]);  #compare length
+
+            my ($alen, $blen) = (length(${$a->[0]}), length(${$b->[0]}));
+            #warn "$alen <=> $blen (length)\n";
+            $c = $blen <=> $alen;                  #max length
+            return $c  if $c != 0;
+
+            #assume all frags have same orientation - they should have
+            if ($a->[1] < $a->[2]) {               #a is forward
+                #warn "$a->[1] <=> $b->[1] (start, forward)\n";
+                $c = $a->[1] <=> $b->[1];          #min start position
+                return $c;
+            } else {                               #reversed
+                #warn "$b->[1] <=> $a->[1] (start, was reversed)\n";
+                $c = $b->[1] <=> $a->[1];          #max start position
+                return $c;
+            }
+
         } @{$_[0]->{'frag'}}
-	];
+        ];
+
+    # warn "sort: (finished)\n";
+    # foreach my $f (@{$_[0]->{'frag'}}) { warn "@$f\n" }
+
     $_[0];
 }
 
@@ -470,6 +507,7 @@ sub assemble {
     my $self = shift;
     $self->SUPER::assemble(@_);
 }
+
 
 ###########################################################################
 package Bio::MView::Build::Row::BLASTX;

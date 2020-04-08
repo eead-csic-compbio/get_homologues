@@ -1,84 +1,27 @@
 # Copyright (C) 1997-2006 Nigel P. Brown
-# $Id: Search.pm,v 1.12 2015/06/18 21:26:11 npb Exp $
+
+# This file is part of MView.
+# MView is released under license GPLv2, or any later version.
+
+use strict;
 
 ###########################################################################
 package Bio::MView::Build::Search;
 
-use Bio::MView::Build;
-
-use strict;
+use Bio::MView::Option::Parameters;  #for $PAR
+use Bio::MView::Build::Base;
 use vars qw(@ISA);
 
-@ISA = qw(Bio::MView::Build);
+@ISA = qw(Bio::MView::Build::Base);
 
-#there's a query sequence to account for an extra row
-sub has_query {1}
+######################################################################
+# public methods
+######################################################################
+#override: the query sequence accounts for an extra row
+sub is_search {1}
 
-sub use_row {
-    my ($self, $num, $nid, $sid) = @_;
-
-    #warn "use_row($num, $nid, $sid)\n";
-    
-    #first, check explicit keeplist and reference row
-    foreach my $pat (@{$self->{'keeplist'}}, $self->{'ref_id'}) {
-
-	#Search subclass only
-	return 1  if $pat eq '0'     and $num == 0;
-	return 1  if $pat eq 'query' and $num == 0;
-
-	#look at row number
-	return 1  if $nid eq $pat;      #major OR major.minor
-	if ($nid =~ /^\d+$/ and $pat =~ /^(\d+)\./) {
-	    #major matched by major.*
-	    return 1  if $nid eq $1;
-	} elsif ($pat =~ /^\d+$/ and $nid =~ /^(\d+)\./) {
-	    #major.* matched by major
-	    return 1  if $1 eq $pat;
-	}
-	
-	#look at identifier
-	return 1  if $sid eq $pat;      #exact match
-	if ($pat =~ /^\/(.*)\/$/) {     #regex match (case insensitive)
-	    return 1  if $sid =~ /$1/i;
-	}
-    }
-
-    #second, check skiplist and reference row
-    foreach my $pat (@{$self->{'skiplist'}}, $self->{'ref_id'}) {
-
-	#Search subclass only
-	return 0  if $pat eq '0'     and $num == 0;
-	return 0  if $pat eq 'query' and $num == 0;
-
-	#look at row number
-	return 0  if $nid eq $pat;      #major OR major.minor
-	if ($nid =~ /^\d+$/ and $pat =~ /^(\d+)\./) {
-	    #major matched by major.*
-	    return 0  if $nid eq $1;
-	} elsif ($pat =~ /^\d+$/ and $nid =~ /^(\d+)\./) {
-	    #major.* matched by major
-	    return 0  if $1 eq $pat;
-	}
-	
-	#look at identifier
-	return 0  if $sid eq $pat;      #exact match
-	if ($pat =~ /^\/(.*)\/$/) {     #regex match (case insensitive)
-	    return 0  if $sid =~ /$1/i;
-	}
-    }
-
-    #assume implicit membership of keeplist
-    return 1;    #default
-}
-
-sub map_id {
-    my ($self, $ref) = @_;
-    $ref = 0  if $ref =~ /query/i;
-    $self->SUPER::map_id($ref);
-}
-
-#selects the first frag as a seed then add remaining frags that satisfy query
-#and sbjct sequence ordering constraints
+#selects the first frag as a seed then add remaining frags that satisfy
+#query and sbjct sequence ordering constraints
 sub combine_frags_by_centroid {
     my ($self, $alist, $qorient) = @_;
 
@@ -189,6 +132,117 @@ sub combine_frags_by_centroid {
     return \@tmp;
 }
 
+######################################################################
+# protected methods
+######################################################################
+#override: are sequence inserts being kept?
+sub test_if_aligned {
+    my ($self, $lo, $hi) = @_;
+    return 0  if $PAR->get('keepinserts');
+    return 1;
+}
+
+#override
+sub use_row {
+    my ($self, $num, $nid, $sid) = @_;
+
+    #warn "use_row($num, $nid, $sid)\n";
+
+    #first, check explicit keeplist and reference row
+    foreach my $pat (@{$PAR->get('keeplist')}, $PAR->get('ref_id')) {
+
+        #Search subclass only
+        return 1  if $pat eq '0'     and $num == 0;
+        return 1  if $pat eq 'query' and $num == 0;
+
+        #look at row number
+        return 1  if $nid eq $pat;      #major OR major.minor
+        if ($nid =~ /^\d+$/ and $pat =~ /^(\d+)\./) {
+            #major matched by major.*
+            return 1  if $nid eq $1;
+        } elsif ($pat =~ /^\d+$/ and $nid =~ /^(\d+)\./) {
+            #major.* matched by major
+            return 1  if $1 eq $pat;
+        }
+
+        #look at identifier
+        return 1  if $sid eq $pat;      #exact match
+        if ($pat =~ /^\/(.*)\/$/) {     #regex match (case insensitive)
+            return 1  if $sid =~ /$1/i;
+        }
+    }
+
+    #second, check skiplist and reference row
+    foreach my $pat (@{$PAR->get('skiplist')}, $PAR->get('ref_id')) {
+
+        #Search subclass only
+        return 0  if $pat eq '0'     and $num == 0;
+        return 0  if $pat eq 'query' and $num == 0;
+
+        #look at row number
+        return 0  if $nid eq $pat;      #major OR major.minor
+        if ($nid =~ /^\d+$/ and $pat =~ /^(\d+)\./) {
+            #major matched by major.*
+            return 0  if $nid eq $1;
+        } elsif ($pat =~ /^\d+$/ and $nid =~ /^(\d+)\./) {
+            #major.* matched by major
+            return 0  if $1 eq $pat;
+        }
+
+        #look at identifier
+        return 0  if $sid eq $pat;      #exact match
+        if ($pat =~ /^\/(.*)\/$/) {     #regex match (case insensitive)
+            return 0  if $sid =~ /$1/i;
+        }
+    }
+
+    #assume implicit membership of keeplist
+    return 1;    #default
+}
+
+#override
+sub map_id {
+    my ($self, $id) = @_;
+    $id = 0  if $id =~ /query/i;
+    return $self->SUPER::map_id($id);
+}
+
+#subclass overrides: remove query and hit columns at gaps in the query
+#sequence and downcase the bounding hit symbols in the hit sequence thus
+#affected.
+sub strip_query_gaps {
+    my ($self, $query, $sbjct) = @_;
+
+    #warn "sqg(in  q)=[$$query]\n";
+    #warn "sqg(in  h)=[$$sbjct]\n";
+
+    #no gaps in query
+    return    if index($$query, '-') < 0;
+
+    #iterate over query frag symbols
+    while ( (my $i = index($$query, '-')) >= 0 ) {
+
+        #downcase preceding symbol in hit
+        if (defined substr($$query, $i-1, 1)) {
+            substr($$sbjct, $i-1, 1) = lc substr($$sbjct, $i-1, 1);
+        }
+
+        #consume gap symbols in query and hit
+        while (substr($$query, $i, 1) eq '-') {
+            substr($$query, $i, 1) = "";
+            substr($$sbjct, $i, 1) = "";
+        }
+
+        #downcase succeeding symbol in hit
+        if (defined substr($$query, $i, 1)) {
+            substr($$sbjct, $i, 1) = lc substr($$sbjct, $i, 1);
+        }
+
+        #warn "sqg(out q)=[$$query]\n";
+        #warn "sqg(out h)=[$$sbjct]\n";
+    }
+    $self;
+}
 
 ###########################################################################
 package Bio::MView::Build::Search::Collector;
@@ -208,9 +262,30 @@ sub new {
     $self;
 }
 
+######################################################################
+# public methods
+######################################################################
+sub has {
+    my ($self, $key) = @_;
+    return 1  if exists $self->{keys}->{$key};
+    return 0;
+}
+
 sub key {
     my $self = shift;
-    join($DELIM, @_);
+    return join($DELIM, @_);
+}
+
+sub item {
+    my ($self, $key) = @_;
+    die "get: unknown key '$key'\n"  unless exists $self->{keys}->{$key};
+    return $self->{list}->[ $self->{keys}->{$key} ];
+}
+
+sub list {
+    my $self = shift;
+    $self->_discard_empty_ranges;
+    return $self->{list};
 }
 
 sub insert {
@@ -223,19 +298,6 @@ sub insert {
         $self->{keys}->{$key} = scalar @{$self->{list}};
     }
     push @{$self->{list}}, $item;
-    $self;
-}
-
-sub has {
-    my ($self, $key) = @_;
-    return 1  if exists $self->{keys}->{$key};
-    return 0;
-}
-
-sub item {
-    my ($self, $key) = @_;
-    die "get: unknown key '$key'\n"  unless exists $self->{keys}->{$key};
-    $self->{list}->[ $self->{keys}->{$key} ];
 }
 
 sub add_frags {
@@ -246,15 +308,11 @@ sub add_frags {
     my ($h, $h1, $h2, @hrest) = @$hdata;
     #warn "[$h1, $h2, @hrest]\n";
     $self->item($key)->add_frag($h, $qf,$qt, $q1,$q2, $h1,$h2, @hrest);
-    $self;
 }
 
-sub list {
-    my $self = shift;
-    $self->_discard_empty_ranges;
-    $self->{list};
-}
-
+######################################################################
+# private methods
+######################################################################
 #remove hits lacking positional data; finally remove the query itself if
 #that's all that's left
 sub _discard_empty_ranges {
@@ -262,14 +320,17 @@ sub _discard_empty_ranges {
     my $hit = $self->{list};
     for (my $i=1; $i<@$hit; $i++) {
         #warn "hit[$i]= $hit->[$i]->{'cid'} [", scalar @{$hit->[$i]->{'frag'}},"]\n";
-	if (@{$hit->[$i]->{'frag'}} < 1) {
-	    splice(@$hit, $i--, 1);
-	}
+        if (@{$hit->[$i]->{'frag'}} < 1) {
+            splice(@$hit, $i--, 1);
+        }
     }
     pop @$hit  unless @$hit > 1;
     $self;
 }
 
+######################################################################
+# debug
+######################################################################
 sub dump {
     my $self = shift;
     warn "Collector:\n";
@@ -279,7 +340,6 @@ sub dump {
         warn "[$self->{keys}->{$k}] <= $k => $self->{list}->[$i]\n";
     }
 }
-
 
 ###########################################################################
 1;

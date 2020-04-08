@@ -1,20 +1,19 @@
-# Copyright (C) 2015 Nigel P. Brown
-# $Id$
+# Copyright (C) 2015-2017 Nigel P. Brown
+
+# This file is part of MView.
+# MView is released under license GPLv2, or any later version.
+
+use strict;
 
 ###########################################################################
 package Bio::MView::Build::Scheduler;
 
-use strict;
 use vars qw(@ISA);
 
-#@ISA = qw(Bio::MView::Build::Simple_Scheduler);
-@ISA = qw(Bio::MView::Build::Multi_Scheduler);
-
+@ISA = qw(Bio::MView::Build::MultiScheduler);
 
 ###########################################################################
-package Bio::MView::Build::Simple_Scheduler;
-
-use strict;
+package Bio::MView::Build::SimpleScheduler;
 
 # An iterator over a stored list of prescribed values (supplied to the
 # constructor) which, given an optional subset of these (supplied with the
@@ -24,17 +23,17 @@ use strict;
 # If the constructor is called with no list of prescribed items, the next()
 # method will return a true value just once, effecting a one-pass scheduler.
 #
-# use Bio::MView::Build::Simple_Scheduler;
+# use Bio::MView::Build::SimpleScheduler;
 #
-# $s = new Bio::MView::Build::Simple_Scheduler;
+# $s = new Bio::MView::Build::SimpleScheduler;
 # $s->next;  #returns each of 1, undef
 #
-# $s = new Bio::MView::Build::Simple_Scheduler([1,2,3]);
+# $s = new Bio::MView::Build::SimpleScheduler([1,2,3]);
 # $s->next;  #returns each of 1, 2, 3, undef
 # $s->reset;
 # $s->next;  #repeats
 #
-# $s = new Bio::MView::Build::Simple_Scheduler([1,2,3]);
+# $s = new Bio::MView::Build::SimpleScheduler([1,2,3]);
 # $s->filter([2, 3, 'fred']);
 # $s->next;  #returns each of 2, 3, undef
 
@@ -52,8 +51,13 @@ sub new {
     $self->{'todoidx'} = undef;                      #current todoset index
 
     $self->filter;
+
+    $self;
 }
 
+######################################################################
+# public methods
+######################################################################
 #set wanted values or all of them if no parameter
 sub filter {
     my ($self, $todo) = (@_);
@@ -66,34 +70,6 @@ sub filter {
     $self->reset;
 }
 
-#reset iterator back to start
-sub reset {
-    my $self = shift;
-    warn "Scheduler::reset\n"  if $DEBUG;
-    $self->{'todoidx'} = -1;  #ready to go
-    $self;
-}
-
-#scheduler state: finished waiting for reset
-sub is_done {
-    return 0  if defined $_[0]->{'todoidx'};
-    return 1;
-}
-
-#scheduler state: post-reset, ready to start
-sub is_ready {
-    return 0  unless defined $_[0]->{'todoidx'};
-    return 1  if $_[0]->{'todoidx'} == -1;
-    return 0;
-}
-
-#scheduler state: iterating
-sub is_running {
-    my $i = $_[0]->{'todoidx'};
-    return 0  unless defined $i;
-    return 1  if -2 < $i and $i < @{$_[0]->{'todo'}};
-}
-
 #return 1-based counter
 sub itemnum {
     return 0  unless defined $_[0]->{'todoidx'};
@@ -103,11 +79,14 @@ sub itemnum {
 #return the currently selected item
 sub item {
     return undef  unless defined $_[0]->{'todoidx'};
-    $_[0]->{'todo'}->[ $_[0]->{'todoidx'} ];
+    return $_[0]->{'todo'}->[ $_[0]->{'todoidx'} ];
 }
 
 #test if the currently selected item matches the argument
-sub use_item { return 1  if $_[0]->item eq $_[1] }
+sub use_item {
+    return 1  if $_[0]->item eq $_[1];
+    return 0;
+}
 
 #return the next item and advance the iterator, or return undef after
 #completion of a cycle
@@ -131,9 +110,39 @@ sub next {
 
     #finished now
     warn "Scheduler::next done\n"  if $DEBUG;
-    $self->{'todoidx'} = undef;
+    return $self->{'todoidx'} = undef;
 }
 
+#reset iterator back to start
+sub reset {
+    my $self = shift;
+    warn "Scheduler::reset\n"  if $DEBUG;
+    $self->{'todoidx'} = -1;  #ready to go
+}
+
+#scheduler state: finished waiting for reset
+sub is_done {
+    return 0  if defined $_[0]->{'todoidx'};
+    return 1;
+}
+
+#scheduler state: post-reset, ready to start
+sub is_ready {
+    return 0  unless defined $_[0]->{'todoidx'};
+    return 1  if $_[0]->{'todoidx'} == -1;
+    return 0;
+}
+
+#scheduler state: iterating
+sub is_running {
+    my $i = $_[0]->{'todoidx'};
+    return 0  unless defined $i;
+    return 1  if -2 < $i and $i < @{$_[0]->{'todo'}};
+}
+
+######################################################################
+# private methods
+######################################################################
 #return list of unique items in given order
 sub _get_items {
     my ($self, $items) = @_;
@@ -143,7 +152,7 @@ sub _get_items {
         push @$list, $i;
         $hash->{$i}++;
     }
-    $list;
+    return $list;
 }
 
 #return a list of unique and ordered values from $todo as found in
@@ -189,7 +198,7 @@ sub _get_todo {
 
     #extact legitimate items in correct order
     foreach my $i (@$range) {
-	push @items, $i  if exists $tmp{$i};
+        push @items, $i  if exists $tmp{$i};
     }
     warn "Scheduler::_get_todo:  exit: items [@$range] todo [@items]\n"
         if $DEBUG > 2;
@@ -197,11 +206,8 @@ sub _get_todo {
     return \@items;
 }
 
-
 ###########################################################################
-package Bio::MView::Build::Multi_Scheduler;
-
-use strict;
+package Bio::MView::Build::MultiScheduler;
 
 # An iterator over a multiple stored lists of prescribed values (supplied to
 # the constructor) which, given an optional subset of these (supplied with
@@ -211,16 +217,16 @@ use strict;
 # If the constructor is called with no list of prescribed items, the next()
 # method will return a true value just once, effecting a one-pass scheduler.
 
-# use Bio::MView::Build::Multi_Scheduler;
+# use Bio::MView::Build::MultiScheduler;
 #
-# $s = new Bio::MView::Build::Multi_Scheduler;
+# $s = new Bio::MView::Build::MultiScheduler;
 # $s->next;  #returns each of 1, undef
 #
-# $s = new Bio::MView::Build::Multi_Scheduler([1,2,3]);
+# $s = new Bio::MView::Build::MultiScheduler([1,2,3]);
 # $s->filter([2, 3, 'fred']);
 # $s->next;  #returns each of 2, 3, undef
 #
-# $s = new Bio::MView::Build::Multi_Scheduler([1,2,3] ['X','Y']);
+# $s = new Bio::MView::Build::MultiScheduler([1,2,3] ['X','Y']);
 # $s->next;  #returns each of [1,X], [1,Y], [2,X], [2,Y] ... [3,Y], undef
 # $s->reset;
 # $s->next;  #repeats
@@ -228,37 +234,30 @@ use strict;
 sub new {
     my $type = shift;
     push @_, [1]  unless @_;
-    warn "Multi_Scheduler::new [@_]\n"  if $DEBUG;
+    warn "MultiScheduler::new [@_]\n"  if $DEBUG;
 
     my $self = {}; bless $self, $type;
 
     $self->{stage} = [];  #list of scheduler stages
 
     foreach my $stage (@_) {
-        push @{$self->{stage}}, new Bio::MView::Build::Simple_Scheduler($stage);
+        push @{$self->{stage}}, new Bio::MView::Build::SimpleScheduler($stage);
     }
     $self;
 }
 
+######################################################################
+# public methods
+######################################################################
 sub filter {
     my $self = shift;
     push @_, []  unless @_;
-    die "Multi_Scheduler::filter: unexpected number of filters\n"
+    die "MultiScheduler::filter: unexpected number of filters\n"
         unless scalar @{$self->{stage}} == scalar @_;
     for (my $i=0; $i<@_; $i++) {
         my $stage = $self->{stage}->[$i];
         $stage->filter($_[$i]);
     }
-    $self;
-}
-
-sub reset {
-    my $self = shift;
-    warn "Multi_Scheduler::reset\n"  if $DEBUG;
-    foreach my $stage (@{$self->{stage}}) {
-        $stage->reset;
-    }
-    $self;
 }
 
 sub itemnum {
@@ -268,7 +267,7 @@ sub itemnum {
         push @tmp, $stage->itemnum;
     }
     return @tmp  if wantarray;
-    return $tmp[0];  #behave like Simple_Scheduler
+    return $tmp[0];  #behave like SimpleScheduler
 }
 
 sub item {
@@ -278,12 +277,12 @@ sub item {
         push @tmp, $stage->item;
     }
     return @tmp  if wantarray;
-    return $tmp[0];  #behave like Simple_Scheduler
+    return $tmp[0];  #behave like SimpleScheduler
 }
 
 sub use_item {
     my $self = shift;
-    die "Multi_Scheduler::use_item: unexpected number of tests\n"
+    die "MultiScheduler::use_item: unexpected number of tests\n"
         unless scalar @{$self->{stage}} == scalar @_;
     for (my $i=0; $i<@_; $i++) {
         my $stage = $self->{stage}->[$i];
@@ -295,7 +294,7 @@ sub use_item {
 #iterate over multiple lists
 sub next {
     my $self = shift;
-    warn "Multi_Scheduler::next entry @{[scalar @{$self->{stage}}]} stages\n"
+    warn "MultiScheduler::next entry @{[scalar @{$self->{stage}}]} stages\n"
         if $DEBUG;
 
     for (my $i=@{$self->{stage}}-1; $i>-1; $i--) {
@@ -339,6 +338,13 @@ sub next {
     return undef;
 }
 
+sub reset {
+    my $self = shift;
+    warn "MultiScheduler::reset\n"  if $DEBUG;
+    foreach my $stage (@{$self->{stage}}) {
+        $stage->reset;
+    }
+}
 
 ###########################################################################
 1;

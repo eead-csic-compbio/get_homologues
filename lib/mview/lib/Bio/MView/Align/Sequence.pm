@@ -1,459 +1,228 @@
-# Copyright (C) 1997-2015 Nigel P. Brown
-# $Id: Sequence.pm,v 1.26 2015/06/14 17:09:04 npb Exp $
+# Copyright (C) 1997-2019 Nigel P. Brown
+
+# This file is part of MView.
+# MView is released under license GPLv2, or any later version.
+
+use strict;
 
 ###########################################################################
 package Bio::MView::Align::Sequence;
 
-use Bio::MView::Align;
-use Bio::MView::Display;
 use Bio::MView::Align::Row;
+use Bio::MView::Color::ColorMap;
+use Bio::MView::Align::ColorMixin;
 
-use strict;
-use vars qw(@ISA
-	    $Default_PRO_Colormap $Default_DNA_Colormap
-            $Default_FIND_Colormap $Default_Colormap
-	    %Template);
+use vars qw(@ISA);
 
-@ISA = qw(Bio::MView::Align::Row);
-
-$Default_PRO_Colormap  = 'P1';    #default protein colormap name
-$Default_DNA_Colormap  = 'D1';    #default nucleotide colormap name
-$Default_FIND_Colormap = 'FIND';  #default find pattern colormap name
-$Default_Colormap = $Default_PRO_Colormap;
-
-%Template = 
-    (
-     'id'      => undef,     #identifier
-     'type'    => undef,     #information about own subtype
-     'from'    => undef,     #start number of sequence
-     'string'  => undef,     #alignment string
-     'display' => undef,     #hash of display parameters
-    );
+@ISA = qw(Bio::MView::Align::Row Bio::MView::Align::ColorMixin);
 
 sub new {
     my $type = shift;
-    #warn "${type}::new() (@_)\n";
-    if (@_ < 2) {
-	die "${type}::new() missing arguments\n";
-    }
-    my ($id, $string, $subtype) = (@_, 'sequence');
+    #warn "${type}::new(@_)\n";
+    die "${type}::new: missing arguments\n"  if @_ < 2;
+    my ($uid, $sob) = @_;
 
-    my $self = { %Template };
-
-    $self->{'id'}     = $id;
-    $self->{'type'}   = $subtype;
-    $self->{'from'}   = $string->lo;
-    $self->{'string'} = $string;
-
+    my $self = new Bio::MView::Align::Row('sequence', $uid);
     bless $self, $type;
 
-    $self->reset_display;
+    $self->{'from'}   = $sob->lo;  #start number of sequence
+    $self->{'string'} = $sob;      #sequence object
+    $self->{'cov'}    = 0;         #percent coverage of reference sequence
+    $self->{'pid'}    = 0;         #percent identity to reference sequence
+
+    $self->reset_display;          #hash of display parameters
+
+    $Bio::MView::Align::ColorMixin::FIND_WARNINGS = 1;  #reset
 
     $self;
 }
 
-#sub DESTROY { warn "DESTROY $_[0]\n" }
+######################################################################
+# public methods
+######################################################################
+#override
+sub is_sequence { 1 }
 
-sub print {
-    sub _format {
-	my ($self, $k, $v) = @_;
-	$v = 'undef' unless defined $v;
-	$v = "'$v'" if $v =~ /^\s*$/;
-	return sprintf("  %-15s => %s\n", $k, $v)
-    }
-    my $self = shift;
-    warn "$self\n";
-    map { warn $self->_format($_, $self->{$_}) } sort keys %{$self};
-    $self;
+#overrides Bio::MView::Align::Row::string
+sub string   { return $_[0]->{'string'}->string }
+
+sub from     { return $_[0]->{'from'} }
+sub seqobj   { return $_[0]->{'string'} }
+sub sequence { return $_[0]->{'string'}->sequence }
+sub seqlen   { return $_[0]->{'string'}->seqlen }
+
+sub set_coverage {
+    my ($self, $ref) = @_;
+    my $val = $self->compute_coverage_wrt($ref);
+    $self->{'cov'} = $val;
+    $self->set_display('label4' => sprintf("%.1f%%", $val));
 }
 
-sub id       { $_[0]->{'id'} }
-sub seqobj   { $_[0]->{'string'} }
-sub string   { $_[0]->{'string'}->string }
-sub sequence { $_[0]->{'string'}->sequence }
-sub from     { $_[0]->{'from'} }
-sub length   { $_[0]->{'string'}->length }
-sub seqlen   { $_[0]->{'string'}->seqlen }
-
-sub reset_display {
-    $_[0]->{'display'} =
-	{
-	 'type'     => 'sequence',
-	 'label1'   => $_[0]->{'id'},
-	 'sequence' => $_[0]->{'string'},
-	 'range'    => [],
-	};
-    $_[0];
-}
-
-sub get_color {
-    my ($self, $c, $map) = @_;
-    my ($index, $color, $trans);
-
-    #warn "get_color: $c, $map";
-
-    #set transparent(T)/solid(S)
-    if (exists $Bio::MView::Align::Colormaps->{$map}->{$c}) {
-	$trans = $Bio::MView::Align::Colormaps->{$map}->{$c}->[1];
-	$index = $Bio::MView::Align::Colormaps->{$map}->{$c}->[0];
-	$color = $Bio::MView::Align::Palette->[1]->[$index];
-
-	#warn "$c $map\{$c} [$index] [$color] [$trans]\n";
-	
-	return ($color, "$trans$index");
-    }
-
-    #wildcard colour
-    if (exists $Bio::MView::Align::Colormaps->{$map}->{'*'}) {
-
-	$trans = $Bio::MView::Align::Colormaps->{$map}->{'*'}->[1];
-	$index = $Bio::MView::Align::Colormaps->{$map}->{'*'}->[0];
-	$color = $Bio::MView::Align::Palette->[1]->[$index];
-
-	#warn "$c $map\{'*'} [$index] [$color] [$trans]\n";
-
-	return ($color, "$trans$index");
-    }
-
-    #preset colour name in $map, used for string searches
-    #where all matches should be same colour
-    if (exists $Bio::MView::Align::Palette->[0]->{$map}) {
-
-	$trans = 'S';
-	$index = $Bio::MView::Align::Palette->[0]->{$map};
-        $color = $Bio::MView::Align::Palette->[1]->[$index];
-
-	#warn "$c $map\{$c} [$index] [$color] [$trans]\n";
-
-	return ($color, "$trans$index");
-    }
-
-    return 0;    #no match
-}
-
-sub color_special {
-    my $self = shift;
-    my %par = @_;
-
-    $par{'css1'}     = 0
-	unless defined $par{'css1'};
-    $par{'symcolor'} = $Bio::MView::Align::Row::Colour_Black
-	unless defined $par{'symcolor'};
-    $par{'gapcolor'} = $Bio::MView::Align::Row::Colour_Black
-	unless defined $par{'gapcolor'};
-    $par{'colormap'} = $Default_Colormap
-	unless defined $par{'colormap'};
-
-    #locate a 'special' colormap'
-    my ($size, $map) = (0);
-    foreach $map (keys %$Bio::MView::Align::Colormaps) {
-	if ($self->{'id'} =~ /$map/i) {
-	    if (length($&) > $size) {
-		$par{'colormap'} = $map;
-		$size = length($&);
-	    }
-	}
-    }
-    return unless $size;
-
-    #warn $par{'colormap'};
-
-    my ($color, $end, $i, $c, @tmp) = ($self->{'display'}->{'range'});
-    
-    push @$color, 1, $self->length, 'color' => $par{'symcolor'};
-
-    for ($end=$self->length+1, $i=1; $i<$end; $i++) {
-
-	$c = $self->{'string'}->raw($i);
-	
-	#warn "$self->{'id'}  [$i]= $c\n";
-
-	#white space: no color
-	next    if $self->{'string'}->is_space($c);
-
-	#gap: gapcolour
-	if ($self->{'string'}->is_non_char($c)) {
-	    push @$color, $i, 'color' => $par{'gapcolor'};
-	    next;
-	}
-	
-	#use symbol color/wildcard colour
-	@tmp = $self->get_color($c, $par{'colormap'});
-
-	if (@tmp) {
-	    if ($par{'css1'}) {
-		push @$color, $i, 'class' => $tmp[1];
-	    } else {
-		push @$color, $i, 'color' => $tmp[0];
-	    }
-	} else {
-	    push @$color, $i, 'color' => $par{'symcolor'};
-	}
-    }
-    
-    $self->{'display'}->{'paint'}  = 1;
-    $self;
-}
-
-sub color_by_find_block {
-    my $self = shift;
-    my %par = @_;
-
-    return  unless $self->{'type'} eq 'sequence';
-
-    $par{'css1'}     = 0
-	unless defined $par{'css1'};
-    $par{'symcolor'} = $Bio::MView::Align::Row::Colour_Black
-	unless defined $par{'symcolor'};
-    $par{'gapcolor'} = $Bio::MView::Align::Row::Colour_Black
-	unless defined $par{'gapcolor'};
-    $par{'colormap'} = $Default_Colormap
-	unless defined $par{'colormap'};
-    $par{'find'}     = ''
-        unless defined $par{'find'};
-
-    my ($color, $end, $i, $c, @tmp) = ($self->{'display'}->{'range'});
-    
-    push @$color, 1, $self->length, 'color' => $par{'symcolor'};
-
-    my %mindex = ();
-    foreach my $block (@{$self->{string}->findall($par{patterns},
-						  $par{mapsize})}) {
-	$mindex{$block->[1]} = $block->[0];
-    }
-
-    for ($end=$self->length+1, $i=1; $i<$end; $i++) {
-        
-	$c = $self->{'string'}->raw($i);
-	
-	#warn "[$i]= $c\n";
-
-	#white space: no color
-	next    if $self->{'string'}->is_space($c);
-        
-	#gap or frameshift: gapcolour
-	if ($self->{'string'}->is_non_char($c)) {
-	    push @$color, $i, 'color' => $par{'gapcolor'};
-	    next;
-	}
-	
-        if (exists $mindex{$i}) {
-            #use symbol color/wildcard colour
-            @tmp = $self->get_color($mindex{$i}, $par{'colormap'});
-        } else {
-            @tmp = ();
-        }
-	
-	if (@tmp) {
-	    if ($par{'css1'}) {
-		push @$color, $i, 'class' => $tmp[1];
-	    } else {
-		push @$color, $i, 'color' => $tmp[0];
-	    }
-	} else {
-	    push @$color, $i, 'color' => $par{'symcolor'};
-	}
-    }
-    
-    $self->{'display'}->{'paint'} = 1;
-    $self;
-}
-
-sub color_by_type {
-    my $self = shift;
-    my %par = @_;
-
-    return  unless $self->{'type'} eq 'sequence';
-
-    $par{'css1'}     = 0
-	unless defined $par{'css1'};
-    $par{'symcolor'} = $Bio::MView::Align::Row::Colour_Black
-	unless defined $par{'symcolor'};
-    $par{'gapcolor'} = $Bio::MView::Align::Row::Colour_Black
-	unless defined $par{'gapcolor'};
-    $par{'colormap'} = $Default_Colormap
-	unless defined $par{'colormap'};
-
-    my ($color, $end, $i, $c, @tmp) = ($self->{'display'}->{'range'});
-    
-    push @$color, 1, $self->length, 'color' => $par{'symcolor'};
-
-    for ($end=$self->length+1, $i=1; $i<$end; $i++) {
-
-	$c = $self->{'string'}->raw($i);
-	
-	#warn "[$i]= $c\n";
-
-	#white space: no color
-	next    if $self->{'string'}->is_space($c);
-
-	#gap or frameshift: gapcolour
-	if ($self->{'string'}->is_non_char($c)) {
-	    push @$color, $i, 'color' => $par{'gapcolor'};
-	    next;
-	}
-	
-	#use symbol color/wildcard colour
-	@tmp = $self->get_color($c, $par{'colormap'});
-	
-	if (@tmp) {
-	    if ($par{'css1'}) {
-		push @$color, $i, 'class' => $tmp[1];
-	    } else {
-		push @$color, $i, 'color' => $tmp[0];
-	    }
-	} else {
-	    push @$color, $i, 'color' => $par{'symcolor'};
-	}
-    }
-    
-    $self->{'display'}->{'paint'}  = 1;
-    $self;
-}
-
-sub color_by_identity {
-    my ($self, $othr) = (shift, shift);
-    my %par = @_;
-
-    return  unless $self->{'type'} eq 'sequence';
-    return  unless defined $othr;
-
-    die "${self}::color_by_identity() length mismatch\n"
-	unless $self->length == $othr->length;
-
-    $par{'css1'}     = 0
-	unless defined $par{'css1'};
-    $par{'symcolor'} = $Bio::MView::Align::Row::Colour_Black
-	unless defined $par{'symcolor'};
-    $par{'gapcolor'} = $Bio::MView::Align::Row::Colour_Black
-	unless defined $par{'gapcolor'};
-    $par{'colormap'} = $Default_Colormap
-	unless defined $par{'colormap'};
-
-    my ($color, $end, $i, $c1, $c2, @tmp) = ($self->{'display'}->{'range'});
-
-    push @$color, 1, $self->length, 'color' => $par{'symcolor'};
-
-    for ($end=$self->length+1, $i=1; $i<$end; $i++) {
-
-	$c1 = $self->{'string'}->raw($i); $c2 = $othr->{'string'}->raw($i);
-
-	#warn "[$i]= $c1 <=> $c2\n";
-
-	#white space: no color
-	next    if $self->{'string'}->is_space($c1);
-					 
-	#gap of frameshift: gapcolour
-	if ($self->{'string'}->is_non_char($c1)) {
-	    push @$color, $i, 'color' => $par{'gapcolor'};
-	    next;
-	}
-
-	#same symbol when upcased: use symbol/wildcard color
-	if (uc $c1 eq uc $c2) {
-
-            @tmp = $self->get_color($c1, $par{'colormap'});
-
-	    if (@tmp) {
-		if ($par{'css1'}) {
-		    push @$color, $i, 'class' => $tmp[1];
-		} else {
-		    push @$color, $i, 'color' => $tmp[0];
-		}
-	    } else {
-		push @$color, $i, 'color' => $par{'symcolor'};
-	    }
-
-	    next;
-	}
-
-	#different symbol: use contrast colour
-	#push @$color, $i, 'color' => $par{'symcolor'};
-	
-	#different symbol: use wildcard colour
-	@tmp = $self->get_color('*', $par{'colormap'});
-	if (@tmp) {
-	    if ($par{'css1'}) {
-		push @$color, $i, 'class' => $tmp[1];
-	    } else {
-		push @$color, $i, 'color' => $tmp[0];
-	    }
-	} else {
-	    push @$color, $i, 'color' => $par{'symcolor'};
-	}
-    }
-
-    $self->{'display'}->{'paint'}  = 1;
-    $self;
-}
+sub get_coverage { return $_[0]->{'cov'} }
+sub get_coverage_string { return $_[0]->get_label(4) }
 
 sub set_identity {
-    #warn "Bio::MView::Align::Sequence::set_identity(@_)\n";
     my ($self, $ref, $mode) = @_;
     my $val = $self->compute_identity_to($ref, $mode);
-    $self->set_display('label4'=>sprintf("%.1f%%", $val));
+    $self->{'pid'} = $val;
+    $self->set_display('label5' => sprintf("%.1f%%", $val));
 }
 
-#compute percent identity to input reference object. Normalisation
-#depends on the mode argument: 'reference' divides by the reference
-#sequence length,'aligned' by the aligned region length (like blast),
-#and 'hit' by the hit sequence. The last is the same as 'aligned' for
-#blast, but different for multiple alignments like clustal.
+sub get_identity { return $_[0]->{'pid'} }
+sub get_identity_string { return $_[0]->get_label(5) }
+
+# Compute the percent coverage of a row with respect to a reference row as:
+#   number~of~residues~in~row~aligned~with~reference~row /
+#   length~of~ungapped~reference~row
+sub compute_coverage_wrt {
+    #warn "Bio::MView::Align::Sequence::compute_coverage_wrt(@_)\n";
+    my ($self, $othr) = @_;
+
+    return 0      unless defined $othr;
+    return 100.0  if $self == $othr;  #always 100% coverage of self
+
+    die "${self}::compute_coverage_wrt: length mismatch\n"
+        unless $self->length == $othr->length;
+
+    my $hit = $self->{'string'};
+    my $ref = $othr->{'string'};
+    my $end = $self->length + 1;
+
+    my ($hitlen, $reflen) = (0, 0);
+
+    for (my $i=1; $i<$end; $i++) {
+
+        #reference must be a sequence character
+        my $c = $ref->char_at($i);
+        next  unless defined $c;
+        $reflen++;
+
+        $c = $hit->char_at($i);
+        $hitlen++  if defined $c;
+    }
+
+    #compute percent coverage
+    return 100.0 * $hitlen/$reflen  if $reflen > 0;
+    return 0;
+}
+
+#Compute percent identity to a reference row; normalisation depends on the
+#mode argument:
+#- 'reference' divides by the total reference sequence length
+#- 'hit'       divides by the total hit sequence length
+#- 'aligned'   divides by the aligned hit region length
 sub compute_identity_to {
     #warn "Bio::MView::Align::Sequence::compute_identity_to(@_)\n";
-    my ($self, $othr, $mode) = @_;
+    my ($self, $othr, $mode) = (@_, 'aligned');
 
     return 0      unless defined $othr;
     return 100.0  if $self == $othr;  #always 100% identical to self
 
-    die "${self}::compute_identity_to() length mismatch\n"
-	unless $self->length == $othr->length;
-    
-    my ($sum, $len) = (0, 0);
-    my $end = $self->length +1;
+    die "${self}::compute_identity_to: length mismatch\n"
+        unless $self->length == $othr->length;
+
+    my $hit = $self->{'string'};
+    my $ref = $othr->{'string'};
+    my $end = $self->length + 1;
+
+    if ($mode eq 'aligned') {
+        return $self->compute_identity_to_region($hit, $ref, $end);
+    }
+    if ($mode eq 'reference') {
+        #note order of arguments
+        return $self->compute_identity_to_seq($hit, $ref, $end);
+    }
+    if ($mode eq 'hit') {
+        #note reversed order of arguments
+        return $self->compute_identity_to_seq($ref, $hit, $end);
+    }
+    die "${self}::compute_identity_to: unknown mode '$mode'\n";
+}
+
+######################################################################
+# private methods
+######################################################################
+#override: label1 is valid for computed rows
+sub reset_display {
+    $_[0]->SUPER::reset_display(
+        'sequence' => $_[0]->seqobj,
+        'label1'   => $_[0]->uid,
+    );
+}
+
+#override
+sub length { return $_[0]->{'string'}->length }
+
+sub compute_identity_to_region {
+    my ($self, $hit, $ref, $end) = @_;
+
+    my $ids = 0;  #identities count
+    my $len = 0;  #region length
+    my $test = $hit;
 
     for (my $i=1; $i<$end; $i++) {
-	my $cnt = 0;
-	
-	my $c1 = $self->{'string'}->raw($i);
-	my $c2 = $othr->{'string'}->raw($i);
 
-	#at least one must be a sequence character
-	$cnt++  if $self->{'string'}->is_char($c1);
-	$cnt++  if $self->{'string'}->is_char($c2);
-	next  if $cnt < 1;
+        my $hitsym = $hit->raw($i);
+        my $refsym = $ref->raw($i);
 
-        #standardize case
-        $c1 = uc $c1; $c2 = uc $c2;
+        #ignore pure gaps: at least one sequence character
+        my $chars = 0;
+        $chars++  if $test->is_char($hitsym);
+        $chars++  if $test->is_char($refsym);
+        next  unless $chars > 0;
 
-	#ignore terminal gaps in the *first* sequence
-	$len++  unless $self->{'string'}->is_terminal_gap($c1);
+        #length of HIT sequence in aligned region: excludes terminal gaps
+        $len++  unless $test->is_terminal_gap($hitsym);
 
-        #ignore unknown character: contributes to length only
-        next  if $c1 eq 'X' or $c2 eq 'X';
+        $hitsym = uc $hitsym; $refsym = uc $refsym;  #standardize case
 
-	$sum++  if $c1 eq $c2;
-	#warn "[$i] $c1 $c2 : $cnt => $sum / $len\n";
+        #unknown character: contributes to length only
+        next  if $hitsym eq 'X' or $refsym eq 'X';
+
+        #count identities
+        $ids++  if $hitsym eq $refsym;
     }
-    
-    #normalise identities
-    my $norm = 0;
-    if ($mode eq 'reference') {
-	$norm = $othr->seqlen;
-	#warn "ref norm= $norm\n";
-    } elsif ($mode eq 'aligned') {
-	$norm = $len;
-	#warn "aln norm= $norm\n";
-    } elsif ($mode eq 'hit') {
-	$norm = $self->seqlen;
-	#warn "hit norm= $norm\n";
-    }
-    #warn "identity $self->{'id'} = $sum/$norm\n";
 
-    return ($sum = 100 * ($sum + 0.0) / $norm)    if $norm > 0;
+    return 100.0 * $ids / $len  if $len > 0;
     return 0;
 }
 
+sub compute_identity_to_seq {
+    my ($self, $hit, $ref, $end) = @_;
+
+    my $ids = 0;  #identities count
+    my $test = $hit;
+
+    for (my $i=1; $i<$end; $i++) {
+
+        my $hitsym = $hit->raw($i);
+        my $refsym = $ref->raw($i);
+
+        #ignore pure gaps: at least one sequence character
+        my $chars = 0;
+        $chars++  if $test->is_char($hitsym);
+        $chars++  if $test->is_char($refsym);
+        next  unless $chars > 0;
+
+        $hitsym = uc $hitsym; $refsym = uc $refsym;  #standardize case
+
+        #unknown character: contributes to length only
+        next  if $hitsym eq 'X' or $refsym eq 'X';
+
+        #count identities
+        $ids++  if $hitsym eq $refsym;
+    }
+
+    my $len = $ref->seqlen;  #supplied 'ref' sequence
+
+    return 100.0 * $ids / $len  if $len > 0;
+    return 0;
+}
+
+######################################################################
+# debug
+######################################################################
+#sub DESTROY { print "destroy: $_[0]\n" }
 
 ###########################################################################
 1;

@@ -1,8 +1,8 @@
 TREE = bin
-DIRS = 
-FILE = 
+DIRS =
+FILE =
 EXES = mview
 SRCS =
-HTML = 
+HTML =
 
 include $(HOME)/etc/MAKEFILE.templ
