@@ -1,28 +1,30 @@
 Current list of ideas to improve/update GET_HOMOLOGUES:
 
+* Add flag to take into account synteny/gene order in input FASTA files for EST
+   + read in .gff/.gtf file (3) matching ids in .fna (1) and .faa (2), save contig name and order
+     * all input species must have GFF or allow badly broken assemblies?
+     * >Bradi1g55470.1 pacid=43943876 polypeptide=Bradi1g55470.1.p locus=Bradi1g55470 ID=Bradi1g55470.1.v3.2 annot-version=v3.2
+     * Bd1	phytozomev13	gene	10581	11638	.	+	.	ID=Bradi1g00200.v3.2;Name=Bradi1g00200;ancestorIdentifier=Bradi1g00200.v3.1
+     * Bd1	phytozomev13	mRNA	10581	11638	.	+	.	ID=Bradi1g00200.1.v3.2;Name=Bradi1g00200.1;pacid=43953538;....
+
+   + for pairs_i,j of sequences sets with GFF remove non-syntenic BLAST hits
+     * bin/DAGchainer_r020608
+     * take raw, compressed BLAST output and reformat for DAGchainer, eliminating redundant hits (filter_repetitive_matches.pl)
+     * DP match ids_i to ids_j considering N neighbors and tolerating missing or duplicated genes 
+     * produce synt-filtered raw, compressed BLAST output
+		
+   + Buscar segmentos synt con Blastn desde FASTA ordenados , bench con brassicas?
+
 * Speed-up/paralellize marfil_homology::blast_parse. This can be done by:
   a) port sub to C++
   b) do parsing in parallel splitting (sorted) infile in chunks without braking consecutive HSPs
   Read: http://blogs.perl.org/users/kirk_kimmel/2012/09/text-processing-divide-and-conquer.html
-
-* Add flag to take into account synteny/gene order in input FASTA files for EST
-   + optionally read in .gff/.gtf file matching ids in .fna
-	+ for pairs_i,j of sequences sets with GFF remove non-syntenic BLAST hits
-		* http://dagchainer.sourceforge.net , https://academic.oup.com/bioinformatics/article/20/18/3643/202025
-		* check +-2 neighbors, will fail with indel genes 
-		* diff chr heuristic, assumes chr names are known & conserved, wont work with translocations 
-		* do dyn prog to match ids_i to ids_j allowing indels 
-   + Buscar segmentos synt con Blastn desde FASTA ordenados , bench con brassicas?
-	+ https://www.ensembl.org/info/genome/compara/Ortholog_qc_manual.html
 
 * Print clusters in pangenome matrix (PGM) sorted by their (consensus) physical/genetic position
 
 * Compute tree determinants of PGM
 
 * Script to produce VCF/MFA after parsing sorted DNA clusters 
-
-* Add alternatives to NCBI blastn: minimap2 simulating bitscore & E-value
-  Local tests show minimap alignments are shorter: https://bioinfoperl.blogspot.com/2018/08/minimap2-vs-blastn.html
 
 * Add taxon names to tmp/blast.bpo file 
 
