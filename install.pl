@@ -2,7 +2,7 @@
 
 # Script that checks/compiles software required by get_homologues[-est] and checks dependencies
 # for first-time users.
-# last checked Feb2020
+# last checked Apr2020
 
 use strict;
 use warnings;
@@ -17,8 +17,8 @@ use transcripts;
 my $WGETEXE = 'wget'; # add path if required, likely not pre-installed in MacOS
 my $BINTGZFILE = 'bin.tgz';
 my $BINOSXTGZFILE = 'binosx.tgz';
-my $BINURL = "https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.3/$BINTGZFILE";
-my $BINOSXURL = "https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.3/$BINOSXTGZFILE";
+my $BINURL = "https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.3.3/$BINTGZFILE";
+my $BINOSXURL = "https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.3.3/$BINOSXTGZFILE";
 
 my $PFAMSERVERURL   = 'ftp.ebi.ac.uk';
 my $PFAMFOLDER      = 'pub/databases/Pfam/current_release/';
