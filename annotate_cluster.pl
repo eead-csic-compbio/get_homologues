@@ -8,7 +8,8 @@
 # This script produces a multiple alignment view of BLAST locally-aligned sequences clustered by get_homologues[-est].pl
 # It works by aligning all sequences in the cluster to the longest/user-selected sequence.
 # It does not necessarily conserve the original sequence order. 
- 
+# Any sequence stretches masked by BLAST will appear as Xs.
+
 # Uses third-party software:
 # MVIEW (https://github.com/desmid/mview) Brown NP, Leroy C, Sander C (1998) MView: A Web compatible database search or 
 # multiple alignment viewer. Bioinformatics. 14 (4):380-381.
@@ -392,8 +393,6 @@ else
   push(@trash,$filenamedb.'.psq', $filenamedb.'.pin', $filenamedb.'.phr');
 }
 
-
-
 system($command);
 if($? != 0)
 {
@@ -405,8 +404,8 @@ else
   unlink(@trash);
 }  
 
-## format raw alignment  (note that sequence ids are truncated to 60chr)
-$command = "$ENV{'EXE_MVIEW'} -in blast -out fasta $filenameb > $filenamea"; 
+## format raw alignment  (note that sequence ids are truncated to 60chr, and that MVIEW adds sequence number
+$command = "$ENV{'EXE_MVIEW'} -in blast -out fasta $filenameb | perl -lne 's/^>\\d+:/>/; print' > $filenamea"; 
 system($command); 
 
 ## extract SNPs, parsimony-informative sites, private variants and trim alignment if required
