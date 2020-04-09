@@ -149,6 +149,7 @@ if($output !~ /usage/)
 
   chdir($ENV{'MARFIL'}.'/bin/mcl-14-137');
   system("./configure 2>&1");
+  system("make clean 2>&1");
   system("make 2>&1");
   chdir($cwd);
 
