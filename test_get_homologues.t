@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 28;
+use Test::More tests => 29;
 use lib "lib";
 use lib "lib/bioperl-1.5.2_102/";
 
@@ -63,3 +63,5 @@ ok( eval{ `perl ./parse_pangenome_matrix.pl -m sample_intersection/pangenome_mat
 # requires optional module GD
 ok( eval{ `perl ./parse_pangenome_matrix.pl -m sample_intersection/pangenome_matrix_t0.tab -A sample_plasmids_gbk/A.txt -B sample_plasmids_gbk/B.txt -g -p 'Klebsiella oxytoca KOX105'` } =~ /chromosome\/contig/, 'parse_pangenome_matrix.pl -p' );
 
+# uses lib/mview
+ok( eval{ `perl ./annotate_cluster.pl -f sample_cluster.fna -b 2>&1` } =~ /taxa included in alignment: 14/, 'annotate_cluster.pl -f sample_cluster -b' );
