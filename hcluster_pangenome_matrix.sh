@@ -10,9 +10,9 @@
 #
 #: OUTPUT: ph + svg|pdf output of hclust and heatmap2. Computes optimal number of clusters
 
-
 progname=${0##*/} 
-VERSION='v2.3_26Jan20' #v2.3_26Jan20, fixed typo in help meny: -c <float>
+VERSION='v2.4_10Apr20' # v2.4_10Apr20, added option -b for par(mar()) and improved options documentation
+         # v2.3_26Jan20, fixed typo in help meny: -c <float>
          # v2.2_24Jan20; remove intermediate silhouette-width genome table
          # v2.1_22Jan20 minor fix (missing space) in test [ "$palette" != "greys"] && ...
 
@@ -237,7 +237,7 @@ if("$clust_stat" == "gap"){
     title <- paste("hc of pan-genome (${algorithm}-${distance}; gap-statistic: k = ", gap_n_clust, ")", sep="")
     
     $outformat(gap_hc_plot_name)
-       par(mar=c(3,1,1,12))
+       par(mar=c(3,1,1,$right_border_margin))
        #plot(d_plot)
        #dend %>% set("branches_k_color", value = 3:gap_n_clust, k = gap_n_clust ) %>% 
        dend %>% set("branches_k_color", k = gap_n_clust ) %>% 
@@ -286,7 +286,7 @@ function print_help()
        -i <string> name of matrix file 
     OPTIONAL:
      * Clustering
-       -a <string> algorithm/method for clustering 
+       -a <string> algorithm/method for clustering  
              [ward.D|ward.D2|single|complete|average(=UPGMA)]      [def: $algorithm]
        -c <real> height (dist) to cut clusters                     [def: $cut_height]
        -d <string> distance type [euclidean|manhattan|gower]       [def: $distance]
@@ -297,11 +297,13 @@ function print_help()
        -k <integer> max. number of clusters                        [def: ${k}; NOTE: 2<= k <= n-1 ]
 
      * Plotting
+       -b <int> dendextend right Border marging for par(mar()) 
+                cluster rectangles                                 [def: $right_border_margin]
        -C <flag> display the distace values in the heatmap cells   [def:$cell_note]
        -F <int> maximum number of decimals in matrix display       [1,2; def:$decimals]
        -T <string> text for Main title                             [def:$text]
-       -M <integer> margins_horizontal                             [def:$margin_hor]
-       -V <integer> margins_vertical                               [def:$margin_vert]
+       -M <integer> margins_horizontal for heatmap dendrograms     [def:$margin_hor]
+       -V <integer> margins_vertical for heatmap dendrograms       [def:$margin_vert]
        -O <string> output file format  [svg|pdf]                   [def:$outformat]
        -H <integer> ouptupt device height                          [def:$height]    
        -W <integer> ouptupt device width                           [def:$width]     
@@ -359,6 +361,7 @@ runmode=0
 check_dep=0
 cell_note=0
 decimals=2
+right_border_margin=25
 
 algorithm=ward.D2
 distance=gower
@@ -386,11 +389,13 @@ palette="magma"
 
 
 # See bash cookbook 13.1 and 13.2
-while getopts ':a:A:c:d:F:H:i:k:M:O:P:s:T:V:W:x:X:CDhlNv?:' OPTIONS
+while getopts ':a:A:b:c:d:F:H:i:k:M:O:P:s:T:V:W:x:X:CDhlNv?:' OPTIONS
 do
    case $OPTIONS in
 
    a)   algorithm=$OPTARG
+        ;;
+   b)   right_border_margin=$OPTARG
         ;;
    A)   angle=$OPTARG
         ;;
@@ -518,6 +523,9 @@ cat << PARAMS
 	# Goodnes of clustering stats
 	  * silhouette width
 	     k:$k
+	# Cluser-deliminting rectangles
+	  * rect.dendrogram
+	     right_border_margin=$right_border_margin
 	      
 ##############################################################################################
 
@@ -708,7 +716,7 @@ if("$clust_stat" == "sil"){
    title <- paste("hc of pan-genome (", "${algorithm}", "-", "{$distance}", "; silhouette mean width: k = ", sil_n_clust, ")", sep="")
    
    $outformat(sil_hc_plot_name, width=$width, height=$height)
-   par(mar=c(3,1,1,12))
+   par(mar=c(3,1,1,$right_border_margin))
       #plot(d_plot)
       #dend %>% set("branches_k_color", value = 3:sil_n_clust, k = sil_n_clust ) %>% 
       dend %>% set("branches_k_color", k = sil_n_clust ) %>% 
@@ -745,7 +753,7 @@ hcut_plot_name <- paste("hcluster_", "${algorithm}", "-", "${distance}", "_cut_a
 title <- paste("hc of pan-genome (", "${algorithm}", "-", "{$distance}", "; _cut_at_height: h = ", "$cut_height", ")", sep="")
 
 $outformat(hcut_plot_name, width=$width, height=$height)
-par(mar=c(3,1,1,12))
+par(mar=c(3,1,1,$right_border_margin))
    #plot(d_plot)
    #dend %>% set("branches_k_color", value = 3:$cut_height, h = $cut_height ) %>% 
    dend %>% set("branches_k_color", h = $cut_height ) %>% 
