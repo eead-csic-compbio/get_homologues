@@ -327,3 +327,4 @@
 08042020: updated mview version to 1.67 which now shows masked sequences with Xs and not gaps
 08042020: updated annotate_cluster.pl to use mview 1.67
 09042020: added make clean to mcl compilation in install.pl
+10042020: v2.4_10Apr20, added option -b for par(mar()) and improved options documentation to hcluster_pangenome_matrix.sh
