@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# 2015-8 Pablo Vinuesa (1) and Bruno Contreras-Moreira (2):
+# 2015-20 Pablo Vinuesa (1) and Bruno Contreras-Moreira (2):
 # 1: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 # 2: http://www.eead.csic.es/compbio (Laboratory of Computational Biology, EEAD/CSIC, Spain)
 
@@ -11,7 +11,8 @@
 #: OUTPUT: ph + svg|pdf output of hclust and heatmap2. Computes optimal number of clusters
 
 progname=${0##*/} 
-VERSION='v2.4_10Apr20' # v2.4_10Apr20, added option -b for par(mar()) and improved options documentation
+VERSION='v2.4_20Apr20' # fixed warning ‘mode(height)’ differs between new and previous 
+			# v2.4_10Apr20, added option -b for par(mar()) and improved options documentation
          # v2.3_26Jan20, fixed typo in help meny: -c <float>
          # v2.2_24Jan20; remove intermediate silhouette-width genome table
          # v2.1_22Jan20 minor fix (missing space) in test [ "$palette" != "greys"] && ...
@@ -623,7 +624,7 @@ nwk_tree <- as.phylo(hclust(my_dist, method="$algorithm"), hang=-1, main="$algor
 write.tree(phy=nwk_tree, file="$newick_file")
 
 # 7,2 plot the dendrogram
-$outformat("$tree_file", width="$width", height="$height")
+$outformat("$tree_file", width=$width, height=$height)
 plot(hclust(my_dist, method="$algorithm"), hang=-1, main="$algorithm clustering with $distance dist", cex = "$charExp")
 dev.off()
 
