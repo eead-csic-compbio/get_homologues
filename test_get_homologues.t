@@ -28,15 +28,11 @@ ok( eval{ `perl ./_cluster_makeOrtholog.pl` } =~ /\[options\]/ , '_cluster_makeO
 
 ok( eval{ `perl ./download_genomes_ncbi.pl test` } =~ /\$NCBIHOST ok/ , 'download_genomes_ncbi.pl test' );
 
-ok( eval{ `bash ./hcluster_pangenome_matrix.sh` } =~ /check_dependencies/ , 'hcluster_pangenome_matrix.sh' );
-
 ok( eval{ `perl ./install.pl test` } =~ /testing only/ , 'install.pl test' );
 
 ok( eval{ `perl ./make_nr_pangenome_matrix.pl` } =~ /\[options\]/ , 'make_nr_pangenome_matrix.pl' );
 
 ok( eval{ `perl ./pfam_enrich.pl` } =~ /\[options\]/ , 'pfam_enrich.pl' );
-
-ok( eval{ `bash ./plot_matrix_heatmap.sh` } =~ /check_dependencies/ , 'plot_matrix_heatmap.sh' );
 
 ok( eval{ `perl ./plot_pancore_matrix.pl` } =~ /\[options\]/ , 'plot_pancore_matrix.pl' );
 
@@ -59,6 +55,11 @@ ok( eval{ `perl ./get_homologues.pl -d sample_plasmids_gbk -G -t 0` } =~ /number
 ok( eval{ `perl ./compare_clusters.pl -d sample_plasmids_gbk_homologues/UnculturedbacteriumplasmidpRSB203_f0_0taxa_algOMCL_e0_,sample_plasmids_gbk_homologues/UnculturedbacteriumplasmidpRSB203_f0_0taxa_algCOG_e0_ -o sample_intersection -m` } =~ /pangenome_matrix_t0.tab/ , 'compare_clusters.pl ' );
 
 ok( eval{ `perl ./parse_pangenome_matrix.pl -m sample_intersection/pangenome_matrix_t0.tab -s` } =~ /sample_intersection\/pangenome_matrix_t0__shell.png/, 'parse_pangenome_matrix.pl -s' );
+
+# require R dependencies
+ok( eval{ `bash ./hcluster_pangenome_matrix.sh -i sample_intersection/pangenome_matrix_t0.tab 2>&1` } =~ /heatmap.pdf was generated/ , 'hcluster_pangenome_matrix.sh' );
+
+ok( eval{ `bash ./plot_matrix_heatmap.sh -i sample_intersection/pangenome_matrix_t0.tab -o pdf 2>&1` } =~ /heatmap.pdf was produced/ , 'plot_matrix_heatmap.sh' );
 
 # requires optional module GD
 ok( eval{ `perl ./parse_pangenome_matrix.pl -m sample_intersection/pangenome_matrix_t0.tab -A sample_plasmids_gbk/A.txt -B sample_plasmids_gbk/B.txt -g -p 'Klebsiella oxytoca KOX105'` } =~ /chromosome\/contig/, 'parse_pangenome_matrix.pl -p' );
