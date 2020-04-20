@@ -12,6 +12,11 @@ BEGIN { use_ok('phyTools') };
 
 BEGIN { use_ok('marfil_homology') };
 
+my $testR = 0;
+if(defined($ARGV[0]) && $ARGV[0] eq 'testR'){
+	$testR = 1
+}
+
 ok( eval{ `perl ./add_pancore_matrices.pl ` } =~ /\[options\]/ , 'add_pancore_matrices.pl' );
 
 ok( eval{ `perl ./add_pangenome_matrices.pl` } =~ /\[options\]/ , 'add_pangenome_matrices.pl' );
@@ -56,13 +61,23 @@ ok( eval{ `perl ./compare_clusters.pl -d sample_plasmids_gbk_homologues/Uncultur
 
 ok( eval{ `perl ./parse_pangenome_matrix.pl -m sample_intersection/pangenome_matrix_t0.tab -s` } =~ /sample_intersection\/pangenome_matrix_t0__shell.png/, 'parse_pangenome_matrix.pl -s' );
 
-# require R dependencies
-ok( eval{ `bash ./hcluster_pangenome_matrix.sh -i sample_intersection/pangenome_matrix_t0.tab 2>&1` } =~ /heatmap.pdf was generated/ , 'hcluster_pangenome_matrix.sh' );
-
-ok( eval{ `bash ./plot_matrix_heatmap.sh -i sample_intersection/pangenome_matrix_t0.tab -o pdf 2>&1` } =~ /heatmap.pdf was produced/ , 'plot_matrix_heatmap.sh' );
-
-# requires optional module GD
+# requires module GD and package libgd-dev
 ok( eval{ `perl ./parse_pangenome_matrix.pl -m sample_intersection/pangenome_matrix_t0.tab -A sample_plasmids_gbk/A.txt -B sample_plasmids_gbk/B.txt -g -p 'Klebsiella oxytoca KOX105'` } =~ /chromosome\/contig/, 'parse_pangenome_matrix.pl -p' );
 
 # uses lib/mview
 ok( eval{ `perl ./annotate_cluster.pl -f sample_cluster.fna -b 2>&1` } =~ /taxa included in alignment: 14/, 'annotate_cluster.pl -f sample_cluster -b' );
+
+# require R dependencies
+if($testR == 1){
+	ok( eval{ `bash ./hcluster_pangenome_matrix.sh -i sample_intersection/pangenome_matrix_t0.tab 2>&1` } =~ 
+		/heatmap.pdf was generated/ , 'hcluster_pangenome_matrix.sh -i ' );
+} else {
+	ok( eval{ `bash ./hcluster_pangenome_matrix.sh` } =~ /synopsis/ , 'hcluster_pangenome_matrix.sh' );
+}
+
+if($testR == 1){
+	ok( eval{ `bash ./plot_matrix_heatmap.sh -i sample_intersection/pangenome_matrix_t0.tab -o pdf 2>&1` } =~ 
+	/heatmap.pdf was produced/ , 'plot_matrix_heatmap.sh -i' );
+} else {
+	ok( eval{ `bash ./plot_matrix_heatmap.sh` } =~ /synopsis/ , 'plot_matrix_heatmap.sh' );
+}

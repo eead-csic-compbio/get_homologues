@@ -330,5 +330,7 @@
 10042020: v2.4_10Apr20, added option -b for par(mar()) and improved options documentation to hcluster_pangenome_matrix.sh
 20042020: updated hcluster_pangenome_matrix.sh to v2.4_10Apr20 to eliminate warning message
 20042020: acknowledged possible bug in section 4 of plot_matrix_heatmap.sh
-20042020: improved tests of hcluster_pangenome_matrix.sh and plot_matrix_heatmap.sh; both now require R packages to be installed
+20042020: added arg $testR to hcluster_pangenome_matrix.sh and plot_matrix_heatmap.sh tests to check R packages
 20042020: updated test_get_homologues.t, Makefile & .travis.yml
+20042020: updated ubuntu to bionic (18.04) in travis.yml to match docker OS
+20042020: added libgd-dev to travis.yml
