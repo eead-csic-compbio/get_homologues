@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# 2015-8 Pablo Vinuesa (1) and Bruno Contreras-Moreira (2):
+# 2015-20 Pablo Vinuesa (1) and Bruno Contreras-Moreira (2):
 # 1: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 # 2: http://www.eead.csic.es/compbio (Laboratory of Computational Biology, EEAD/CSIC, Spain)
 
@@ -9,28 +9,31 @@
 #: OUTPUT: svg and pdf; png not implemented yet
 
 progname=${0##*/} # plot_matrix_heatmap.sh
-VERSION='v1.0.4_31Jan18' # added the complete.cases(tab)check, at the head of the script to stop its execution if( dim(tab)[1] < 5 )
-       #'v1.0.2_28Jan18' # * added check for existence of input *Avg_identity.tab file and adjusted par(mar)
-                         # * added filtering code to clean-up taxon names in pangenome_matrix*.tab; 
-                         # * added option -b to control the amount of right-border (margin) in 
-			 #   the cgAND dendrogram plot, which now also displays vertical lines
-			 #   at the critical cgAND values of 4,5,6
-			 # * removed the (now) redundant and ugly plot produced by hclust.
+VERSION='v1.0.4_20Apr20' # pending fix for errors on section 4:
+                         # Rrror in rect(xleft, ybottom, xright, ytop, border = border[n], density = density,  : 
+                         #  cannot mix zero-length and non-zero-length coordinates
+       
+# v1.0.4_31Jan18' # added the complete.cases(tab)check, at the head of the script to stop its execution if( dim(tab)[1] < 5 )
+#'v1.0.2_28Jan18' # * added check for existence of input *Avg_identity.tab file and adjusted par(mar)
+                  # * added filtering code to clean-up taxon names in pangenome_matrix*.tab; 
+                  # * added option -b to control the amount of right-border (margin) in 
+                  #   the cgAND dendrogram plot, which now also displays vertical lines
+                  #   at the critical cgAND values of 4,5,6
+                  # * removed the (now) redundant and ugly plot produced by hclust.
+                  # added the mean silhouette width statistic to compute and plot
+                  #    the  optimal number of clusters in ANDg matrices.
+                  # requires new R packages: dendextend and factoextra
 
-# added the mean silhouette width statistic to compute and plot
-#    the  optimal number of clusters in ANDg matrices.
-# requires new R packages: dendextend and factoextra
-
-#'v0.8_31Oct17'   # added hclustering (complete linkage, hang=-1) of ANdist matrix 
-		#  for convenient cluster delimitatios at distance cutoffs of 6,5 and 4
-        	#  which correspond to ANI values of 94%, 95% and 96%, respectively
+#'v0.8_31Oct17' # added hclustering (complete linkage, hang=-1) of ANdist matrix 
+                #  for convenient cluster delimitatios at distance cutoffs of 6,5 and 4
+                #  which correspond to ANI values of 94%, 95% and 96%, respectively
 #'v0.7_14Oct17' # added options -X (charExp) and -a (label rotation angle)
 #'v0.5_18Aug17' # added options -d (max no. decimals) and -x (filter matrix with regex)
 #'v0.4_17Aug17' # added option -r to remove column names and cell contents, and -k 
 #'v0.3_13Apr16' # added option -c to filter input matrix by a maximum similarity cut-off value
-		# to reduce excessive redundancy. Improved the help text printed with -M
+                # to reduce excessive redundancy. Improved the help text printed with -M
 #'0.2_26Feb15'  # wrote R function sim2dist() to compute bioNJ tree with ape
-		# based on ANI sim-matrix, and write it to file as newick string
+                # based on ANI sim-matrix, and write it to file as newick string
 #'0.1_16Feb15'; first version
 
 date_F=$(date +%F |sed 's/-/_/g')-
@@ -474,17 +477,14 @@ title <- paste("ANDg complete linkage dendrogram (k = ", sil_n_clust, ")", sep="
 $outformat(ANDg_hc_outfile)
 par(mar=c(5.7,1,1,$right_margin))
    #plot(d_plot)
+	
    dend %>% set("branches_k_color", k = sil_n_clust ) %>% 
          set("labels_cex", c($charExp)) %>% plot(horiz = TRUE, xlab = "cgANDb (%)") 
-  dend %>% rect.dendrogram(k = sil_n_clust, horiz = TRUE, border = 8, lty = 5, lwd = 1)
-  abline(v=6.0, col="red", lty=2)
-  abline(v=5.0, col="black", lty=2)
-  abline(v=4.0, col="blue", lty=2)
-  
-
-
-
-dev.off()
+   dend %>% rect.dendrogram(k = sil_n_clust, horiz = TRUE, border = 8, lty = 5, lwd = 1)
+   abline(v=6.0, col="red", lty=2)
+   abline(v=5.0, col="black", lty=2)
+   abline(v=4.0, col="blue", lty=2)
+   #dev.off()
 
 dev.off()
 par(opar)
