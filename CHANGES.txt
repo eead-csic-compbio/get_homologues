@@ -334,3 +334,4 @@
 20042020: updated test_get_homologues.t, Makefile & .travis.yml
 20042020: updated ubuntu to bionic (18.04) in travis.yml to match docker OS
 20042020: added libgd-dev to travis.yml
+21042020: added check to get_homologues*pl when printing aligned coords

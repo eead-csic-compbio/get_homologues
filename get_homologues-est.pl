@@ -2362,7 +2362,7 @@ GENE: foreach $gene (sort {$a<=>$b} (keys(%orthologues)))
     push(@taxon_names,$gindex2[$orth]);
 
     $header = $sequence_data[$orth];
-    if(!$saveRAM)
+    if(!$saveRAM && defined($aligned_coords{$orth}{'first'}))
     {
       chomp($header);
       $header .= " | aligned:$aligned_coords{$orth}{'first'}-$aligned_coords{$orth}{'last'} ".
