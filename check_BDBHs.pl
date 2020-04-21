@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# 2013-9 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2013-20 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Laboratory of Computational Biology, EEAD/CSIC, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -65,7 +65,7 @@ if(defined($opts{'e'})){  $INP_est = 1; }
 ##########################################################################
 
 my ($pQid,$querylen,$pSid,$subjectlen,$pEvalue,$ppercID,$simspan,$pbits);
-my ($hit,$rest,$taxon,$fullname,@hits,%taxaids,%taxonhits,%names,%revhits);
+my ($hit,$rest,$taxon,$idxtaxon,$fullname,@hits,%taxaids,%taxonhits,%names,%revhits);
 my ($rhit,$rtaxon,$querytaxon,$cover,$use_short_sequence,$red,$red_parseOK);
 my ($qcov,$scov,$input_order_file,%input_order,@sorted_taxa);
 
@@ -233,7 +233,16 @@ foreach $taxon (@sorted_taxa)
   my @sortedhits = sort {$a<=>$b} (@{$taxonhits{$taxon}});
   open(BPO,$bpo_file);
   flock(BPO,1);
-  seek(BPO,$taxa_bpo_index{$taxon}[0],0);
+
+  # find BPO block for this taxon
+  $idxtaxon = $taxon;
+  if(!defined($taxa_bpo_index{$idxtaxon})){ $idxtaxon .= '.nucl' } # EST jobs
+  if(!defined($taxa_bpo_index{$idxtaxon}))
+  {
+    die "# ERROR: cannot find BPO index for taxon $idxtaxon\n";
+  }
+  seek(BPO,$taxa_bpo_index{$idxtaxon}[0],0);
+
   while($hit=<BPO>)
   {
     if($hit =~ /(\d+)\t(.*?)\n/)
