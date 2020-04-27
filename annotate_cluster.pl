@@ -38,6 +38,9 @@ my $MAXSEQNAMELEN = 60;
 my $MAXMISMCOLLAP = 0; # natural, number of mismatches tolerated when collapsing 
 my $MAXGAPSCOLLAP = 2; # natural, number of tolerated gaps in different places when collapsing 
 
+my %CHARSFORMVIEW = ( '/' => '_fslash_' ); # chars that have to be removed before calling MVIEW
+my %CHARSFROMMVIEW = ( '_fslash_' => '/' );
+
 my $INP_collapse = 0;
 my ($INP_nucleotides,$INP_blunt,$do_PFAM,$INP_clusterfile,$INP_outfile,$INP_ref_file,%opts) = (1,0,0,'','','');
 my ($INP_includeA,$INP_includeB) = ('','');
@@ -130,7 +133,7 @@ printf(STDERR "\n# %s -f %s -r %s -o %s -P %s -b %s -D %s -c %d -A %s -B %s\n",
 ##########################################################################
 
 my ($maxlength,$longest_seq,$length,$start,$end,$seq,$fh,$seqname) = (0,-1);
-my ($ext_seq,$ext_seqname,$taxon,$seqid,$align_seq) = ('','');
+my ($ext_seq,$ext_seqname,$taxon,$seqid,$align_seq,$char) = ('','');
 my ($command,$Pfam_string,$Pfam_full) = ('','','');
 my (@trash,%short_names,%intaxa,%id2taxon);
 my (%included_input_filesA,%included_input_filesB,@listA,@listB);
@@ -189,7 +192,7 @@ foreach $seq (0 .. $#{$cluster_ref})
     $seqname = (split(/\s+/,$cluster_ref->[$seq][NAME]))[0];
   }
   
-  # shorten name, otherwise it might break mview downstream
+  # shorten name and remove forbidden chars, otherwise it might break mview downstream
   if(length($seqname) > $MAXSEQNAMELEN ){ $seqname = substr($seqname,0,$MAXSEQNAMELEN); } 
   
   $short_names{$seq} = $seqname;
@@ -359,23 +362,36 @@ if($do_PFAM)
 my ($fhdb,$filenamedb) = tempfile(UNLINK => 1); # blast DB
 my ($fhq,$filenameq)   = tempfile(UNLINK => 1); # blast query
 my ($fhb,$filenameb)   = tempfile(UNLINK => 1); # blast output
+my ($fhr,$filenamer)   = tempfile(UNLINK => 1); # raw alignment file
 my ($fha,$filenamea)   = tempfile(UNLINK => 1); # out alignment file
+my $mview_seqname;
 
 if($ext_seq ne '')
 {
   $fh = $fhq;
-  print $fh ">$ext_seqname\n$ext_seq\n";    
+
+  $mview_seqname = $ext_seqname;
+  foreach $char (keys(%CHARSFORMVIEW)){
+    $mview_seqname =~ s/\Q$char\E/$CHARSFORMVIEW{$char}/g;
+  }
+  
+  print $fh ">$mview_seqname\n$ext_seq\n";    
 }
 
 foreach $seq (0 .. $#{$cluster_ref})
 {
   if($ext_seq eq '' && $seq == $longest_seq){ $fh = $fhq }
   else{ $fh = $fhdb }
-  
-  print $fh ">$short_names{$seq}\n$cluster_ref->[$seq][SEQ]\n";
+ 
+  # make sure no forbidden chars are passed to MVIEW
+  $mview_seqname = $short_names{$seq};
+  foreach $char (keys(%CHARSFORMVIEW)){
+    $mview_seqname =~ s/\Q$char\E/$CHARSFORMVIEW{$char}/g;
+  }
+ 
+  print $fh ">$mview_seqname\n$cluster_ref->[$seq][SEQ]\n";
 }
 
-close($fha);
 close($fhb);
 close($fhq);
 close($fhdb);
@@ -404,9 +420,26 @@ else
   unlink(@trash);
 }  
 
+
 ## format raw alignment  (note that sequence ids are truncated to 60chr, and that MVIEW adds sequence number
-$command = "$ENV{'EXE_MVIEW'} -in blast -out fasta $filenameb | perl -lne 's/^>\\d+:/>/; print' > $filenamea"; 
+$command = "$ENV{'EXE_MVIEW'} -in blast -out fasta $filenameb | perl -lne 's/^>\\d+:/>/; print' > $filenamer"; 
 system($command); 
+
+# substitute MVIEW forbidden char place holders and save output in open filehandle $fha
+open(MVIEWRAW,"<",$filenamer) || die "# ERROR: cannot open mview outfile $filenamer\n";
+while(my $line = <MVIEWRAW>)
+{
+  if($line =~ /^>/)
+  {
+    foreach $char (keys(%CHARSFROMMVIEW)){
+      $line =~ s/$char/$CHARSFROMMVIEW{$char}/g;
+    }
+  }
+  
+  print $fha $line;
+}
+close(MVIEWRAW);
+close($fha);
 
 ## extract SNPs, parsimony-informative sites, private variants and trim alignment if required
 my ($align_ref,$nSNPS,$npars,$npriv,$SNPs,$pars,$priv,$missA,$missB) = 
@@ -430,9 +463,9 @@ else
 ## check aligned & unaligned sequences
 # 
 # This can happen in several cases:
-# i) sequences were clusterred by BLASTN but aminoacid sequences are being annotated (translated fragments are shifted)
+# i) DNA sequences clustered but aminoacid sequences are being annotated (translated fragments shifted)
 # ii) longest sequence, which is used to build MSA, does not match some sequences
-#
+
 my ($fhndb,$filenamenotaligndb) = tempfile(UNLINK => 1); # blast DB
 my ($fhnq,$filenamenotalignq) = tempfile(UNLINK => 1); # blast output
 my ($fhnb,$filenamenotalignb) = tempfile(UNLINK => 1); # out alignment file
@@ -474,14 +507,14 @@ if($unaligned > 0 && $#{$align_ref} > 0)
   {
     executeFORMATDB($filenamenotaligndb,1,1); 
     $command = format_BLASTN_command($filenamenotalignq,$filenamenotalignb,$filenamenotaligndb,
-      $DEFEVALUE,1,0,$DEFBLASTNTASK);
+      $DEFEVALUE,5,0,$DEFBLASTNTASK);
       push(@trash,$filenamenotaligndb.'.nsq', $filenamenotaligndb.'.nin', $filenamenotaligndb.'.nhr');
   }
   else
   {
     executeFORMATDB($filenamenotaligndb,0,1); 
     $command = format_BLASTP_command($filenamenotalignq,$filenamenotalignb,$filenamenotaligndb,
-      $DEFEVALUE,1,0);
+      $DEFEVALUE,5,0);
     push(@trash,$filenamenotaligndb.'.psq', $filenamenotaligndb.'.pin', $filenamenotaligndb.'.phr');  
   }
 
@@ -494,12 +527,14 @@ if($unaligned > 0 && $#{$align_ref} > 0)
   {
     warn "\n# sequences not included in multiple alignment (n=$unaligned):\n";
  
-    my $unhits = 0; 
+    my $unhits = 0;
+    my %seen; 
     open(BLASTOUT,'<',$filenamenotalignb) || die "# EXIT: cannot open $filenamenotalignb\n";
     while(<BLASTOUT>)
     {
       my @data = split(/\t/,$_,3);
-      warn "# $data[0] (matches $data[1])\n";
+      warn "# $data[0] (matches $data[1])\n" if(!defined($seen{ $data[0] }));
+      $seen{ $data[0] }++;
       $unhits++;
     }
     close(BLASTOUT);

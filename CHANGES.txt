@@ -336,3 +336,4 @@
 20042020: added libgd-dev to travis.yml
 21042020: added check to get_homologues*pl when printing aligned coords
 21042020: fixed index seek for EST jobs in check_BDBHs.pl
+27042020: updated annotate_cluster.pl to scape forbidden chars in sequence names that trouble mview 
