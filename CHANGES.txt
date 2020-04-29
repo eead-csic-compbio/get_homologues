@@ -337,3 +337,4 @@
 21042020: added check to get_homologues*pl when printing aligned coords
 21042020: fixed index seek for EST jobs in check_BDBHs.pl
 27042020: updated annotate_cluster.pl to scape forbidden chars in sequence names that trouble mview 
+29042020: updated install instructions for R modules imported by hcluster_pangenome_matrix.sh 
