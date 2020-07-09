@@ -339,3 +339,4 @@
 27042020: updated annotate_cluster.pl to scape forbidden chars in sequence names that trouble mview 
 29042020: updated install instructions for R modules imported by hcluster_pangenome_matrix.sh 
 02062020: added -n dryrun to get_homologues.pl
+09072020: install.pl now tries curl before wget in macOS

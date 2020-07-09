@@ -2,7 +2,7 @@
 
 # Script that checks/compiles software required by get_homologues[-est] and checks dependencies
 # for first-time users.
-# last checked Apr2020
+# last checked Jul2020
 
 use strict;
 use warnings;
@@ -14,7 +14,7 @@ use lib "$Bin/lib/bioperl-1.5.2_102/";
 require phyTools;
 use transcripts;
 
-my $WGETEXE = 'wget'; # add path if required, likely not pre-installed in MacOS
+my $DOWNLOADEXE = 'wget'; # add path if required, curl in MacOS
 my $BINTGZFILE = 'bin.tgz';
 my $BINOSXTGZFILE = 'binosx.tgz';
 my $BINURL = "https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.3.3/$BINTGZFILE";
@@ -101,8 +101,12 @@ if(! -e $ENV{'MARFIL'}.'/bin/COGsoft/' || !-e $ENV{'EXE_BLASTP'})
        $BINTGZFILE =  $BINOSXTGZFILE;
        $BINURL = $BINOSXURL;
 
-       # check wget is available
-       if(!`which $WGETEXE`)
+       # check curl is available
+       if(`which curl`)
+       {
+         $DOWNLOADEXE = 'curl -LJO '
+       } 
+       elsif(!`which $DOWNLOADEXE`) # check wget is available instead
        {
          die "# need wget, install it with 'brew install wget' and re-run\n";
        }
@@ -111,7 +115,7 @@ if(! -e $ENV{'MARFIL'}.'/bin/COGsoft/' || !-e $ENV{'EXE_BLASTP'})
     if(! -s $BINTGZFILE)
     {
       print "# retrieving $BINURL ...\n";
-      system("$WGETEXE -c $BINURL");
+      system("$DOWNLOADEXE $BINURL");
       if(! -s $BINTGZFILE)
       {
         die "# cannot download file $BINTGZFILE \n\n".
