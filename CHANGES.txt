@@ -340,3 +340,4 @@
 29042020: updated install instructions for R modules imported by hcluster_pangenome_matrix.sh 
 02062020: added -n dryrun to get_homologues.pl
 09072020: install.pl now tries curl before wget in macOS
+31072020: downgraded cluster_pangenome_matrix.sh plot_matrix_heatmap.sh to simplify R deps 
