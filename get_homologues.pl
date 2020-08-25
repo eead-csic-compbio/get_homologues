@@ -954,7 +954,7 @@ if($inputDIR)
         if($genbankOK || $dnaOK)
         {
           $sequence_dna[$n_of_sequences] = $dna_fasta_ref->[$seq][SEQ];
-          if($dna_fasta_ref->[$seq][SEQ] eq '')
+          if(!$dna_fasta_ref->[$seq][SEQ] || $dna_fasta_ref->[$seq][SEQ] eq '')
           {
             printf("# cannot parse DNA sequence of %s... (%s)\n",
               substr($fasta_ref->[$seq][NAME],0,15),$infile);

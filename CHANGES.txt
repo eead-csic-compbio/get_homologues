@@ -341,3 +341,4 @@
 02062020: added -n dryrun to get_homologues.pl
 09072020: install.pl now tries curl before wget in macOS
 31072020: downgraded cluster_pangenome_matrix.sh plot_matrix_heatmap.sh to simplify R deps 
+25082020: improved warning for gbk files with no nucleotide seqs in get_homologues.pl
