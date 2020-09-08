@@ -17,7 +17,7 @@ The software was then adapted to the study of **intra-specific eukaryotic pan-ge
 
 [Contreras-Moreira B, Cantalapiedra CP et al (2017) Front. Plant Sci. 10.3389/fpls.2017.00184](http://journal.frontiersin.org/article/10.3389/fpls.2017.00184/full)
 
-GET_HOMOLOGUES-EST was benchmarked with genomes and transcriptomes of *Arabidopsis thaliana* and *Hordeum vulgare*, available at [http://floresta.eead.csic.es/plant-pan-genomes](http://floresta.eead.csic.es/plant-pan-genomes), and used to analyze the pan-genomes of [*Brachypodium distachyon*](https://brachypan.jgi.doe.gov) and [*Brachypodium hybridum*](http://floresta.eead.csic.es/plant-pan-genomes/Bhybridum).
+GET_HOMOLOGUES-EST was benchmarked with genomes and transcriptomes of *Arabidopsis thaliana* and *Hordeum vulgare*, available at [http://floresta.eead.csic.es/plant-pan-genomes](http://floresta.eead.csic.es/plant-pan-genomes), and used to analyze the pan-genomes of [*Brachypodium distachyon*](https://brachypan.jgi.doe.gov) and [*Brachypodium hybridum*](http://floresta.eead.csic.es/plant-pan-genomes/Bhybridum)([press release](https://jgi.doe.gov/more-the-merrier-making-case-for-plant-pan-genomes)).
 
 A [tutorial](http://eead-csic-compbio.github.io/get_homologues/tutorial/pangenome_tutorial.html) is available, covering typical examples of both GET_HOMOLOGUES (bacteria) and GET_HOMOLOGUES-EST (plants). 
 
