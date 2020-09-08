@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# 2013-9 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2013-20 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Laboratory of Computational Biology, EEAD-CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -926,28 +926,28 @@ venndia <- function(labels, A, B, C, ...)
     pdf(file='$venn_file')
     par(mar=c(2,2,0,0))
     plot(-10,-10,ylim=c(0,9), xlim=c(0,9),axes=F)
-	  #mtext(c('$INP_dirs'),side=1,cex=0.4,adj=0)
-	  #mtext(c('$params'),side=1,cex=0.4,adj=0)
+    #mtext(c('$INP_dirs'),side=1,cex=0.4,adj=0)
+    #mtext(c('$params'),side=1,cex=0.4,adj=0)
     circle(x=3, y=6, r=3, col=rgb(1,0,0,.5), border=NA)
     circle(x=6, y=6, r=3, col=rgb(0,.5,.1,.5), border=NA)
     if(cMissing == F)
     {
-       	circle(x=4.5, y=3, r=3, col=rgb(0,0,1,.5), border=NA)
-       	text( x=c(1,8,4.5), y=c(6,6,0.8), labels, cex=1.5, col="gray90" )
-       	text( x=c(2, 7, 4.5, 4.5, 3, 6, 4.5), y=c(7, 7, 2, 7, 4, 4, 5), 
+        circle(x=4.5, y=3, r=3, col=rgb(0,0,1,.5), border=NA)
+        text( x=c(1,8,4.5), y=c(6,6,0.8), labels, cex=1.5, col="gray90" )
+        text( x=c(2, 7, 4.5, 4.5, 3, 6, 4.5), y=c(7, 7, 2, 7, 4, 4, 5), 
         c(nA, nB, nC, nAB, nAC, nBC, nABC), cex=2)
 	
- 	      # return sectors, including intersections of two sets Aug2017
-	      list(uniqueA,uniqueB,uniqueC,intersAB,intersAC,intersBC)
+        # return sectors, including intersections of two sets
+        list(uniqueA,uniqueB,uniqueC,intersAB,intersAC,intersBC)
     }
     else
     {
-       	text( x=c(1.9, 7.2), y=c(7.8, 7.8), labels, cex=1.5, col="gray90" )
-       	text( x=c(2, 7, 4.5), y=c(6, 6, 6), 
+        text( x=c(1.9, 7.2), y=c(7.8, 7.8), labels, cex=1.5, col="gray90" )
+        text( x=c(2, 7, 4.5), y=c(6, 6, 6), 
         c(nA, nB, nAB), cex=2)
 		
-   	    # return sectors
-	      list(uniqueA,uniqueB)
+        # return sectors
+        list(uniqueA,uniqueB)
     }
 }
 
@@ -959,26 +959,25 @@ labels = c(toString(input_files[1,2]),toString(input_files[2,2]))
 
 if(nrow(input_files) == 6)
 {
-	set3 = read.table(toString(input_files[3,1]),sep="\n",colClasses="character")
-	labels[3] <- toString(input_files[3,2])
-	sectors = venndia(labels,set1[1]\$V1,set2[1]\$V1,set3[1]\$V1)
-	# print venn sectors to files
-  # unique
-	if(length(sectors[1])>0){ lapply(sectors[1],write,toString(input_files[1,3]),append=T,ncolumns=1) }
-	if(length(sectors[2])>0){ lapply(sectors[2],write,toString(input_files[2,3]),append=T,ncolumns=1) }
-	if(length(sectors[3])>0){ lapply(sectors[3],write,toString(input_files[3,3]),append=T,ncolumns=1) }
-  # intersections of two sets
-  if(length(sectors[4])>0){ lapply(sectors[4],write,toString(input_files[4,3]),append=T,ncolumns=1) }
-	if(length(sectors[5])>0){ lapply(sectors[5],write,toString(input_files[5,3]),append=T,ncolumns=1) }
-	if(length(sectors[6])>0){ lapply(sectors[6],write,toString(input_files[6,3]),append=T,ncolumns=1) }
-  
-	
-}else
+    set3 = read.table(toString(input_files[3,1]),sep="\n",colClasses="character")
+    labels[3] <- toString(input_files[3,2])
+    sectors = venndia(labels,set1[1]\$V1,set2[1]\$V1,set3[1]\$V1)
+    # print venn sectors to files
+    # unique
+    if(length(sectors[1])>0){ lapply(sectors[1],write,toString(input_files[1,3]),append=T,ncolumns=1) }
+    if(length(sectors[2])>0){ lapply(sectors[2],write,toString(input_files[2,3]),append=T,ncolumns=1) }
+    if(length(sectors[3])>0){ lapply(sectors[3],write,toString(input_files[3,3]),append=T,ncolumns=1) }
+    # intersections of two sets
+    if(length(sectors[4])>0){ lapply(sectors[4],write,toString(input_files[4,3]),append=T,ncolumns=1) }
+    if(length(sectors[5])>0){ lapply(sectors[5],write,toString(input_files[5,3]),append=T,ncolumns=1) }
+    if(length(sectors[6])>0){ lapply(sectors[6],write,toString(input_files[6,3]),append=T,ncolumns=1) }
+}
+else
 { 
-	sectors = venndia(labels,set1[1]\$V1,set2[1]\$V1) 
-	# print unique venn sectors to files
-	if(length(sectors[1])>0){ lapply(sectors[1],write,toString(input_files[1,3]),append=T,ncolumns=1) }
-  if(length(sectors[2])>0){ lapply(sectors[2],write,toString(input_files[2,3]),append=T,ncolumns=1) }
+    sectors = venndia(labels,set1[1]\$V1,set2[1]\$V1) 
+    # print unique venn sectors to files
+    if(length(sectors[1])>0){ lapply(sectors[1],write,toString(input_files[1,3]),append=T,ncolumns=1) }
+    if(length(sectors[2])>0){ lapply(sectors[2],write,toString(input_files[2,3]),append=T,ncolumns=1) }
 }	
 
 q()
