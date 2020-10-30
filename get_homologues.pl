@@ -1826,7 +1826,7 @@ if($do_genome_composition)
         unlink(@to_be_deleted);
         %cluster_PIDs = @to_be_deleted = ();
       }
-      elsif($runmode eq 'dryrun')
+      elsif($runmode eq 'dryrun' && $total_dry > 0)
       {
         close(DRYRUNLOG);
         print "# EXIT: check the list of pending commands at $dryrun_file\n";
@@ -1870,7 +1870,7 @@ if($do_genome_composition)
       print "\n";
       unlink(@to_be_deleted);
     } 
-    elsif($runmode eq 'dryrun')
+    elsif($runmode eq 'dryrun' && $total_dry > 0)
     {
       close(DRYRUNLOG);
       print "# EXIT: check the list of pending commands at $dryrun_file\n";
@@ -1929,7 +1929,7 @@ if($do_genome_composition)
         print "\n";
         unlink(@to_be_deleted);
       }
-		elsif($runmode eq 'dryrun')
+		elsif($runmode eq 'dryrun' && $total_dry > 0)
       {
         close(DRYRUNLOG);
         print "# EXIT: check the list of pending commands at $dryrun_file\n";
@@ -2048,7 +2048,7 @@ if($do_genome_composition)
         print "\n";
         unlink(@to_be_deleted);
       }
-      elsif($runmode eq 'dryrun')
+      elsif($runmode eq 'dryrun' && $total_dry > 0)
       {
         close(DRYRUNLOG);
         print "# EXIT: check the list of pending commands at $dryrun_file\n";
@@ -2428,7 +2428,7 @@ if($runmode eq 'cluster' || $runmode eq 'dryrun')
       unlink(@to_be_deleted);
       %cluster_PIDs = @to_be_deleted = ();
     }
-    elsif($runmode eq 'dryrun')
+    elsif($runmode eq 'dryrun' && $total_dry > 0)
     {
       close(DRYRUNLOG);
       print "# EXIT: check the list of pending commands at $dryrun_file\n";
@@ -2491,7 +2491,7 @@ if($doMCL)
         check_cluster_jobs($newDIR,\%cluster_PIDs);
         unlink(@to_be_deleted);
       }
-		elsif($runmode eq 'dryrun')
+		elsif($runmode eq 'dryrun' && $total_dry > 0)
       {
         close(DRYRUNLOG);
         print "# EXIT: check the list of pending commands at $dryrun_file\n";
@@ -2617,8 +2617,11 @@ else # BDBH
     elsif($runmode eq 'dryrun')
     {
       close(DRYRUNLOG);
-      print "# EXIT: check the list of pending commands at $dryrun_file\n";
-      exit;
+      if($total_dry > 0)
+      {
+        print "# EXIT: check the list of pending commands at $dryrun_file\n";
+        exit;
+      }
     }
   }
 
