@@ -342,4 +342,5 @@
 09072020: install.pl now tries curl before wget in macOS
 31072020: downgraded cluster_pangenome_matrix.sh plot_matrix_heatmap.sh to simplify R deps 
 25082020: improved warning for gbk files with no nucleotide seqs in get_homologues.pl
-08092020: fixed indentation of R code within compare_culsters.pl
+08092020: fixed indentation of R code within compare_clusters.pl
+30102020: fixed -m dryrun
