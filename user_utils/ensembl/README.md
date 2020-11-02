@@ -1,7 +1,9 @@
 
-# Pan-gene analysis of clades in Ensembl Plant
+# Pan-gene analysis of clades in Ensembl Plants
 
-This script interrogates Ensembl Plants through [REST endpoints](https://rest.ensembl.org) and the FTP site to carry out a clade-specific pan-gene set analysis. Instead of BLAST-based results, orthologies and paralogies are computed with the [Ensembl Compara](https://plants.ensembl.org/info/genome/compara/index.html) pipelines. This script is derived from scripts at the repository [Ensembl/plant_tools](https://github.com/Ensembl/plant_tools/tree/master/phylogenomics)
+This script interrogates Ensembl Plants through [REST endpoints](https://rest.ensembl.org) and the FTP site to carry out a clade-specific pan-gene set analysis. Instead of BLAST-based results, orthologies and paralogies are computed with the [Ensembl Compara](https://plants.ensembl.org/info/genome/compara/index.html) pipelines. 
+
+This script was adapted from [Ensembl/plant_tools](https://github.com/Ensembl/plant_tools/tree/master/phylogenomics)
 
 ## Dependencies
 
