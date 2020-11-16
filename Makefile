@@ -24,4 +24,4 @@ install:
 	perl install.pl
 
 install_auto:
-	perl install.pl no_databases
+	perl install.pl force
