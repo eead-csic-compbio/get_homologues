@@ -992,7 +992,7 @@ EOF
     close RSHELL;
 
     # 4) clean
-    unlink(@venn,$tmp_input_file);
+    #unlink(@venn,$tmp_input_file);
 
     # 5) check and print output
     if(-s $venn_file)

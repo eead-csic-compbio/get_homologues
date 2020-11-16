@@ -23,5 +23,8 @@ cleanR:
 install:
 	perl install.pl
 
+install_swissprot:
+	perl install.pl swissprot
+
 install_auto:
-	perl install.pl force
+	perl install.pl no_databases 
