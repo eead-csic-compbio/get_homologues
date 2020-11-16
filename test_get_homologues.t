@@ -48,7 +48,7 @@ ok( eval{ `perl ./_split_hmmscan.pl` } =~ /Usage/ , '_split_hmmscan.pl' );
 ok( eval{ `perl ./transcripts2cds.pl` } =~ /\[options\]/ , 'transcripts2cds.pl' );
 # implicitly tests modules in libs/est/
 
-ok( eval{ `perl ./transcripts2cdsCPP.pl` } =~ /\[options\]/ , 'transcripts2cdsCPP.pl' );
+ok( eval{ `perl ./transcripts2cdsCPP.pl sample_cluster.fna` } =~ /sample_cluster.fna_l50_E1e-05.cds/ , 'transcripts2cdsCPP.pl' );
 # requires optional module Inline::CPP
 
 ok( eval{ `perl ./get_homologues-est.pl -v ` } =~ /Checking required binaries/ , 'get_homologues-est.pl -v' );
