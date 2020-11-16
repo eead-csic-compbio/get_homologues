@@ -347,5 +347,4 @@
 10112020: replaced ' with - in $cluster_name in get_homologues*pl, thanks Tommy Tran!
 10112020: compare_clusters.pl stops if intersection==0
 10112020: updated if else Venn R code in compare_clusters.pl
-16112020: added real test of transcripts2cdsCPP.pl
-16112020: added install_swissprot to install.pl, Makefile and .travis.yml
+16112020: added real test of transcripts2cdsCPP.pl, not used for travis

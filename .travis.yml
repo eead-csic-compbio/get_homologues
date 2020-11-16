@@ -10,7 +10,7 @@ before_install:
   - "cpanm --sudo -v --installdeps --notest --cpanfile cpanfile ."
 
 before_script:
-  - "make install_swissprot"
+  - "make install_auto"
 
 script:
   - "make test"
