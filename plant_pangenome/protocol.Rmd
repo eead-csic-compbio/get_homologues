@@ -1,0 +1,631 @@
+---
+bibliography: bib_myarticles.bib
+csl: springerprotocols.csl
+output:
+  html_document:
+    fig_caption: yes
+    highlight: zenburn
+    theme: cerulean
+    toc: yes
+    toc_depth: 4
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 4
+  word_document: default
+---
+
+```{r knitr setup, include=FALSE,  eval=TRUE, echo=FALSE, warning=FALSE}
+library(knitr)
+knitr::opts_chunk$set(echo=TRUE, eval=TRUE, cache=FALSE, message=FALSE, warning=FALSE, comment = "")
+```
+
+# Pan-genome analysis of plant transcripts and coding sequences
+
+Bruno Contreras-Moreira (1)*, Alvaro Rodriguez del Rio (1), Carlos P. Cantalapiedra (1), Ruben Sancho (2) and Pablo Vinuesa (3)
+
+1. Estación Experimental de Aula Dei-CSIC, Av. Montañana 1.005, 50059 Zaragoza, Spain.
+2. Department of Agricultural and Environmental Sciences, High Polytechnic School of Huesca, University of Zaragoza, Huesca, Spain.
+3. Centro de Ciencias Genómicas, Universidad Nacional Autónoma de México, Cuernavaca, Mexico.
+
+
+* Corresponding author: Bruno Contreras Moreira <bcontreras@eead.csic.es>
+
+
+This tutorial illustrates how to analyze pan-genomes using GET_HOMOLOGUES and GET_HOMOLOGUES-EST. After a short introduction, where the main concepts are illustrated, the remaining sections cover the installation and typical operations required to analyze and annotate genomes and transcriptomes from a pan-genome perspective, in which individuals or species contribute genetic material to a pool.
+
+The frst version of this tutorial was produced originally for a [two-day workshop](pics/posterBIOS.jpg) held at [BIOS](http://bios.co) (Manizales, Colombia), in March 2017.
+
+# Introduction
+
+## Useful names and concepts about pan-genomes
+
+Let’s start by explaining a few concepts. @Welch2002 compared the genome sequences of three strains of *Escherichia coli*, two of them pathogens, and found shared genes, which mostly conserve their positions in the genome, and also accessory genes, which are encoded only in some strains. Three years later @Tettelin2005 analyzed 8 strains of a Gram+ bacteria and for the first time defined the pan-genome as a core genome shared by all strains, plus a dispensable genome consisting of partially shared and strain-specific genes. In addition, a mathematical model suggested that the pan-genome of *Streptococcus agalactiae* might be very large and that unique genes will possibly continue to be identified even after sequencing hundreds of genomes. 
+
+![**Figure 1.** First compelling observations of bacterial pan-genomes in the literature, described as genome mosaics.](pics/pangenome_concepts1.png)
+
+Although the complexity of plant genomes has limited pan-genome approaches, the genomes of two maize lines allowed @Morgante2007 to propose a role for transposable elements in generating dispensable genomic components. A few years later @Marroni2014 questioned how dispensable these components really are, and in fact some authors prefer the terms **accessory** or **shell**, which we use in this tutorial:
+
+![**Figure 2.** Maize pan-genome defined by the genomes of Mo17 and B73 lines (@Morgante2007).](pics/pangenome_concepts3.jpg)
+
+
+The next Figure shows a computational reconstruction of the pan-genome of three toy genomes. 
+
+**Occupancy** is defined as the number of genomes/strains/ecotypes present in a sequence cluster and in this example takes values from 1 to 3.
+
+**Core loci** are found in all three genomes and hence have **occupancy=3**. It might be convenient to define the **soft-core** as a relaxed core, so that some assembly/annotation errors are tolerated. **Accessory loci** are allocated to shell and cloud compartments:
+
+![**Figure 3.** Pan-genome of three genomes (A, B and C). In this example there are 101 core loci and 44 (11+9+24) shell loci are found in two accessions. Finally, 82 (35+25+22) cloud loci are annotated only in one genome. The pan-genome size is 82+44+101=227 loci.](pics/pangenome_concepts2.png)
+
+In addition to occupancy differences, different analyses have shown that pan-genome classes differ in their functional annotations:
+
+![**Figure 4.** Functional annotations (COGs) of core and accessory sequences in two bacterial sets show differences.](pics/pangenome_concepts4.png)
+
+The next table defines the occupancy classes used by GET_HOMOLOGUES:
+
+| class or compartment | definition                                            |
+| ------- | ------------------------------------------------------------------ |
+| core | Genes contained in all considered genomes/taxa. |
+| soft-core | Genes contained in 95% of the considered genomes/taxa, as in the work of @Kaas2012. |
+| cloud | Genes present only in a few genomes/taxa, generally $\leq 2$. The cutoff is defined as the class next to the most populated non-core cluster class. |
+| shell | Remaining genes, present in several genomes/taxa. |
+
+# GET_HOMOLOGUES
+
+The **GET_HOMOLOGUES** software was originally designed for the analysis of bacterial genomes, and has been described in @ContrerasMoreira2013 and @Vinuesa2015.
+
+That software was then adapted to the study of intra-specific eukaryotic pan-genomes, as described in @ContrerasMoreira2017, taking the **GET_HOMOLOGUES-EST** name. Since 2015 the software is hosted at <https://github.com/eead-csic-compbio/get_homologues>.
+
+The next table summarizes the main differences between the two flavours of the software:
+
+| version     | primary input | primary engine | align coverage | COGS | isoforms filtered |
+| ----------- | --------------| ---------| ----------------------| --- | --- |
+| GET_HOMS    | peptides | BLASTP / DIAMOND | query sequence | yes | no |
+|GET_HOMS-EST | nucleotides | BLASTN | shortest sequence | no | yes |
+
+Note that GET_HOMOLOGUES can also cluster user-selected nucleotide features in GenBank files, and in this case BLASTN is used.
+
+Please check the [tables](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4411478/table/t0005) by @Xiao2015 and @Golicz2015 for other software options.
+
+## Installation and up-to-date documentation
+
+GET_HOMOLOGUES is an open source software package, written in Perl and R, 
+available for Linux and MacOS systems. There is documentation available for the
+[bacterial version](http://eead-csic-compbio.github.io/get_homologues/manual) and for the [EST version](http://eead-csic-compbio.github.io/get_homologues/manual-est), which has been tested with genomic and transcriptomic sequences from plants.
+
+### Latest binary release
+
+The simplest way to get the current release of GET_HOMOLOGUES is to check
+<https://github.com/eead-csic-compbio/get_homologues/releases>, download it and extract it in your local filesystem. Let's assume we have a dedicated folder called *soft*:
+
+```{r, engine='bash', eval=FALSE}
+cd soft
+wget -c 'https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.2.4/get_homologues-x86_64-20191128.tgz'
+tar xvfz get_homologues-x86_64-20191128.tgz
+```
+
+Releases include scripts (Perl and R), documentation, sample data and the required binary dependencies, which are listed in the next table and discussed in [manual](http://eead-csic-compbio.github.io/get_homologues/manual/manual.html#SECTION00033000000000000000)
+and [manual-EST](http://eead-csic-compbio.github.io/get_homologues/manual-est/manual-est.html#SECTION00033000000000000000):
+
+software | source
+--------------| ---------------------------------------------------------------
+mcl v14-137   | <http://micans.org/mcl> 
+COGtriangles v2.1 | <http://sourceforge.net/projects/cogtriangles>
+NCBI Blast-2.8.1+ | <http://blast.ncbi.nlm.nih.gov>
+BioPerl v1.5.2 | <http://www.bioperl.org> 
+HMMER 3.1b2 | <http://hmmer.org>
+Pfam | <http://pfam.xfam.org>
+PHYLIP 3.695 | <http://evolution.genetics.washington.edu/phylip>
+Transdecoder r20140704 | <http://transdecoder.sf.net>
+MVIEW 1.60.1 | <https://github.com/desmid/mview>
+diamond 0.8.25 | <https://github.com/bbuchfink/diamond>
+
+For this tutorial the following dependencies were also installed:
+```{r, engine='bash', eval=FALSE}
+sudo apt-get install git htop geeqie evince default-jre
+sudo apt-get -y install r-base r-base-dev libgd-gd2-perl
+sudo cpan -i Inline::C Inline::CPP
+```
+
+In addition, in order to illustrate the use of a computer cluster with GET_HOMOLOGUES,
+we set up a Grid Engine following the instructions in the [manual](http://eead-csic-compbio.github.io/get_homologues/manual/manual.html#SECTION00033000000000000000).
+
+### GitHub clone / pull
+
+A more space-efficient way of getting the software is to use [git](https://en.wikipedia.org/wiki/Git).
+For this you might need to install *git* in your system, as explained earlier. Note also that the *git* protocol requires to open port 9418, which might be blocked by your firewall. This method does not include the binary dependencies, which must downloaded during installation:
+
+```{r, engine='bash', eval=FALSE}
+cd soft
+git clone https://github.com/eead-csic-compbio/get_homologues.git
+cd get_homologues
+perl install.pl
+```
+Note this will create a folder called *get_homologues*.
+
+This approach makes future updates very simple, after moving to the git repository:
+```{r, engine='bash', eval=FALSE}
+cd soft/get_homologues
+git pull
+```
+
+### Optional dependencies, such as Pfam and SwissProt
+
+In order to annotate protein domains and to translate open reading frames a couple of databases must be downloaded and formatted, which you can do by calling in the terminal:
+
+```{r, engine='bash', eval=FALSE}
+cd soft/get_homologues
+perl install.pl
+```
+You should be able to control the installation process by typing Y or N in the terminal.
+Note that this script will also tell you of missing dependencies. 
+
+## Docker container
+
+A way to use GET_HOMOLOGUES with all software dependencies pre-installed is the Docker image available at 
+[dockerhub](https://hub.docker.com/r/csicunam/get_homologues). This container includes also [GET_PHYLOMARKERS](https://github.com/vinuesa/get_phylomarkers). 
+
+## HPC cluster
+
+See the manual for instructions on how to run GET_HOMOLOGUES in a gridengine or LSF cluster.
+
+# Analysis of bacterial pan-genomes
+
+GET_HOMOLOGUES was originally designed to define robust bacterial pan-genomes by computing consensus clusters  of  orthologous  gene  families  from whole  genome  sequences  using  the  bidirectional best-hit, COGtriangles and OrthoMCL clustering algorithms. The granularity of the clusters can be tuned by a configurable filtering strategy based on a combination of BLAST pairwise alignment parameters, hmmscan-based scanning of Pfam domain composition of the proteins in each cluster and a partial synteny criterion.  
+
+![**Figure 5.** GET_HOMOLOGUES flow chart and its outcomes. BLAST and optional Pfam searches are optimized for local (multicore) and cluster computer environments. While the BDBH algorithm uses one sequence from the reference genome to grow clusters, the COG algorithm requires a triangle of reciprocal hits. Instead, the OMCL algorithm groups nodes in a BLAST graph to build clusters. Note that these clustering algorithms can be fine-tuned by customizing parameters such as -C (minimum percentage of coverage in pairwise BLAST alignments), -E (maximum E value for a hit to be considered), -D (require equal Pfam domain composition when defining similarity-based orthology composition), -S (minimum percentage of sequence identity in BLAST query/subject pairs [BDBH|OMCL]). In addition, the user can choose which genome should be used as the reference using option -r. Figure from @ContrerasMoreira2013.](pics/flow.png)
+
+![**Figure 6.** Alignment coverage [BDBH,OMCL] and overall segment coverage [COGS] illustrated with the alignment of sequence 'query' to two aligned fragments of sequence 'subject', where 1,s1,e1,s2,e2 and L are alignment coordinates.](pics/match_cover.png)
+
+Input sequences can be the preferred GenBank files, which capture gene order information, or in FASTA format.
+
+![**Figure 7.** When downloading genome files fron The NCBI, make sure to select full GenBank files.](pics/genbankfull.png)
+
+![**Figure 8.** Effect of alignment coverage on the number of core sequences in different datasets.](pics/figure_cover.png)
+
+![**Figure 9.** A cluster is called syntenic when it contains neighboring genes which are also contained in other single clusters. In this example gene X and gene Z are found to be syntenic, regardless of their orientation. Figure from @ContrerasMoreira2013.](pics/neighbors.png)
+
+![**Figure 10.** Conservation of protein domains as alignment coverage increases.](pics/fig_Pfam.png)
+
+## Example protocol
+
+In this section we present a detailed protocol to fit exponential and binomial mixture models to  estimate core and pan-genome sizes, compute pan-genome trees from the pan-genome matrix using a parsimony criterion, analyze and graphically represent the pan-genome structure and identify lineage-specific gene families for  12 complete pIncA/C plasmids available in NCBI RefSeq. An earliear version of this protocol was first published in @Vinuesa2015.
+
+The data are broad-host-range bacterial resistance plasmids of the IncA/C incompatibility group (@Fricke2009, @Sekizuka2011, @Carattoli2012, @Johnson2012). The goal is to estimate the size of their core and pan-genomes, graphically visualize the structure of the pan-genome and identify genes specifically found in two plasmids containing the blaNDM-1 (New Delhi metallo-beta-lactamase-1) gene (@Poirel2010). This gene encodes a metallo-enzyme conferring resistance to all beta-lactams, including carbapenems. 
+
+```{r, engine='bash', eval=FALSE}
+# edit and set GET_HOMOLOGUES path
+export GETHOMS=~/path/to/get_homologues
+
+# set data paths and choose pIncA/C plasmid dataset
+export top_dir=$GETHOMS
+export gbk_dir=$top_dir/sample_plasmids_gbk
+
+# or download/use your own genomes 
+# mkdir /path/to/mygenomes
+# export gbk_dir=/path/to/mygenomes
+# cd $gbk_dir
+# 
+# create a text file with genomes to be downloaded, 1 per line
+# see example $GETHOMS/sample_genome_list.txt
+#
+# perl $GETHOMS/download_genomes_ncbi.pl download.txt
+
+## 1 Compute orthologous gene clusters with default settings
+
+# algorithm: BDBH 
+# alignment coverage: 75% [-C 75]
+# E-value: 1e-05 [-E 1e-05]
+# cluster size: clusters with 1+ representative protein from each proteome analyzed [-t number_of_proteomes]
+# run mode: local [-m local]). 
+# You can check all available params issuing:
+perl $GETHOMS/get_homologues.pl -v
+
+# 1.1 run GET_HOMOLOGUES with default settings and 6 cores/threads
+cd $top_dir
+perl $GETHOMS/get_homologues.pl -d $gbk_dir -n 6
+
+# The script: 
+# i) creates a new output directory named ${gbk_dir}_homologues/ (blast_dir below)
+# ii) extracts and numbers FASTA peptide & nucleotide CDS seqs from input GenBank files 
+# iii) generates sequence databases calling makeblastdb 
+# iv) calls BLASTP to carry out all-against-all search, splitting jobs among threads 
+
+# 1.2 cd into blast results directory, which we will save in var
+export blast_dir=$top_dir/${gbk_dir}_homologues 
+cd $blast_dir
+
+# 1.3 explore contents by file extension names
+ls | cut -d\. -f2 | sort | uniq -c
+
+# 1.4 find which of those files are directories
+find . -type d
+
+# 1.5 cd into the BDBH clusters directory
+
+# The BDBH algorithm requires a reference genome, takes smallest by default.
+# The folder names also tells that:
+# i) no %length-difference within clusters filtering was applied (_f0)
+# ii) only (core) clusters with 1+ seq from all proteomes are considered (_alltaxa)
+# [Note that nucleotide clusters are also produced with GenBank input]
+# iii) clusters with inparalogues were allowed (_e0)
+
+cd UnculturedbacteriumplasmidpRSB203_f0_alltaxa_algBDBH_e0_
+
+# 1.6 list contents (orthologous gene clusters) and count them
+ls && ls | wc
+
+# 1.7 how many genes does each orthologous cluster contain?
+grep -c '>' *faa
+ 
+# 1.8 which clusters contain inparalogues (in our case > 12 sequences)?
+grep -c '>' *faa | grep -v ':12'
+
+# 1.9 which proteome contains the locus with inparalogues 
+# grep '>' *cluster*.faa | cut -d\| -f2,3 | sort | uniq -c
+
+
+## 2 BDBH orthologous clusters with conserved Pfam domains
+
+# 2.1 run GET_HOMOLOGUES with 6 cores/threads and Pfam annotation
+# The default parameters for parsing BLASTP results are quite stringent and can be adjusted
+# depending on the divergence of the dataset to be analyzed. An alternative and powerful means 
+# of selecting bona-fide orthologous clusters is imposing the restriction that all members have 
+# the same Pfam domain composition. Due to the link that exists between protein domain architecture 
+# and function, this makes the resulting clusters more likely to contain functionally equivalent proteins
+
+# We use nohup to run run the process in the background detaching it from the login session
+cd $top_dir
+nohup $GETHOMS/get_homologues.pl -d $gbk_dir -D -n 6 &> log.get_homologues_pIncAC_BDBH_C75D_allTaxa &
+
+# The job can be monitored with tail -f []exit with Ctrl+C
+tail -f log.get_homologues_pIncAC_BDBH_C75D_allTaxa
+
+# 2.2 cd into the Pfam-domain filtered BDBH cluster directory
+cd $blast_dir/UnculturedbacteriumplasmidpRSB203_f0_alltaxa_algBDBH_Pfam_e0_
+
+# 2.3 list contents (orthologous gene clusters) and count them
+ls && ls | wc
+
+# 2.4 which clusters contain inparalogues?
+# Alternatively check the contents of UnculturedbacteriumplasmidpRSB203_f0_alltaxa_algBDBH_Pfam_e0_.cluster_list
+grep -c '>' *faa | grep -v ':12'
+
+# 2.5 Question: which are the clusters from the standard BDBH analysis 
+# that do not contain an homogeneous Pfam domain composition?  
+
+## 3 compute robust core and pan-genomes
+
+# 3.1 produce pan-genome clusters of all sizes (-t 0) with both the COG and OrthoMCL algorithms
+# [Note that Average Peptide Identities (-A) and percentage of conserved proteins (-P) matrices
+# are produced, as well as pan-genome growth simulations (-c),
+#  please check the produced logfiles]
+# If Average Nucleotide Identities are desired then option -a should be used, enforcing the 
+# alignment if nucleotide sequences
+# If option -X is set DIAMOND would be called instead of BLASTP, which reduces computing time 
+# when many input genomes are to be analyzed
+cd $top_dir
+$GETHOMS/get_homologues.pl -d $gbk_dir -G -D -t 0 -A -P -c &> log.get_homologues_pIncAC_GDt0c 
+$GETHOMS/get_homologues.pl -d $gbk_dir -M -D -t 0 -A -P -c &> log.get_homologues_pIncAC_MDt0c
+
+cat ${blast_dir}/UnculturedbacteriumplasmidpRSB203_f0_0taxa_algOMCL_Pfam_e0_Avg_identity.tab
+
+# 3.1 generate consensus single-copy orthologous gene clusters with homogeneous Pfam-domain 
+# composition using the intersection of  BDBH, COG and OrthoMCL gene families
+cd $blast_dir
+$GETHOMS/compare_clusters.pl -d UnculturedbacteriumplasmidpRSB203_f0_0taxa_algCOG_Pfam_e0_,\
+UnculturedbacteriumplasmidpRSB203_f0_0taxa_algOMCL_Pfam_e0_,\
+UnculturedbacteriumplasmidpRSB203_f0_alltaxa_algBDBH_Pfam_e0_\
+ -o intersect_core_BCM_Dt12 -t 12 -m
+
+# check Venn diagram
+evince intersect_core_BCM_Dt12/venn_t12.pdf
+
+# 3.2 explore the contents of the intersect_core_BCM_Dt12 directory
+cd intersect_core_BCM_Dt12  && ls && ls *faa | wc
+      
+# 3.3 confirm that all clusters contain only one sequence from each plasmid/proteome
+grep '>' *faa | cut -d\| -f2,3 | sort | uniq -c
+     
+# 3.4 robust consensus pan-genome clusters as the intersection of COG and OrthoMCL clusters
+# [Note that a pan-genome matrix is produced (-m), as well as a parsimony-based pangenomic tree (-T)]
+
+# We observe that the COGtriangles clustering algorithm consistently generates a larger number 
+# of unique clusters than the OMCL algorithm. Most of these COG-specific clusters are actually
+# singletons, consisting of single or pairs of proteins that were not merged into a proper 
+# cluster because at least three proteins from distinct organisms/proteomes are required 
+# to form a COG triangle
+
+cd $blast_dir
+$GETHOMS/compare_clusters.pl -d UnculturedbacteriumplasmidpRSB203_f0_0taxa_algCOG_Pfam_e0_,\
+UnculturedbacteriumplasmidpRSB203_f0_0taxa_algOMCL_Pfam_e0_ -o intersect_pan_CM_Dt0 -t 0 \
+-m -T 
+
+evince intersect_pan_CM_Dt0/venn_t0.pdf
+
+# check some columns of the pan-genome matrix
+cut -f 1,90-93 intersect_pan_CM_Dt0/pangenome_matrix_t0.tab
+
+# now in its transposed format
+head intersect_pan_CM_Dt0/pangenome_matrix_t0.tr.tab 
+
+# check the parsimony presence/absence tree
+cat intersect_pan_CM_Dt0/pangenome_matrix_t0.phylip.ph
+
+# (recommended) visualize the tree, outgroup: Aeromonas hydrophila
+# software options include:
+# http://tree.bio.ed.ac.uk/software/figtree
+# https://itol.embl.de/
+
+## 4 Statistical estimation of the theoretical core and pan-genome sizes 
+
+cd $blast_dir
+
+# 4.1 find pancore tab files that summarize permutation experiments (and check their contents)
+ls pan*.tab
+ls core*.tab
+for file in pan*tab; do echo "# $file"; cat $file; echo; echo; done
+
+# 4.2 use the *tab files computed based on the OrthoMCL clusters to fit
+# both the Tettelin and Willenbrock exponential decay core genomes functions 
+# after resampling, which of them has fits better?
+$GETHOMS/plot_pancore_matrix.pl -i core_genome_algOMCL_Pfam.tab -f core_both -a core_snapshots
+
+evince core_genome_algOMCL_Pfam.tab_core_both.pdf
+
+# (recommended) see how the plot was computed step-by-step
+# in Ubuntu you could do: $geeqie core_snapshots
+
+# 4.3 fit mixture model and plot core-cloud-shell pan-genome composition graphics
+# using consensus COG and OrthoMCL clusters
+
+# Exponential models have been criticized based on two objections: 
+# i) Exponential models implicitly assume an infinite size for “open” pan-genomes, which is not realistic
+# ii) They imply that the pan-genome consists of two “compartments”, the universally 
+# distributed core-genome genes and the less conserved, “accessory genes” that conform the “flexible genome”
+
+# The Bayesian Information Criterion (BIC) of the different components sampled by mixture models
+# can be taken as an objective way of estimating the best fitting number of components, corresponding
+# to the minimum BIC
+
+cd intersect_pan_CM_Dt0
+$GETHOMS/parse_pangenome_matrix.pl -m pangenome_matrix_t0.tab -s 
+
+evince pangenome_matrix_t0__shell.pdf
+
+# 4.4 inspect the pangenome_matrix_t0__*_list.txt for the presence plasmid replication and mobilization genes
+egrep 'mob|tra|rep' pangenome_matrix_t0*txt | egrep -v 'transpo|transcr|trans' | uniq
+
+# 4.5 inspect the pangenome_matrix_t0__*_list.txt for the presence of 
+# beta-lactamase or tetracycline resistance genes
+egrep 'bla|lactamase|tet|tetracycline' pangenome_matrix_t0__*_list.txt
+
+## 5 detection of lineage-specific genes
+
+# 5.1 list cluster names containing cloud/unique genes and the corresponding taxa
+cat pangenome_matrix_t0__cloud_list.txt
+grep ">" 68_armA.faa
+
+# (recommended) check the BLAST hits of sequence 887
+cd ../..
+$GETHOMS/check_BDBHs.pl -d $blast_dir -i 68 -D -s
+
+# 5.2 make lists of genomes to be compared for lineage specific genes (list A vs. B)
+export panGmat_dir=$(pwd)
+cd $gbk_dir
+ls *gbk | grep pNDM > listA_pNDM
+ls *gbk | grep -v pNDM > listB_nonNDM
+cd $panGmat_dir
+
+# 5.3 parse the pangenome matrix file to find the listA-specific genes
+$GETHOMS/parse_pangenome_matrix.pl -A $gbk_dir/listA_pNDM -B $gbk_dir/listB_nonNDM \
+-g -m pangenome_matrix_t0.tab -p "Escherichia coli"
+
+# 5.4 Find genes present only in the NDM-1 expressing plasmids
+
+# The sequential numbering of several genes indicates that most of the ‘A’-specific genes are clustered in two regions. The first one, which harbours the blaNDM-1 gene, also contains the well-known proteins GroES and TrpF, which are perhaps a surprise in a resistance plasmid.
+
+cat pangenome_matrix_t0__pangenes_list.txt
+
+# (recommended)
+geeqie
+
+```
+
+The OrthoMCL and COG triangles algorithms were first described in @Li2003 and @Kristensen2010, respectively.
+The Willenbrock exponential fit was first published by @Willenbrock2007.
+The mixture model implemented in GET_HOMOLOGUES was first described by @Snipen2009.
+
+# Analysis of plant pan-genomes
+
+Unlike its ancestor, which was designed for the analysis of genes within fully sequences genomes, 
+GET_HOMOLOGUES-EST has been adapted to the large size of plant genomic data sets, and adds new features to adequately handle redundant and fragmented transcript sequences, as those usually obtained from state-of-the-art technologies like RNA-seq, as well as incomplete/fragmented gene models from WGS assemblies.   
+
+![**Figure 11.** Features of GET_HOMOLOGUES-EST. (A) Flowchart of the main tasks and deliverables. BLASTN and optional Pfam scans, as well as BDBH and OMCL clustering, can be run on a local computer, preferably multi-core, or over a computer cluster. Resulting clusters are post-processed to produce pan-genome or average nucleotide identity matrices, as well as to estimate pan-, soft-core-, and core-genomes. Note that both clustering algorithms can be fine-tuned by customizing an array of parameters, of which alignment coverage is perhaps the most important. While OMCL is adequate for most applications, the niche of BDBH is the fast calculation of core sequences within large datasets. (B) Coverage calculation illustrated with the alignment of sequence ‘query’ to two aligned fragments of sequence ’subject.’ Lq and Ls are the lengths of both sequences, and s1, e1, s2, e2, and Lq are alignment coordinates. (C–E) Common problems faced when clustering RNA-seq transcripts or CDS sequences from whole-genome assemblies: split genes, partial genes and genes or transcripts with retained introns. A cluster of four sequences is shown in C, where two black fragments correspond to pieces of the same gene. Panel D shows a cluster of three sequences, where the last one corresponds to the 5′ half of a transcript, probably missing one or more exons. A cluster of four transcripts is shown in E, where the last one bears an intron not present on the others. (F) Benchmark of barley transcript clusters produced with sequence identity cut-offs of 95 and 98% and with CD-HIT-EST, requiring in all cases coverage ≥ 75%. Curated, high quality Haruna Nijo isoforms were used as a gold-standard. When the same output cluster contained several Haruna Nijo isoforms, the average number of shared exons was computed as a measure of cluster consistency. Thus, the reported mean and SEM values correspond to clusters containing > 1 isoforms of the same Haruna Nijo gene model. Figure from @ContrerasMoreira2017.](pics/flow-est.png)
+
+![**Figure 12.** Redundant isoforms (dashed) are optionally removed from an input sequence set if they overlap a longer sequence over a length $\geq 40$ (A) or when they are completely matched (B). In either case a 100% sequence identity is required. By calling option -L all redundant isoforms are included in the output. Figure from @ContrerasMoreira2017.](pics/isoforms.png)
+
+<!--![**Figure.** Alignment coverage illustrated with the alignment of sequence 'query' to two aligned fragments of sequence 'subject'. Lq and Ls are the lengths of both sequences, and s1,e1,s2,e2 and Lq are alignment coordinates.](pics/match_cover-est.png)-->
+
+The script *transcripts2cds.pl* is bundled with GET_HOMOLOGUES-EST to assist in the analysis of transcripts. It can be used to annotate potential Open Reading Frames (ORFs) contained within raw transcripts, which might be truncated or contain introns. This script uses TransDecoder and BLASTX to scan protein sequences in SWISSPROT. DIAMOND can also be used with significant gains in computing time and very small sensitivity losses, as shown in [manual-est](http://eead-csic-compbio.github.io/get_homologues/manual-est/manual-est.html#SECTION00043000000000000000).
+
+## Example protocol
+
+In this section we present a step-by-step protocol for the analysis of *Hordeum vulgare* WGS-based cDNA sequences, annotated in reference cultivars *Morex* and *Haruna Nijo*, and *de novo* assembled transcriptomes used by @ContrerasMoreira2017. The barley sequences used can be obtained as explained below from files included in the *test_barley* folder, which should be bundled with your copy of GET_HOMOLOGUES. Similar analyses could be performed with the  *Arabidopsis thaliana* sequences at <http://floresta.eead.csic.es/plant-pan-genomes/>.
+
+```{r, engine='bash', eval=FALSE}
+# set GET_HOMOLOGUES path
+export GETHOMS=~/soft/get_homologues
+
+cd test_barley
+
+## 1) prepare sequences
+cd seqs
+
+# download all transcriptomes
+wget -c -i wgetlist.txt
+
+# extract CDS sequences (this takes several hours)
+# choose cdsCPP.sh if dependency Inline::CPP is available in your system
+# the script will use 20 CPU cores, please adapt it to your system
+#./cds.sh 
+
+# clean and compress
+#rm -f _* *noORF* *transcript*
+#gzip *diamond*
+
+# put cds sequences aside
+#mv *cds.f*gz ../cds
+cd ..
+
+# check lists of accessions are in place (see HOWTO.txt there)
+ls cds/*list
+
+
+## 2) cluster sequences and start the analyses
+# [Check the log files to detect errors, see what the program
+# is doing and get the fina number fo clusters produced]
+
+# calculate protein domain frequencies (Pfam)
+$GETHOMS/get_homologues-est.pl -d cds -D -m cluster -o &> log.cds.pfam
+
+# alternatively, if not running in a SGE cluster, taking for instance 20 CPUs 
+# $GETHOMS/get_homologues-est.pl -d cds -D -n 20 -o &> log.cds.pfam
+
+# calculate 'control' cds clusters
+$GETHOMS/get_homologues-est.pl -d cds -M -t 0 -m cluster &> log.cds
+
+# get non-cloud clusters
+$GETHOMS/get_homologues-est.pl -d cds -M -t 3 -m cluster &> log.cds.t3
+
+# single-copy clusters with high occupancy & Average Nucleotide Identity
+# [Note that flag -e leaves out clusters with inparalogues]
+$GETHOMS/get_homologues-est.pl -d cds -M -t 10 -m cluster -A -e &> log.cds.t10.e
+
+# clusters for dN/dS calculations
+#$GETHOMS/get_homologues-est.pl -d cds -e -M -t 4 -m cluster &> log.cds.t4.e
+
+# leaf clusters and pangenome growth simulations with soft-core
+$GETHOMS/get_homologues-est.pl -d cds -c -z \
+  -I cds/leaf.list -M -t 3 -m cluster &> log.cds.leaf.t3.c
+
+# make heatmap and dendrograms based on ANI
+# [You might want to edit labels in ANI tab file] 
+
+# first install dependencies
+$GETHOMS/plot_matrix_heatmap.sh -M
+
+$GETHOMS/plot_matrix_heatmap.sh -i cds_est_homologues/Alexis_10taxa_algOMCL_e1_Avg_identity.tab \
+  -H 10 -W 15 -t "ANI of single-copy transcripts (occupancy > 9)" -N -o pdf
+
+
+# produce pan-genome matrix and allocate clusters to occupancy classes
+
+# all occupancies
+$GETHOMS/compare_clusters.pl -d cds_est_homologues/Alexis_0taxa_algOMCL_e0_ \
+  -o clusters_cds -m -n &> log.compare_clusters.cds
+
+# excluding cloud clusters, the most unreliable in our benchmarks
+$GETHOMS/compare_clusters.pl -d cds_est_homologues/Alexis_3taxa_algOMCL_e0_ \
+  -o clusters_cds_t3 -m -n &> log.compare_clusters.cds.t3
+  
+# (recommended) check the log files for the number of clusters   
+  
+# (recommended) inspect some of those clusters with script annotate_cluster.pl,
+# useful to reconstruct the alignments that support them
+
+# (recommended) it is possible to annotate pan-genome clusters with script 
+# make_nr_pangenome_matrix.pl and a FASTA file of curated sequences
+  
+# log file contains mixture model pan-genome size estimates   
+$GETHOMS/parse_pangenome_matrix.pl -m clusters_cds_t3/pangenome_matrix_t0.tab -s \
+  &> log.parse_pangenome_matrix.cds.t3
+
+
+# make pan-genome growth plots
+$GETHOMS/plot_pancore_matrix.pl -i cds_est_homologues/core_genome_leaf.list_algOMCL.tab \
+	-f core_both &> log.core.plots
+$GETHOMS/plot_pancore_matrix.pl -i cds_est_homologues/pan_genome_leaf.list_algOMCL.tab \
+	-f pan &> log.pan.plots
+  
+# (recommended) check the produced plots and the exponential size estimates
+
+
+## 3) annotate accessory genes
+
+# find [-t 3] SBCC073 clusters absent from references
+$GETHOMS/parse_pangenome_matrix.pl -m clusters_cds_t3/pangenome_matrix_t0.tab \
+  -A cds/SBCC073.list -B cds/ref.list -g &> log.acc.SBCC073
+mv clusters_cds_t3/pangenome_matrix_t0__pangenes_list.txt \
+  clusters_cds_t3/SBCC073_pangenes_list.txt
+
+# how many SBCC073 clusters are there? 
+perl -lane 'if($F[0] =~ /SBCC073/){ foreach $c (1 .. $#F){ if($F[$c]>0){ $t++ } }; print $t }' \
+  clusters_cds_t3/pangenome_matrix_t0.tab 
+
+# find [-t 3] Scarlett clusters absent from references
+$GETHOMS/parse_pangenome_matrix.pl -m clusters_cds_t3/pangenome_matrix_t0.tab \
+  -A cds/Scarlett.list -B cds/ref.list -g &> log.acc.Scarlett 
+mv clusters_cds_t3/pangenome_matrix_t0__pangenes_list.txt \
+  clusters_cds_t3/Scarlett_pangenes_list.txt 
+
+# find [-t 3] H.spontaneum clusters absent from references
+$GETHOMS/parse_pangenome_matrix.pl -m clusters_cds_t3/pangenome_matrix_t0.tab \
+  -A cds/spontaneum.list -B cds/ref.list -g &> log.acc.spontaneum
+mv clusters_cds_t3/pangenome_matrix_t0__pangenes_list.txt \
+  clusters_cds_t3/spontaneum_pangenes_list.txt
+
+# Pfam enrichment tests
+
+# core
+$GETHOMS/pfam_enrich.pl -d cds_est_homologues -c clusters_cds -n \
+	-x clusters_cds_t3/pangenome_matrix_t0__core_list.txt -e -p 1 \
+	-r SBCC073 > SBCC073_core.pfam.enrich.tab
+
+$GETHOMS/pfam_enrich.pl -d cds_est_homologues -c clusters_cds -n \
+	-x clusters_cds_t3/pangenome_matrix_t0__core_list.txt -e -p 1 \
+	-r SBCC073 -t less > SBCC073_core.pfam.deplet.tab
+
+# accessory
+$GETHOMS/pfam_enrich.pl -d cds_est_homologues -c clusters_cds -n \
+	-x clusters_cds_t3/SBCC073_pangenes_list.txt -e -p 1 -r SBCC073 \
+	-f SBCC073_accessory.fna > SBCC073_accessory.pfam.enrich.tab
+  
+$GETHOMS/pfam_enrich.pl -d cds_est_homologues -c clusters_cds -n \
+	-x clusters_cds_t3/Scarlett_pangenes_list.txt -e -p 1 -r Scarlett \
+	-f Scarlett_accessory.fna > Scarlett_accessory.pfam.enrich.tab
+
+$GETHOMS/pfam_enrich.pl -d cds_est_homologues -c clusters_cds -n \
+	-x clusters_cds_t3/spontaneum_pangenes_list.txt -e -p 1 -r Hs_ \
+	-f spontaneum_accessory.fna > spontaneum_accessory.pfam.enrich.tab
+
+# note that output files contain data such as the mean length of sequences
+
+# get merged stats for figure
+perl suppl_scripts/_add_Pfam_domains.pl > accessory_stats.tab
+perl -lane 'print if($F[0] >= 5 || $F[1] >= 5 || $F[2] >= 5)' \
+  accessory_stats.tab  > accessory_stats_min5.tab
+Rscript suppl_scripts/_plot_heatmap.R
+
+
+```
+
+## Analysis of pan-genomes from Ensembl Plants
+
+If you ever wanted to do some of the analyses described above for any taxa supported in the 
+[Ensembl Plants](http://plants.ensembl.org) genome browser (@Howe2019) you can try the scripts at
+[Ensembl/plant_tools/compara](https://github.com/Ensembl/plant_tools/tree/master/compara), 
+which query pre-computed comparative genomics data produced by the Ensembl Compara pipelines 
+(@Herrero2016).
+
+# Downstream phylogenomic analyses 
+
+Both pangenome matrices and single-copy CDS sequence clusters produced with the protocols explained above can be further analyzed and plotted with help from tools of the [GET_PHYLOMARKERS](https://github.com/vinuesa/get_phylomarkers) pipeline (@Vinuesa2018). As explained in its own [tutorial](https://vinuesa.github.io/get_phylomarkers), with this toolbox it is possible to use twin nucleotide & peptide clusters produced by GET_HOMOLOGUES to compute robust multi-gene and pangenome phylogenies.
+
+See the section "Docker container" above to learn about the container bundled with both GET_HOMOLOGUES and GET_PHYLOMARKERS to avoid trouble installing dependencies and produce reproducible analyses. 
+
+
+# References
+
+
