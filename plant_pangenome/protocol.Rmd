@@ -1,4 +1,5 @@
 ---
+title: 'Pan-genome analysis of plant transcripts and coding sequences'
 bibliography: bib_myarticles.bib
 csl: springerprotocols.csl
 output:
