@@ -36,8 +36,6 @@ Bruno Contreras-Moreira (1)*, Alvaro Rodriguez del Rio (1), Carlos P. Cantalapie
 
 The pan-genome of a species is the sum of the genomes of its individuals. However, coding sequences often represent only a small fraction of each genome, and thus analyzing the pan-gene set can be a cost-efective strategy for plants with large genomes or highly heterzygous species. Here we describe a step-by-step protocol to analyze plant pan-gene sets with the software GET_HOMOLOGUES-EST. After a short introduction, where the main concepts are illustrated, the remaining sections cover the installation and typical operations required to analyze and annotate pan-transcriptomes and gene sets of plants. The recipes include how to call core and accessory genes, how to compute a presence-absence pan-genome matrix and how to identify and analyze private genes, present only in some genotypes. The use of core-genes for phylogeny analysis is also discussed.
 
-<!--was benchmarked with genomic and RNA-seq data of 19 Arabidopsis thaliana ecotypes and then applied to the analysis of transcripts from 16 Hordeum vulgare genotypes. The goal was to sample their pan-genomes and classify sequences as core, if detected in all accessions, or accessory, when absent in some of them. The resulting sequence clusters were used to simulate pan-genome growth, and to compile Average Nucleotide Identity matrices that summarize intra-species variation. Although transcripts were found to under-estimate pan-genome size by at least 10%, we concluded that clusters of expressed sequences can recapitulate phylogeny and reproduce two properties observed in A. thaliana gene models: accessory loci show lower expression and higher non-synonymous substitution rates than core genes. Finally, accessory sequences were observed to preferentially encode transposon components in both species, plus disease resistance genes in cultivated barleys, and a variety of protein domains from other families that appear frequently associated with presence/absence variation in the literature. These results demonstrate that pan-genome analyses are useful to explore germplasm diversity. -->
-
 ### ii. Key Words
 
 - Pan-genome, pan-gene set, crops, model plants, wild plants, polyploids, scripting
@@ -49,7 +47,12 @@ Defining pan-gene sets with GET_HOMOLOGUES-EST
 
 ## 1. Introduction
 
-@Novak2020k
+A pan-genome can be defined as the sum of the core genome, shared by all individuals of a species, plus the dispensable genome, which includes partially shared and population-specific genes [@Tettelin2005].  Among plants, previous work has compared ecotypes of model species and cultivars of crops such as maize, barley, soybean, or rice, revealing that dispensable genes play important roles in evolution, and in the complex interplay between plants and the environment (reviewed at [@Golicz2020]). For these reasons  we prefer to rename dispensable genes as “accessory”, a term borrowed from microbiology [@Laing2010; @Marroni2014]. Moreover, accounting for accessory genomic features improves the association of genotypes to phenotypes beyond SNPs called on a single reference genome [@Yano2016; @Coletta2021]. In summary, pan-genomes are the new reference sequences for plant genomic studies [@Bayer2020].
+
+The data structures used to represent pan-genomes are evolving in parallel with the sequencing technologies,
+and the state-of-the-art are the so called pan-genome graphs, which have been shown to significantly improve variant calling by read mapping [@Eizenga2020; @Coletta2021]. However, the input genome sequences used to construct a graph need to be highly contiguous. In reality, the plant genome assemblies that can be found in the public archives are still fragmented, particularly for species with large, highly repetitive, heterozygous and polyploid genomes. For these reasons, approaches that do not require a fully-assembled reference genome are of interest for plant breeding and ecology [@Arora2019; @Voichek2020].
+
+
 
 
 
