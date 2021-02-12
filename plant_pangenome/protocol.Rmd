@@ -30,25 +30,37 @@ Bruno Contreras-Moreira (1)*, Alvaro Rodriguez del Rio (1), Carlos P. Cantalapie
 2. Department of Agricultural and Environmental Sciences, High Polytechnic School of Huesca, University of Zaragoza, Huesca, Spain.
 3. Centro de Ciencias Genómicas, Universidad Nacional Autónoma de México, Cuernavaca, Mexico.
 
-
 * Corresponding author: Bruno Contreras Moreira <bcontreras@eead.csic.es>
 
+## i. Summary/Abstract
 
-This tutorial illustrates how to analyze pan-genomes using GET_HOMOLOGUES and GET_HOMOLOGUES-EST. After a short introduction, where the main concepts are illustrated, the remaining sections cover the installation and typical operations required to analyze and annotate genomes and transcriptomes from a pan-genome perspective, in which individuals or species contribute genetic material to a pool.
+The pan-genome of a species is the sum of the genomes of its individuals. However, coding sequences often represent only a small fraction of each genome, and thus analyzing the pan-gene set can be a cost-efective strategy for plants with large genomes or highly heterzygous species. Here we describe a step-by-step protocol to analyze plant pan-gene sets with the software GET_HOMOLOGUES-EST. After a short introduction, where the main concepts are illustrated, the remaining sections cover the installation and typical operations required to analyze and annotate pan-transcriptomes and gene sets of plants. The recipes include how to call core and accessory genes, how to compute a presence-absence pan-genome matrix and how to identify and analyze private genes, present only in some genotypes.
 
-The frst version of this tutorial was produced originally for a [two-day workshop](pics/posterBIOS.jpg) held at [BIOS](http://bios.co) (Manizales, Colombia), in March 2017.
+<!--was benchmarked with genomic and RNA-seq data of 19 Arabidopsis thaliana ecotypes and then applied to the analysis of transcripts from 16 Hordeum vulgare genotypes. The goal was to sample their pan-genomes and classify sequences as core, if detected in all accessions, or accessory, when absent in some of them. The resulting sequence clusters were used to simulate pan-genome growth, and to compile Average Nucleotide Identity matrices that summarize intra-species variation. Although transcripts were found to under-estimate pan-genome size by at least 10%, we concluded that clusters of expressed sequences can recapitulate phylogeny and reproduce two properties observed in A. thaliana gene models: accessory loci show lower expression and higher non-synonymous substitution rates than core genes. Finally, accessory sequences were observed to preferentially encode transposon components in both species, plus disease resistance genes in cultivated barleys, and a variety of protein domains from other families that appear frequently associated with presence/absence variation in the literature. These results demonstrate that pan-genome analyses are useful to explore germplasm diversity. -->
 
-# Introduction
+### ii. Key Words
 
-## Useful names and concepts about pan-genomes
+- Pan-genome, pan-gene set, crops, model plants, wild plants, polyploids, scripting
+
+### iv. Running head
+
+Defining pan-gene sets with GET_HOMOLOGUES-EST
+
+
+## 1. Introduction
+
+@Novak2020k
+
+
+
 
 Let’s start by explaining a few concepts. @Welch2002 compared the genome sequences of three strains of *Escherichia coli*, two of them pathogens, and found shared genes, which mostly conserve their positions in the genome, and also accessory genes, which are encoded only in some strains. Three years later @Tettelin2005 analyzed 8 strains of a Gram+ bacteria and for the first time defined the pan-genome as a core genome shared by all strains, plus a dispensable genome consisting of partially shared and strain-specific genes. In addition, a mathematical model suggested that the pan-genome of *Streptococcus agalactiae* might be very large and that unique genes will possibly continue to be identified even after sequencing hundreds of genomes. 
 
-![**Figure 1.** First compelling observations of bacterial pan-genomes in the literature, described as genome mosaics.](pics/pangenome_concepts1.png)
+<!-- ![**Figure 1.** First compelling observations of bacterial pan-genomes in the literature, described as genome mosaics.](pics/pangenome_concepts1.png) -->
 
 Although the complexity of plant genomes has limited pan-genome approaches, the genomes of two maize lines allowed @Morgante2007 to propose a role for transposable elements in generating dispensable genomic components. A few years later @Marroni2014 questioned how dispensable these components really are, and in fact some authors prefer the terms **accessory** or **shell**, which we use in this tutorial:
 
-![**Figure 2.** Maize pan-genome defined by the genomes of Mo17 and B73 lines (@Morgante2007).](pics/pangenome_concepts3.jpg)
+<!-- ![**Figure 2.** Maize pan-genome defined by the genomes of Mo17 and B73 lines (@Morgante2007).](pics/pangenome_concepts3.jpg) -->
 
 
 The next Figure shows a computational reconstruction of the pan-genome of three toy genomes. 
@@ -57,11 +69,38 @@ The next Figure shows a computational reconstruction of the pan-genome of three 
 
 **Core loci** are found in all three genomes and hence have **occupancy=3**. It might be convenient to define the **soft-core** as a relaxed core, so that some assembly/annotation errors are tolerated. **Accessory loci** are allocated to shell and cloud compartments:
 
-![**Figure 3.** Pan-genome of three genomes (A, B and C). In this example there are 101 core loci and 44 (11+9+24) shell loci are found in two accessions. Finally, 82 (35+25+22) cloud loci are annotated only in one genome. The pan-genome size is 82+44+101=227 loci.](pics/pangenome_concepts2.png)
+<!--![**Figure 3.** Pan-genome of three genomes (A, B and C). In this example there are 101 core loci and 44 (11+9+24) shell loci are found in two accessions. Finally, 82 (35+25+22) cloud loci are annotated only in one genome. The pan-genome size is 82+44+101=227 loci.](pics/pangenome_concepts2.png) -->
 
 In addition to occupancy differences, different analyses have shown that pan-genome classes differ in their functional annotations:
 
-![**Figure 4.** Functional annotations (COGs) of core and accessory sequences in two bacterial sets show differences.](pics/pangenome_concepts4.png)
+<!--![**Figure 4.** Functional annotations (COGs) of core and accessory sequences in two bacterial sets show differences.](pics/pangenome_concepts4.png) -->
+
+(Gordon et al. 2020)
+(Contreras-Moreira et al. 2017)
+https://legumeinfo.org/gcv2/instructions
+
+https://busco.ezlab.org/
+
+Ideas:
+CPC2 for protein coding potential, RNAsamba, both trained on human truth set
+https://academic.oup.com/nar/article/45/W1/W12/3831091
+https://academic.oup.com/nargab/article/2/1/lqz024/5701461
+→ Poner Ensembl Plants https://github.com/Ensembl/plant_tools/tree/master/phylogenomics
+→ http://eead-csic-compbio.github.io/get_homologues/tutorial/pangenome_tutorial.html
+Pan-gene sets vs pangenomes
+busco transcriptomes
+http://eead-csic-compbio.github.io/get_homologues/tutorial/pangenome_tutorial.html
+http://floresta.eead.csic.es/plant-pan-genomes/Bhybridum/readme.txt
+IsoSeq
+annotate_cluster.pl
+pfam_enrich.pl
+check_BDBHS.pl
+Transcripts2cds.pl
+SGE, slurm, LSF
+-> get_phylo
+
+ventajas de transcriptomes, genomas difíciles de ensamblar
+
 
 The next table defines the occupancy classes used by GET_HOMOLOGUES:
 
@@ -72,7 +111,11 @@ The next table defines the occupancy classes used by GET_HOMOLOGUES:
 | cloud | Genes present only in a few genomes/taxa, generally $\leq 2$. The cutoff is defined as the class next to the most populated non-core cluster class. |
 | shell | Remaining genes, present in several genomes/taxa. |
 
-# GET_HOMOLOGUES
+The first version of this tutorial was produced originally for a [two-day workshop](pics/posterBIOS.jpg) held at [BIOS](http://bios.co) (Manizales, Colombia), in March 2017.
+
+## 2. Materials
+
+### GET_HOMOLOGUES
 
 The **GET_HOMOLOGUES** software was originally designed for the analysis of bacterial genomes, and has been described in @ContrerasMoreira2013 and @Vinuesa2015.
 
@@ -89,13 +132,13 @@ Note that GET_HOMOLOGUES can also cluster user-selected nucleotide features in G
 
 Please check the [tables](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4411478/table/t0005) by @Xiao2015 and @Golicz2015 for other software options.
 
-## Installation and up-to-date documentation
+### Installation and up-to-date documentation
 
 GET_HOMOLOGUES is an open source software package, written in Perl and R, 
 available for Linux and MacOS systems. There is documentation available for the
 [bacterial version](http://eead-csic-compbio.github.io/get_homologues/manual) and for the [EST version](http://eead-csic-compbio.github.io/get_homologues/manual-est), which has been tested with genomic and transcriptomic sequences from plants.
 
-### Latest binary release
+#### Latest binary release
 
 The simplest way to get the current release of GET_HOMOLOGUES is to check
 <https://github.com/eead-csic-compbio/get_homologues/releases>, download it and extract it in your local filesystem. Let's assume we have a dedicated folder called *soft*:
@@ -132,7 +175,7 @@ sudo cpan -i Inline::C Inline::CPP
 In addition, in order to illustrate the use of a computer cluster with GET_HOMOLOGUES,
 we set up a Grid Engine following the instructions in the [manual](http://eead-csic-compbio.github.io/get_homologues/manual/manual.html#SECTION00033000000000000000).
 
-### GitHub clone / pull
+#### GitHub clone / pull
 
 A more space-efficient way of getting the software is to use [git](https://en.wikipedia.org/wiki/Git).
 For this you might need to install *git* in your system, as explained earlier. Note also that the *git* protocol requires to open port 9418, which might be blocked by your firewall. This method does not include the binary dependencies, which must downloaded during installation:
@@ -151,7 +194,7 @@ cd soft/get_homologues
 git pull
 ```
 
-### Optional dependencies, such as Pfam and SwissProt
+#### Optional dependencies, such as Pfam and SwissProt
 
 In order to annotate protein domains and to translate open reading frames a couple of databases must be downloaded and formatted, which you can do by calling in the terminal:
 
@@ -162,32 +205,34 @@ perl install.pl
 You should be able to control the installation process by typing Y or N in the terminal.
 Note that this script will also tell you of missing dependencies. 
 
-## Docker container
+#### Docker container
 
 A way to use GET_HOMOLOGUES with all software dependencies pre-installed is the Docker image available at 
 [dockerhub](https://hub.docker.com/r/csicunam/get_homologues). This container includes also [GET_PHYLOMARKERS](https://github.com/vinuesa/get_phylomarkers). 
 
-## HPC cluster
+#### HPC cluster
 
 See the manual for instructions on how to run GET_HOMOLOGUES in a gridengine or LSF cluster.
+
+## 3. Methods
 
 # Analysis of bacterial pan-genomes
 
 GET_HOMOLOGUES was originally designed to define robust bacterial pan-genomes by computing consensus clusters  of  orthologous  gene  families  from whole  genome  sequences  using  the  bidirectional best-hit, COGtriangles and OrthoMCL clustering algorithms. The granularity of the clusters can be tuned by a configurable filtering strategy based on a combination of BLAST pairwise alignment parameters, hmmscan-based scanning of Pfam domain composition of the proteins in each cluster and a partial synteny criterion.  
 
-![**Figure 5.** GET_HOMOLOGUES flow chart and its outcomes. BLAST and optional Pfam searches are optimized for local (multicore) and cluster computer environments. While the BDBH algorithm uses one sequence from the reference genome to grow clusters, the COG algorithm requires a triangle of reciprocal hits. Instead, the OMCL algorithm groups nodes in a BLAST graph to build clusters. Note that these clustering algorithms can be fine-tuned by customizing parameters such as -C (minimum percentage of coverage in pairwise BLAST alignments), -E (maximum E value for a hit to be considered), -D (require equal Pfam domain composition when defining similarity-based orthology composition), -S (minimum percentage of sequence identity in BLAST query/subject pairs [BDBH|OMCL]). In addition, the user can choose which genome should be used as the reference using option -r. Figure from @ContrerasMoreira2013.](pics/flow.png)
+<!--![**Figure 5.** GET_HOMOLOGUES flow chart and its outcomes. BLAST and optional Pfam searches are optimized for local (multicore) and cluster computer environments. While the BDBH algorithm uses one sequence from the reference genome to grow clusters, the COG algorithm requires a triangle of reciprocal hits. Instead, the OMCL algorithm groups nodes in a BLAST graph to build clusters. Note that these clustering algorithms can be fine-tuned by customizing parameters such as -C (minimum percentage of coverage in pairwise BLAST alignments), -E (maximum E value for a hit to be considered), -D (require equal Pfam domain composition when defining similarity-based orthology composition), -S (minimum percentage of sequence identity in BLAST query/subject pairs [BDBH|OMCL]). In addition, the user can choose which genome should be used as the reference using option -r. Figure from @ContrerasMoreira2013.](pics/flow.png) -->
 
-![**Figure 6.** Alignment coverage [BDBH,OMCL] and overall segment coverage [COGS] illustrated with the alignment of sequence 'query' to two aligned fragments of sequence 'subject', where 1,s1,e1,s2,e2 and L are alignment coordinates.](pics/match_cover.png)
+<!--![**Figure 6.** Alignment coverage [BDBH,OMCL] and overall segment coverage [COGS] illustrated with the alignment of sequence 'query' to two aligned fragments of sequence 'subject', where 1,s1,e1,s2,e2 and L are alignment coordinates.](pics/match_cover.png) -->
 
 Input sequences can be the preferred GenBank files, which capture gene order information, or in FASTA format.
 
-![**Figure 7.** When downloading genome files fron The NCBI, make sure to select full GenBank files.](pics/genbankfull.png)
+<!--![**Figure 7.** When downloading genome files fron The NCBI, make sure to select full GenBank files.](pics/genbankfull.png) -->
 
-![**Figure 8.** Effect of alignment coverage on the number of core sequences in different datasets.](pics/figure_cover.png)
+<!--![**Figure 8.** Effect of alignment coverage on the number of core sequences in different datasets.](pics/figure_cover.png) -->
 
-![**Figure 9.** A cluster is called syntenic when it contains neighboring genes which are also contained in other single clusters. In this example gene X and gene Z are found to be syntenic, regardless of their orientation. Figure from @ContrerasMoreira2013.](pics/neighbors.png)
+<!--![**Figure 9.** A cluster is called syntenic when it contains neighboring genes which are also contained in other single clusters. In this example gene X and gene Z are found to be syntenic, regardless of their orientation. Figure from @ContrerasMoreira2013.](pics/neighbors.png) -->
 
-![**Figure 10.** Conservation of protein domains as alignment coverage increases.](pics/fig_Pfam.png)
+<!--![**Figure 10.** Conservation of protein domains as alignment coverage increases.](pics/fig_Pfam.png)-->
 
 ## Example protocol
 
@@ -443,9 +488,9 @@ The mixture model implemented in GET_HOMOLOGUES was first described by @Snipen20
 Unlike its ancestor, which was designed for the analysis of genes within fully sequences genomes, 
 GET_HOMOLOGUES-EST has been adapted to the large size of plant genomic data sets, and adds new features to adequately handle redundant and fragmented transcript sequences, as those usually obtained from state-of-the-art technologies like RNA-seq, as well as incomplete/fragmented gene models from WGS assemblies.   
 
-![**Figure 11.** Features of GET_HOMOLOGUES-EST. (A) Flowchart of the main tasks and deliverables. BLASTN and optional Pfam scans, as well as BDBH and OMCL clustering, can be run on a local computer, preferably multi-core, or over a computer cluster. Resulting clusters are post-processed to produce pan-genome or average nucleotide identity matrices, as well as to estimate pan-, soft-core-, and core-genomes. Note that both clustering algorithms can be fine-tuned by customizing an array of parameters, of which alignment coverage is perhaps the most important. While OMCL is adequate for most applications, the niche of BDBH is the fast calculation of core sequences within large datasets. (B) Coverage calculation illustrated with the alignment of sequence ‘query’ to two aligned fragments of sequence ’subject.’ Lq and Ls are the lengths of both sequences, and s1, e1, s2, e2, and Lq are alignment coordinates. (C–E) Common problems faced when clustering RNA-seq transcripts or CDS sequences from whole-genome assemblies: split genes, partial genes and genes or transcripts with retained introns. A cluster of four sequences is shown in C, where two black fragments correspond to pieces of the same gene. Panel D shows a cluster of three sequences, where the last one corresponds to the 5′ half of a transcript, probably missing one or more exons. A cluster of four transcripts is shown in E, where the last one bears an intron not present on the others. (F) Benchmark of barley transcript clusters produced with sequence identity cut-offs of 95 and 98% and with CD-HIT-EST, requiring in all cases coverage ≥ 75%. Curated, high quality Haruna Nijo isoforms were used as a gold-standard. When the same output cluster contained several Haruna Nijo isoforms, the average number of shared exons was computed as a measure of cluster consistency. Thus, the reported mean and SEM values correspond to clusters containing > 1 isoforms of the same Haruna Nijo gene model. Figure from @ContrerasMoreira2017.](pics/flow-est.png)
+<!--![**Figure 11.** Features of GET_HOMOLOGUES-EST. (A) Flowchart of the main tasks and deliverables. BLASTN and optional Pfam scans, as well as BDBH and OMCL clustering, can be run on a local computer, preferably multi-core, or over a computer cluster. Resulting clusters are post-processed to produce pan-genome or average nucleotide identity matrices, as well as to estimate pan-, soft-core-, and core-genomes. Note that both clustering algorithms can be fine-tuned by customizing an array of parameters, of which alignment coverage is perhaps the most important. While OMCL is adequate for most applications, the niche of BDBH is the fast calculation of core sequences within large datasets. (B) Coverage calculation illustrated with the alignment of sequence ‘query’ to two aligned fragments of sequence ’subject.’ Lq and Ls are the lengths of both sequences, and s1, e1, s2, e2, and Lq are alignment coordinates. (C–E) Common problems faced when clustering RNA-seq transcripts or CDS sequences from whole-genome assemblies: split genes, partial genes and genes or transcripts with retained introns. A cluster of four sequences is shown in C, where two black fragments correspond to pieces of the same gene. Panel D shows a cluster of three sequences, where the last one corresponds to the 5′ half of a transcript, probably missing one or more exons. A cluster of four transcripts is shown in E, where the last one bears an intron not present on the others. (F) Benchmark of barley transcript clusters produced with sequence identity cut-offs of 95 and 98% and with CD-HIT-EST, requiring in all cases coverage ≥ 75%. Curated, high quality Haruna Nijo isoforms were used as a gold-standard. When the same output cluster contained several Haruna Nijo isoforms, the average number of shared exons was computed as a measure of cluster consistency. Thus, the reported mean and SEM values correspond to clusters containing > 1 isoforms of the same Haruna Nijo gene model. Figure from @ContrerasMoreira2017.](pics/flow-est.png) -->
 
-![**Figure 12.** Redundant isoforms (dashed) are optionally removed from an input sequence set if they overlap a longer sequence over a length $\geq 40$ (A) or when they are completely matched (B). In either case a 100% sequence identity is required. By calling option -L all redundant isoforms are included in the output. Figure from @ContrerasMoreira2017.](pics/isoforms.png)
+<!--![**Figure 12.** Redundant isoforms (dashed) are optionally removed from an input sequence set if they overlap a longer sequence over a length $\geq 40$ (A) or when they are completely matched (B). In either case a 100% sequence identity is required. By calling option -L all redundant isoforms are included in the output. Figure from @ContrerasMoreira2017.](pics/isoforms.png) -->
 
 <!--![**Figure.** Alignment coverage illustrated with the alignment of sequence 'query' to two aligned fragments of sequence 'subject'. Lq and Ls are the lengths of both sequences, and s1,e1,s2,e2 and Lq are alignment coordinates.](pics/match_cover-est.png)-->
 
