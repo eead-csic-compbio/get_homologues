@@ -34,7 +34,7 @@ Bruno Contreras-Moreira (1)*, Alvaro Rodriguez del Rio (1), Carlos P. Cantalapie
 
 ## i. Summary/Abstract
 
-The pan-genome of a species is the sum of the genomes of its individuals. However, coding sequences often represent only a small fraction of each genome, and thus analyzing the pan-gene set can be a cost-efective strategy for plants with large genomes or highly heterzygous species. Here we describe a step-by-step protocol to analyze plant pan-gene sets with the software GET_HOMOLOGUES-EST. After a short introduction, where the main concepts are illustrated, the remaining sections cover the installation and typical operations required to analyze and annotate pan-transcriptomes and gene sets of plants. The recipes include how to call core and accessory genes, how to compute a presence-absence pan-genome matrix and how to identify and analyze private genes, present only in some genotypes.
+The pan-genome of a species is the sum of the genomes of its individuals. However, coding sequences often represent only a small fraction of each genome, and thus analyzing the pan-gene set can be a cost-efective strategy for plants with large genomes or highly heterzygous species. Here we describe a step-by-step protocol to analyze plant pan-gene sets with the software GET_HOMOLOGUES-EST. After a short introduction, where the main concepts are illustrated, the remaining sections cover the installation and typical operations required to analyze and annotate pan-transcriptomes and gene sets of plants. The recipes include how to call core and accessory genes, how to compute a presence-absence pan-genome matrix and how to identify and analyze private genes, present only in some genotypes. The use of core-genes for phylogeny analysis is also discussed.
 
 <!--was benchmarked with genomic and RNA-seq data of 19 Arabidopsis thaliana ecotypes and then applied to the analysis of transcripts from 16 Hordeum vulgare genotypes. The goal was to sample their pan-genomes and classify sequences as core, if detected in all accessions, or accessory, when absent in some of them. The resulting sequence clusters were used to simulate pan-genome growth, and to compile Average Nucleotide Identity matrices that summarize intra-species variation. Although transcripts were found to under-estimate pan-genome size by at least 10%, we concluded that clusters of expressed sequences can recapitulate phylogeny and reproduce two properties observed in A. thaliana gene models: accessory loci show lower expression and higher non-synonymous substitution rates than core genes. Finally, accessory sequences were observed to preferentially encode transposon components in both species, plus disease resistance genes in cultivated barleys, and a variety of protein domains from other families that appear frequently associated with presence/absence variation in the literature. These results demonstrate that pan-genome analyses are useful to explore germplasm diversity. -->
 
@@ -111,7 +111,6 @@ The next table defines the occupancy classes used by GET_HOMOLOGUES:
 | cloud | Genes present only in a few genomes/taxa, generally $\leq 2$. The cutoff is defined as the class next to the most populated non-core cluster class. |
 | shell | Remaining genes, present in several genomes/taxa. |
 
-The first version of this tutorial was produced originally for a [two-day workshop](pics/posterBIOS.jpg) held at [BIOS](http://bios.co) (Manizales, Colombia), in March 2017.
 
 ## 2. Materials
 
@@ -216,7 +215,6 @@ See the manual for instructions on how to run GET_HOMOLOGUES in a gridengine or 
 
 ## 3. Methods
 
-# Analysis of bacterial pan-genomes
 
 GET_HOMOLOGUES was originally designed to define robust bacterial pan-genomes by computing consensus clusters  of  orthologous  gene  families  from whole  genome  sequences  using  the  bidirectional best-hit, COGtriangles and OrthoMCL clustering algorithms. The granularity of the clusters can be tuned by a configurable filtering strategy based on a combination of BLAST pairwise alignment parameters, hmmscan-based scanning of Pfam domain composition of the proteins in each cluster and a partial synteny criterion.  
 
@@ -672,6 +670,22 @@ Both pangenome matrices and single-copy CDS sequence clusters produced with the 
 See the section "Docker container" above to learn about the container bundled with both GET_HOMOLOGUES and GET_PHYLOMARKERS to avoid trouble installing dependencies and produce reproducible analyses. 
 
 
-# References
+## 4. Notes
 
+<!--As we all know, even the simplest techniques go wrong from time to time. Would you therefore indicate any major problems or faults that can occur with your technique? Try to indicate the major sources of problems and how they can be identified and overcome. With reference to related techniques, any variations of the technique that you have described should also be made in this section, as well as--where relevant--an indication of the sensitivity of the method, timescale for the singled technique, etc. This "Notes" section is a hallmark of this series and has been singled out for praise by a number of reviewers. Please try and make this section as extensive as possible by putting on paper all of your various experiences with the technique. Each ‘Note’ should be cross-referenced with the ‘Materials’ and ‘Methods’ sections, e.g. (see Note 1) -->
+
+<!-- To be cut-pasted from the end of the Word document -->
+
+<!--Jacques: I suppressed the hard-coded numbering of the note because I inserted some notes-->
+<!-- JAime:  We should menton how much time should take the entire protocol. -->
+
+## 5. References
+
+
+<!-- To be cut-pasted from the end of the Word document -->
+
+
+## Acknowledgements
+
+The first version of this protocol was funded by Centro de Bioinformática y Biología Computacional de Colombia – [BIOS](http://bios.co) for a two-day workshop held at Manizales, Colombia, in March 2017.
 
