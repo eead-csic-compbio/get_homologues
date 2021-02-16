@@ -180,7 +180,7 @@ As summarized in __Figure 3__, the main script _get_homologues-est.pl_ can produ
 
 
 
-As assembled transcripts are often incomplete, and annotated gene models might miss exons, by default GET_HOMOLOGUES-EST computes alignment coverage with respect to the shortest sequence, as illustrated on __Figure 4__. Users can add the 'flcdna' string to input FASTA filenames to indicate that coverage should be computed with respect to full-length cDNA sequences, when available. 
+As assembled transcripts are often incomplete, and annotated gene models might miss exons, by default GET_HOMOLOGUES-EST computes alignment coverage with respect to the shortest sequence, as illustrated on __Figure 4__. 
 
 ![](Figures/Figure4.png)
 
@@ -202,55 +202,95 @@ A few scripts are bundled with GET_HOMOLOGUES-EST to assist in the interpretatio
 
  + _pfam_enrich.pl_ calculates the enrichment of a set of sequence clusters in terms of Pfam domains, by using Fisher's exact test.
 
-Apart from these, scripts *transcripts2cds.pl* and *transcripts2cdsCPP.pl* are also bundled to assist in the analysis of transcripts. They can be used to annotate potential ORFs contained within raw transcripts, which might be truncated or contain retained introns. This script uses TransDecoder and BLASTX to scan protein sequences in SWISSPROT (see benchmark in [@ContrerasMoreira2017]). DIAMOND can also be used with significant gains in computing time and very small sensitivity losses, as shown in the manual. The CPP version is faster but requires some optional Perl dependencies (which you should have installed earlier).
+Apart from these, scripts *transcripts2cds.pl* and *transcripts2cdsCPP.pl* are also bundled to assist in the analysis of transcripts. They can be used to annotate potential ORFs contained within raw transcripts, which might be truncated or contain retained introns. The CPP version is faster but requires some optional Perl dependencies (which you should have installed earlier). These scripts use TransDecoder and BLASTX (see __Table 3__) to scan protein sequences in SWISSPROT (see __Note __^[See benchmark in [@ContrerasMoreira2017]; DIAMOND can also be used with significant gains in computing time and very small sensitivity losses, as shown in the manual.]). 
 
 ### 3.3 Protocol for plant transcripts and CDS sequences
 
 In this section we present a step-by-step protocol for the analysis of *Hordeum vulgare* WGS-based cDNA sequences, annotated in reference cultivars *Morex* and *Haruna Nijo*, and *de novo* assembled transcriptomes.
-These sequence sets were first used in [@ContrerasMoreira2017]. For convenience, these barley sequences can be obtained as explained below from files included in the *test_barley* folder, which should be bundled with your copy of GET_HOMOLOGUES. Similar analyses could be performed with the  *Arabidopsis thaliana* and *Brachypodium hybridum* sequences at <http://floresta.eead.csic.es/plant-pan-genomes/>.
+These sequence sets were first used in [@ContrerasMoreira2017]. For convenience, these barley sequences can be obtained as explained below from files included in the *test_barley* folder, which should be bundled with your copy of GET_HOMOLOGUES. Similar analyses could be performed with the  *Arabidopsis thaliana* and *Brachypodium hybridum* sequences at <http://floresta.eead.csic.es/plant-pan-genomes/>
 
-<!-- 4.1 Extracting coding sequences (CDS) from transcripts
+We can start by defining an enviromental variable pointing to our GET_HOMOLOGUES installation:
+
+```{r, engine='bash', eval=FALSE}
+# set GET_HOMOLOGUES path, for example:
+export GETHOMS=~/soft/get_homologues
+```
+
+<!-- 
 4.2 Clustering orthologous transcripts from FASTA files, one per strain
 4.3 Producing a nucleotide-based pangenome matrix
 4.4 Estimating protein domain enrichment of some sequence clusters
 4.5 Making and annotating a non-redundant pangenome matrix
 4.6 Annotating a sequence cluster -->
 
-#### 3.3.1 Preparing input sequences 
+#### 3.3.1 Preparing input sequences and extracting CDS from transcripts
 
-<!-- Si tienes CDS sequences faa/fna Phytozome/Ensembl salta a -->
-Ourgroups
-
-
+The main script takes input sequences in FASTA format, which might be GZIP- or BZIP2-compressed, contained in a folder containing at least two files with extension .fna, one per cultivar/ecotype. Yhould consider adding also sequences from one or more outgroups if you plan to run phylogenomic analyses with the resulting clusters. In either case, nucleotide .fna files might have twin .faa files with translated amino acid sequences in the same order. These you get from resources such as [Ensembl Plants](http://plants.ensembl.org) or [Phytozome](https://phytozome.jgi.doe.gov), or obtain with script *transcripts2cds.pl*, as in the example:
 
 ```{r, engine='bash', eval=FALSE}
-# set GET_HOMOLOGUES path, for example
-export GETHOMS=~/soft/get_homologues
+$GETHOMS/transcripts2cds.pl -n 3 $GETHOMS/sample_transcripts.fna
 
-cd test_barley
+# ./transcripts2cds.pl -p 0 -m  -d $GETHOMS/db/uniprot_sprot.fasta -E 1e-05 -l 50 -g 1 -n 3 -X 0
+# input files(s):
+# sample_transcripts.fna
+
+## processing file sample_transcripts.fna ...
+# parsing re-used transdecoder output (_sample_transcripts.fna_l50.transdecoder.cds.gz) ...
+# running blastx...
+# parsing blastx output (_sample_transcripts.fna_E1e-05.blastx.gz) ...
+# calculating consensus sequences ...
+# input transcripts = 9
+# transcripts with ORFs = 7
+# transcripts with no ORFs = 2
+# output files: sample_transcripts.fna_l50_E1e-05.transcript.fna , sample_transcripts.fna_l50_E1e-05.cds.fna , sample_transcripts.fna_l50_E1e-05.cds.faa , sample_transcripts.fna_l50_E1e-05.noORF.fna
+```
+
+Other optional analyses you might want to carry out on your input sequences include computing their coding potential or their gene completeness (see __Note __^[Software choices include CPC2 and RNAsamba [@Kang2017; @Camargo2020], trained on human truth sets, and BUSCO [@Seppey2019]]).
+
+You don't need .faa files to run GET_HOMOLOGUES-EST, but then all the Pfam-based analyses and the phylogenomics recipes of GET_PHYLOMARKERS cannot be used. However, that allows to clusters any kind of nucleotide sequence, such as conserved intergenic regions or transposons.
+
+Note that filenames matching the tag 'flcdna' are handled as full-length transcripts, and this information will be used downstream in order to estimate coverage. By default only sequences of 20 or more bases are considered (see __Note __^[Global variable $MINSEQLENGTH controls the minimum length of sequences to be considered; the default value is 20 but you can edit in the source to increase it.]).
+
+Let's now get all the barley sequences and extract CDS from them:
+
+```{r, engine='bash', eval=FALSE}
+
+cd ${GETHOMS}/test_barley
 cd seqs
 
 # download all transcriptomes
 wget -c -i wgetlist.txt
 
-# extract CDS sequences (this takes several hours)
+# Extract CDS sequences (this takes several hours)
 # choose cdsCPP.sh if dependency Inline::CPP is available in your system
 # the script will use 20 CPU cores, please adapt it to your system
-#./cds.sh 
+./cds.sh 
 
 # clean and compress
-#rm -f _* *noORF* *transcript*
-#gzip *diamond*
+rm -f _* *noORF* *transcript*
+gzip *diamond*
 
 # put cds sequences aside
-#mv *cds.f*gz ../cds
+mv *cds.f*gz ../cds
 cd ..
 
 # check lists of accessions are in place (see HOWTO.txt there)
 ls cds/*list
 ```
-
 #### 3.3.2 Clustering sequences 
+
+The only required option is -d, which indicates an input folder, as seen in section 3.1. It is important to remark that in principle only files with extensions .fna / .fa / .fasta and optionally .faa are considered when parsing the -d directory. By using .faa input files protein sequences can be used to scan Pfam domains and included in output clusters.
+
+The use of an input folder or directory (-d) is recommended as it allows for new files to be added there in the future, reducing the computing required for updated analyses. For instance, if a user does a first analysis with 5 input genomes today, it is possible to check how the resulting clusters would change when adding an extra 10 genomes tomorrow, by copying these new 10 .fna input files to the pre-existing -d folder, so that all previous BLASTN searches are re-used.
+
+All remaining flags are options that can modify the default behavior of the program, which is to use the bidirectional best hit algorithm (BDBH) in order to compile clusters of potential orthologous DNA sequences, taking the smallest genome as a reference. By default nucleotide sequences are used to guide the clustering, thus relying on BLASTN searches.
+
+Perhaps the most important optional parameter would be the choice of clustering algorithm (Table 2):
+
+Table 2: List of available clustering algorithms. Note that the COG triangles algorithm is not supported.
+name 	option 	 
+BDBH 	default 	Starting from a reference genome, keep adding genomes stepwise while storing the sequence clusters that result of merging the latest bidirectional best hits.
+OMCL 	-M 	OrthoMCL v1.4, uses the Markov Cluster Algorithm to group sequences, with inflation (-F) controlling cluster granularity, as described in PubMed=12952885.
 
 !In addition, the user can choose which genome should be used as the reference using option -r
 
@@ -333,6 +373,10 @@ $GETHOMS/plot_pancore_matrix.pl -i cds_est_homologues/pan_genome_leaf.list_algOM
 ```
 
 See Different pangenome matrices
+
+visualization
+
+https://legumeinfo.org/gcv2/instructions
 
 Note: Analysis of pangenomes from Ensembl Plants
 
