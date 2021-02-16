@@ -166,23 +166,28 @@ While calling GET_HOMOLOGUES-EST with several CPU cores speeds up the batch of B
 ## 3. Methods
 
 Unlike its predecessor, which was designed for the analysis of genes within fully sequenced genomes, 
-GET_HOMOLOGUES-EST has been adapted to the large size of plant genomic data sets, and adds new features to adequately handle redundant and fragmented transcript sequences, as those usually obtained from transcript profiling experiments, as well as incomplete/fragmented gene models from WGS assemblies. Sequence clusters can be produced using the bidirectional best-hit or the OrthoMCL [@Li2003] algorithms.The granularity of the clusters can be tuned by a configurable filtering strategy based on a combination of BLAST pairwise alignment parameters and, optionally, hmmscan-based scanning of Pfam domain composition of the proteins encoded in each cluster. __Figure 3__ summarizes how GET_HOMOLOGUES-EST works.
+GET_HOMOLOGUES-EST has been adapted to the large size of plant genomic data sets, and adds new features to adequately handle redundant and fragmented transcript sequences, as those usually obtained from transcript profiling experiments, as well as incomplete/fragmented gene models from WGS assemblies. Sequence clusters can be produced using the bidirectional best-hit or the OrthoMCL [@Li2003] algorithms.The granularity of the clusters can be tuned by a configurable filtering strategy based on a combination of BLAST pairwise alignment parameters and, optionally, hmmscan-based scanning of Pfam domain composition of the proteins encoded in each cluster. By default redundant sequences are removed from input sets if they overlap a longer identical sequence over a length $\geq 40$ or when they are completely matched. This is to prevent BLAST results being biased by transcript isoforms [@Pertea2003]. If your input are annotated CDS sequences this behavior can be disabled with option -i 0 . 
+
+As summarized in __Figure 3__, the main script _get_homologues-est.pl_ can produce different outputs:
+
+ + Sequence clusters based on nucleotide similarity, which provide higher resolution than peptide comparisons.
+ + Presence-absence pan-genome matrices in different formats, which can be easily transformed and exported for different applications.
+ + Simulations on the growth of the pangenome at the gene level using different fits [@Tettelin2005; @Willenbrock2007] and mixture models [@Snipen2009].
+ + Average nucleotide sequence identity (ANI) matrices, which contain average sequence identity values among pairs of genomes, computed from clustered sequences. These values are derived from BLASTN alignments. 
+ + Matrices of percentage of conserved sequence clusters (POCS), which contain the % of clusters that contain sequence from every two species being compared [@Qin2014].
 
 ![](Figures/Figure3.png)
 
-By default redundant sequences are removed from input sets if they overlap a longer sequence over a length $\geq 40$ or when they are completely matched (see __Figure 4__). This is to prevent BLAST results being biased by transcript isoforms.
+
+
+As assembled transcripts are often incomplete, as well as gene models, by default GET_HOMOLOGUES-EST computes alignment coverage with respect to the shortest sequence, as illustrated on __Figure 5__. Users can add the 'flcdna' string to input FASTA filenames to indicate that coverage should be computed with respect to full-length cDNA sequences, when available. 
 
 ![](Figures/Figure4.png)
-
-As assembled transcripts are often incomplete, as well as gene models, by default GET_HOMOLOGUES-EST computes alignment coverage with respect to the shortest sequence, as illustrated on __Figure 5__. Users can add the flcdna string to input FASTA files to indicate that coverage should be computed with respect to full-length cDNA sequences, when available. 
-
-![](Figures/Figure5.png)
 
 ### Other scripts
 
 
-The Willenbrock exponential fit was first published by @Willenbrock2007.
-The mixture model implemented in GET_HOMOLOGUES-EST was first described by @Snipen2009.
+
 
 annotate_cluster.pl
 pfam_enrich.pl
@@ -404,13 +409,11 @@ The first version of this protocol was funded by Centro de Bioinformática y Bio
 
 **Figure 1.** Pan-gene set of three genomes (A, B and C). In this example there are 101 core loci and 44 (11+9+24) shell loci are found in two accessions. Finally, 82 (35+25+22) cloud loci are annotated only in one genome. The pan-gene set size is 82+44+101=227 loci.
 
-**Figure 2.** Functional annotations (COGs) of core and accessory sequences in two bacterial sets show differences.
+**Figure 2.** Functional annotations (COGs) of protein-coding genes classified in occupancy classes in two bacterial sets .
 
 **Figure 3.** Features of GET_HOMOLOGUES-EST. (A) Flowchart of the main tasks and deliverables. BLASTN and optional Pfam scans, as well as BDBH and OMCL clustering, can be run on a local computer, preferably multi-core, or over a HPC cluster. Resulting clusters are post-processed to produce pan-genome or average nucleotide identity matrices, as well as to estimate pan-, soft-core-, and core-genomes. Note that both clustering algorithms can be fine-tuned by customizing an array of parameters, of which alignment coverage (-C) and same Pfam domain composition (-D) are perhaps the most important. While OMCL is adequate for most applications, BDBH is faster for the calculation of core sequences within large datasets. 
 
-**Figure 4.** Redundant isoforms (dashed) are optionally removed from an input sequence set if they overlap a longer sequence over a length $\geq 40$ (A) or when they are completely matched (B). In either case a 100% sequence identity is required. By calling option -L all redundant isoforms are included in the output. 
-
-**Figure 5.** Alignment coverage illustrated with the alignment of sequence 'query' to two aligned fragments of sequence 'subject'. Lq and Ls are the lengths of both sequences, and s1,e1,s2,e2 and Lq are alignment coordinates. This approach adds robustness agains typical problems faced when clustering RNA-seq transcripts or CDS sequences: split genes, partial genes and genes or transcripts with retained introns. 
+**Figure 4.** Alignment coverage illustrated with the alignment of sequence 'query' to two aligned fragments of sequence 'subject'. Lq and Ls are the lengths of both sequences, and s1,e1,s2,e2 and Lq are alignment coordinates. This approach adds robustness agains typical problems faced when clustering RNA-seq transcripts or CDS sequences: split genes, partial genes and genes or transcripts with retained introns. 
 
 ## Table captions
 
