@@ -59,7 +59,7 @@ Compared to whole genome sequencing (WGS) and assemblying, pan-gene analyses hav
 
 ### 1.2 Pangenome history and concepts
 
-In 2002 Welch and colleagues [@Welch2002] compared the genome sequences of three strains of the bacteria *Escherichia coli*, two of them pathogens, and found shared genes, which mostly conserve their positions in the genome, and also accessory genes, which are encoded only in some strains. Three years later, Tettelin and collaborators [@Tettelin2005] analyzed 8 strains of a Gram+ bacteria and for the first time defined the pangenome as a core genome shared by all strains, plus a dispensable genome consisting of partially shared and strain-specific genes. In addition, a mathematical model suggested that the pan-genome of *Streptococcus agalactiae* might be very large (open) and that unique genes would continue to be identified in newly sequenced strains. In 2007 Morgante and co-workers [@Morgante2007] took these ideas and proposed a role for transposable elements (TEs) in generating the dispensable genomic components that differentiate maize inbred lines B73 and Mo17. A few years later they concluded these components might not be dispensable after all [@Marroni2014]. 
+In 2002 Welch and colleagues [@Welch2002] compared the genome sequences of three strains of the bacteria *Escherichia coli*, two of them pathogens, and found shared genes, which mostly conserve their positions in the genome, and also accessory genes, which are encoded only in some strains. Three years later, Tettelin and collaborators [@Tettelin2005] analyzed 8 strains of a Gram+ bacteria and for the first time defined the pangenome as a core genome shared by all strains, plus a dispensable genome consisting of partially shared and strain-specific genes. In addition, a mathematical model suggested that the pan-genome of *Streptococcus agalactiae* might be very large (open) and that unique genes would continue to be identified in newly sequenced strains. In 2007 Morgante and co-workers [@Morgante2007] took these ideas and proposed a role for transposable elements (TEs) in generating the dispensable genomic components that differentiate maize inbred lines B73 and Mo17. A few years later they concluded these components might not be dispensable after all [@Marroni2014]. In order to make this classification problem more tractable, dispensability scores are now being computed [@Sielemann2021].
 
 __Figure 1__ summarizes the computational analysis of the pan-gene set of three toy genomes with software GET_HOMOLOGUES-EST. Note that occupancy is defined as the number of genomes/cultivars/ecotypes present in a sequence cluster and in this example takes values from 1 to 3 (see also definitions in __Table 1__). Core loci are found in all three genomes and hence have occupancy=3 in the example. Accessory loci are allocated to shell and cloud compartments. Although not shown in the figure, it's often convenient to define a forth class, the soft-core, as a relaxed core, so that some assembly/annotation errors are tolerated:
 
@@ -180,25 +180,29 @@ As summarized in __Figure 3__, the main script _get_homologues-est.pl_ can produ
 
 
 
-As assembled transcripts are often incomplete, as well as gene models, by default GET_HOMOLOGUES-EST computes alignment coverage with respect to the shortest sequence, as illustrated on __Figure 5__. Users can add the 'flcdna' string to input FASTA filenames to indicate that coverage should be computed with respect to full-length cDNA sequences, when available. 
+As assembled transcripts are often incomplete, and annotated gene models might miss exons, by default GET_HOMOLOGUES-EST computes alignment coverage with respect to the shortest sequence, as illustrated on __Figure 4__. Users can add the 'flcdna' string to input FASTA filenames to indicate that coverage should be computed with respect to full-length cDNA sequences, when available. 
 
 ![](Figures/Figure4.png)
 
 ### Other scripts
 
+A few scripts are bundled with GET_HOMOLOGUES-EST to assist in the interpretation of results. We will use some of them in this protocol:
 
+ + _compare_clusters.pl_ primarily calculates the intersection between cluster sets, which can be used to select clusters supported by different algorithms or settings. This script can also produce pangenome matrices and Venn diagrams.
 
+ + _parse_pangenome_matrix.pl_ can be used to analyze pan-genome sets, in order to find transcripts/genes present in a group A of strains which are absent in set B. This script can also be used for calculating and plotting cloud, shell and core genome compartments with mixture models.
 
-annotate_cluster.pl
-pfam_enrich.pl
-check_BDBHS.pl
-Transcripts2cds.pl
-   
-The script *transcripts2cds.pl* is bundled with GET_HOMOLOGUES-EST to assist in the analysis of transcripts. It can be used to annotate potential Open Reading Frames (ORFs) contained within raw transcripts, which might be truncated or contain introns. This script uses TransDecoder and BLASTX to scan protein sequences in SWISSPROT. DIAMOND can also be used with significant gains in computing time and very small sensitivity losses, as shown in [manual-est](http://eead-csic-compbio.github.io/get_homologues/manual-est/manual-est.html#SECTION00043000000000000000).
+ + _plot_pancore_matrix.pl_ plots pan/soft/core-genome sampling results and fits regression curves with help from R functions.
 
+ + _check_BDBHs.pl_ can be used, after a previous _get_homologues-est.pl_ run, to find out the bidirectional best hits of a sequence identifier chosen by the user. It can also retrieve its Pfam annotations.
 
+ + _annotate_cluster.pl_ produces a multiple alignment view of the supporting local BLAST alignments of sequences in a cluster. It can also annotate Pfam domains and find private sequence variants private to an arbitrary group of sequences.
 
+ + _plot_matrix_heatmap.sh_ calculates ordered heatmaps with attached row and column dendrograms from tab-separated numeric matrices, which can be presence/absence pangenomic matrices or identity matrices as those produced by get_homologues-est with flag -A.
 
+ + _pfam_enrich.pl_ calculates the enrichment of a set of sequence clusters in terms of Pfam domains, by using Fisher's exact test.
+
+Apart from these, script *transcripts2cds.pl* is bundled with GET_HOMOLOGUES-EST to assist in the analysis of transcripts. It can be used to annotate potential ORFs contained within raw transcripts, which might be truncated or contain retained introns. This script uses TransDecoder and BLASTX to scan protein sequences in SWISSPROT. DIAMOND can also be used with significant gains in computing time and very small sensitivity losses, as shown in the manual.
 
 ## Example protocol for plant transcripts
 
@@ -407,7 +411,7 @@ The first version of this protocol was funded by Centro de Bioinformática y Bio
 
 ## Figure captions
 
-**Figure 1.** Pan-gene set of three genomes (A, B and C). In this example there are 101 core loci and 44 (11+9+24) shell loci are found in two accessions. Finally, 82 (35+25+22) cloud loci are annotated only in one genome. The pan-gene set size is 82+44+101=227 loci.
+**Figure 1.** Pan-gene set of three genomes (A, B and C). In this example there are 101 core loci and 44 (11+9+24) shell loci are found in two accessions. Moreover, 82 (35+25+22) cloud loci are annotated only in one genome. The pan-gene set size is 82+44+101=227 loci. The table below shows four example clusters and their occupancy, computed using the rules in __Table 1__.
 
 **Figure 2.** Functional annotations (COGs) of protein-coding genes classified in occupancy classes in two bacterial sets .
 
