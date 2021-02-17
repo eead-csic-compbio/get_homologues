@@ -1,5 +1,7 @@
 Current list of ideas to improve/update GET_HOMOLOGUES:
 
+* Add minimap2 as alternative to BLASTN https://bioinfoperl.blogspot.com/2018/08/minimap2-vs-blastn.html
+
 * Add flag to take into account synteny/gene order in input FASTA files for EST
    + read in .gff/.gtf file (3) matching ids in .fna (1) and .faa (2), save contig name and order
      * all input species must have GFF or allow badly broken assemblies?
@@ -14,6 +16,14 @@ Current list of ideas to improve/update GET_HOMOLOGUES:
      * produce synt-filtered raw, compressed BLAST output
 		
    + Buscar segmentos synt con Blastn desde FASTA ordenados , bench con brassicas?
+
+   + min quality: 
+     * https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5791376/
+	 * https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0092621
+
+   + Mirar GENESPACE (synteny-constrained BDBH)
+     * https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-018-07669-x/MediaObjects/41467_2018_7669_MOESM1_ESM.docx
+     * https://pubmed.ncbi.nlm.nih.gov/22217600/
 
 * Speed-up/paralellize marfil_homology::blast_parse. This can be done by:
   a) port sub to C++
