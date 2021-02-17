@@ -342,4 +342,11 @@
 09072020: install.pl now tries curl before wget in macOS
 31072020: downgraded cluster_pangenome_matrix.sh plot_matrix_heatmap.sh to simplify R deps 
 25082020: improved warning for gbk files with no nucleotide seqs in get_homologues.pl
-08092020: fixed indentation of R code within compare_culsters.pl
+08092020: fixed indentation of R code within compare_clusters.pl
+30102020: fixed -m dryrun
+10112020: replaced ' with - in $cluster_name in get_homologues*pl, thanks Tommy Tran!
+10112020: compare_clusters.pl stops if intersection==0
+10112020: updated if else Venn R code in compare_clusters.pl
+16112020: added real test of transcripts2cdsCPP.pl, not used for travis
+17112020: fixed bug and improved documentation of pfam_enrich.pl
+17022021: added -m dryrun to get_homologues-est.pl
