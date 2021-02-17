@@ -350,3 +350,6 @@
 16112020: added real test of transcripts2cdsCPP.pl, not used for travis
 17112020: fixed bug and improved documentation of pfam_enrich.pl
 17022021: added -m dryrun to get_homologues-est.pl
+17022021: fixed _cluster_makeIsoform.pl
+17022021: updated bin/mcl-14-137 and made mview executable
+17022021: added get_homologues-est.pl -m dryrun to test
