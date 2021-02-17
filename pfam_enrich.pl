@@ -1,11 +1,14 @@
 #!/usr/bin/env perl
 
-# 2016-8 Carlos P Cantalapiedra (1), Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2016-20 Carlos P Cantalapiedra (1), Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Laboratory of Computational Biology, EEAD/CSIC, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
-# This script checks whether some input clusters, produced by get_homologues.pl or get_homologues-est.pl,
-# are enriched in Pfam domains when compared to previously Pfam-annotated sequences
+# This script checks whether selected input clusters, produced by get_homologues.pl or 
+# get_homologues-est.pl, are enriched in Pfam domains when compared to a control set of 
+# previously Pfam-annotated clusters
+
+# Note: the actual files read from -d directory are: tmp/all.pfam & tmp/all.p2o.csv
 
 # External dependencies: R , calls function fisher.test
 
@@ -47,7 +50,8 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   print "-r reference .gbk/.faa/.fna file or \"taxon name\"  (optional, by default gets Pfam frequencies from all taxons)\n";
   print "-t type of test                                   (optional, default: -t greater, [".join(',',@valid_tests)."]\n";
   print "-p $ADJUST adjusted p-value threshold                 (optional, default: -p $INP_pcutoff\n";
-  print "-e cluster sequences are ESTs                     (optional, use with pre-computed Pfam mappings of deduced CDSs)\n";
+  print "-e cluster sequences are ESTs                     (optional, requires pre-computed Pfam mappings of deduced CDSs,\n";
+  print "                                                             uses different regex to parse cluster FASTA files)\n";
   print "-f make FASTA file with experiment sequences      (optional, example: -f experiment.fasta)\n";
   print "-s take individual sequences as annotation units  (optional, by default Pfam domains are counted once per cluster)\n\n"; 
   exit(0); 
@@ -149,6 +153,7 @@ print "# parsing clusters...\n";
 
 foreach my $cluster (@clusters)
 {
+
   if($INP_est) # Takes first non-blank tag + [taxon] in FASTA header to identify sequences
   {
     open(CLUSTER,"$INP_clusterdir/$cluster") || 
@@ -170,7 +175,7 @@ foreach my $cluster (@clusters)
         }  
         
         $full_id = $full_id." [$taxon]"; #TR30768|c0_g1_i1SBCC073_fLF.Trinity
-      
+        
         if($cluster_full_ids{$full_id})
         {
           warn "# WARNING: skipping sequence: $full_id , seems to be duplicated:\n$cluster{$full_id},$cluster\n";
@@ -206,14 +211,13 @@ foreach my $cluster (@clusters)
       if(/^>(.*)?\|neighbours/ || /^>(.*)? \| aligned/ || /^>(.*)/)
       { 
         #>gi|116515001|ref|YP_802630.1| DapE [Buchnera aphidicola str. Cc (Cinara cedri)] | aligned:1-375 (376)
-        
+  
+        $full_id = $1;  
         if($reference_proteome_string && $_ !~ /$reference_proteome_string/)
         {
           $full_id = '';
           next;
         }
-        
-        $full_id = $1;
         
         if($cluster_full_ids{$full_id})
         {
@@ -233,7 +237,7 @@ foreach my $cluster (@clusters)
         }
       } 
     }
-    close(CLUSTER);
+    close(CLUSTER); 
   }
 }
 
