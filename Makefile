@@ -15,6 +15,7 @@ clean:
 	rm -f sample_plasmids_gbk_homologues/UnculturedbacteriumplasmidpRSB203_f0_0taxa_algCOG_e0_.cluster_list
 	rm -f sample_intersection/*.png
 	rm -f _sample_cluster.fna_* sample_cluster.fna_*
+	rm -rf sample_transcripts_fasta_est_homologues/
 
 cleanR:
 	rm -f pangenome_matrix_variable_sites_only.tsv gower_dist_matrix.tab hclust_gower-ward* hcluster_ward*

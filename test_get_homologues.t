@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 29;
+use Test::More tests => 30;
 use lib "lib";
 use lib "lib/bioperl-1.5.2_102/";
 
@@ -57,6 +57,8 @@ if($testSP){
 }
 
 ok( eval{ `perl ./get_homologues-est.pl -v ` } =~ /Checking required binaries/ , 'get_homologues-est.pl -v' );
+
+ok( eval{ `perl ./get_homologues-est.pl -d sample_transcripts_fasta -m dryrun` } =~ /check the list of pending commands/ , 'get_homologues-est.pl -dryrun' );
 
 ok( eval{ `perl ./get_homologues.pl -d sample_plasmids_gbk -M -t 0` } =~ /number_of_clusters = 19\d+/, 'get_homologues.pl -d sample_plasmids_gbk -M' );
 

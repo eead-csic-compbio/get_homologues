@@ -990,7 +990,7 @@ if($do_PFAM)
             system("$command");
             if($? != 0)
             {
-              die "# EXIT: failed while running localPfam search ($command)\n";
+              die "# EXIT: failed while running local Pfam search ($command)\n";
             }
           }
         }
@@ -1256,6 +1256,7 @@ else
         {
           $clusteroutfile = get_makeIsoform_outfilename($taxa[$j]);
           next if(!$redo_iso && -e $clusteroutfile);
+
           $clusterlogfile = $clusteroutfile.'.queue';
           $command = "$ENV{'EXE_ISOFORM'} -d $newDIR -b $bpo_file -t $taxa[$j] -E $evalue_cutoff -C $isoform_overlap ".
             "-H 0 -f $redo_iso ";
