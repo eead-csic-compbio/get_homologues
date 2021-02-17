@@ -521,6 +521,12 @@ close(LIST);
 if($INP_synt){ print "# intersection size = $n_of_clusters clusters (syntenic)\n\n"; }
 else{ print "# intersection size = $n_of_clusters clusters\n\n"; }
 
+if($n_of_clusters == 0)
+{
+  print "# ERROR: cannot proceed with null intersection\n";
+  exit(0);
+}
+
 print "# intersection list = $intersection_file\n\n";
 
 # print OrthoXML report (http://orthoxml.org/xml/Main.html) if required
@@ -836,7 +842,7 @@ if($n_of_dirs <=3 && $n_of_dirs > 1)
     print TMPIN "$dirvennfile\t$shortn\t$sectorfile\n";
     push(@venn,$dirvennfile);
     push(@sector,$sectorfile);
-  }
+  } 
   
   # add intersections of two sets if there are 3 sets in total
   if($#cluster_dirs == 2)
@@ -863,10 +869,10 @@ if($n_of_dirs <=3 && $n_of_dirs > 1)
     }       
   }
   
-  close(TMPIN);
+  close(TMPIN); 
 
   if($Rok)
-  {
+  { 
     my $Rparams = '';
     if(!$RVERBOSE){ $Rparams = '-q 2>&1 > /dev/null' }
 
@@ -884,7 +890,7 @@ circle <- function(x, y, r, ...)
 }
 
 # adapted from http://stackoverflow.com/questions/1428946/venn-diagrams-with-r
-venndia <- function(labels, A, B, C, ...)
+venndia <- function(pdf_file,labels, A, B, C, ...)
 {
     cMissing <- missing(C)
     if(cMissing){ C <- c() }
@@ -923,7 +929,7 @@ venndia <- function(labels, A, B, C, ...)
     intersBC = gsub(pattern=".faa_.+",replacement=".faa", intersBC)
     intersBC = gsub(pattern=".fna_.+",replacement=".fna", intersBC)
     
-    pdf(file='$venn_file')
+    pdf(file=pdf_file)
     par(mar=c(2,2,0,0))
     plot(-10,-10,ylim=c(0,9), xlim=c(0,9),axes=F)
     #mtext(c('$INP_dirs'),side=1,cex=0.4,adj=0)
@@ -961,7 +967,7 @@ if(nrow(input_files) == 6)
 {
     set3 = read.table(toString(input_files[3,1]),sep="\n",colClasses="character")
     labels[3] <- toString(input_files[3,2])
-    sectors = venndia(labels,set1[1]\$V1,set2[1]\$V1,set3[1]\$V1)
+    sectors = venndia('$venn_file',labels,set1[1]\$V1,set2[1]\$V1,set3[1]\$V1)
     # print venn sectors to files
     # unique
     if(length(sectors[1])>0){ lapply(sectors[1],write,toString(input_files[1,3]),append=T,ncolumns=1) }
@@ -972,9 +978,10 @@ if(nrow(input_files) == 6)
     if(length(sectors[5])>0){ lapply(sectors[5],write,toString(input_files[5,3]),append=T,ncolumns=1) }
     if(length(sectors[6])>0){ lapply(sectors[6],write,toString(input_files[6,3]),append=T,ncolumns=1) }
 }
-else
+
+if(nrow(input_files) == 2)
 { 
-    sectors = venndia(labels,set1[1]\$V1,set2[1]\$V1) 
+    sectors = venndia('$venn_file',labels,set1[1]\$V1,set2[1]\$V1) 
     # print unique venn sectors to files
     if(length(sectors[1])>0){ lapply(sectors[1],write,toString(input_files[1,3]),append=T,ncolumns=1) }
     if(length(sectors[2])>0){ lapply(sectors[2],write,toString(input_files[2,3]),append=T,ncolumns=1) }
@@ -985,7 +992,7 @@ EOF
     close RSHELL;
 
     # 4) clean
-    unlink(@venn,$tmp_input_file);
+    #unlink(@venn,$tmp_input_file);
 
     # 5) check and print output
     if(-s $venn_file)
