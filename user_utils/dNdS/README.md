@@ -11,7 +11,7 @@ We will use a set of codon-aligned sequences from barley used in https://www.fro
 
 In order to produce codon-based alignments you would need nucleotide CDS sequences and their matching peptidic sequences, such as the .fna & .faa clusters produced by GET_HOMOLOGUES-EST. The idea is to align the protein sequences and then translate that alignment to the nucleotide sequences, which become codon-aligned.
 
-In the original barley work, trranslated CDS of single-copy sequence clusters with occupancy ≥ 4 (the minimum number of sequences required for these calculations) were aligned with [clustal-omega v1.2.1](http://www.clustal.org/omega). The resulting alignments were translated back to codon alignments using the script run_Fasta4phylogenomics.pl , which depends on multiple binaries. This script can be found at http://floresta.eead.csic.es/plant-pan-genomes/suppl_scripts . You can read more [here](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2703966) and [here](http://maya.ccg.unam.mx/primers4clades/tutorial.html)
+In the original barley work, translated CDS of single-copy sequence clusters with occupancy ≥ 4 (the minimum number of sequences required for these calculations) were aligned with [clustal-omega v1.2.1](http://www.clustal.org/omega). The resulting alignments were translated back to codon alignments using the script run_Fasta4phylogenomics.pl , which depends on multiple binaries. This script can be found at http://floresta.eead.csic.es/plant-pan-genomes/suppl_scripts . You can read more [here](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2703966) and [here](http://maya.ccg.unam.mx/primers4clades/tutorial.html)
 
 ```
 mkdir nucl_t4 pep_t4 align kaks
