@@ -1,6 +1,6 @@
 #!/usr/bin/env perl 
 
-# 2020 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2021 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei-CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -107,7 +107,7 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
     print   "-s save memory by using BerkeleyDB; default parsing stores\n".
       "   sequence hits in RAM\n";
   }
-  print   "-m runmode [local|cluster]                                     ".
+  print   "-m runmode [local|cluster|dryrun]                              ".
     "(default: -m local)\n";
   print   "-n nb of threads for BLASTN/HMMER/MCL in 'local' runmode       (default=$n_of_cpus)\n";
   print   "-I file with .fna files in -d to be included                   ".
@@ -215,7 +215,7 @@ if(defined($opts{'m'}))
 {
   $runmode = $opts{'m'};
   if($runmode eq 'pbs'){ $runmode = 'cluster'; } # legacy
-  elsif($runmode ne 'local' && $runmode ne 'cluster'){ $runmode = 'cluster'; }# default
+  elsif($runmode ne 'local' && $runmode ne 'cluster' && $runmode ne 'dryrun'){ $runmode = 'cluster'; }
 }
 else{ $runmode = 'local'; }
 
@@ -433,7 +433,7 @@ my ($pname,$n_of_sequences,$refOK,$genbankOK,$cluster_size,$prot_cluster_size,$p
 my (%orth_registry,%LSE_registry,$LSE_reference,$LSE_t,$redo_inp,$redo_orth,%idclusters,%names,$generef);
 my ($reparse_all,$n_of_similar_length_paralogues,$pfam_annot,$protOK,$n_of_taxa_cluster) = (0);
 my ($BDBHdone,$PARANOIDdone,$orthoMCLdone,$n_of_parsed_lines,$n_of_pfam_parsed_lines) = (0,0,0,0,0);
-my ($diff_BDBH_params,$diff_INP_params,$diff_HOM_params,$diff_OMCL_params,$lockcapableFS) = (0,0,0,0,0);
+my ($diff_BDBH_params,$diff_INP_params,$diff_HOM_params,$diff_OMCL_params,$lockcapableFS,$total_dry) = (0,0,0,0,0,0);
 my ($diff_ISO_params,$redo_iso,$partial_sequences,$isof,%full_length_file,%redundant_isoforms,%total_redundant) = (0);
 my ($total_clustersOK,$clgene,$clorth,%ANIb_matrix,%POCP_matrix,%GIclusters,$clustersOK,%cluster_ids) = (0);
 
@@ -471,10 +471,17 @@ my $sequence_dna_filename = $newDIR."/sequence_dna.db";
 my $pfam_data_filename = $newDIR."/pfam.db";# %pfam_hash is global, imported from marfil_homology
 unlink($sequence_data_filename,$sequence_prot_filename,$sequence_dna_filename,$pfam_data_filename);
 my $input_order_file = $newDIR."/input_order.txt";
+my $dryrun_file = $newDIR."/dryrun.txt";
 
 print "# version $VERSION\n";
 print "# results_directory=$newDIR\n";
 print "# parameters: MAXEVALUEBLASTSEARCH=$MAXEVALUEBLASTSEARCH MAXPFAMSEQS=$MAXPFAMSEQS BATCHSIZE=$BATCHSIZE MINSEQLENGTH=$MINSEQLENGTH MAXSEQLENGTH=$MAXSEQLENGTH\n";
+
+# 0.3) prepare dryrun file if required
+if($runmode eq 'dryrun')
+{
+    open(DRYRUNLOG,">",$dryrun_file);
+}
 
 ################################################################
 
@@ -972,6 +979,11 @@ if($do_PFAM)
           {
             submit_cluster_job($prot_new_infile.$group,$command,$group_clusterfile,$newDIR,\%cluster_PIDs);
           }
+		  elsif($runmode eq 'dryrun')
+          {
+            print DRYRUNLOG "$command\n";
+            $total_dry++;
+          }
           else # 'local' runmode
           {
             $command = format_SPLITHMMPFAM_command()."$BATCHSIZE $command ";
@@ -1003,6 +1015,13 @@ if($do_PFAM)
   {
     check_cluster_jobs($newDIR,\%cluster_PIDs);
   }
+  elsif($runmode eq 'dryrun' && $total_dry > 0)
+  {
+    close(DRYRUNLOG);
+    print "# EXIT: check the list of pending commands at $dryrun_file\n";
+    exit;
+  }
+
   print "# done\n\n";
 
   # concatenate partial/group Pfam results
@@ -1112,6 +1131,12 @@ if(!-s $bpo_file || $current_files ne $previous_files) # || $include_file
       {
         submit_cluster_job($new_infile,$command,$clusteroutfile,$newDIR,\%cluster_PIDs);
       }
+	  elsif($runmode eq 'dryrun')
+      {
+        $command =~ s/\\//g;
+        print DRYRUNLOG "$command\n";
+        $total_dry++;
+      }
       else # 'local' runmode
       {
         $command = format_SPLITBLAST_command()."$BATCHSIZE $command > /dev/null"; # ensure multicore CPU use
@@ -1131,6 +1156,13 @@ if(!-s $bpo_file || $current_files ne $previous_files) # || $include_file
   {
     check_cluster_jobs($newDIR,\%cluster_PIDs);
   }
+  elsif($runmode eq 'dryrun' && $total_dry > 0)
+  {
+    close(DRYRUNLOG);
+    print "# EXIT: check the list of pending commands at $dryrun_file\n";
+    exit;
+  }
+
   print "# done\n\n";
 
   # concat blast output files to $blast_file (global var)
@@ -1216,7 +1248,7 @@ else
         construct_indexes($bpo_file);
       }
 
-      if($runmode eq 'cluster')
+      if($runmode eq 'cluster' || $runmode eq 'dryrun')
       {
         my ($command,%cluster_PIDs,@to_be_deleted,$clusteroutfile,$clusterlogfile);
         $redo_iso = $diff_ISO_params;
@@ -1224,11 +1256,20 @@ else
         {
           $clusteroutfile = get_makeIsoform_outfilename($taxa[$j]);
           next if(!$redo_iso && -e $clusteroutfile);
+          $clusterlogfile = $clusteroutfile.'.queue';
           $command = "$ENV{'EXE_ISOFORM'} -d $newDIR -b $bpo_file -t $taxa[$j] -E $evalue_cutoff -C $isoform_overlap ".
             "-H 0 -f $redo_iso ";
-          $clusterlogfile = $clusteroutfile.'.queue';
-          push(@to_be_deleted,$clusterlogfile);
-          submit_cluster_job($taxa[$j],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
+
+          if($runmode eq 'cluster')
+          {
+            push(@to_be_deleted,$clusterlogfile);
+            submit_cluster_job($taxa[$j],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
+          }
+		  else
+          {
+            print DRYRUNLOG "$command\n";
+            $total_dry++;
+          }
         }
         if(@to_be_deleted)
         {
@@ -1236,6 +1277,12 @@ else
           check_cluster_jobs($newDIR,\%cluster_PIDs);
           unlink(@to_be_deleted);
           %cluster_PIDs = @to_be_deleted = ();
+        }
+        elsif($runmode eq 'dryrun' && $total_dry > 0)
+        {
+          close(DRYRUNLOG);
+          print "# EXIT: check the list of pending commands at $dryrun_file\n";
+          exit;
         }
       }
 
@@ -1404,7 +1451,7 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
     $diff_HOM_params = 1;
   }
 
-  if($runmode eq 'cluster') # precalculate inparalogues/orthologues in cluster
+  if($runmode eq 'cluster' || $runmode eq 'dryrun') # precalculate inparalogues/orthologues in cluster
   {
     my ($command,%cluster_PIDs,@to_be_deleted,$clusteroutfile,$clusterlogfile);
 
@@ -1416,12 +1463,20 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
 
       $partial_sequences = 0;
       if(!$full_length_file{$taxa[$j]}){ $partial_sequences = 1 }
-
+      $clusterlogfile = $clusteroutfile.'.queue';
       $command = "$ENV{'EXE_INPARA'} -d $newDIR -b $bpo_file -t $taxa[$j] -E $evalue_cutoff ".
         "-S $pi_cutoff -C $pmatch_cutoff -N 0 -f $redo_inp -s $partial_sequences"; #die "$command\n";
-      $clusterlogfile = $clusteroutfile.'.queue';
-      push(@to_be_deleted,$clusterlogfile);
-      submit_cluster_job($taxa[$j],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
+      
+      if($runmode eq 'cluster')
+      {
+        push(@to_be_deleted,$clusterlogfile);
+        submit_cluster_job($taxa[$j],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
+      }
+	  else
+      {
+        print DRYRUNLOG "$command\n";
+        $total_dry++;
+      }
     }
     if(@to_be_deleted)
     {
@@ -1430,6 +1485,12 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
       print "\n";
       unlink(@to_be_deleted);
       %cluster_PIDs = @to_be_deleted = ();
+    }
+    elsif($runmode eq 'dryrun' && $total_dry > 0)
+    {
+      close(DRYRUNLOG);
+      print "# EXIT: check the list of pending commands at $dryrun_file\n";
+      exit;
     }
 
     $redo_inp = $reparse_all || $diff_HOM_params;
@@ -1451,8 +1512,17 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
           $command = "$ENV{'EXE_HOMOL'} -d $newDIR -b $bpo_file -i $tmptaxa[$j]".
             " -j $tmptaxa[$k] -E $evalue_cutoff -S $MIN_PERSEQID_HOM ".
             " -C $MIN_COVERAGE_HOM -f $redo_inp -s $partial_sequences";
-          push(@to_be_deleted,$clusterlogfile);
-          submit_cluster_job('h'.$tmptaxa[$j].'-'.$tmptaxa[$k],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
+
+          if($runmode eq 'cluster')
+          {
+            push(@to_be_deleted,$clusterlogfile);
+            submit_cluster_job('h'.$tmptaxa[$j].'-'.$tmptaxa[$k],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
+          }
+          else
+          {
+            print DRYRUNLOG "$command\n";
+            $total_dry++;
+          }
         }
       }
     }
@@ -1462,6 +1532,12 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
       check_cluster_jobs($newDIR,\%cluster_PIDs);
       print "\n";
       unlink(@to_be_deleted);
+    }
+    elsif($runmode eq 'dryrun' && $total_dry > 0)
+    {
+      close(DRYRUNLOG);
+      print "# EXIT: check the list of pending commands at $dryrun_file\n";
+      exit;
     }
   }
 
@@ -1481,7 +1557,7 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
       }
     }
 
-    if($runmode eq 'cluster')
+    if($runmode eq 'cluster' || $runmode eq 'dryrun')
     {
       my ($command,%cluster_PIDs,@to_be_deleted,$clusteroutfile,$clusterlogfile);
       $redo_inp = $reparse_all || $diff_INP_params || $diff_BDBH_params;
@@ -1495,14 +1571,24 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
           $partial_sequences = 0;
           if(!$full_length_file{$taxa[$i]} || !$full_length_file{$taxa[$j]}){ $partial_sequences = 1 }
 
+          $clusterlogfile = $clusteroutfile.'.queue';
           $command = "$ENV{'EXE_ORTHO'} -d $newDIR -b $bpo_file -i $taxa[$i]".
             " -j $taxa[$j] -E $evalue_cutoff -D 0 -S $pi_cutoff -C $pmatch_cutoff".
             " -N 0 -f $redo_inp -n 1 -l 0 -B 0 -s $partial_sequences"; #die "$command\n";
-          $clusterlogfile = $clusteroutfile.'.queue';
-          push(@to_be_deleted,$clusterlogfile);
-          submit_cluster_job($taxa[$i].'-'.$taxa[$j],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
+
+          if($runmode eq 'cluster')
+          {
+            push(@to_be_deleted,$clusterlogfile);
+            submit_cluster_job($taxa[$i].'-'.$taxa[$j],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
+          }
+          else
+          {
+            print DRYRUNLOG "$command\n";
+            $total_dry++;
+          }
         }
       }
+
       if(@to_be_deleted)
       {
         print "# submitting orthologues jobs to cluster ...\n";
@@ -1510,6 +1596,13 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
         print "\n";
         unlink(@to_be_deleted);
       }
+      elsif($runmode eq 'dryrun' && $total_dry > 0)
+      {
+        close(DRYRUNLOG);
+        print "# EXIT: check the list of pending commands at $dryrun_file\n";
+        exit;
+      }
+
       if($diff_INP_params){ $diff_INP_params = -1 }
       if($diff_BDBH_params){ $diff_BDBH_params = -1 }
       $diff_OMCL_params = $reparse_all || $diff_OMCL_params;
@@ -1554,7 +1647,7 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
       $diff_BDBH_params = 1;
     }
 
-    if($runmode eq 'cluster')
+    if($runmode eq 'cluster' || $runmode eq 'dryrun')
     {
       my ($command,%cluster_PIDs,@to_be_deleted,$clusteroutfile,$clusterlogfile,$fmask);
       $redo_inp = $reparse_all || $diff_INP_params || $diff_BDBH_params;
@@ -1575,16 +1668,32 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
           $command = "$ENV{'EXE_ORTHO'} -d $newDIR -b $bpo_file -i $tmptaxa[0]".
             " -j $tmptaxa[$j] -E $evalue_cutoff -D $do_PFAM -S $pi_cutoff -C $pmatch_cutoff".
             " -N 0 -f $redo_inp -n 0 -l 1 -B 1 -s $partial_sequences";
-          push(@to_be_deleted,$clusterlogfile);
-          submit_cluster_job($tmptaxa[0].'-'.$tmptaxa[$j],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
+
+          if($runmode eq 'cluster')
+          {	
+            push(@to_be_deleted,$clusterlogfile);
+            submit_cluster_job($tmptaxa[0].'-'.$tmptaxa[$j],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
+          }
+          else
+          {
+            print DRYRUNLOG "$command\n";
+            $total_dry++;
+          }
         }
       }
+
       if(@to_be_deleted)
       {
         print "# submitting orthologues jobs to cluster ...\n";
         check_cluster_jobs($newDIR,\%cluster_PIDs);
         print "\n";
         unlink(@to_be_deleted);
+      }
+      elsif($runmode eq 'dryrun' && $total_dry > 0)
+      {
+        close(DRYRUNLOG);
+        print "# EXIT: check the list of pending commands at $dryrun_file\n";
+        exit;
       }
     }
 
@@ -1965,7 +2074,7 @@ if(!-s $marfil_homology::parameter_INP_log || check_different_params('INP',('EVA
   $diff_INP_params = 1;
 }
 
-if($runmode eq 'cluster')
+if($runmode eq 'cluster' || $runmode eq 'dryrun')
 {
   my ($command,%cluster_PIDs,@to_be_deleted,$clusteroutfile,$clusterlogfile);
   if(($doMCL && !$orthoMCLdone) || !$doMCL)
@@ -1980,18 +2089,34 @@ if($runmode eq 'cluster')
       $partial_sequences = 0;
       if(!$full_length_file{$taxa[$j]}){ $partial_sequences = 1 }
 
+      $clusterlogfile = $clusteroutfile.'.queue';
       $command = "$ENV{'EXE_INPARA'} -d $newDIR -b $bpo_file -t $taxa[$j] -E $evalue_cutoff ".
         "-S $pi_cutoff -C $pmatch_cutoff -N 0 -f $redo_inp -s $partial_sequences";
-      $clusterlogfile = $clusteroutfile.'.queue';
-      push(@to_be_deleted,$clusterlogfile);
-      submit_cluster_job($taxa[$j],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
+      
+      if($runmode eq 'cluster')
+      {
+        push(@to_be_deleted,$clusterlogfile);
+        submit_cluster_job($taxa[$j],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
+	  }
+      else
+      {
+        print DRYRUNLOG "$command\n";
+        $total_dry++;
+      }
     }
+
     if(@to_be_deleted)
     {
       print "\n# submitting inparalogues jobs to cluster ...\n";
       check_cluster_jobs($newDIR,\%cluster_PIDs);
       unlink(@to_be_deleted);
       %cluster_PIDs = @to_be_deleted = ();
+    }
+    elsif($runmode eq 'dryrun' && $total_dry > 0)
+    {
+      close(DRYRUNLOG);
+      print "# EXIT: check the list of pending commands at $dryrun_file\n";
+      exit;
     }
   }
 }
@@ -2015,7 +2140,7 @@ if($doMCL)
       }
     }
 
-    if($runmode eq 'cluster')
+    if($runmode eq 'cluster' || $runmode eq 'dryrun')
     {
       my ($command,%cluster_PIDs,@to_be_deleted,$clusteroutfile,$clusterlogfile);
       $redo_inp = $reparse_all || $diff_INP_params || $diff_BDBH_params;
@@ -2029,12 +2154,21 @@ if($doMCL)
           $partial_sequences = 0;
           if(!$full_length_file{$taxa[$i]} || !$full_length_file{$taxa[$j]}){ $partial_sequences = 1 }
 
+          $clusterlogfile = $clusteroutfile.'.queue';
           $command = "$ENV{'EXE_ORTHO'} -d $newDIR -b $bpo_file -i $taxa[$i]".
             " -j $taxa[$j] -E $evalue_cutoff -D 0 -S $pi_cutoff -C $pmatch_cutoff".
             " -N 0 -f $redo_inp -n 1 -l 0 -B 0 -s $partial_sequences"; #die "$command\n";
-          $clusterlogfile = $clusteroutfile.'.queue';
-          push(@to_be_deleted,$clusterlogfile);
-          submit_cluster_job($taxa[$i].'-'.$taxa[$j],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
+
+          if($runmode eq 'cluster')
+          {
+            push(@to_be_deleted,$clusterlogfile);
+            submit_cluster_job($taxa[$i].'-'.$taxa[$j],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
+          }
+          else
+          {
+            print DRYRUNLOG "$command\n";
+            $total_dry++;
+          }
         }
       }
       if(@to_be_deleted)
@@ -2043,6 +2177,13 @@ if($doMCL)
         check_cluster_jobs($newDIR,\%cluster_PIDs);
         unlink(@to_be_deleted);
       }
+      elsif($runmode eq 'dryrun' && $total_dry > 0)
+      {
+        close(DRYRUNLOG);
+        print "# EXIT: check the list of pending commands at $dryrun_file\n";
+        exit;
+      }
+
       if($diff_INP_params){ $diff_INP_params = -1 }
       if($diff_BDBH_params){ $diff_BDBH_params = -1 }
       $diff_OMCL_params = $reparse_all || $diff_OMCL_params;
@@ -2087,7 +2228,7 @@ else # BDBH
     $diff_BDBH_params = 1;
   }#print "$diff_INP_params $diff_BDBH_params\n";
 
-  if($runmode eq 'cluster') # precalculate orthologues in cluster
+  if($runmode eq 'cluster' || $runmode eq 'dryrun') # precalculate orthologues in cluster
   {
     my ($command,%cluster_PIDs,@to_be_deleted,$clusteroutfile,$clusterlogfile,$fmask);
     $redo_inp = ($reparse_all || $diff_INP_params || $diff_BDBH_params) && !$BDBHdone;
@@ -2102,18 +2243,33 @@ else # BDBH
       $partial_sequences = 0;
       if(!$full_length_file{$taxa[$reference_proteome]} || !$full_length_file{$taxa[$j]}){ $partial_sequences = 1 }
 
+      $clusterlogfile = $clusteroutfile.'.queue';
       $command = "$ENV{'EXE_ORTHO'} -d $newDIR -b $bpo_file -i $taxa[$reference_proteome]".
         " -j $taxa[$j] -E $evalue_cutoff -D $do_PFAM -S $pi_cutoff -C $pmatch_cutoff".
         " -N 0 -f $redo_inp -n 0 -l 1 -B 1 -s $partial_sequences"; #die "$command\n";
-      $clusterlogfile = $clusteroutfile.'.queue';
-      push(@to_be_deleted,$clusterlogfile);
-      submit_cluster_job($taxa[$reference_proteome].'-'.$taxa[$j],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
+      
+      if($runmode eq 'cluster')
+      {
+        push(@to_be_deleted,$clusterlogfile);
+        submit_cluster_job($taxa[$reference_proteome].'-'.$taxa[$j],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
+      }
+      else
+      {
+        print DRYRUNLOG "$command\n";
+        $total_dry++;
+      }
     }
     if(@to_be_deleted)
     {
       print "\n# submitting orthologues jobs to cluster ...\n";
       check_cluster_jobs($newDIR,\%cluster_PIDs);
       unlink(@to_be_deleted);
+    }
+    elsif($runmode eq 'dryrun' && $total_dry > 0)
+    {
+      close(DRYRUNLOG);
+      print "# EXIT: check the list of pending commands at $dryrun_file\n";
+      exit;
     }
   }
 
@@ -2287,7 +2443,7 @@ GENE: foreach $gene (sort {$a<=>$b} (keys(%orthologues)))
   }
 
   $cluster_name =~ s/ /_/g;
-  $cluster_name =~ s/[\s|\(|\)|\*|;|\|\[|\]|\/|:|,|>|&|<]/-/g;
+  $cluster_name =~ s/[\s|\(|\)|\*|;|\|\[|\]|\/|:|,|>|&|<|']/-/g;
   $cluster_name = $generef.'_'.$cluster_name;
   if($names{$cluster_name})
   {

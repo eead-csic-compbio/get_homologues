@@ -1,6 +1,6 @@
 #!/usr/bin/env perl 
 
-# 2020 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2021 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei-CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -1802,17 +1802,17 @@ if($do_genome_composition)
       {
         $clusteroutfile = get_makeInparalog_outfilename($taxa[$j]);
         next if(!$redo_inp && -e $clusteroutfile);
-		  $clusterlogfile = $clusteroutfile.'.queue';
+        $clusterlogfile = $clusteroutfile.'.queue';
         $command = "$ENV{'EXE_INPARA'} -d $newDIR -b $bpo_file -t $taxa[$j] -E $evalue_cutoff ".
           "-S $pi_cutoff -C $pmatch_cutoff -N $neighbor_corr_cutoff -f $redo_inp "; #die "$command\n";
 
         if($runmode eq 'cluster')
-		  {
+        {
           push(@to_be_deleted,$clusterlogfile);
           submit_cluster_job($taxa[$j],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
         } 
-		  else 
-		  {
+        else 
+        {
           print DRYRUNLOG "$command\n";
           $total_dry++;
         }
@@ -1826,13 +1826,14 @@ if($do_genome_composition)
         unlink(@to_be_deleted);
         %cluster_PIDs = @to_be_deleted = ();
       }
-      elsif($runmode eq 'dryrun')
+      elsif($runmode eq 'dryrun' && $total_dry > 0)
       {
         close(DRYRUNLOG);
         print "# EXIT: check the list of pending commands at $dryrun_file\n";
         exit;
       }
     }
+
     $redo_inp = $reparse_all || $diff_HOM_params;
     for($s=0;$s<$NOFSAMPLESREPORT;$s++)
     {
@@ -1870,7 +1871,7 @@ if($do_genome_composition)
       print "\n";
       unlink(@to_be_deleted);
     } 
-    elsif($runmode eq 'dryrun')
+    elsif($runmode eq 'dryrun' && $total_dry > 0)
     {
       close(DRYRUNLOG);
       print "# EXIT: check the list of pending commands at $dryrun_file\n";
@@ -1914,7 +1915,7 @@ if($do_genome_composition)
             push(@to_be_deleted,$clusterlogfile);
             submit_cluster_job($taxa[$i].'-'.$taxa[$j],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
           }
-			 else
+          else
           {
             print DRYRUNLOG "$command\n";
             $total_dry++;
@@ -1929,7 +1930,7 @@ if($do_genome_composition)
         print "\n";
         unlink(@to_be_deleted);
       }
-		elsif($runmode eq 'dryrun')
+      elsif($runmode eq 'dryrun' && $total_dry > 0)
       {
         close(DRYRUNLOG);
         print "# EXIT: check the list of pending commands at $dryrun_file\n";
@@ -2033,7 +2034,7 @@ if($do_genome_composition)
             push(@to_be_deleted,$clusterlogfile);
             submit_cluster_job($tmptaxa[0].'-'.$tmptaxa[$j],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
           }
-			 else
+          else
           {
             print DRYRUNLOG "$command\n";
             $total_dry++;
@@ -2048,7 +2049,7 @@ if($do_genome_composition)
         print "\n";
         unlink(@to_be_deleted);
       }
-      elsif($runmode eq 'dryrun')
+      elsif($runmode eq 'dryrun' && $total_dry > 0)
       {
         close(DRYRUNLOG);
         print "# EXIT: check the list of pending commands at $dryrun_file\n";
@@ -2409,7 +2410,7 @@ if($runmode eq 'cluster' || $runmode eq 'dryrun')
       $command = "$ENV{'EXE_INPARA'} -d $newDIR -b $bpo_file -t $taxa[$j] -E $evalue_cutoff ".
         "-S $pi_cutoff -C $pmatch_cutoff -N $neighbor_corr_cutoff -f $redo_inp ";
       
-		if($runmode eq 'cluster')
+      if($runmode eq 'cluster')
       {
         push(@to_be_deleted,$clusterlogfile);
         submit_cluster_job($taxa[$j],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
@@ -2428,7 +2429,7 @@ if($runmode eq 'cluster' || $runmode eq 'dryrun')
       unlink(@to_be_deleted);
       %cluster_PIDs = @to_be_deleted = ();
     }
-    elsif($runmode eq 'dryrun')
+    elsif($runmode eq 'dryrun' && $total_dry > 0)
     {
       close(DRYRUNLOG);
       print "# EXIT: check the list of pending commands at $dryrun_file\n";
@@ -2472,7 +2473,7 @@ if($doMCL)
             " -j $taxa[$j] -E $evalue_cutoff -D 0 -S $pi_cutoff -C $pmatch_cutoff".
             " -N $neighbor_corr_cutoff -f $redo_inp -n 1 -l 0 -B 0"; #die "$command\n";
           
-			 if($runmode eq 'cluster')
+          if($runmode eq 'cluster')
           {
             push(@to_be_deleted,$clusterlogfile);
             submit_cluster_job($taxa[$i].'-'.$taxa[$j],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
@@ -2491,7 +2492,7 @@ if($doMCL)
         check_cluster_jobs($newDIR,\%cluster_PIDs);
         unlink(@to_be_deleted);
       }
-		elsif($runmode eq 'dryrun')
+      elsif($runmode eq 'dryrun' && $total_dry > 0)
       {
         close(DRYRUNLOG);
         print "# EXIT: check the list of pending commands at $dryrun_file\n";
@@ -2596,7 +2597,7 @@ else # BDBH
         " -j $taxa[$j] -E $evalue_cutoff -D $do_PFAM -S $pi_cutoff -C $pmatch_cutoff".
         " -N $neighbor_corr_cutoff -f $redo_inp -n 0 -l 1 -B 1"; #die "$command\n";
       
-		if($runmode eq 'cluster')
+      if($runmode eq 'cluster')
       {
         push(@to_be_deleted,$clusterlogfile);
         submit_cluster_job($taxa[$reference_proteome].'-'.$taxa[$j],$command,$clusterlogfile,$newDIR,\%cluster_PIDs);
@@ -2617,8 +2618,11 @@ else # BDBH
     elsif($runmode eq 'dryrun')
     {
       close(DRYRUNLOG);
-      print "# EXIT: check the list of pending commands at $dryrun_file\n";
-      exit;
+      if($total_dry > 0)
+      {
+        print "# EXIT: check the list of pending commands at $dryrun_file\n";
+        exit;
+      }
     }
   }
 
@@ -2760,7 +2764,8 @@ GENE: foreach $gene (sort {$a<=>$b} (keys(%orthologues)))
 
     my @orths = ($gene,@{$orthologues{$gene}});
 
-    ($n_of_similar_length_orthologues,$ref_hash_short_orthologues) = same_length(\%seq_length,\@orths,$filter_by_length);
+    ($n_of_similar_length_orthologues,$ref_hash_short_orthologues) = 
+      same_length(\%seq_length,\@orths,$filter_by_length);
 
     next if($n_of_similar_length_orthologues < $min_cluster_size);
   }
@@ -2801,7 +2806,7 @@ GENE: foreach $gene (sort {$a<=>$b} (keys(%orthologues)))
   }
 
   $cluster_name =~ s/ /_/g;
-  $cluster_name =~ s/[\s|\(|\)|\*|;|\|\[|\]|\/|:|,|>|&|<]/-/g;
+  $cluster_name =~ s/[\s|\(|\)|\*|;|\|\[|\]|\/|:|,|>|&|<|']/-/g;
   $cluster_name = $generef.'_'.$cluster_name;
   if($names{$cluster_name})
   {
