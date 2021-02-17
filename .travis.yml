@@ -1,5 +1,5 @@
 os: linux
-dist: bionic
+dist: xenial
 language: perl
 perl:
   - "5.26"
@@ -14,7 +14,6 @@ before_script:
 
 script:
   - "make test"
-  - "make clean"
 
 notifications:
   email:
