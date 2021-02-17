@@ -59,5 +59,4 @@ $bpo_file = $INP_bpofile;
 construct_taxa_indexes($bpo_file);
 
 # %gindex y %gindex2 are created here, while calling construct_indexes($bpo_file,($INP_taxon=>1))
-my($rhash_inparalogues) = makeInparalog(1,$INP_taxon,$INP_evalue,$INP_overlap,$INP_besthit,$INP_forceredo);
-
+my($rhash_inparalogues) = makeIsoform(1,$INP_taxon,$INP_evalue,$INP_overlap,$INP_besthit,$INP_forceredo);
