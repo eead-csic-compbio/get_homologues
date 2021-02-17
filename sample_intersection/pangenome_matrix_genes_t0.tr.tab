@@ -8,7 +8,7 @@ source:/home/bcontreras/ownCloud/codigo/cvs/get_homologues-est/sample_intersecti
 34_methyl-accepting_che...faa	ID:ADH30015.1,	-	-	-	-	-	-	-	-	-	-	-	
 35_tnpA.faa	ID:ADH29992.1,	ID:AAT01860.1,	-	-	-	-	ID:ABY74371.1,	-	-	-	-	-	
 36_beta-lactamase_CTX-M...faa	ID:ADH29993.1,	-	-	ID:ADH29557.1,	ID:ACI63023.1,ID:ACI63039.1,	ID:ACI63105.1,ID:ACI63116.1,	ID:ABY74372.1,	ID:BAF93093.1,	ID:AEW28787.1,	-	ID:AEW28870.1,	ID:AEW28922.1,	
-60_ant39.faa	-	ID:ABG33786.1,ID:ABG33789.1,	ID:AAL13420.1,	-	ID:ACI63026.1,	-	-	-	ID:AEW28744.1,	-	-	-	
+60_ant3-9.faa	-	ID:ABG33786.1,ID:ABG33789.1,	ID:AAL13420.1,	-	ID:ACI63026.1,	-	-	-	ID:AEW28744.1,	-	-	-	
 61_linF.faa	-	ID:ABG33787.1,	-	-	-	-	-	-	-	-	-	-	
 64_qacEdelta1.faa	-	ID:ABG33790.1,	ID:AAL13423.1,	-	-	-	ID:ACG49253.1,	-	-	-	-	-	
 65_sul1.faa	-	ID:ABG33791.1,	ID:AAL13424.1,	-	ID:ACI63019.1,	-	ID:ABY74385.1,ID:ABY74425.1,	-	-	-	-	ID:AEW28927.1,	

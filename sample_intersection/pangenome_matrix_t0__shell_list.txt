@@ -1,6 +1,6 @@
 35_tnpA.faa
 36_beta-lactamase_CTX-M...faa
-60_ant39.faa
+60_ant3-9.faa
 64_qacEdelta1.faa
 65_sul1.faa
 159_intI1.faa
