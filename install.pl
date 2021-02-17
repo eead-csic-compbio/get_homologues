@@ -1,8 +1,8 @@
 #!/usr/bin/env perl
 
-# Script that checks/compiles software required by get_homologues[-est] and checks dependencies
-# for first-time users.
-# last checked Jul2020
+# Script that checks/compiles software required by get_homologues[-est] and 
+# checks dependencies for first-time users.
+# last checked Nov2020
 
 use strict;
 use warnings;
@@ -50,13 +50,18 @@ if(defined($ARGV[0]))
   }
   elsif($ARGV[0] eq 'no_databases')
   { 
-    $noDBs = 1;   
+    $noDBs = 2;   
     print "# \$no_databases=$noDBs\n\n";
+  }
+  elsif($ARGV[0] eq 'swissprot')
+  {
+    $noDBs = 1;
+    print "# \$no_databases=$noDBs (swissprot)\n\n";
   }
   elsif($ARGV[0] eq 'test')
   {
     print "# testing only\n";
-	exit(0);
+    exit(0);
   }
 }
 
@@ -84,13 +89,13 @@ print "## checking whether source and binaries of dependencies are in place\n";
 if(! -e $ENV{'MARFIL'}.'/bin/COGsoft/' || !-e $ENV{'EXE_BLASTP'})
 {
   my $userword = '';
-  if(!$noDBs)
+  if($noDBs==0 && $force_unsupervised==0)
   {
     print "# cannot locate source and binaries, would you like to download it now? [Y/n]\n";
     $userword = <STDIN>;
   }    
 
-  if($noDBs || $userword =~ m/Y/i)
+  if($noDBs || $force_unsupervised || $userword =~ m/Y/i )
   {
     chdir($ENV{'MARFIL'}.'/bin/');
     my ($ff,$fpath);
@@ -219,11 +224,11 @@ else
     "<< Then re-run\n";
 }
 
-if(!$noDBs)
+if(!$noDBs || $noDBs==1)
 {
   print "## checking optional PFAM library (lib/phyTools: \$ENV{'PFAMDB'})\n";
   print "# required by get_homologues.pl -D and get_homologues-est.pl -D\n";
-  if($force_unsupervised || ! -s $ENV{'PFAMDB'}.'.h3m')
+  if(!$noDBs && ($force_unsupervised || ! -s $ENV{'PFAMDB'}.'.h3m'))
   {
     my $userword = '';
     if(!$force_unsupervised)
@@ -314,13 +319,13 @@ if(!$noDBs)
   else
   {
     my $userword = '';
-    if(!$force_unsupervised)
+    if(!$force_unsupervised && $noDBs != 1)
     { 
       print "# cannot locate SWISSPROT, would you like to download it now? [Y/n]\n";
       $userword = <STDIN>; 
     }
   
-    if($force_unsupervised || $userword =~ m/Y/i)
+    if($force_unsupervised || $noDBs==1 || $userword =~ m/Y/i)
     {
       chdir($ENV{'MARFIL'}.'/db/');
   

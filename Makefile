@@ -14,6 +14,7 @@ clean:
 	rm -rf sample_plasmids_gbk_homologues/UnculturedbacteriumplasmidpRSB203_f0_0taxa_algCOG_e0_
 	rm -f sample_plasmids_gbk_homologues/UnculturedbacteriumplasmidpRSB203_f0_0taxa_algCOG_e0_.cluster_list
 	rm -f sample_intersection/*.png
+	rm -f _sample_cluster.fna_* sample_cluster.fna_*
 
 cleanR:
 	rm -f pangenome_matrix_variable_sites_only.tsv gower_dist_matrix.tab hclust_gower-ward* hcluster_ward*
@@ -22,5 +23,8 @@ cleanR:
 install:
 	perl install.pl
 
+install_swissprot:
+	perl install.pl swissprot
+
 install_auto:
-	perl install.pl no_databases
+	perl install.pl no_databases 
