@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# 2016-20 Carlos P Cantalapiedra (1), Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2016-21 Carlos P Cantalapiedra (1), Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Laboratory of Computational Biology, EEAD/CSIC, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 

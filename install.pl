@@ -2,7 +2,7 @@
 
 # Script that checks/compiles software required by get_homologues[-est] and 
 # checks dependencies for first-time users.
-# last checked Nov2020
+# last checked Feb2021
 
 use strict;
 use warnings;

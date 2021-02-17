@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# 2013-20 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2013-21 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Laboratory of Computational Biology, EEAD-CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
