@@ -12,9 +12,10 @@ BEGIN { use_ok('phyTools') };
 
 BEGIN { use_ok('marfil_homology') };
 
-my $testR = 0;
-if(defined($ARGV[0]) && $ARGV[0] eq 'testR'){
-	$testR = 1
+my ($testR,$testSP) = (0,0);
+if(defined($ARGV[0])){
+	if($ARGV[0] eq 'testR'){ $testR = 1 }
+	elsif($ARGV[0] eq 'swiss'){ $testSP = 1 }
 }
 
 ok( eval{ `perl ./add_pancore_matrices.pl ` } =~ /\[options\]/ , 'add_pancore_matrices.pl' );
@@ -48,8 +49,12 @@ ok( eval{ `perl ./_split_hmmscan.pl` } =~ /Usage/ , '_split_hmmscan.pl' );
 ok( eval{ `perl ./transcripts2cds.pl` } =~ /\[options\]/ , 'transcripts2cds.pl' );
 # implicitly tests modules in libs/est/
 
-ok( eval{ `perl ./transcripts2cdsCPP.pl` } =~ /\[options\]/ , 'transcripts2cdsCPP.pl' );
-# requires optional module Inline::CPP
+if($testSP){
+	ok( eval{ `perl ./transcripts2cdsCPP.pl sample_cluster.fna` } =~ /sample_cluster.fna_l50_E1e-05.cds/ , 'transcripts2cdsCPP.pl' );
+} else {
+	ok( eval{ `perl ./transcripts2cdsCPP.pl` } =~ /\[options\]/ , 'transcripts2cdsCPP.pl' );
+	# requires optional module Inline::CPP
+}
 
 ok( eval{ `perl ./get_homologues-est.pl -v ` } =~ /Checking required binaries/ , 'get_homologues-est.pl -v' );
 
