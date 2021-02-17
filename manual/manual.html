@@ -780,7 +780,7 @@ Optional parameters:
                                                                 ignores -r,-t,-e)
 -R set random seed for genome composition analysis             (optional, requires -c, example -R 1234,
                                                                 required for mixing -c with -c -a runs)
--m runmode [local|cluster]                                     (default local)
+-m runmode [local|cluster|dryrun]                              (default local)
 -n nb of threads for BLAST/HMMER/MCL in 'local' runmode        (default=2)
 -I file with .faa/.gbk files in -d to be included              (takes all by default, requires -d)
 
@@ -1016,9 +1016,9 @@ this might be the only way to complete a job.
 
 <P>
 </LI>
-<LI><code>-m</code> allows the choice of runmode, which can be either <code>-m local</code> (the default) or 
-<code>-m cluster</code>. In the second case global variable <code>$SGEPATH</code> might need to be appropriately set, as explained in section <A HREF="#dependencies">2.3</A>,
-as well as <code>$QUEUESETTINGS</code>, that specificies for instance a particular queue name for your cluster jobs.
+<LI><code>-m</code> allows the choice of runmode, which can be either <code>-m local</code> (the default),   
+<code>-m cluster</code>, for computing farms configured as explained in section <A HREF="#dependencies">2.3</A>) and 
+<code>-m dryrun</code>, which will allow you to run all required parallel jobs in batches manually.
 
 <P>
 </LI>
@@ -4067,7 +4067,7 @@ This document was generated using the
 The command line arguments were: <BR>
  <kbd>latex2html manual -no_antialias_text -split 0 -dir manual -no_navigation -show_section_numbers</kbd>
 <P>
-The translation was initiated on 2020-02-26
+The translation was initiated on 2021-02-17
 <BR><HR>
 <ADDRESS>
 Bruno Contreras-Moreira and Pablo Vinuesa<br><a href="https://github.com/eead-csic-compbio/get_homologues">https://github.com/eead-csic-compbio/get_homologues</a>
