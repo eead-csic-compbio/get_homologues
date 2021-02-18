@@ -86,8 +86,12 @@ The simplest way to get the current release of GET_HOMOLOGUES is to check
 
 ```{r, engine='bash', eval=FALSE}
 cd soft
-wget -c 'https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.3.2/get_homologues-x86_64-20200226.tgz'
-tar xvfz get_homologues-x86_64-20200226.tgz
+
+# make sure you choose the right version
+wget -c https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.4.1/get_homologues-x86_64-20210217.tgz
+#get -c https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.4.1/get_homologues-macosx-20210217.tgz
+
+tar xvfz get_homologues-x86_64-20210217.tgz
 ```
 
 Releases include scripts (Perl and R), documentation, sample data and the required binary dependencies, which are listed in __Table 3__ and discussed in the manual. For this tutorial the following dependencies were also installed on Ubuntu:
@@ -135,7 +139,7 @@ A way to use GET_HOMOLOGUES-EST with all dependencies pre-installed is the Docke
 
 #### 2.1.5 High performance cluster (HPC) configuration
 
-In order to prepare your installation to run on a computer cluster please follow the instructions in section "Optional software dependencies" of the manual. Three job managers are currently supported: gridengine, LSF and Slurm. Configuration involves creating a file named "HPC.conf" and setting appropriate values and paths for your HPC cluster. The sample configuration file looks like this:
+In order to prepare your installation to run on a computer cluster please follow the instructions in section "Optional software dependencies" of the manual. Three job managers are currently supported: gridengine, LSF and Slurm. The default configuration is for gridengine, but this can be changed by creating a file named "HPC.conf" and setting appropriate values and paths for your HPC cluster. The sample configuration file looks like this:
 
     cat sample.HPC.conf 
     # cluster/farm configuration file, edit as needed (use spaces or tabs)
@@ -321,6 +325,10 @@ $GETHOMS/get_homologues-est.pl -d cds -M -t 10 -m cluster -A -e &> log.cds.t10.e
 
 #### 3.3.4 Annotation of selected clusters 
 
+
+user_utils/dNdS/README.md
+
+polyploid_trees
 
 #### 3.3.5 Pangenome analyses
 
