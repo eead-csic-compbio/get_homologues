@@ -353,3 +353,5 @@
 17022021: fixed _cluster_makeIsoform.pl
 17022021: updated bin/mcl-14-137 and made mview executable
 17022021: added get_homologues-est.pl -m dryrun to test and manuals
+19022021: removed HarunaNijo from test_barley 
+19022021: pfam_enrich.pl allows for missing PFam annot
