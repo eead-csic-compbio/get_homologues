@@ -528,7 +528,7 @@ In this section we will see how to extract accessory genes of interest and how t
 
 ```{r, engine='bash', eval=FALSE}
 
-# find [-t 3] clusters from cultivar SBCC073 which are absent from references
+# find [-t 3] clusters from cultivar SBCC073 which are absent from reference Morex
 $GETHOMS/parse_pangenome_matrix.pl -m clusters_cds_t3/pangenome_matrix_t0.tab \
   -A cds/SBCC073.list -B cds/ref.list -g &> log.acc.SBCC073
 mv clusters_cds_t3/pangenome_matrix_t0__pangenes_list.txt \
@@ -537,12 +537,18 @@ mv clusters_cds_t3/pangenome_matrix_t0__pangenes_list.txt \
 # how many SBCC073 clusters are there? 
 perl -lane 'if($F[0] =~ /SBCC073/){ foreach $c (1 .. $#F){ if($F[$c]>0){ $t++ } }; print $t }' \
   clusters_cds_t3/pangenome_matrix_t0.tab 
+21041
 
-# find [-t 3] private H.spontaneum clusters absent from references
+# find [-t 3] private H.spontaneum clusters absent from reference Morex
 $GETHOMS/parse_pangenome_matrix.pl -m clusters_cds_t3/pangenome_matrix_t0.tab \
   -A cds/spontaneum.list -B cds/ref.list -g &> log.acc.spontaneum
 mv clusters_cds_t3/pangenome_matrix_t0__pangenes_list.txt \
   clusters_cds_t3/spontaneum_pangenes_list.txt
+
+head clusters_cds_t3/spontaneum_pangenes_list.txt 
+# genes present in set A and absent in B (1653):
+172_TR8839-c0_g1_i4.fna
+...
 
 # Pfam enrichment tests
 
@@ -555,25 +561,14 @@ $GETHOMS/pfam_enrich.pl -d cds_est_homologues -c clusters_cds -n \
 	-x clusters_cds_t3/pangenome_matrix_t0__core_list.txt -e -p 1 \
 	-r SBCC073 -t less > SBCC073_core.pfam.deplet.tab
 
-# accessory
-$GETHOMS/pfam_enrich.pl -d cds_est_homologues -c clusters_cds -n \
-	-x clusters_cds_t3/SBCC073_pangenes_list.txt -e -p 1 -r SBCC073 \
-	-f SBCC073_accessory.fna > SBCC073_accessory.pfam.enrich.tab
-  
 $GETHOMS/pfam_enrich.pl -d cds_est_homologues -c clusters_cds -n \
 	-x clusters_cds_t3/spontaneum_pangenes_list.txt -e -p 1 -r Hs_ \
 	-f spontaneum_accessory.fna > spontaneum_accessory.pfam.enrich.tab
-
-# note that output files contain data such as the mean length of sequences
-
-# get merged stats for figure
-perl suppl_scripts/_add_Pfam_domains.pl > accessory_stats.tab
-perl -lane 'print if($F[0] >= 5 || $F[1] >= 5 || $F[2] >= 5)' \
-  accessory_stats.tab  > accessory_stats_min5.tab
-Rscript suppl_scripts/_plot_heatmap.R
-
-
 ```
+
+
+<!-- Rscript suppl_scripts/_plot_heatmap.R -->
+
 
 #### 3.3.6 Downstream phylogenomic analyses 
 
