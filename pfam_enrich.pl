@@ -352,7 +352,7 @@ if($INP_fasta)
     printf( OUTFASTA ">%s cluster=%s %s %s\n%s\n",
       $full_id,$cluster{$full_id},
       $fasta_annot{$full_id} || '', 
-      $pfam_hash{$fullid2id{$full_id}},
+      $pfam_hash{$fullid2id{$full_id}} || '',
       $fasta{$full_id});
       
     $mean_length += length($fasta{$full_id});
