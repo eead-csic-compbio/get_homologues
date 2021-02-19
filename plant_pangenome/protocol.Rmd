@@ -534,38 +534,37 @@ $GETHOMS/parse_pangenome_matrix.pl -m clusters_cds_t3/pangenome_matrix_t0.tab \
 mv clusters_cds_t3/pangenome_matrix_t0__pangenes_list.txt \
   clusters_cds_t3/SBCC073_pangenes_list.txt
 
-# how many SBCC073 clusters are there? 
+head clusters_cds_t3/SBCC073_pangenes_list.txt 
+# genes present in set A and absent in B (5531):
+172_TR8839-c0_g1_i4.fna
+...
+
+# how many SBCC073 non-cloud clusters are there? 
 perl -lane 'if($F[0] =~ /SBCC073/){ foreach $c (1 .. $#F){ if($F[$c]>0){ $t++ } }; print $t }' \
   clusters_cds_t3/pangenome_matrix_t0.tab 
 21041
 
-# find [-t 3] private H.spontaneum clusters absent from reference Morex
-$GETHOMS/parse_pangenome_matrix.pl -m clusters_cds_t3/pangenome_matrix_t0.tab \
-  -A cds/spontaneum.list -B cds/ref.list -g &> log.acc.spontaneum
-mv clusters_cds_t3/pangenome_matrix_t0__pangenes_list.txt \
-  clusters_cds_t3/spontaneum_pangenes_list.txt
+# Pfam enrichment tests (-c control set, -x experiment set)
 
-head clusters_cds_t3/spontaneum_pangenes_list.txt 
-# genes present in set A and absent in B (1653):
-172_TR8839-c0_g1_i4.fna
-...
-
-# Pfam enrichment tests
-
-# core
+# negative control, is the core genome enriched in some Pfam domains
+# with respect to the complete genome?
 $GETHOMS/pfam_enrich.pl -d cds_est_homologues -c clusters_cds -n \
 	-x clusters_cds_t3/pangenome_matrix_t0__core_list.txt -e -p 1 \
 	-r SBCC073 > SBCC073_core.pfam.enrich.tab
 
+# positive control, is the core depleted in some Pfam domains?
 $GETHOMS/pfam_enrich.pl -d cds_est_homologues -c clusters_cds -n \
 	-x clusters_cds_t3/pangenome_matrix_t0__core_list.txt -e -p 1 \
 	-r SBCC073 -t less > SBCC073_core.pfam.deplet.tab
 
+# are SBCC073 accessory genes enriched in some Pfam domains?
+# Note that the experiment sequences are output in FASTA format
 $GETHOMS/pfam_enrich.pl -d cds_est_homologues -c clusters_cds -n \
-	-x clusters_cds_t3/spontaneum_pangenes_list.txt -e -p 1 -r Hs_ \
-	-f spontaneum_accessory.fna > spontaneum_accessory.pfam.enrich.tab
+	-x clusters_cds_t3/SBCC073_pangenes_list.txt -e -p 1 -r SBCC073 \
+	-f SBCC073_accessory.fna > SBCC073_accessory.pfam.enrich.tab
 ```
 
+The top enriched domains of the last example are shown in __Table 5__.
 
 <!-- Rscript suppl_scripts/_plot_heatmap.R -->
 
@@ -614,7 +613,7 @@ Values are average nucleotide identities among sequences clustered together by G
 
 **Figure 6.** Soft-core leaf pan-transcriptome after comparing 14 barley cultivars and ecotypes. Left) Snapshot of the simulation after 2 replicates are complete. The data points for the first replicate are in black, and those for the second in gree. Right) Fitted Tettelin function after 20 replicates are complete. 
 
-**Figure 7.** Distribution of leaf CDS clusters from 15 barleys as a function of their occupancy. Occupancy classes are colored as core, soft-core, shell and cloud members. 
+**Figure 7.** Distribution of leaf CDS clusters from 15 barleys as a function of their occupancy. Occupancy classes are colored as core, soft-core and shell members. Cloud clusters were filtered out (-t 3). 
 
 ## Table captions
 
@@ -625,6 +624,8 @@ Values are average nucleotide identities among sequences clustered together by G
 **Table 3.** Dependencies of GET_HOMOLOGUES-EST.
 
 **Table 4.** Excerpt of percentage of conserved sequences (POCS) matrix. Values are percentages of conserved sequence clusters among pairs of taxa. In other words, these values summarize how many clusters of one genome contain also sequences from another. 
+
+**Table 5.** Top 3 enriched Pfam domains encoded in accessory (Exp) CDS found in barley landrace SBCC073 with respect to the complete CDS set (Ctr). Both raw and adjusted Fisher's test P-values are shown.
 
 ## Tables
 
@@ -669,4 +670,10 @@ Esterel |	72.43	| 71.38 |	71.14 | 100 | 73.66 |	70.79
 Franka | 72.06 | 70.90 | 71.18 | 73.66 | 100 |70.74	
 Himala2	| 70.46 | 70.40 | 71.80 | 70.79 |	70.74 |	100	
 
+### Table 5
 
+PfamID | counts(exp) | counts(ctr) | freq(exp) | freq(ctr) | p-value | p-value(adj) | description
+ :-- | --: | --: | --: | --: | --: | --: | :--
+PF13976|14|19|7.376e-03|9.715e-04|2.994e-07|3.855e-04|GAG-pre-integrase domain
+PF01535|59 | 305 | 3.109e-02 | 1.559e-02 | 5.950e-06 | 5.746e-03 | PPR repeat
+PF00560|32|128| 1.686e-02|6.545e-03|1.140e-05|8.810e-03|Leucine Rich Repeat
