@@ -780,9 +780,8 @@ MAAAAMAAHRASFPLRLQQILSGSRAVSPAIKVESEPPAKVKAFIDRVINIPLHDIAIPLSGFHWEFNKGN...</code
 </div>
 <div id="downstream-phylogenomic-analyses" class="section level4">
 <h4>3.3.6 Downstream phylogenomic analyses</h4>
-<p>Both pangenome matrices and single-copy CDS sequence clusters produced with the protocols explained above can be further analyzed and plotted with help from tools of the <a href="https://github.com/vinuesa/get_phylomarkers">GET_PHYLOMARKERS</a> pipeline (<span class="citation"><em>(32)</em></span>). As explained in its own <a href="https://vinuesa.github.io/get_phylomarkers">tutorial</a>, with this toolbox it is possible to use twin nucleotide &amp; peptide clusters produced by GET_HOMOLOGUES to compute robust multi-gene and pangenome phylogenies.</p>
-<p>Add outgroups</p>
-<p>See the section “Docker container” above to learn about the container bundled with both GET_HOMOLOGUES and GET_PHYLOMARKERS to avoid trouble installing dependencies and produce reproducible analyses.</p>
+<p>Both pangenome matrices and single-copy CDS sequence clusters produced with the protocols explained above can be further analyzed and plotted with help from tools of the <a href="https://github.com/vinuesa/get_phylomarkers">GET_PHYLOMARKERS</a> pipeline <span class="citation"><em>(32)</em></span>. As explained in its own tutorial (see <strong>Note </strong><a href="#fn15" class="footnote-ref" id="fnref15"><sup>15</sup></a>), with this toolbox it is possible to use twin nucleotide &amp; peptide clusters produced by GET_HOMOLOGUES to compute robust multi-gene and pangenome phylogenies.</p>
+<p>See the section 2.1.4 above to learn about the container bundled with both GET_HOMOLOGUES and GET_PHYLOMARKERS to avoid trouble installing dependencies and produce reproducible analyses.</p>
 </div>
 </div>
 </div>
@@ -790,8 +789,6 @@ MAAAAMAAHRASFPLRLQQILSGSRAVSPAIKVESEPPAKVKAFIDRVINIPLHDIAIPLSGFHWEFNKGN...</code
 <h2>4. Notes</h2>
 <!--As we all know, even the simplest techniques go wrong from time to time. Would you therefore indicate any major problems or faults that can occur with your technique? Try to indicate the major sources of problems and how they can be identified and overcome. With reference to related techniques, any variations of the technique that you have described should also be made in this section, as well as--where relevant--an indication of the sensitivity of the method, timescale for the singled technique, etc. This "Notes" section is a hallmark of this series and has been singled out for praise by a number of reviewers. Please try and make this section as extensive as possible by putting on paper all of your various experiences with the technique. Each ‘Note’ should be cross-referenced with the ‘Materials’ and ‘Methods’ sections, e.g. (see Note 1) -->
 <!-- To be cut-pasted from the end of the Word document -->
-<!--Jacques: I suppressed the hard-coded numbering of the note because I inserted some notes-->
-<!-- JAime:  We should menton how much time should take the entire protocol. -->
 </div>
 <div id="references" class="section level2">
 <h2>5. References</h2>
@@ -817,7 +814,7 @@ MAAAAMAAHRASFPLRLQQILSGSRAVSPAIKVESEPPAKVKAFIDRVINIPLHDIAIPLSGFHWEFNKGN...</code
 <p><strong>Table 2.</strong> Summary of features and differences of GET_HOMOLOGUES and GET_HOMOLOGUES-EST. Note that GET_HOMOLOGUES can also cluster user-selected nucleotide features in GenBank files, and in this case BLASTN is used as well.</p>
 <p><strong>Table 3.</strong> Dependencies of GET_HOMOLOGUES-EST.</p>
 <p><strong>Table 4.</strong> Excerpt of percentage of conserved sequences (POCS) matrix. Values are percentages of conserved sequence clusters among pairs of taxa. In other words, these values summarize how many clusters of one genome contain also sequences from another.</p>
-<p><strong>Table 5.</strong> Enriched Pfam domains encoded in accessory CDS found in barley landrace SBCC073.</p>
+<p><strong>Table 5.</strong> Top 3 enriched Pfam domains encoded in accessory (Exp) CDS found in barley landrace SBCC073 with respect to the complete CDS set (Ctr). Both raw and adjusted Fisher’s test P-values are shown.</p>
 </div>
 <div id="tables" class="section level2">
 <h2>Tables</h2>
@@ -1233,6 +1230,7 @@ MAAAAMAAHRASFPLRLQQILSGSRAVSPAIKVESEPPAKVKAFIDRVINIPLHDIAIPLSGFHWEFNKGN...</code
 <li id="fn12"><p>Similar matrices can be obtained for clades in Ensembl Plants with scripts at <a href="https://github.com/Ensembl/plant_tools/tree/master/phylogenomics" class="uri">https://github.com/Ensembl/plant_tools/tree/master/phylogenomics</a><a href="#fnref12" class="footnote-back">↩︎</a></p></li>
 <li id="fn13"><p>See <a href="https://github.com/AdmiralenOla/Scoary" class="uri">https://github.com/AdmiralenOla/Scoary</a><a href="#fnref13" class="footnote-back">↩︎</a></p></li>
 <li id="fn14"><p>You might want to try <em>compare_clusters.pl</em> -T for a quick PHYLIP parsimony tree or <em>estimate_pangenome_trees.sh</em> from the GET_PHYLOMARKERS pipeline for both parsimony and ML trees with support estimates<a href="#fnref14" class="footnote-back">↩︎</a></p></li>
+<li id="fn15"><p>See <a href="https://vinuesa.github.io/get_phylomarkers" class="uri">https://vinuesa.github.io/get_phylomarkers</a><a href="#fnref15" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 
