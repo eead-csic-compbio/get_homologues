@@ -352,7 +352,7 @@ This mask is a prefix added to the output folder. In this case tells that the re
 
 Note that internally sequences are numbered with natural numbers, in this case starting with Alexis.
 
-The resulting heatmap summarizing the ANI matrix in the example is shown in __Figure 4__.
+The resulting heatmap summarizing the ANI matrix in the example is shown in __Figure 4__. In our experience, ANI matrices computed from core genes can recapitulate the expected phylogeny of your input set [@ContrerasMoreira2017].
 
 ![](Figures/Figure4.png)
 
@@ -369,22 +369,7 @@ For instance, file cds_est_homologues/Alexis_3taxa_leaf.list_algOMCL_e0_.cluster
     : AmagiNijo.trinity.fna.bz2_l50_E1e-05.diamond.cds.fna.gz.nucl
     : Beiqing5.trinity.fna.bz2_l50_E1e-05.diamond.cds.fna.gz.nucl
     : Esterel.trinity.fna.bz2_l50_E1e-05.diamond.cds.fna.gz.nucl
-    : Esterel.trinity.fna.bz2_l50_E1e-05.diamond.cds.fna.gz.nucl
-    : Franka.trinity.fna.bz2_l50_E1e-05.diamond.cds.fna.gz.nucl
-    : Himala2.trinity.fna.bz2_l50_E1e-05.diamond.cds.fna.gz.nucl
-    : Hs_ECI-2-0.trinity.fna.bz2_l50_E1e-05.diamond.cds.fna.gz.nucl
-    : Hs_Turkey-19-24.trinity.fna.bz2_l50_E1e-05.diamond.cds.fna.gz.nucl
-    : Hs_XZ2.trinity.fna.bz2_l50_E1e-05.diamond.cds.fna.gz.nucl
-    : Padanggamu.trinity.fna.bz2_l50_E1e-05.diamond.cds.fna.gz.nucl
-    : Padanggamu.trinity.fna.bz2_l50_E1e-05.diamond.cds.fna.gz.nucl
-    : SBCC073_fLF.Trinity.fna.gz_l50_E1e-05.diamond.cds.fna.gz.nucl
-    : SBCC073_fLF.Trinity.fna.gz_l50_E1e-05.diamond.cds.fna.gz.nucl
-    : Scarlett_fLF.Trinity.fna.gz_l50_E1e-05.diamond.cds.fna.gz.nucl
-    : Scarlett_fLF.Trinity.fna.gz_l50_E1e-05.diamond.cds.fna.gz.nucl
-    : TX9425.trinity.fna.bz2_l50_E1e-05.diamond.cds.fna.gz.nucl
-    : TX9425.trinity.fna.bz2_l50_E1e-05.diamond.cds.fna.gz.nucl
-    : Yiwuerleng.trinity.fna.bz2_l50_E1e-05.diamond.cds.fna.gz.nucl
-    : Yiwuerleng.trinity.fna.bz2_l50_E1e-05.diamond.cds.fna.gz.nucl
+    ...
     : Yiwuerleng.trinity.fna.bz2_l50_E1e-05.diamond.cds.fna.gz.nucl
 
 It contains 22 sequences from 14 barleys, so it belongs to the soft-core occupancy class.
@@ -403,8 +388,6 @@ and this:
     >TR4758|c0_g1_i1 [Alexis.trinity.fna.bz2_l50_E1e-05.diamond.cds.fna.gz]
     MAAAAMAAHRASFPLRLQQILSGSRAVSPAIKVESEPPAKVKAFIDRVINIPLHDIAIPLSGFHWEFNKGN...
     
-<!-- For many users such clusters are what they are after.-->
-
 In this section we will see how to further annotate these clusters.
 
 For instance, you might want to see the BLASTN evidence supporting this cluster (sequence id=3, full name TR4758|c0_g1_i1). Note that option -D would output also the Pfam domains called in these sequences:
@@ -429,15 +412,10 @@ dir	query	sbjct	bits	Eval	%ident	cover	Pfam	annotation
 >	3	71423	16081	0	99.9	100.0	NA	TR10181|c0_g1_i1 evidence:blastx.transdecoder match:sp|Q8GY23.. 
 
 <	71423	3	16081	0	99.9	100.0	NA
-
-:						[Esterel.trinity.fna.bz2_l50_E1e-05.diamond.cds.fna.gz]
->	3	106823	19496	0	100.0	100.0	NA	TR34037|c0_g2_i2 evidence:blastx.transdecoder match:sp|Q8GY23.. 
-
-<	106823	3	19496	0	100.0	100.0	NA
 ...
 ```
 
-Another useful script to annotate individual clusters is _annotate_cluster.pl_, which produces a multiple alignment (MSA) view of the locally-aligned sequences that make up the cluster. It works by aligning all sequences in the cluster to the longest/user-selected sequence (see __Note __^[xIt does not necessarily conserve the original sequence order. Any sequence stretches masked by BLAST will appear as Xs. Clusters of transcripts might contain sequences that do not match the longest sequence; instead, they align towards the 5' or 3' of other sequences and are not included in the produced cumulative MSA.]). __Figure 5__ summarizes the output of this script.
+Another useful script to annotate individual clusters is _annotate_cluster.pl_, which produces a multiple alignment (MSA) view of the locally-aligned sequences that make up the cluster. It works by aligning all sequences in the cluster to the longest/user-selected sequence (see __Note __^[It does not necessarily conserve the original sequence order. Any sequence stretches masked by BLAST will appear as Xs. Clusters of transcripts might contain sequences that do not match the longest sequence; instead, they align towards the 5' or 3' of other sequences and are not included in the produced cumulative MSA.]). __Figure 5__ summarizes the output of this script.
 
 ![](Figures/Figure5.png)
 
@@ -469,11 +447,9 @@ Another script, _parse_pangenome_matrix.pl_ can be used to consume the matrices 
 
 ```{r, engine='bash', eval=FALSE}
 
-# leaf clusters and pan-transcriptome growth simulations with soft-core
-# produces a genome composition matrices in cds_est_homologues/:
-# core_genome_leaf.list_algOMCL.tab,
-# soft-core_genome_leaf.list_algOMCL.tab and
-# pan_genome_leaf.list_algOMCL.tab 
+# leaf clusters and pan-transcriptome growth simulations with soft-core (-z)
+# produces 3 genome composition matrices in cds_est_homologues/:
+# [core|soft-core|pan]_genome_leaf.list_algOMCL.tab
 $GETHOMS/get_homologues-est.pl -d cds -c -z \
   -I cds/leaf.list -M -t 3 -m cluster &> log.cds.leaf.t3.c
   
@@ -483,9 +459,8 @@ $GETHOMS/get_homologues-est.pl -d cds -c -z \
 $GETHOMS/plot_pancore_matrix.pl -i cds_est_homologues/core_genome_leaf.list_algOMCL.tab \
 	-f core_both 
 # outfiles: 
-# core_genome_leaf.list_algOMCL.tab_core_both.log (actual fitted values and function)
-# core_genome_leaf.list_algOMCL.tab_core_both.png (plot)
-# core_genome_leaf.list_algOMCL.tab_core_both.pdf (plot)
+# core_genome_leaf.list_algOMCL.tab_core_both.log (fitted values and function)
+# core_genome_leaf.list_algOMCL.tab_core_both.png/pdf (plots)
 
 # now soft-core	making simulation snapshots for figure
 $GETHOMS/plot_pancore_matrix.pl -i cds_est_homologues/soft-core_genome_leaf.list_algOMCL.tab \
@@ -505,60 +480,35 @@ $GETHOMS/compare_clusters.pl -d cds_est_homologues/Alexis_0taxa_algOMCL_e0_ \
 $GETHOMS/compare_clusters.pl -d cds_est_homologues/Alexis_3taxa_algOMCL_e0_ \
   -o clusters_cds_t3 -m -n &> log.compare_clusters.cds.t3
   
-## (recommended) check the log files for the number of clusters   
-cat  log.compare_clusters.cds
+## check the log files for the number of clusters   
+cat log.compare_clusters.cds
 # ...
-# pangenome_file = clusters_cds/pangenome_matrix_t0.tab 
-# transposed = clusters_cds/pangenome_matrix_t0.tr.tab
-# pangenome_genes = clusters_cds/pangenome_matrix_genes_t0.tab 
-# transposed = clusters_cds/pangenome_matrix_genes_t0.tr.tab
+# pangenome_file = clusters_cds/pangenome_matrix_t0.tab (and transposed)
+# pangenome_genes = clusters_cds/pangenome_matrix_genes_t0.tab (and transposed) 
 # pangenome_phylip file = clusters_cds/pangenome_matrix_t0.phylip
 # pangenome_FASTA file = clusters_cds/pangenome_matrix_t0.fasta
 # pangenome CSV file (Scoary) = clusters_cds/pangenome_matrix_t0.tr.csv
-
   
 # plot compartments and perform mixture model pan-genome size estimates   
+# creates _list.txt files with clusters in each compartment 
 $GETHOMS/parse_pangenome_matrix.pl -m clusters_cds_t3/pangenome_matrix_t0.tab -s \
   &> log.parse_pangenome_matrix.cds.t3
 
+cat log.parse_pangenome_matrix.cds.t3
 # matrix contains 33644 clusters and 15 taxa
-
-# cloud size: 9724 list: clusters_cds_t3/pangenome_matrix_t0__cloud_list.txt
-# shell size: 12550 list: clusters_cds_t3/pangenome_matrix_t0__shell_list.txt
-# soft core size: 11370 list: clusters_cds_t3/pangenome_matrix_t0__softcore_list.txt
-# core size: 9798 (included in soft core) list: clusters_cds_t3/pangenome_matrix_t0__core_list.txt
 # ...
 # pan-genome size estimates (Snipen mixture model PMID:19691844): clusters_cds_t3/pangenome_matrix_t0__shell_estimates.tab
 Core.size Pan.size BIC LogLikelihood
 2 components 9815 33648 198886.077102331 -99427.4031661459
-...
-
-# occupancy stats:
-	cloud	shell	soft_core	core
-Alexis	2154	7415	11318	9798
-AmagiNijo	2221	7465	11300	9798
-Beiqing5	2060	7063	11304	9798
-Esterel	1961	7043	11308	9798
-Franka	2041	7181	11295	9798
-Himala2	1626	5570	11233	9798
-Hs_ECI-2-0	2319	7204	11293	9798
-Hs_Turkey-19-24	2419	7111	11282	9798
-Hs_XZ2	2313	7466	11330	9798
-Morex	2684	6201	11019	9798
-Padanggamu	1759	6264	11291	9798
-SBCC073_fLF	2764	7009	11268	9798
-Scarlett_fLF	3202	7405	11290	9798
-TX9425	1678	5963	11271	9798
-Yiwuerleng	1733	5754	11176	9798
 ```
 
 ![](Figures/Figure6.png)
 
  As you can see from the output, script _compare_clusters.pl_ produces several versions of the same matrix, which describe a pan-gene set (see __Note __^[Similar matrices can be obtained for clades in Ensembl Plants with scripts at <https://github.com/Ensembl/plant_tools/tree/master/phylogenomics>]):
 
- + _pangenome_matrix_t0.tab_ is a numeric matrix with tab-separated (TSV) columns, with taxa/genomes as rows and sequence clusters as columns, in which cells with natural numbers indicate whether a given taxa contains one or more sequences from a given cluster. It can be read and edited with any text editor or spreadsheet software, and is also produced in transposed form for convenience. For example, users might want to sort the clusters by position on a reference genome.
+ + _pangenome_matrix_t0.tab_ is a numeric matrix with tab-separated (TSV) columns, with taxa/genomes as rows and sequence clusters as columns, in which cells with natural numbers indicate whether a given taxa contains 1+ sequences from a given cluster. It can be read and edited with any text editor or spreadsheet software, and is also produced in transposed form for convenience. For example, users might want to sort the clusters by position on a reference genome and use these matrices to visualize results.
 
- + _pangenome_matrix_genes_t0.tab_ is similar to the previous one, but instead of natural numbers contains the actual sequence names in each cluster.
+ + _pangenome_matrix_genes_t0.tab_ is similar to the previous one, but contains the actual sequence names in each cluster instead.
  
  + _pangenome_matrix_t0.phylip_ is a reduced binary matrix in a format suitable for PHYLIP discrete character analysis software
  
@@ -566,20 +516,19 @@ Yiwuerleng	1733	5754	11176	9798
  
  + _pangenome_matrix_t0.tr.csv_ is a transposed, reduced binary matrix in CSV format suitable for pangenome-wide association analysis with software Scoary (see __Note __^[See <https://github.com/AdmiralenOla/Scoary>]). 
  
-These matrices can be used directly to infer population phylogenies (see __Note __^[You might want to try _compare_clusters.pl_ -T for a quick PHYLIP parsimony tree or _estimate_pangenome_trees.sh_ from the GET_PHYLOMARKERS pipeline for both parsimony and ML trees with support estimates]), particularly if your data are CDS sequences from WGS genomes [@Gordon2017]. On the contrary, in our experience transcript-based matrices do not infer the expected topologies [@ContrerasMoreira2017]. 
+These presence-absence matrices can be used directly to infer population phylogenies (see __Note __^[You might want to try _compare_clusters.pl_ -T for a quick PHYLIP parsimony tree or _estimate_pangenome_trees.sh_ from the GET_PHYLOMARKERS pipeline for both parsimony and ML trees with support estimates]), particularly if your data are CDS sequences from WGS genomes [@Gordon2017]. On the contrary, in our experience transcript-based matrices do not necessarily support the expected topologies [@ContrerasMoreira2017]. 
 
 Moreover, it is possible to annotate pan-genome clusters with script _make_nr_pangenome_matrix.pl_ and a user-provided FASTA file of curated sequences. For instance, you might want to identify clusters containing genes from transposable elements.
 
 ![](Figures/Figure7.png)
 
-
-
 #### 3.3.5 Analysis of accessory genes/transcripts
 
+In this section we will see how to extract accessory genes of interest and how to check whether they are enriched in some protein domains with respect to the rest of the genome. For this you need to define lists of cultivars/genotypes to be compared:
 
 ```{r, engine='bash', eval=FALSE}
 
-# find [-t 3] SBCC073 clusters absent from references
+# find [-t 3] clusters from cultivar SBCC073 which are absent from references
 $GETHOMS/parse_pangenome_matrix.pl -m clusters_cds_t3/pangenome_matrix_t0.tab \
   -A cds/SBCC073.list -B cds/ref.list -g &> log.acc.SBCC073
 mv clusters_cds_t3/pangenome_matrix_t0__pangenes_list.txt \
@@ -589,13 +538,7 @@ mv clusters_cds_t3/pangenome_matrix_t0__pangenes_list.txt \
 perl -lane 'if($F[0] =~ /SBCC073/){ foreach $c (1 .. $#F){ if($F[$c]>0){ $t++ } }; print $t }' \
   clusters_cds_t3/pangenome_matrix_t0.tab 
 
-# find [-t 3] Scarlett clusters absent from references
-$GETHOMS/parse_pangenome_matrix.pl -m clusters_cds_t3/pangenome_matrix_t0.tab \
-  -A cds/Scarlett.list -B cds/ref.list -g &> log.acc.Scarlett 
-mv clusters_cds_t3/pangenome_matrix_t0__pangenes_list.txt \
-  clusters_cds_t3/Scarlett_pangenes_list.txt 
-
-# find [-t 3] H.spontaneum clusters absent from references
+# find [-t 3] private H.spontaneum clusters absent from references
 $GETHOMS/parse_pangenome_matrix.pl -m clusters_cds_t3/pangenome_matrix_t0.tab \
   -A cds/spontaneum.list -B cds/ref.list -g &> log.acc.spontaneum
 mv clusters_cds_t3/pangenome_matrix_t0__pangenes_list.txt \
@@ -617,10 +560,6 @@ $GETHOMS/pfam_enrich.pl -d cds_est_homologues -c clusters_cds -n \
 	-x clusters_cds_t3/SBCC073_pangenes_list.txt -e -p 1 -r SBCC073 \
 	-f SBCC073_accessory.fna > SBCC073_accessory.pfam.enrich.tab
   
-$GETHOMS/pfam_enrich.pl -d cds_est_homologues -c clusters_cds -n \
-	-x clusters_cds_t3/Scarlett_pangenes_list.txt -e -p 1 -r Scarlett \
-	-f Scarlett_accessory.fna > Scarlett_accessory.pfam.enrich.tab
-
 $GETHOMS/pfam_enrich.pl -d cds_est_homologues -c clusters_cds -n \
 	-x clusters_cds_t3/spontaneum_pangenes_list.txt -e -p 1 -r Hs_ \
 	-f spontaneum_accessory.fna > spontaneum_accessory.pfam.enrich.tab
