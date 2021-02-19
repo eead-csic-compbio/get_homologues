@@ -17,7 +17,6 @@ Scarlett_fLF.Trinity.fna.gz_l50_E1e-05.diamond.cds.fna.gz
 Ctrl-D
 
 cat > ref.list
-HarunaNijo_transcripts.fa.gz_l50_E1e-05.diamond.cds.fna.gz.nucl
 Morex_MIPS_cDNAs.fna.bz2_l50_E1e-05.diamond.cds.fna.gz.nucl
 
 Ctrl-D
