@@ -198,7 +198,7 @@ A few scripts are bundled with GET_HOMOLOGUES-EST to assist in the interpretatio
 
  + _annotate_cluster.pl_ produces a multiple alignment view of the supporting local BLAST alignments of sequences in a cluster. It can also annotate Pfam domains and find private sequence variants private to an arbitrary group of sequences.
 
- + _plot_matrix_heatmap.sh_ calculates ordered heatmaps with attached row and column dendrograms from tab-separated numeric matrices, which can be presence/absence pangenomic matrices or identity matrices as those produced by get_homologues-est with flag -A.
+ + _plot_matrix_heatmap.sh_ calculates ordered heatmaps with attached row and column dendrograms from tab-separated numeric matrices, which can be presence/absence pangenomic matrices or identity matrices as those produced by get_homologues-est with flag -A. Requires R packages ape [@Popescu2012], dendextend (<https://cran.r-project.org/package=dendextend>), factoextra (<https://cran.r-project.org/package=factoextra>) and gplots (<https://CRAN.R-project.org/package=gplots>).
 
  + _pfam_enrich.pl_ calculates the enrichment of a set of sequence clusters in terms of Pfam domains, by using Fisher's exact test.
 
@@ -295,7 +295,7 @@ By default the input set with least sequences is taken as a reference. However, 
 
 Option -t allows you to control the minimum occupancy of the output clusters. By default only core clusters are produced, while with -t 0 clusters of any size, including singletons and cloud clusters, are output. The latter are named 'control' clusters as they will be used to compute the background frequencies of Pfam domains in later sections.
 
-Option -A, used in the last example, requests an ANI matrix. In this case it is combined with flag -e to exclude clusters with inparalogues and therefore minimize biases when averaging observed identities. An excerpt of the resulting ANI matrix can be inspected in __Table 4__.
+Option -A, used in the last example, requests an ANI matrix. In this case it is combined with flag -e to exclude clusters with inparalogues and therefore minimize biases when averaging observed identities. ANI matrices are useful to robustly compute the similarity among your input genotypes and to cluster them, so that redundancy can easily be managed. If you had outgroups in your input sequences you can also check them in the ANI matrix.
 
 Note the examples below use -m cluster to parallize most tasks (see section 2.1.5). If your cluster manager is not supported you can always use -m dryrun to generate batch files that should be able to execute. If you are running GET_HOMOLOGUES-EST on a multicore Linux/macOS box, you can use option -n to indicate how many cores can be used (see __Note __^[This will parallelize BLASTN and hmmer jobs, but not the clustering steps though.]).
 
@@ -326,21 +326,27 @@ $GETHOMS/get_homologues-est.pl -d cds -M -t 3 -m cluster &> log.cds.t3
 # as a summary of 2254 clusters
 $GETHOMS/get_homologues-est.pl -d cds -M -t 10 -m cluster -A -e &> log.cds.t10.e
 
-# make heatmap and dendrograms based on ANI
-# first install dependencies
+# Make heatmap and dendrograms based on ANI
+
+# This requires some R dependencies, see install instructions with 
 $GETHOMS/plot_matrix_heatmap.sh -M
 
-# You might want to edit labels in ANI tab file
+# You also probably want to edit/shorten the labels in ANI tab file
+# This produces several outfiles:
+# 1) Alexis_10taxa_algOMCL_e1_Avg_identity_heatmap.pdf (Figure 4)
+# 2) Alexis_10taxa_algOMCL_e1_Avg_identity_BioNJ.ph (Neighbor Joining Newick file)
+# 3) ANDg_meand_silhouette_width_statistic_plot.pdf (silhouette width statistics to compute K)
+# 4) ANDg_hc_plot_cut_at_mean_silhouette_width_k4.pdf (K optimal silhouette clusters)
+
 $GETHOMS/plot_matrix_heatmap.sh -i cds_est_homologues/Alexis_10taxa_algOMCL_e1_Avg_identity.tab \
   -H 10 -W 15 -t "ANI of single-copy transcripts (occupancy > 9)" -N -o pdf -d 2
 ```
 
-You should check the log files to make sure there are no errors.
-You will see for instance the output mask:
+Noy you should check the log files to make sure there are no errors and useful information such as the output mask:
 
     # mask=Alexis_0taxa_algOMCL_e0_ (_0taxa_algOMCL)
 
-This prefix will is added to the output folders and in this case tells that the reference genomes is 'Alexis', that no occupancy cutoff was set (t0), the clustering algorithm is OMCL and clusters with inparalogues are considered (e0, see __Note __^[Inparalogues are sequences whose best BLASTN hit is in the same genome.]). 
+This mask is a prefix added to the output folder. In this case tells that the reference genomes is 'Alexis', that no occupancy cutoff was set (t0), the clustering algorithm is OMCL and clusters with inparalogues are considered (e0, see __Note __^[Inparalogues are sequences whose best BLASTN hit is in the same genome.]). 
 
 Note that internally sequences are numbered with natural numbers, in this case starting with Alexis.
 
@@ -397,7 +403,7 @@ and this:
 
 In this section we will see how to further annotate these clusters.
 
-For instance, you might want to see the BLASTN evidence supporting this cluster (id=3). Note that option -D would output also the Pfam domains called in these sequences:
+For instance, you might want to see the BLASTN evidence supporting this cluster (sequence id=3, full name TR4758|c0_g1_i1). Note that option -D would output also the Pfam domains called in these sequences:
 
 ```{r, engine='bash', eval=FALSE}
 
@@ -431,22 +437,54 @@ Another useful script to annotate individual clusters is _annotate_cluster.pl_, 
 
 ![](Figures/Figure5.png)
 
-These clusters can be used to compute rates of non-synonymous to synonymous codon substitutions (see __Note __^[This requires single-copy clusters with at least 4 sequences (-e -t 4), see more at $GETHOMS/user_utils/dNdS]) or to ascertain the genomic composition of allopolyploids 
-(see __Note __^[See <https://github.com/eead-csic-compbio/allopolyploids>]). 
+There are many possible uses for clusters produced by GET_HOMOLOGUES-EST:
 
+ + Exploration of genetic variation in expressed/coding sequences. For instance, clusters can be used to compute rates of non-synonymous to synonymous codon substitutions (see __Note __^[This requires single-copy clusters with at least 4 sequences (-e -t 4), see more at $GETHOMS/user_utils/dNdS]).
+ 
+ + As raw material for phylogenomic analyses. Section 3.3.6 provides a guide on how to perform this with the software GET_PHYLOMARKERS, but you can use your favourite tools as well. A particular use case would be to ascertain the genomic composition and the phylogeny of allopolyploids, which are particularly difficult to assembly (see __Note __^[See <https://github.com/eead-csic-compbio/allopolyploids>]). 
 
 #### 3.3.4 Pangenome analyses
 
-TODO
+The raw clusters from the previous sections can be analyzed in bulk in order to discover properties of the resulting pangenome or pan-transcriptome.
 
-In this section we'll see how to produce and analyze pangenome matrices.
-First we will simulate how the barley pantranscriptome grows as new cultivars are added. In this case we compare only CDS derived from leaf tissue
+We can simulate how a pangenome grows as new genomes are added. In the main script this option is named genome composition (option -c). This is really a simulation where the input sequence sets are sampled in random order and added sequentially. After a new genome is added the algorithm checks whether previous clusters gain sequences or new clusters are added. The process is repeated 20 times (see __Note __^[You can control this with global variable $NOFSAMPLESREPORT]). This kind of analyses can be done with:
+
+ + CDS sequences from WGS genomes, as in the pioneer work of Tettelin [@Tettelin2005]. This is probably the best possible data, provided that the assemblies are of similar quality and the gene annotation obtained with the same methodology.
+ 
+ + With transcripts from the same tissue of several genotypes. Note that samples should be from the developmental stage, and that might be quite difficult to manage even in controlled experiments. 
+ 
+ + With conserved non-coding sequences or annotated transposons.
+
+ + With random genome/transcriptome fragments of the same size (k-mers), as done in a recent barley study [@Jayakodi2020].
+ 
+In this protocol we will compare leaf tissue CDS sequences from 14 barley cultivars and ecotypes. Note that we use option -z to make a soft-core simulation in addition to the default core and pan simulations. The resulting plots are shown in __Figure 6__.
+
+Moreover, the next examples also produce pangenome matrices and used them to estimate the size of the different pangenome compartments:
 
 ```{r, engine='bash', eval=FALSE}
 
-# leaf clusters and pangenome growth simulations with soft-core
+# leaf clusters and pan-transcriptome growth simulations with soft-core
 $GETHOMS/get_homologues-est.pl -d cds -c -z \
   -I cds/leaf.list -M -t 3 -m cluster &> log.cds.leaf.t3.c
+  
+# make pan-genome growth plots
+
+# first core plot bith two types of fits (Tettelin & Willenbrock)
+$GETHOMS/plot_pancore_matrix.pl -i cds_est_homologues/core_genome_leaf.list_algOMCL.tab \
+	-f core_both 
+# outfiles: 
+# core_genome_leaf.list_algOMCL.tab_core_both.log (actual fitted values and function)
+# core_genome_leaf.list_algOMCL.tab_core_both.png (plot)
+# core_genome_leaf.list_algOMCL.tab_core_both.pdf (plot)
+
+# now soft-core	making simulation snapshots for figure
+$GETHOMS/plot_pancore_matrix.pl -i cds_est_homologues/soft-core_genome_leaf.list_algOMCL.tab \
+	-a animation
+	
+# finally pan	
+$GETHOMS/plot_pancore_matrix.pl -i cds_est_homologues/pan_genome_leaf.list_algOMCL.tab \
+	-f pan 
+  
 
 # produce pan-genome matrix and allocate clusters to occupancy classes
 
@@ -470,15 +508,9 @@ $GETHOMS/compare_clusters.pl -d cds_est_homologues/Alexis_3taxa_algOMCL_e0_ \
 $GETHOMS/parse_pangenome_matrix.pl -m clusters_cds_t3/pangenome_matrix_t0.tab -s \
   &> log.parse_pangenome_matrix.cds.t3
 
-
-# make pan-genome growth plots
-$GETHOMS/plot_pancore_matrix.pl -i cds_est_homologues/core_genome_leaf.list_algOMCL.tab \
-	-f core_both &> log.core.plots
-$GETHOMS/plot_pancore_matrix.pl -i cds_est_homologues/pan_genome_leaf.list_algOMCL.tab \
-	-f pan &> log.pan.plots
-  
-# (recommended) check the produced plots and the exponential size estimates
 ```
+
+![](Figures/Figure6.png)
 
 See Different pangenome matrices
 
@@ -488,8 +520,11 @@ https://legumeinfo.org/gcv2/instructions
 
 Note: Analysis of pangenomes from Ensembl Plants
 
+With https://github.com/Ensembl/plant_tools/tree/master/phylogenomics
+ 
 
-#### 3.3.5 Annotation of accessory genes/transcripts
+
+#### 3.3.5 Analysis of accessory genes/transcripts
 
 
 ```{r, engine='bash', eval=FALSE}
@@ -588,9 +623,12 @@ The first version of this protocol was funded by Centro de Bioinformática y Bio
 
 **Figure 3.** Features of GET_HOMOLOGUES-EST. (A) Flowchart of the main tasks and deliverables. BLASTN and optional Pfam scans, as well as BDBH and OMCL clustering, can be run on a local computer, preferably multi-core, or over a HPC cluster. Resulting clusters are post-processed to produce pan-genome or average nucleotide identity matrices, as well as to estimate pan-, soft-core-, and core-genomes. Note that both clustering algorithms can be fine-tuned by customizing an array of parameters, of which alignment coverage (-C) and same Pfam domain composition (-D) are perhaps the most important. While OMCL is adequate for most applications, BDBH is faster for the calculation of core sequences within large datasets. 
 
-**Figure 4.** Average nucleotide % identity matrix and ordered heat map of 2254 single-copy core barley CDS. This figure was produced with script plot_matrix_heatmap.sh, which calls heatmap.2 function from the gplots R package. The dendrograms were computed by complete linkage clustering and Euclidean distances computed among ANI columns.
+**Figure 4.** Average nucleotide % identity matrix and ordered heat map of 2254 single-copy core barley CDS.
+Values are average nucleotide identities among sequences clustered together by GET_HOMOLOGUES-EST. This figure was produced with script _plot_matrix_heatmap.sh_, which calls heatmap.2 function from the gplots R package. The dendrograms were computed by complete linkage clustering and Euclidean distances computed among ANI columns. 
 
 **Figure 5.** Summary of script _annotate_clusters.pl_. A cluster of transcript sequences (top) is processed for further downstream analyses by alignment to an external reference sequence (-r), collapsing overlapping sequences of the same taxon (-c) or making the alignment block blunt (-b). In addition, private variants to a group of taxa can be extracted, and Pfam domains called by translating the longest sequence.
+
+**Figure 6.** Soft-core leaf pan-transcriptome after comparing 14 barley cultivars and ecotypes. Left) Snapshot of the simulation after 2 replicates are complete. The data points for the first replicate are in black, and those for the second in gree. Right) Fitted Tettelin function after 20 replicates are complete. 
 
 ## Table captions
 
@@ -600,7 +638,7 @@ The first version of this protocol was funded by Centro de Bioinformática y Bio
 
 **Table 3.** Dependencies of GET_HOMOLOGUES-EST.
 
-**Table 4.** Average Nucleotide Identity matrix. Values are average nucleotide identities among sequences clustered together by GET_HOMOLOGUES-EST.
+<!--**Table 4.** Average Nucleotide Identity matrix. --> 
 
 
 ## Tables
@@ -635,13 +673,4 @@ Transdecoder r20140704 | <http://transdecoder.sf.net> | @Haas2013
 MVIEW 1.60.1 | <https://github.com/desmid/mview> | @Brown1998
 diamond 0.8.25 | <https://github.com/bbuchfink/diamond> | @Buchfink2015
 
-### Table 4
 
-genomes | Alexis | AmagiNijo | Beiqing5 | Esterel | Franka | Himala2
-:------------ | ------------: | ------------: | ------------: | ------------: | ------------: | ------------:
-Alexis | 100 | 99.74 | 99.64 | 99.69 | 99.67 | 99.64
-AmagiNijo | 99.74 | 100 | 99.61 | 99.68 | 99.67 | 99.62
-Beiqing5 | 99.64 | 99.61 | 100 | 99.60 | 99.58 | 99.75
-Esterel | 99.69 | 99.68 | 99.60 | 100 | 99.79 | 99.59
-Franka | 99.67 | 99.67 | 99.58 | 99.79 | 100 | 99.58
-Himala2 | 99.64 | 99.62 | 99.75 | 99.59 | 99.58 | 100
