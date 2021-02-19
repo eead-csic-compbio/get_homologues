@@ -202,7 +202,7 @@ A few scripts are bundled with GET_HOMOLOGUES-EST to assist in the interpretatio
 
  + _pfam_enrich.pl_ calculates the enrichment of a set of sequence clusters in terms of Pfam domains, by using Fisher's exact test.
 
-Apart from these, scripts *transcripts2cds.pl* and *transcripts2cdsCPP.pl* are also bundled to assist in the analysis of transcripts. They can be used to annotate potential ORFs contained within raw transcripts, which might be truncated or contain retained introns. The CPP version is faster but requires some optional Perl dependencies (which you should have installed earlier). These scripts use TransDecoder and BLASTX (see __Table 3__) to scan protein sequences in SWISSPROT (see __Note __^[See benchmark in [@ContrerasMoreira2017]; DIAMOND can also be used with significant gains in computing time and very small sensitivity losses, as shown in the manual.]). 
+Apart from these, scripts *transcripts2cds.pl* and *transcripts2cdsCPP.pl* are also bundled to assist in the analysis of transcripts. They can be used to annotate potential ORFs contained within raw transcripts, which might be truncated or contain retained introns. The CPP version is faster but requires some optional Perl dependencies (which you should have installed earlier). These scripts use TransDecoder and BLASTX (see __Table 3__) to scan protein sequences in SWISSPROT (see __Note __^[See benchmark in c; DIAMOND can also be used with significant gains in computing time and very small sensitivity losses, as shown in the manual.]). 
 
 ### 3.3 Protocol for plant transcripts and CDS sequences
 
@@ -314,10 +314,11 @@ $GETHOMS/get_homologues-est.pl -d cds -D -m cluster -o &> log.cds.pfam
 # cluster_directory = cds_est_homologues/Alexis_0taxa_algOMCL_e0_
 $GETHOMS/get_homologues-est.pl -d cds -M -t 0 -m cluster &> log.cds
 
-# get non-cloud clusters
+# get non-cloud clusters and POCS matrix
 # cluster_list = cds_est_homologues/Alexis_3taxa_algOMCL_e0_.cluster_list
 # cluster_directory = cds_est_homologues/Alexis_3taxa_algOMCL_e0_
-$GETHOMS/get_homologues-est.pl -d cds -M -t 3 -m cluster &> log.cds.t3
+# percent_conserved_sequences_file = cds_est_homologues/Alexis_3taxa_algOMCL_e0_POCS.tab
+$GETHOMS/get_homologues-est.pl -d cds -M -t 3 -P -m cluster &> log.cds.t3
 
 # single-copy clusters with high occupancy & Average Nucleotide Identity
 # [Note that flag -e leaves out clusters with inparalogues]
@@ -338,6 +339,7 @@ $GETHOMS/plot_matrix_heatmap.sh -M
 # 3) ANDg_meand_silhouette_width_statistic_plot.pdf (silhouette width statistics to compute K)
 # 4) ANDg_hc_plot_cut_at_mean_silhouette_width_k4.pdf (K optimal silhouette clusters)
 
+# note that two decimals are used (-d 2)
 $GETHOMS/plot_matrix_heatmap.sh -i cds_est_homologues/Alexis_10taxa_algOMCL_e1_Avg_identity.tab \
   -H 10 -W 15 -t "ANI of single-copy transcripts (occupancy > 9)" -N -o pdf -d 2
 ```
@@ -353,6 +355,8 @@ Note that internally sequences are numbered with natural numbers, in this case s
 The resulting heatmap summarizing the ANI matrix in the example is shown in __Figure 4__.
 
 ![](Figures/Figure4.png)
+
+A sample of the resulting POCS matrix is shown in __Table 4__.
 
 #### 3.3.3 Annotation of clusters 
 
@@ -457,13 +461,19 @@ We can simulate how a pangenome grows as new genomes are added. In the main scri
 
  + With random genome/transcriptome fragments of the same size (k-mers), as done in a recent barley study [@Jayakodi2020].
  
-In this protocol we will compare leaf tissue CDS sequences from 14 barley cultivars and ecotypes. Note that we use option -z to make a soft-core simulation in addition to the default core and pan simulations. The resulting plots are shown in __Figure 6__.
+In this protocol we will compare leaf tissue CDS sequences from 14 barley cultivars and ecotypes. Note that we use option -z to make a soft-core simulation in addition to the default core and pan simulations. Examples of the resulting plots are shown on __Figure 6__.
 
-Moreover, the next examples also produce pangenome matrices and used them to estimate the size of the different pangenome compartments:
+Moreover, we also produce pangenome matrices and used them to estimate the size of the different pangenome compartments. The matrices are created with script _compare_clusters.pl_ with option -m. Note that option -n uses nucleotide clusters for building the matrix. In the example we actually call this script twice; the second time cloud clusters are filtered out, as they were found to be the most unreliable in our benchmarks [@ContrerasMoreira2017]. A totaa
+
+Another script, _parse_pangenome_matrix.pl_ can be used to consume the matrices and produce compartment plots and size estimates. In this example it estimates a core-genome of 9815 CDS and a pan-genome of 33648 CDS clusters and produces __Figure 7__:
 
 ```{r, engine='bash', eval=FALSE}
 
 # leaf clusters and pan-transcriptome growth simulations with soft-core
+# produces a genome composition matrices in cds_est_homologues/:
+# core_genome_leaf.list_algOMCL.tab,
+# soft-core_genome_leaf.list_algOMCL.tab and
+# pan_genome_leaf.list_algOMCL.tab 
 $GETHOMS/get_homologues-est.pl -d cds -c -z \
   -I cds/leaf.list -M -t 3 -m cluster &> log.cds.leaf.t3.c
   
@@ -482,46 +492,86 @@ $GETHOMS/plot_pancore_matrix.pl -i cds_est_homologues/soft-core_genome_leaf.list
 	-a animation
 	
 # finally pan	
-$GETHOMS/plot_pancore_matrix.pl -i cds_est_homologues/pan_genome_leaf.list_algOMCL.tab \
-	-f pan 
+$GETHOMS/plot_pancore_matrix.pl -i cds_est_homologues/pan_genome_leaf.list_algOMCL.tab -f pan 
   
+## produce pan-genome matrices and allocate clusters to occupancy classes
 
-# produce pan-genome matrix and allocate clusters to occupancy classes
-
-# all occupancies
+# all occupancies, produces folder clusters_cds/
 $GETHOMS/compare_clusters.pl -d cds_est_homologues/Alexis_0taxa_algOMCL_e0_ \
   -o clusters_cds -m -n &> log.compare_clusters.cds
 
-# excluding cloud clusters, the most unreliable in our benchmarks
+# excluding cloud clusters, the most unreliable in our transcript benchmarks, 
+# produces folder clusters_cds_t3/
 $GETHOMS/compare_clusters.pl -d cds_est_homologues/Alexis_3taxa_algOMCL_e0_ \
   -o clusters_cds_t3 -m -n &> log.compare_clusters.cds.t3
   
-# (recommended) check the log files for the number of clusters   
-  
-# (recommended) inspect some of those clusters with script annotate_cluster.pl,
-# useful to reconstruct the alignments that support them
+## (recommended) check the log files for the number of clusters   
+cat  log.compare_clusters.cds
+# ...
+# pangenome_file = clusters_cds/pangenome_matrix_t0.tab 
+# transposed = clusters_cds/pangenome_matrix_t0.tr.tab
+# pangenome_genes = clusters_cds/pangenome_matrix_genes_t0.tab 
+# transposed = clusters_cds/pangenome_matrix_genes_t0.tr.tab
+# pangenome_phylip file = clusters_cds/pangenome_matrix_t0.phylip
+# pangenome_FASTA file = clusters_cds/pangenome_matrix_t0.fasta
+# pangenome CSV file (Scoary) = clusters_cds/pangenome_matrix_t0.tr.csv
 
-# (recommended) it is possible to annotate pan-genome clusters with script 
-# make_nr_pangenome_matrix.pl and a FASTA file of curated sequences
   
-# log file contains mixture model pan-genome size estimates   
+# plot compartments and perform mixture model pan-genome size estimates   
 $GETHOMS/parse_pangenome_matrix.pl -m clusters_cds_t3/pangenome_matrix_t0.tab -s \
   &> log.parse_pangenome_matrix.cds.t3
 
+# matrix contains 33644 clusters and 15 taxa
+
+# cloud size: 9724 list: clusters_cds_t3/pangenome_matrix_t0__cloud_list.txt
+# shell size: 12550 list: clusters_cds_t3/pangenome_matrix_t0__shell_list.txt
+# soft core size: 11370 list: clusters_cds_t3/pangenome_matrix_t0__softcore_list.txt
+# core size: 9798 (included in soft core) list: clusters_cds_t3/pangenome_matrix_t0__core_list.txt
+# ...
+# pan-genome size estimates (Snipen mixture model PMID:19691844): clusters_cds_t3/pangenome_matrix_t0__shell_estimates.tab
+Core.size Pan.size BIC LogLikelihood
+2 components 9815 33648 198886.077102331 -99427.4031661459
+...
+
+# occupancy stats:
+	cloud	shell	soft_core	core
+Alexis	2154	7415	11318	9798
+AmagiNijo	2221	7465	11300	9798
+Beiqing5	2060	7063	11304	9798
+Esterel	1961	7043	11308	9798
+Franka	2041	7181	11295	9798
+Himala2	1626	5570	11233	9798
+Hs_ECI-2-0	2319	7204	11293	9798
+Hs_Turkey-19-24	2419	7111	11282	9798
+Hs_XZ2	2313	7466	11330	9798
+Morex	2684	6201	11019	9798
+Padanggamu	1759	6264	11291	9798
+SBCC073_fLF	2764	7009	11268	9798
+Scarlett_fLF	3202	7405	11290	9798
+TX9425	1678	5963	11271	9798
+Yiwuerleng	1733	5754	11176	9798
 ```
 
 ![](Figures/Figure6.png)
 
-See Different pangenome matrices
+ As you can see from the output, script _compare_clusters.pl_ produces several versions of the same matrix, which describe a pan-gene set (see __Note __^[Similar matrices can be obtained for clades in Ensembl Plants with scripts at <https://github.com/Ensembl/plant_tools/tree/master/phylogenomics>]):
 
-visualization
+ + _pangenome_matrix_t0.tab_ is a numeric matrix with tab-separated (TSV) columns, with taxa/genomes as rows and sequence clusters as columns, in which cells with natural numbers indicate whether a given taxa contains one or more sequences from a given cluster. It can be read and edited with any text editor or spreadsheet software, and is also produced in transposed form for convenience. For example, users might want to sort the clusters by position on a reference genome.
 
-https://legumeinfo.org/gcv2/instructions
-
-Note: Analysis of pangenomes from Ensembl Plants
-
-With https://github.com/Ensembl/plant_tools/tree/master/phylogenomics
+ + _pangenome_matrix_genes_t0.tab_ is similar to the previous one, but instead of natural numbers contains the actual sequence names in each cluster.
  
+ + _pangenome_matrix_t0.phylip_ is a reduced binary matrix in a format suitable for PHYLIP discrete character analysis software
+ 
+ +  _pangenome_matrix_t0.fasta_ is a reduced binary matrix in FASTA format suitable for binary character analysis software such as IQ-TREE, which can compute bootstrap and aLRT support. 
+ 
+ + _pangenome_matrix_t0.tr.csv_ is a transposed, reduced binary matrix in CSV format suitable for pangenome-wide association analysis with software Scoary (see __Note __^[See <https://github.com/AdmiralenOla/Scoary>]). 
+ 
+These matrices can be used directly to infer population phylogenies (see __Note __^[You might want to try _compare_clusters.pl_ -T for a quick PHYLIP parsimony tree or _estimate_pangenome_trees.sh_ from the GET_PHYLOMARKERS pipeline for both parsimony and ML trees with support estimates]), particularly if your data are CDS sequences from WGS genomes [@Gordon2017]. On the contrary, in our experience transcript-based matrices do not infer the expected topologies [@ContrerasMoreira2017]. 
+
+Moreover, it is possible to annotate pan-genome clusters with script _make_nr_pangenome_matrix.pl_ and a user-provided FASTA file of curated sequences. For instance, you might want to identify clusters containing genes from transposable elements.
+
+![](Figures/Figure7.png)
+
 
 
 #### 3.3.5 Analysis of accessory genes/transcripts
@@ -630,6 +680,8 @@ Values are average nucleotide identities among sequences clustered together by G
 
 **Figure 6.** Soft-core leaf pan-transcriptome after comparing 14 barley cultivars and ecotypes. Left) Snapshot of the simulation after 2 replicates are complete. The data points for the first replicate are in black, and those for the second in gree. Right) Fitted Tettelin function after 20 replicates are complete. 
 
+**Figure 7.** Distribution of leaf CDS clusters from 15 barleys as a function of their occupancy. Occupancy classes are colored as core, soft-core, shell and cloud members. 
+
 ## Table captions
 
 **Table 1.** Definition of occupancy classes used by the software GET_HOMOLOGUES-EST.
@@ -638,8 +690,7 @@ Values are average nucleotide identities among sequences clustered together by G
 
 **Table 3.** Dependencies of GET_HOMOLOGUES-EST.
 
-<!--**Table 4.** Average Nucleotide Identity matrix. --> 
-
+**Table 4.** Excerpt of percentage of conserved sequences (POCS) matrix. Values are percentages of conserved sequence clusters among pairs of taxa. In other words, these values summarize how many clusters of one genome contain also sequences from another. 
 
 ## Tables
 
@@ -672,5 +723,16 @@ PHYLIP 3.695 | <http://evolution.genetics.washington.edu/phylip> |
 Transdecoder r20140704 | <http://transdecoder.sf.net> | @Haas2013
 MVIEW 1.60.1 | <https://github.com/desmid/mview> | @Brown1998
 diamond 0.8.25 | <https://github.com/bbuchfink/diamond> | @Buchfink2015
+
+### Table 4
+
+genomes	| Alexis | AmagiNijo | Beiqing5	| Esterel | Franka | Himala2
+ :-- | :--: | :--: | :--: | :--: | :--: | :--: 
+Alexis | 100 | 71.54 | 70.76 | 72.43 | 72.06 | 70.46
+AmagiNijo	| 71.54 |	100	| 70.89	| 71.38	| 70.90	| 70.40		
+Beiqing5 | 70.76 | 70.89 | 100 | 71.14 | 71.18 | 71.80
+Esterel |	72.43	| 71.38 |	71.14 | 100 | 73.66 |	70.79	
+Franka | 72.06 | 70.90 | 71.18 | 73.66 | 100 |70.74	
+Himala2	| 70.46 | 70.40 | 71.80 | 70.79 |	70.74 |	100	
 
 
