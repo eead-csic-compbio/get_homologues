@@ -571,21 +571,15 @@ The top enriched domains of the last example are shown in __Table 5__.
 
 #### 3.3.6 Downstream phylogenomic analyses 
 
-Both pangenome matrices and single-copy CDS sequence clusters produced with the protocols explained above can be further analyzed and plotted with help from tools of the [GET_PHYLOMARKERS](https://github.com/vinuesa/get_phylomarkers) pipeline (@Vinuesa2018). As explained in its own [tutorial](https://vinuesa.github.io/get_phylomarkers), with this toolbox it is possible to use twin nucleotide & peptide clusters produced by GET_HOMOLOGUES to compute robust multi-gene and pangenome phylogenies.
+Both pangenome matrices and single-copy CDS sequence clusters produced with the protocols explained above can be further analyzed and plotted with help from tools of the [GET_PHYLOMARKERS](https://github.com/vinuesa/get_phylomarkers) pipeline [@Vinuesa2018]. As explained in its own tutorial (see __Note __^[See <https://vinuesa.github.io/get_phylomarkers>]), with this toolbox it is possible to use twin nucleotide & peptide clusters produced by GET_HOMOLOGUES to compute robust multi-gene and pangenome phylogenies.
 
-Add outgroups
-
-See the section "Docker container" above to learn about the container bundled with both GET_HOMOLOGUES and GET_PHYLOMARKERS to avoid trouble installing dependencies and produce reproducible analyses. 
-
+See the section 2.1.4 above to learn about the container bundled with both GET_HOMOLOGUES and GET_PHYLOMARKERS to avoid trouble installing dependencies and produce reproducible analyses. 
 
 ## 4. Notes
 
 <!--As we all know, even the simplest techniques go wrong from time to time. Would you therefore indicate any major problems or faults that can occur with your technique? Try to indicate the major sources of problems and how they can be identified and overcome. With reference to related techniques, any variations of the technique that you have described should also be made in this section, as well as--where relevant--an indication of the sensitivity of the method, timescale for the singled technique, etc. This "Notes" section is a hallmark of this series and has been singled out for praise by a number of reviewers. Please try and make this section as extensive as possible by putting on paper all of your various experiences with the technique. Each ‘Note’ should be cross-referenced with the ‘Materials’ and ‘Methods’ sections, e.g. (see Note 1) -->
 
 <!-- To be cut-pasted from the end of the Word document -->
-
-<!--Jacques: I suppressed the hard-coded numbering of the note because I inserted some notes-->
-<!-- JAime:  We should menton how much time should take the entire protocol. -->
 
 ## 5. References
 
