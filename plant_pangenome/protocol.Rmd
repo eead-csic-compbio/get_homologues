@@ -602,7 +602,7 @@ ${GETPHYLO}/estimate_pangenome_phylogenies.sh -f pangenome_matrix_t0.fasta -r 10
 # move to folder with single-copy core clusters
 cd Alexis_alltaxa_algOMCL_e1_
 ${GETPHYLO}/run_get_phylomarkers_pipeline.sh -R 1 -t DNA
-
+# TO BE COMPLETED
 
 
 ´´´
