@@ -327,6 +327,11 @@ $GETHOMS/get_homologues-est.pl -d cds -M -t 3 -P -m cluster &> log.cds.t3
 # as a summary of 2254 clusters
 $GETHOMS/get_homologues-est.pl -d cds -M -t 10 -m cluster -A -e &> log.cds.t10.e
 
+# single-copy core clusters for phylogenomic analyses (see section 3.3.6)
+# number_of_clusters = 883
+# cluster_directory = cds_est_homologues/Alexis_alltaxa_algOMCL_e1_
+$GETHOMS/get_homologues-est.pl -d cds -M -m cluster -e &> log.cds.core.e
+
 # Make heatmap and dendrograms based on ANI
 
 # This requires some R dependencies, see install instructions with 
@@ -516,7 +521,7 @@ Core.size Pan.size BIC LogLikelihood
  
  + _pangenome_matrix_t0.tr.csv_ is a transposed, reduced binary matrix in CSV format suitable for pangenome-wide association analysis with software Scoary (see __Note __^[See <https://github.com/AdmiralenOla/Scoary>]). 
  
-These presence-absence matrices can be used directly to infer population phylogenies (see __Note __^[You might want to try _compare_clusters.pl_ -T for a quick PHYLIP parsimony tree or _estimate_pangenome_trees.sh_ from the GET_PHYLOMARKERS pipeline for both parsimony and ML trees with support estimates]), particularly if your data are CDS sequences from WGS genomes [@Gordon2017]. On the contrary, in our experience transcript-based matrices do not necessarily support the expected topologies [@ContrerasMoreira2017]. 
+These presence-absence matrices can be used directly to infer population phylogenies (see __Note __^[You might want to try _compare_clusters.pl_ -T for a PHYLIP pars parsimony tree or GET_PHYLOMARKERS pipeline, as explained on section 3.3.6]), particularly if your data are CDS sequences from WGS genomes [@Gordon2017]. 
 
 Moreover, it is possible to annotate pan-genome clusters with script _make_nr_pangenome_matrix.pl_ and a user-provided FASTA file of curated sequences. For instance, you might want to identify clusters containing genes from transposable elements.
 
@@ -566,14 +571,52 @@ $GETHOMS/pfam_enrich.pl -d cds_est_homologues -c clusters_cds -n \
 
 The top enriched domains of the last example are shown in __Table 5__.
 
-<!-- Rscript suppl_scripts/_plot_heatmap.R -->
-
 
 #### 3.3.6 Downstream phylogenomic analyses 
 
-Both pangenome matrices and single-copy CDS sequence clusters produced with the protocols explained above can be further analyzed and plotted with help from tools of the [GET_PHYLOMARKERS](https://github.com/vinuesa/get_phylomarkers) pipeline [@Vinuesa2018]. As explained in its own tutorial (see __Note __^[See <https://vinuesa.github.io/get_phylomarkers>]), with this toolbox it is possible to use twin nucleotide & peptide clusters produced by GET_HOMOLOGUES to compute robust multi-gene and pangenome phylogenies.
+GET_HOMOLOGUES-EST produces two types of output which can be further processed with the GET_PHYLOMARKERS pipeline [@Vinuesa2018] (<https://github.com/vinuesa/get_phylomarkers>) to compute and plot robust molecular phylogenies: 
 
-See the section 2.1.4 above to learn about the container bundled with both GET_HOMOLOGUES and GET_PHYLOMARKERS to avoid trouble installing dependencies and produce reproducible analyses. 
+ + Single-copy core clusters (twin .fna & .faa FASTA files). These can be CDS sequences annotated in WGS genomes or deduced from transcriptomes.
+
+ + Pangenome matrices, ideally of CDS sequences from WGS genomes, as our benchmarks with transcript-based matrices do not reconstruct the expected topologies [@ContrerasMoreira2017].
+
+Both strategies are explained in detail on a dedicated tutorial (see __Note __^[See <https://vinuesa.github.io/get_phylomarkers> , it includes documentation on how to run a Docker container bundled with both GET_HOMOLOGUES and GET_PHYLOMARKERS. This minimizes trouble installing dependencies and produces reproducible analyses.]), here we will briefly demonstrate them.
+
+```{r, engine='bash', eval=FALSE}
+# set GET_PHYLOMARKERS path, for example:
+cd soft
+git clone https://github.com/vinuesa/get_phylomarkers.git
+export GETPHYLO=~/soft/get_phylomarkers
+
+# Search for the best maximum likelihood tree using 10 independent IQ-TREE runs
+${GETPHYLO}/estimate_pangenome_phylogenies.sh -f pangenome_matrix_t0.fasta -r 10 -S UFBoot
+...
+>>> wrote file sorted_lnL_scores_IQ-TREE_searches.out ...
+>>> Best IQ-TREE run was: UFBoot_run9.log:BEST SCORE FOUND : -250734.229 ...
+>>> wrote file best_PGM_IQT_UFBoot_run9_GTR2+FO+I.treefile ...
+... found in iqtree_PGM_10_runs/iqtree_10_runs
+... done!
+
+# 
+
+# move to folder with single-copy core clusters
+cd Alexis_alltaxa_algOMCL_e1_
+${GETPHYLO}/run_get_phylomarkers_pipeline.sh -R 1 -t DNA
+
+
+
+´´´
+
+The resulting trees are in Newick format and can be plotted with tools such as FigTree or iToL or any other preferred software (see __Note __^[See <http://tree.bio.ed.ac.uk/software/figtree> and <https://itol.embl.de>.]).
+
+###
+
+with this toolbox it is possible to use twin nucleotide & peptide clusters produced by GET_HOMOLOGUES to compute robust multi-gene and pangenome phylogenies.
+
+
+
+<!-- example calls for clusters and pangenome matrix -->
+
 
 ## 4. Notes
 
