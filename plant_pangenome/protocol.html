@@ -746,7 +746,7 @@ MAAAAMAAHRASFPLRLQQILSGSRAVSPAIKVESEPPAKVKAFIDRVINIPLHDIAIPLSGFHWEFNKGN...</code
 <h4>3.3.6 Downstream phylogenomic analyses</h4>
 <p>GET_HOMOLOGUES-EST produces two types of output which can be further processed with the GET_PHYLOMARKERS pipeline <span class="citation"><em>(31)</em></span> (<a href="https://github.com/vinuesa/get_phylomarkers" class="uri">https://github.com/vinuesa/get_phylomarkers</a>) to compute robust molecular phylogenies:</p>
 <ul>
-<li><p>Single-copy core clusters (twin .fna &amp; .faa FASTA files). These can be CDS sequences annotated in WGS genomes or deduced from transcriptomes.</p></li>
+<li><p>Single-copy core clusters (twin .fna &amp; .faa FASTA files). These can be CDS sequences annotated in WGS genomes or deduced from transcriptomes. These are used to compute gene trees which are quality-controlled and eventually concatenated. In our experience this provides useful insights at the Genus level or beyond. As mentioned on section 3.3.1, outgroups will be required to root the resulting trees.</p></li>
 <li><p>Pangenome matrices, ideally of CDS sequences from WGS genomes, as our benchmarks with transcript-based matrices do not reconstruct the expected topologies <span class="citation"><em>(11)</em></span>.</p></li>
 </ul>
 <p>Both strategies use IQ-TREE <span class="citation"><em>(38)</em></span> and are explained in detail on a dedicated tutorial (see <strong>Note </strong><a href="#fn15" class="footnoteRef" id="fnref15"><sup>15</sup></a>), here we will briefly demonstrate how to use them.</p>
@@ -755,12 +755,17 @@ MAAAAMAAHRASFPLRLQQILSGSRAVSPAIKVESEPPAKVKAFIDRVINIPLHDIAIPLSGFHWEFNKGN...</code
 <span class="fu">git</span> clone https://github.com/vinuesa/get_phylomarkers.git
 <span class="bu">export</span> <span class="va">GETPHYLO=</span>~/soft/get_phylomarkers
 
+<span class="co"># install R dependencies</span>
+<span class="bu">cd</span> <span class="va">$GETPHYLO</span>
+<span class="ex">./install_R_deps.R</span>
+
 <span class="co">## pangenome matrix phylogeny</span>
 
 <span class="co"># Search for the best maximum likelihood tree using 10 independent IQ-TREE runs</span>
+<span class="co"># with a previously computed pangenome matrix in FASTA format (section 3.3.4)</span>
 <span class="co"># Note: the script can also run PHYLIP pars, which are much slower</span>
 <span class="va">${GETPHYLO}</span><span class="ex">/estimate_pangenome_phylogenies.sh</span> -f pangenome_matrix_t0.fasta -r 10 -S UFBoot
-<span class="ex">...</span>
+<span class="co">#...</span>
 <span class="op">&gt;&gt;&gt;</span> <span class="ex">wrote</span> file sorted_lnL_scores_IQ-TREE_searches.out ...
 <span class="op">&gt;&gt;&gt;</span> <span class="ex">Best</span> IQ-TREE run was: UFBoot_run9.log:BEST SCORE FOUND : -250734.229 ...
 <span class="op">&gt;&gt;&gt;</span> <span class="ex">wrote</span> file best_PGM_IQT_UFBoot_run9_GTR2+FO+I.treefile ...
@@ -769,11 +774,28 @@ MAAAAMAAHRASFPLRLQQILSGSRAVSPAIKVESEPPAKVKAFIDRVINIPLHDIAIPLSGFHWEFNKGN...</code
 
 <span class="co">## single-copy core cluster phylogeny</span>
 
-<span class="co"># move to folder with single-copy core .faa &amp; .fna clusters, compute CLUSTALO multiple </span>
-<span class="co"># alignments and trees of coding sequences using molecular model selection and produce a </span>
-<span class="co"># species-tree from the concatenated, top-scoring alignments</span>
+<span class="co"># Move to folder with single-copy core .faa &amp; .fna clusters, compute codon alignments </span>
+<span class="co"># and trees of coding sequences using molecular model selection and produce a </span>
+<span class="co"># species-tree from the concatenated, top-scoring alignments.</span>
+<span class="co"># See all options with ./run_get_phylomarkers_pipeline.sh -H</span>
+<span class="co"># For individuals of the same species you can also try -m 0.5</span>
 <span class="bu">cd</span> Alexis_alltaxa_algOMCL_e1_
-<span class="va">${GETPHYLO}</span><span class="ex">/run_get_phylomarkers_pipeline.sh</span> -R 1 -t DNA -f EST</code></pre></div>
+<span class="va">${GETPHYLO}</span><span class="ex">/run_get_phylomarkers_pipeline.sh</span> -R 1 -t DNA -f EST
+<span class="co">#...</span>
+[<span class="ex">13</span>:44:16] <span class="co"># running compute_MJRC_tree treefile I ...</span>
+ <span class="op">&gt;&gt;&gt;</span> <span class="ex">Wrote</span> file IQT_MJRC_tree.nwk ... 
+[<span class="ex">13</span>:44:16] <span class="co"># running ModelFinder on the concatenated alignment with GTR. This will take a while ...</span>
+ <span class="op">&gt;&gt;&gt;</span> <span class="ex">wrote</span> file concat_cdnAlns.fnainf.log ...
+ <span class="op">&gt;&gt;&gt;</span> <span class="ex">Best-fit</span> model: GTR+F+ASC+R2 ...
+[<span class="ex">13</span>:44:26] <span class="co"># running IQ-tree on the concatenated alignment with best model GTR+F+ASC+R2 -abayes -bb 1000. This will take a while ...</span>
+ <span class="op">&gt;&gt;&gt;</span> <span class="ex">wrote</span> file sorted_IQ-TREE_searches.out ...
+<span class="co"># &gt;&gt;&gt; Best IQ-TREE run was: BEST SCORE FOUND : -6661.697 ...</span>
+[<span class="ex">13</span>:44:40]  <span class="op">&gt;&gt;&gt;</span> wrote file concat_nonRecomb_KdeFilt_iqtree_GTR+F+ASC+R2.treefile ...
+
+<span class="co"># The final concatenated &amp; labelled tree, with </span>
+<span class="co"># Bayesian posterior probabilities/bootstrap values per node, can be found at</span>
+<span class="co"># cd get_phylomarkers_run_AIR1tDNA_k1.5_m0.75_Tmedium*/PhiPack/non_recomb_cdn_alns/top_*/</span>
+<span class="co"># concat_nonRecomb_KdeFilt_iqtree_GTR+F+ASC+G4_ed.sptree</span></code></pre></div>
 <p>The resulting trees are in Newick format and can be plotted with tools such as FigTree or iToL or any other preferred software (see <strong>Note </strong><a href="#fn16" class="footnoteRef" id="fnref16"><sup>16</sup></a>).</p>
 </div>
 </div>

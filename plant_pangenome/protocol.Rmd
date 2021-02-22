@@ -429,7 +429,7 @@ dir	query	sbjct	bits	Eval	%ident	cover	Pfam	annotation
 ...
 ```
 
-Another useful script to annotate individual clusters is _annotate_cluster.pl_, which produces a multiple alignment (MSA) view of the locally-aligned sequences that make up the cluster. It works by aligning all sequences in the cluster to the longest/user-selected sequence (see __Note __^[It does not necessarily conserve the original sequence order. Any sequence stretches masked by BLAST will appear as Xs. Clusters of transcripts might contain sequences that do not match the longest sequence; instead, they align towards the 5' or 3' of other sequences and are not included in the produced cumulative MSA.]). __Figure 5__ summarizes the output of this script.
+Another useful script to annotate individual clusters is _annotate_cluster.pl_, which produces a multiple alignment (MSA) view of the locally-aligned sequences that make up the cluster. It works by aligning all sequences in the cluster to the longest/user-selected sequence (see __Note __^[It does not necessarily conserve the original sequence order. Any sequence stretches masked by BLAST will appear as Xs. Clusters of transcripts might contain sequences that do not match the longest sequence; instead, they align towards the 5' or 3' of other sequences and are not included in the produced cumulative MSA.]). __Figure 5__ summarizes the output of this script, which is particularly useful for raw transcripts.
 
 ![](Figures/Figure5.png)
 
@@ -437,7 +437,7 @@ There are many possible uses for clusters produced by GET_HOMOLOGUES-EST:
 
  + Exploration of genetic variation in expressed/coding sequences. For instance, clusters can be used to compute rates of non-synonymous to synonymous codon substitutions (see __Note __^[This requires single-copy clusters with at least 4 sequences (-e -t 4), see more at $GETHOMS/user_utils/dNdS]).
  
- + As raw material for phylogenomic analyses. Section 3.3.6 provides a guide on how to perform this with the software GET_PHYLOMARKERS, but you can use your favourite tools as well. A particular use case would be to ascertain the genomic composition and the phylogeny of allopolyploids, which are particularly difficult to assembly (see __Note __^[See <https://github.com/eead-csic-compbio/allopolyploids>]). 
+ + As raw material for phylogenomic analyses. Section 3.3.6 provides a guide on how to perform this with the software GET_PHYLOMARKERS, but you can use your favourite tools as well. A particular use case would be to ascertain the genomic composition and the phylogeny of allopolyploids, which are challenging to assemble (see __Note __^[See <https://github.com/eead-csic-compbio/allopolyploids>]). 
 
 #### 3.3.4 Pangenome analyses
 
@@ -594,7 +594,7 @@ If you are looking for accessory genes and transcripts, as in the first example 
 
 GET_HOMOLOGUES-EST produces two types of output which can be further processed with the GET_PHYLOMARKERS pipeline [@Vinuesa2018] (<https://github.com/vinuesa/get_phylomarkers>) to compute robust molecular phylogenies: 
 
- + Single-copy core clusters (twin .fna & .faa FASTA files). These can be CDS sequences annotated in WGS genomes or deduced from transcriptomes.
+ + Single-copy core clusters (twin .fna & .faa FASTA files). These can be CDS sequences annotated in WGS genomes or deduced from transcriptomes. These are used to compute gene trees which are quality-controlled and eventually concatenated. In our experience this provides useful insights at the Genus level or beyond. As mentioned on section 3.3.1, outgroups will be required to root the resulting trees.
 
  + Pangenome matrices, ideally of CDS sequences from WGS genomes, as our benchmarks with transcript-based matrices do not reconstruct the expected topologies [@ContrerasMoreira2017].
 
@@ -606,12 +606,17 @@ cd soft
 git clone https://github.com/vinuesa/get_phylomarkers.git
 export GETPHYLO=~/soft/get_phylomarkers
 
+# install R dependencies
+cd $GETPHYLO
+./install_R_deps.R
+
 ## pangenome matrix phylogeny
 
 # Search for the best maximum likelihood tree using 10 independent IQ-TREE runs
+# with a previously computed pangenome matrix in FASTA format (section 3.3.4)
 # Note: the script can also run PHYLIP pars, which are much slower
 ${GETPHYLO}/estimate_pangenome_phylogenies.sh -f pangenome_matrix_t0.fasta -r 10 -S UFBoot
-...
+#...
 >>> wrote file sorted_lnL_scores_IQ-TREE_searches.out ...
 >>> Best IQ-TREE run was: UFBoot_run9.log:BEST SCORE FOUND : -250734.229 ...
 >>> wrote file best_PGM_IQT_UFBoot_run9_GTR2+FO+I.treefile ...
@@ -620,12 +625,28 @@ ${GETPHYLO}/estimate_pangenome_phylogenies.sh -f pangenome_matrix_t0.fasta -r 10
 
 ## single-copy core cluster phylogeny
 
-# move to folder with single-copy core .faa & .fna clusters and compute
-# trees of coding sequences using molecular model selection and produce a 
-# species-tree from the concatenated, top-scoring alignments
+# Move to folder with single-copy core .faa & .fna clusters, compute codon alignments 
+# and trees of coding sequences using molecular model selection and produce a 
+# species-tree from the concatenated, top-scoring alignments.
+# See all options with ./run_get_phylomarkers_pipeline.sh -H
+# For individuals of the same species you can also try -m 0.5
 cd Alexis_alltaxa_algOMCL_e1_
 ${GETPHYLO}/run_get_phylomarkers_pipeline.sh -R 1 -t DNA -f EST
+#...
+[13:44:16] # running compute_MJRC_tree treefile I ...
+ >>> Wrote file IQT_MJRC_tree.nwk ... 
+[13:44:16] # running ModelFinder on the concatenated alignment with GTR. This will take a while ...
+ >>> wrote file concat_cdnAlns.fnainf.log ...
+ >>> Best-fit model: GTR+F+ASC+R2 ...
+[13:44:26] # running IQ-tree on the concatenated alignment with best model GTR+F+ASC+R2 -abayes -bb 1000. This will take a while ...
+ >>> wrote file sorted_IQ-TREE_searches.out ...
+# >>> Best IQ-TREE run was: BEST SCORE FOUND : -6661.697 ...
+[13:44:40]  >>> wrote file concat_nonRecomb_KdeFilt_iqtree_GTR+F+ASC+R2.treefile ...
 
+# The final concatenated & labelled tree, with 
+# Bayesian posterior probabilities/bootstrap values per node, can be found at
+# cd get_phylomarkers_run_AIR1tDNA_k1.5_m0.75_Tmedium*/PhiPack/non_recomb_cdn_alns/top_*/
+# concat_nonRecomb_KdeFilt_iqtree_GTR+F+ASC+G4_ed.sptree
 ```
 
 The resulting trees are in Newick format and can be plotted with tools such as FigTree or iToL or any other preferred software (see __Note __^[See <http://tree.bio.ed.ac.uk/software/figtree> and <https://itol.embl.de>.]).
