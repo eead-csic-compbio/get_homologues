@@ -278,6 +278,15 @@ cd ..
 ls cds/*list
 ```
 
+Alternatively, it is possible to get precomputed CDS sequences (170MB) ready to go:
+
+```{r, engine='bash', eval=FALSE}
+
+cd ${GETHOMS}/test_barley
+wget http://floresta.eead.csic.es/plant-pan-genomes/barley_transcripts/cds.tgz .
+tar xvfz cds.tgz
+```
+
 #### 3.3.2 Clustering sequences 
 
 The only required option is -d, which indicates an input folder or directory. It is important to remark that in principle only files with extensions .fna / .fa / .fasta and optionally .faa are considered when parsing the -d directory. The use of an input folder allows for new files to be added there in the future, reducing the computing required for updated analyses. For instance, if a user does a first analysis with 5 input genomes today, it is possible to check how the resulting clusters would change when adding an extra 10 genomes tomorrow, by copying these new 10 .fna input files to the pre-existing -d folder, so that all previous BLASTN searches are re-used.
@@ -568,8 +577,17 @@ $GETHOMS/pfam_enrich.pl -d cds_est_homologues -c clusters_cds -n \
 	-x clusters_cds_t3/SBCC073_pangenes_list.txt -e -p 1 -r SBCC073 \
 	-f SBCC073_accessory.fna > SBCC073_accessory.pfam.enrich.tab
 ```
-
 The top enriched domains of the last example are shown in __Table 5__.
+
+If you are looking for accessory genes and transcripts, as in the first example of this section, there are several points that should be considered before doing any kind of biological interpration:
+
+ + You should try to compare genotypes with assemblies of similar quality and gene models called with the same methodology. Otherwise, missing genes are most likely due to these methodological differences. In our experience these differences show up when calling accessory genes. For this reason we usually leave out cloud genes/transcripts, as singletons have a good chance of being artifacts.
+ 
+ + A small assembly error might cause a genuine gene to be split in two gene models. In our _B. distachyon_ benchmarks these would be clustered together in most cases, but it is worth double-checking [@ContrerasMoreira2017].
+ 
+ + When working with transcripts, a CDS sequence might be missing due to insufficient sequencing depth, weak expression or a tissue sampled in the wrongt developmental stage.
+ 
+ + Soft-core genes and transcripts are robust to those factors to some extent.
 
 
 #### 3.3.6 Downstream phylogenomic analyses 
@@ -603,9 +621,7 @@ ${GETPHYLO}/estimate_pangenome_phylogenies.sh -f pangenome_matrix_t0.fasta -r 10
 cd Alexis_alltaxa_algOMCL_e1_
 ${GETPHYLO}/run_get_phylomarkers_pipeline.sh -R 1 -t DNA
 # TO BE COMPLETED
-
-
-´´´
+```
 
 The resulting trees are in Newick format and can be plotted with tools such as FigTree or iToL or any other preferred software (see __Note __^[See <http://tree.bio.ed.ac.uk/software/figtree> and <https://itol.embl.de>.]).
 
