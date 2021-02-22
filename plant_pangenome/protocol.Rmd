@@ -592,13 +592,13 @@ If you are looking for accessory genes and transcripts, as in the first example 
 
 #### 3.3.6 Downstream phylogenomic analyses 
 
-GET_HOMOLOGUES-EST produces two types of output which can be further processed with the GET_PHYLOMARKERS pipeline [@Vinuesa2018] (<https://github.com/vinuesa/get_phylomarkers>) to compute and plot robust molecular phylogenies: 
+GET_HOMOLOGUES-EST produces two types of output which can be further processed with the GET_PHYLOMARKERS pipeline [@Vinuesa2018] (<https://github.com/vinuesa/get_phylomarkers>) to compute robust molecular phylogenies: 
 
  + Single-copy core clusters (twin .fna & .faa FASTA files). These can be CDS sequences annotated in WGS genomes or deduced from transcriptomes.
 
  + Pangenome matrices, ideally of CDS sequences from WGS genomes, as our benchmarks with transcript-based matrices do not reconstruct the expected topologies [@ContrerasMoreira2017].
 
-Both strategies are explained in detail on a dedicated tutorial (see __Note __^[See <https://vinuesa.github.io/get_phylomarkers> , it includes documentation on how to run a Docker container bundled with both GET_HOMOLOGUES and GET_PHYLOMARKERS. This minimizes trouble installing dependencies and produces reproducible analyses.]), here we will briefly demonstrate them.
+Both strategies use IQ-TREE [@Nguyen2015] and are explained in detail on a dedicated tutorial (see __Note __^[See <https://vinuesa.github.io/get_phylomarkers> , it includes documentation on how to run a Docker container bundled with both GET_HOMOLOGUES and GET_PHYLOMARKERS. This minimizes trouble installing dependencies and produces reproducible analyses.]), here we will briefly demonstrate how to use them.
 
 ```{r, engine='bash', eval=FALSE}
 # set GET_PHYLOMARKERS path, for example:
@@ -606,7 +606,10 @@ cd soft
 git clone https://github.com/vinuesa/get_phylomarkers.git
 export GETPHYLO=~/soft/get_phylomarkers
 
+## pangenome matrix phylogeny
+
 # Search for the best maximum likelihood tree using 10 independent IQ-TREE runs
+# Note: the script can also run PHYLIP pars, which are much slower
 ${GETPHYLO}/estimate_pangenome_phylogenies.sh -f pangenome_matrix_t0.fasta -r 10 -S UFBoot
 ...
 >>> wrote file sorted_lnL_scores_IQ-TREE_searches.out ...
@@ -615,23 +618,17 @@ ${GETPHYLO}/estimate_pangenome_phylogenies.sh -f pangenome_matrix_t0.fasta -r 10
 ... found in iqtree_PGM_10_runs/iqtree_10_runs
 ... done!
 
-# 
+## single-copy core cluster phylogeny
 
-# move to folder with single-copy core clusters
+# move to folder with single-copy core .faa & .fna clusters and compute
+# trees of coding sequences using molecular model selection and produce a 
+# species-tree from the concatenated, top-scoring alignments
 cd Alexis_alltaxa_algOMCL_e1_
-${GETPHYLO}/run_get_phylomarkers_pipeline.sh -R 1 -t DNA
-# TO BE COMPLETED
+${GETPHYLO}/run_get_phylomarkers_pipeline.sh -R 1 -t DNA -f EST
+
 ```
 
 The resulting trees are in Newick format and can be plotted with tools such as FigTree or iToL or any other preferred software (see __Note __^[See <http://tree.bio.ed.ac.uk/software/figtree> and <https://itol.embl.de>.]).
-
-###
-
-with this toolbox it is possible to use twin nucleotide & peptide clusters produced by GET_HOMOLOGUES to compute robust multi-gene and pangenome phylogenies.
-
-
-
-<!-- example calls for clusters and pangenome matrix -->
 
 
 ## 4. Notes
