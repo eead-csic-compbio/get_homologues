@@ -532,7 +532,7 @@ Core.size Pan.size BIC LogLikelihood
  
 These presence-absence matrices can be used directly to infer population phylogenies (see __Note __^[You might want to try _compare_clusters.pl_ -T for a PHYLIP pars parsimony tree or GET_PHYLOMARKERS pipeline, as explained on section 3.3.6]), particularly if your data are CDS sequences from WGS genomes [@Gordon2017]. 
 
-Moreover, it is possible to annotate pan-genome clusters with script _make_nr_pangenome_matrix.pl_ and a user-provided FASTA file of curated sequences. For instance, you might want to identify clusters containing genes from transposable elements.
+Moreover, it is possible to annotate pan-genome clusters with script _make_nr_pangenome_matrix.pl_ and a user-provided FASTA file of curated sequences. For instance, you might want to identify clusters containing genes from transposable elements (see __Note __^[See for instance the nrTEplants library at <https://github.com/Ensembl/plant-scripts/releases/download/v0.3/nrTEplantsJune2020.fna.bz2>, described at <https://github.com/Ensembl/plant_tools/tree/master/bench/repeat_libs>]), or low copy genes of flowering plants (see __Note __^[See <https://github.com/mossmatters/Angiosperms353> [@Johnson2019] or <http://sftp.kew.org/pub/treeoflife/current_release/fasta/by_gene> [@Baker2021]]). 
 
 ![](Figures/Figure7.png)
 
@@ -579,7 +579,7 @@ $GETHOMS/pfam_enrich.pl -d cds_est_homologues -c clusters_cds -n \
 ```
 The top enriched domains of the last example are shown in __Table 5__.
 
-If you are looking for accessory genes and transcripts, as in the first example of this section, there are several points that should be considered before doing any kind of biological interpration:
+If you are looking for accessory genes and transcripts, as in the first example of this section, there are several points that should be considered before doing any kind of biological interpretation:
 
  + You should try to compare genotypes with assemblies of similar quality and gene models called with the same methodology. Otherwise, missing genes are most likely due to these methodological differences. In our experience these differences show up when calling accessory genes. For this reason we usually leave out cloud genes/transcripts, as singletons have a good chance of being artifacts.
  
