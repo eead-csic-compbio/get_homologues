@@ -3,18 +3,18 @@ title: 'Pangenome analysis of plant transcripts and coding sequences'
 bibliography: bib_myarticles.bib
 csl: springerprotocols.csl
 output:
+  word_document: default
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 4
   html_document:
     fig_caption: yes
     highlight: zenburn
     theme: cerulean
     toc: yes
     toc_depth: 4
-  pdf_document:
-    fig_caption: yes
-    highlight: zenburn
-    toc: yes
-    toc_depth: 4
-  word_document: default
 ---
 
 ```{r knitr setup, include=FALSE,  eval=TRUE, echo=FALSE, warning=FALSE}
@@ -27,14 +27,14 @@ knitr::opts_chunk$set(echo=TRUE, eval=TRUE, cache=FALSE, message=FALSE, warning=
 Bruno Contreras-Moreira (1)*, Alvaro Rodriguez del Rio (1), Carlos P. Cantalapiedra (1), Ruben Sancho (2) and Pablo Vinuesa (3)
 
 1. Estación Experimental de Aula Dei-CSIC, Av. Montañana 1.005, 50059 Zaragoza, Spain.
-2. Department of Agricultural and Environmental Sciences, High Polytechnic School of Huesca, University of Zaragoza, Huesca, Spain.
+2. Escuela Politécnica Superior, Universidad de Zaragoza, Huesca, Spain.
 3. Centro de Ciencias Genómicas, Universidad Nacional Autónoma de México, Cuernavaca, Mexico.
 
 * Corresponding author: Bruno Contreras Moreira <bcontreras@eead.csic.es>
 
 ## i. Summary/Abstract
 
-The pangenome of a species is the sum of the genomes of its individuals. However, coding sequences often represent only a small fraction of each genome, and thus analyzing the pan-gene set can be a cost-efective strategy for plants with large genomes or highly heterzygous species. Here we describe a step-by-step protocol to analyze plant pan-gene sets with the software GET_HOMOLOGUES-EST. After a short introduction, where the main concepts are illustrated, the remaining sections cover the installation and typical operations required to analyze and annotate pan-transcriptomes and gene sets of plants. The recipes include how to call core and accessory genes, how to compute a presence-absence pan-genome matrix and how to identify and analyze private genes, present only in some genotypes. Possible downstream phylogenetic analyses are also discussed.
+The pangenome of a species is the sum of the genomes of its individuals. As coding sequences often represent only a small fraction of each genome, analyzing the pan-gene set can be a cost-effective strategy for plants with large genomes or highly heterozygous species. Here we describe a step-by-step protocol to analyze plant pan-gene sets with the software GET_HOMOLOGUES-EST. After a short introduction, where the main concepts are illustrated, the remaining sections cover the installation and typical operations required to analyze and annotate pan-transcriptomes and gene sets of plants. The recipes include instructions on how to call core and accessory genes, how to compute a presence-absence pan-genome matrix and how to identify and analyze private genes, present only in some genotypes. Downstream phylogenetic analyses are also discussed.
 
 ### ii. Key Words
 
@@ -49,23 +49,22 @@ Defining pan-gene sets with GET_HOMOLOGUES-EST
 
 ### 1.1 Background
 
-A pangenome can be defined as the sum of the core genome, shared by all individuals of a species, plus the dispensable genome, which includes partially shared and population-specific genes [@Tettelin2005].  Among plants, previous work has compared ecotypes of model species and cultivars of crops such as maize, barley, soybean, or rice, revealing that dispensable genes play important roles in evolution, and in the complex interplay between plants and the environment (reviewed at [@Golicz2020]). For these reasons we prefer to rename dispensable genes as “accessory” or "shell" genes, terms borrowed from microbiology [@Laing2010]. Moreover, accounting for accessory genomic features improves the association of genotypes to phenotypes beyond SNPs called on a single reference genome [@Yano2016; @Coletta2021]. In summary, pangenomes are the new reference sequences for plant genomic studies [@Bayer2020].
+A pangenome can be defined as the sum of the core genome, shared by all individuals of a species, plus the dispensable genome, which includes partially shared and population-specific genes [@Tettelin2005].  Among plants, previous work has compared ecotypes of model species and cultivars of crops such as maize, barley, soybean, or rice, revealing that dispensable genes play important roles in evolution, and in the complex interplay between plants and the environment (reviewed at [@Golicz2020]). Moreover, accounting for accessory genomic features improves the association of genotypes to phenotypes beyond SNPs called on a single reference genome [@Yano2016; @Coletta2021]. For these reasons we prefer to rename dispensable genes as “accessory” or "shell" genes, terms borrowed from microbiology [@Laing2010]. In summary, pangenomes are the new reference sequences for plant genomic studies [@Bayer2020].
 
-The data structures used to represent pangenomes are evolving in parallel with the sequencing technologies,
-and the state-of-the-art are the so called pangenome graphs, with multiple implementations (see for instance [@Sheikhizadeh2016]). Graphs have been shown to significantly improve variant calling by read mapping [@Eizenga2020; @Coletta2021]. However, there are currently no community accepted solutions for visualizing or setting coordinate system in genome graphs. More importantly, the input genome sequences used to construct a graph need to be highly contiguous. This contrasts with most plant genome assemblies found in the public archives, which are often fragmented, particularly for species with large, highly repetitive, heterozygous and polyploid genomes. For these reasons, approaches that do not require a fully-assembled reference genome are of interest for plant breeding and ecology. Some of those strategies reduce the natural complexity of genomes by computing the frequency of nucleotide words and looking for enriched words [@Arora2019; @Voichek2020]. Other strategies, like the one presented in this protocol around GET_HOMOLOGUES-EST [@ContrerasMoreira2017], take transcripts or coding sequences as the genomic unit of interest (see examples at [@Gordon2017; @Gordon2020]).
+The data structures used to represent pangenomes are evolving in parallel with the sequencing technologies, and the state-of-the-art are the so called pangenome graphs, which significantly improve variant calling by read mapping [@Eizenga2020; @Coletta2021] and have multiple implementations (see for instance [@Sheikhizadeh2016]). However, there are currently no community accepted solutions for visualizing or setting coordinate systemsd in genome graphs. More importantly, the input genome sequences used to construct a graph need to be highly contiguous. This contrasts with most plant genome assemblies found in the public archives, which are often fragmented, particularly for species with large, highly repetitive, heterozygous and polyploid genomes. For these reasons, approaches that do not require a fully-assembled reference genome are of interest for plant breeding and ecology. Some of those strategies reduce the natural complexity of genomes by computing the frequency of nucleotide words and looking for enriched subsets of sequences [@Arora2019; @Voichek2020]. Other strategies, like the one presented in this protocol around GET_HOMOLOGUES-EST [@ContrerasMoreira2017], take transcripts or coding sequences as the genomic unit of interest (see examples at [@Gordon2017; @Gordon2020]).
 Therefore, a more appropriate name for this approach would be pan-gene set analysis. 
 
-Compared to whole genome sequencing (WGS) and assemblying, pan-gene analyses have the advantage of sampling only the expressed fraction of the genome, the transcriptome. Recent technological advances, such as single-molecule long-read sequencing, are producing transcripts with unprecented accuracy [@Wang2016], even without a reference genome [@Minio2019]. Their main disadvantage is that variation in non-expressed sequences cannot be sampled. Nevertheless, the definition of pan-gene sets is a necessary step for pangenome projects of crops and plants, as a way to deduce consistent gene collections with uniform nomenclature across genotypes.
+Compared to whole genome sequencing (WGS) and assembling, pan-gene analyses have the advantage of sampling only the expressed part of genome, the transcriptome, which is a only a fraction of the complete genome. Recent technological advances, such as single-molecule long-read sequencing, are producing transcripts with unprecedented accuracy [@Wang2016], even without a reference genome [@Minio2019]. Their main disadvantage is that genetic variation in non-expressed sequences cannot be sampled. Nevertheless, the definition of pan-gene sets is a necessary step for pangenome projects of crops and plants, as a way to deduce consistent gene collections with uniform nomenclature across genotypes.
 
 ### 1.2 Pangenome history and concepts
 
-In 2002 Welch and colleagues [@Welch2002] compared the genome sequences of three strains of the bacteria *Escherichia coli*, two of them pathogens, and found shared genes, which mostly conserve their positions in the genome, and also accessory genes, which are encoded only in some strains. Three years later, Tettelin and collaborators [@Tettelin2005] analyzed 8 strains of a Gram+ bacteria and for the first time defined the pangenome as a core genome shared by all strains, plus a dispensable genome consisting of partially shared and strain-specific genes. In addition, a mathematical model suggested that the pan-genome of *Streptococcus agalactiae* might be very large (open) and that unique genes would continue to be identified in newly sequenced strains. In 2007 Morgante and co-workers [@Morgante2007] took these ideas and proposed a role for transposable elements (TEs) in generating the dispensable genomic components that differentiate maize inbred lines B73 and Mo17. A few years later they concluded these components might not be dispensable after all [@Marroni2014]. In order to make this classification problem more tractable, dispensability scores are now being computed [@Sielemann2021].
+In 2002 Welch and colleagues [@Welch2002] compared the genome sequences of three strains of the bacteria *Escherichia coli*, two of them pathogens, and found shared genes, which mostly conserve their positions in the genome, and also accessory genes, which are encoded only in some strains. Three years later, Tettelin and collaborators [@Tettelin2005] analyzed 8 strains of a Gram+ bacteria and for the first time defined the pangenome as a core genome shared by all strains, plus a dispensable genome consisting of partially shared and strain-specific genes. In addition, a mathematical model suggested that the pan-genome of *Streptococcus agalactiae* might be very large (open) and that unique genes would continue to be identified in newly sequenced strains. In 2007 Morgante and co-workers [@Morgante2007] took these ideas and proposed a role for transposable elements (TEs) in generating the dispensable genomic components that differentiate maize inbred lines B73 and Mo17. A few years later they concluded that these components might not be dispensable after all [@Marroni2014]. In order to make this classification problem more tractable, dispensability scores are now being computed [@Sielemann2021].
 
-__Figure 1__ summarizes the computational analysis of the pan-gene set of three toy genomes with software GET_HOMOLOGUES-EST. Note that occupancy is defined as the number of genomes/cultivars/ecotypes present in a sequence cluster and in this example takes values from 1 to 3 (see also definitions in __Table 1__). Core loci are found in all three genomes and hence have occupancy=3 in the example. Accessory loci are allocated to shell and cloud compartments. Although not shown in the figure, it's often convenient to define a fourth class, the soft-core, which is a relaxed core that tolerates assembly and annotation errors.
+__Figure 1__ summarizes the computational analysis of the pan-gene set of three toy genomes with GET_HOMOLOGUES-EST. Note that occupancy is defined as the number of genomes/cultivars/ecotypes present in a sequence cluster and in this example takes values from 1 to 3 (see also definitions in __Table 1__). Core loci are found in all three genomes and hence have occupancy=3 in the example. Accessory loci are allocated to shell and cloud compartments. Although not shown in the figure, it's often convenient to define a fourth class, the soft-core, which is a relaxed core that tolerates assembly and annotation errors.
 
 ![](Figures/Figure1.png)
 
-In addition to occupancy differences, previous benchmarks have shown that occupancy-based classes differ in their functional annotations. The examples in __Figure 2__ are for two bacterial clades, but note that similar observations have been made in plants [@ContrerasMoreira2017; @Gordon2017]:
+In addition to occupancy differences, previous benchmarks have shown that occupancy-based classes differ in their functional annotations. The examples in __Figure 2__ highlight the different functions of core and accessory genes in two bacterial clades; note that similar observations have been made in plants [@ContrerasMoreira2017; @Gordon2017]:
 
 ![](Figures/Figure2.png) 
 
@@ -76,7 +75,7 @@ The **GET_HOMOLOGUES** software was originally designed for the analysis of bact
 ### 2.1 Installation and up-to-date documentation
 
 GET_HOMOLOGUES-EST is an open source software package, written in Perl and R, 
-available for Linux and MacOS systems. A manual is available at <http://eead-csic-compbio.github.io/get_homologues/manual-est> (see __Note __^[The bacterial manual at <http://eead-csic-compbio.github.io/get_homologues/manual> can be also be useful.]).
+available for Linux and MacOS systems. A manual is available at <http://eead-csic-compbio.github.io/get_homologues/manual-est> (see __Note __^[The bacterial manual at <http://eead-csic-compbio.github.io/get_homologues/manual> can also be useful.]).
 
 #### 2.1.1 Latest binary release
 
@@ -104,7 +103,7 @@ sudo cpan -i Inline::C Inline::CPP
 #### 2.1.2 GitHub clone / pull
 
 A more sustainable way of obtaining the software is to use the software git.
-For this you might need to install *git* in your system. Note also that the *git* protocol requires to open port 9418, which might be blocked by your firewall. This method does not include the binary dependencies, which must downloaded during installation:
+For this you might need to install *git* in your system. Note also that the *git* protocol requires having network port 9418 open, which might be blocked by your firewall. This method does not include the binary dependencies, which must downloaded during installation:
 
 ```{r, engine='bash', eval=FALSE}
 cd soft
@@ -134,7 +133,7 @@ Note that this script will also tell you of missing dependencies.
 #### 2.1.4 Docker container
 
 A way to use GET_HOMOLOGUES-EST with all dependencies pre-installed is the Docker image available at 
-[dockerhub](https://hub.docker.com/r/csicunam/get_homologues). This container includes also [GET_PHYLOMARKERS](https://github.com/vinuesa/get_phylomarkers). 
+[dockerhub](https://hub.docker.com/r/csicunam/get_homologues). This container also includes [GET_PHYLOMARKERS](https://github.com/vinuesa/get_phylomarkers). 
 
 #### 2.1.5 High performance cluster (HPC) configuration
 
@@ -166,10 +165,10 @@ While calling GET_HOMOLOGUES-EST with several CPU cores speeds up the batch of B
 
 ## 3. Methods
 
-### 3.1 The main _get_homologues-est.pl_ script
+### 3.1 Overview of the pipeline and the _get_homologues-est.pl_ script
 
 Unlike its predecessor, which was designed for the analysis of genes within fully sequenced genomes, 
-GET_HOMOLOGUES-EST has been adapted to the large size of plant genomic data sets, and adds new features to adequately handle redundant and fragmented transcript sequences, as those usually obtained from transcript profiling experiments, as well as incomplete/fragmented gene models from WGS assemblies. Sequence clusters can be produced using the bidirectional best-hit or the OrthoMCL [@Li2003] algorithms.The granularity of the clusters can be tuned by a configurable filtering strategy based on a combination of BLAST pairwise alignment parameters and, optionally, hmmscan-based scanning of Pfam domain composition of the proteins encoded in each cluster. By default redundant sequences are removed from input sets if they overlap a longer identical sequence over a length $\geq 40$ or when they are completely matched. This is to prevent BLAST results being biased by transcript isoforms [@Pertea2003]. If your input are annotated CDS sequences this behavior can be disabled with option -i 0 . 
+GET_HOMOLOGUES-EST has been adapted to the large size of plant genomic data sets, and adds new features to adequately handle redundant and fragmented transcript sequences, as those usually obtained from transcript profiling experiments, as well as incomplete/fragmented gene models from WGS assemblies. Sequence clusters can be produced using the bidirectional best-hit or the OrthoMCL [@Li2003] algorithms. The granularity of the clusters can be tuned by a configurable filtering strategy based on a combination of BLAST pairwise alignment parameters and, optionally, hmmscan-based scanning of Pfam domain composition of the proteins encoded in each cluster. By default redundant sequences are removed from input sets if they overlap a longer identical sequence over a length $\geq 40$ or when they are completely matched. This is to prevent BLAST results being biased by transcript isoforms [@Pertea2003]. If your input are annotated CDS sequences this behavior can be disabled with option -i 0 . 
 
 As summarized in __Figure 3__, the main script _get_homologues-est.pl_ can produce different outputs:
 
@@ -198,7 +197,9 @@ A few scripts are bundled with GET_HOMOLOGUES-EST to assist in the interpretatio
 
  + _annotate_cluster.pl_ produces a multiple alignment view of the supporting local BLAST alignments of sequences in a cluster. It can also annotate Pfam domains and find private sequence variants private to an arbitrary group of sequences.
 
- + _plot_matrix_heatmap.sh_ calculates ordered heatmaps with attached row and column dendrograms from tab-separated numeric matrices, which can be presence/absence pangenomic matrices or identity matrices as those produced by get_homologues-est with flag -A. Requires R packages ape [@Popescu2012], dendextend (<https://cran.r-project.org/package=dendextend>), factoextra (<https://cran.r-project.org/package=factoextra>) and gplots (<https://CRAN.R-project.org/package=gplots>).
+ + _plot_matrix_heatmap.sh_ calculates ordered heatmaps with attached row and column dendrograms from tab-separated numeric matrices, which can be presence/absence pangenomic matrices or identity matrices as those produced by get_homologues-est with flag -A. Requires R packages ape [@Popescu2012], dendextend, factoextra and gplots (see __Note __^[See
+ <https://cran.r-project.org/package=ape>,
+ <https://cran.r-project.org/package=dendextend>, <https://cran.r-project.org/package=factoextra> and <https://cran.r-project.org/package=gplots>.]).
 
  + _pfam_enrich.pl_ calculates the enrichment of a set of sequence clusters in terms of Pfam domains, by using Fisher's exact test.
 
@@ -209,7 +210,7 @@ Apart from these, scripts *transcripts2cds.pl* and *transcripts2cdsCPP.pl* are a
 In this section we present a step-by-step protocol for the analysis of *Hordeum vulgare* WGS-based cDNA sequences, annotated in reference cultivars *Morex* and *Haruna Nijo*, and *de novo* assembled transcriptomes.
 These sequence sets were first used in [@ContrerasMoreira2017]. For convenience, these barley sequences can be obtained as explained below from files included in the *test_barley* folder, which should be bundled with your copy of GET_HOMOLOGUES. Similar analyses could be performed with the  *Arabidopsis thaliana* and *Brachypodium hybridum* sequences at <http://floresta.eead.csic.es/plant-pan-genomes/>
 
-We can start by defining an enviromental variable pointing to our install destination:
+We can start by defining an environment variable pointing to our install destination:
 
 ```{r, engine='bash', eval=FALSE}
 # set GET_HOMOLOGUES path, for example:
@@ -225,9 +226,13 @@ export GETHOMS=~/soft/get_homologues
 
 #### 3.3.1 Preparing input sequences, outgroups and extracting CDS from transcripts
 
-The main script reads in sequences in FASTA format, which might be GZIP- or BZIP2-compressed, contained in a folder containing at least two files with extension .fna, one per cultivar/ecotype. You should consider adding also sequences from one or more outgroups if you plan to run downstream phylogenomic analyses with the resulting clusters. In either case, nucleotide .fna files might have twin .faa files with translated amino acid sequences in the same order. Peptide files are optional, as this allows clustering any kind of nucleotide sequences, such as conserved intergenic regions or transposons. However, you will need .faa files to run Pfam-based analyses and the phylogenomics recipes of GET_PHYLOMARKERS [@Vinuesa2018]. 
+The main script reads in sequences in FASTA format, which might be GZIP- or BZIP2-compressed, contained in a folder containing at least two files with extension .fna, one per cultivar/ecotype. You should consider adding sequences from one or more outgroup taxa if you plan to run downstream phylogenomic analyses with the resulting clusters (see __Note __^[An outgroup is a
+taxon or lineage that falls outside the clade being studied (ingroup) but it is closely related. It helps root the tree.]).
 
-Peptide files can be downloaded from resources such as [Ensembl Plants](http://plants.ensembl.org) [@Howe2019] or [Phytozome](https://phytozome.jgi.doe.gov) [@Goodstein2012], or deduced with script *transcripts2cds.pl*, as in the example:
+Files with .fna extension allow clustering any kind of nucleotide sequences, such as conserved intergenic regions or transposons.
+However, if you are only interested in the analysis of CDS sequences, .fna files might optionally have twin .faa files with translated amino acid sequences in the same order. Note that you will need .faa files to run Pfam-based analyses and the phylogenomics recipes of GET_PHYLOMARKERS [@Vinuesa2018] (see section 3.3.6). 
+
+Peptide files can be downloaded from resources such as [Ensembl Plants](http://plants.ensembl.org) [@Howe2019] or [Phytozome](https://phytozome.jgi.doe.gov) [@Goodstein2012], or deduced with script *transcripts2cds.pl*, as in the examples of this protocol:
 
 ```{r, engine='bash', eval=FALSE}
 $GETHOMS/transcripts2cds.pl -n 3 $GETHOMS/sample_transcripts.fna
@@ -249,7 +254,7 @@ $GETHOMS/transcripts2cds.pl -n 3 $GETHOMS/sample_transcripts.fna
 
 Other analyses you might want to carry out on your input sequences include computing their coding potential or their gene completeness (see __Note __^[Software choices include CPC2 and RNAsamba [@Kang2017; @Camargo2020], trained on human truth sets, and BUSCO [@Seppey2019]]).
 
-Note that filenames matching the tag 'flcdna' are handled as full-length transcripts, and this information will be used downstream in order to estimate coverage. By default only sequences with length length $\geq 20$ bases are considered (see __Note __^[Global variable $MINSEQLENGTH controls the minimum length of sequences to be considered; the default value is 20 but you can edit in the source to increase it. Similarly, $MAXSEQLENGTH limits the max length for input sequences, 25Kb by default. In our barley tests we found some high-quality flcDNAs reach 23Kb.]).
+Note that file names matching the tag 'flcdna' are handled as full-length transcripts, and this information will be used downstream in order to estimate coverage. By default only sequences with length length $\geq 20$ bases are considered (see __Note __^[Global variable $MINSEQLENGTH controls the minimum length of sequences to be considered; the default value is 20 but you can edit in the source to increase it. Similarly, $MAXSEQLENGTH limits the max length for input sequences, 25Kb by default. In our barley tests we found some high-quality flcDNAs reach 23Kb.]).
 
 Let's now get all the barley sequences and extract CDS from them, which takes several hours:
 
@@ -289,16 +294,17 @@ tar xvfz cds.tgz
 
 #### 3.3.2 Clustering sequences 
 
+In this step we will use the main script _get_homologues-est.pl_.
 The only required option is -d, which indicates an input folder or directory. It is important to remark that in principle only files with extensions .fna / .fa / .fasta and optionally .faa are considered when parsing the -d directory. The use of an input folder allows for new files to be added there in the future, reducing the computing required for updated analyses. For instance, if a user does a first analysis with 5 input genomes today, it is possible to check how the resulting clusters would change when adding an extra 10 genomes tomorrow, by copying these new 10 .fna input files to the pre-existing -d folder, so that all previous BLASTN searches are re-used.
 
 All remaining flags are options that can modify the default behavior of the program, which is to use the bidirectional best hit algorithm (BDBH) in order to compile core clusters of DNA sequences based on BLASTN megablast searches requiring 95% sequence identity (-S 95) and 75% alignment coverage (-C 75). The available clustering algorithms are:
 
- + BDBH (default) ; starting from a reference genome, keep adding genomes stepwise while storing the sequence clusters that result of merging the latest bidirectional best hits.
+ + BDBH (default) ; starting from a reference genome, keep adding genomes stepwise while storing the sequence clusters that result from merging the latest bidirectional best hits.
  + OMCL (-M) ; uses the Markov Cluster Algorithm to group sequences, with inflation (-F) controlling cluster granularity, as described in [@Li2003].
 
 As a rule of thumb, use OMCL (-M) for pangenome analyses, as it can handle sequences missing from the reference, and the BDBH algorithm for rapid calculations of core gene/transcript sets.
 
-Moreover, by default redundant isoforms are filtered out (-i 40). However, when working with curated CDS sequences, with one selected sequence per gene, this is not necessary. You can disable this by adding -i 0 to you command line.
+Moreover, by default redundant isoforms are filtered out (-i 40). However, when working with curated CDS sequences, with one selected sequence per gene, this is not necessary. You can disable this by adding -i 0 to your command line.
 
 By default the input set with least sequences is taken as a reference. However, if you have a previously annotated input set you might want to choose that as a reference, using option -r.
 
@@ -306,7 +312,7 @@ Option -t allows you to control the minimum occupancy of the output clusters. By
 
 Option -A, used in the last example, requests an ANI matrix. In this case it is combined with flag -e to exclude clusters with inparalogues and therefore minimize biases when averaging observed identities. ANI matrices are useful to robustly compute the similarity among your input genotypes and to cluster them, so that redundancy can easily be managed. If you had outgroups in your input sequences you can also check them in the ANI matrix.
 
-Note the examples below use -m cluster to parallize most tasks (see section 2.1.5). If your cluster manager is not supported you can always use -m dryrun to generate batch files that should be able to execute. If you are running GET_HOMOLOGUES-EST on a multicore Linux/macOS box, you can use option -n to indicate how many cores can be used (see __Note __^[This will parallelize BLASTN and hmmer jobs, but not the clustering steps though.]).
+Note that the examples below use -m cluster to parallelize most tasks (see section 2.1.5). If your cluster manager is not supported you can always use -m dryrun to generate batch files that should be able to execute. If you are running GET_HOMOLOGUES-EST on a multicore Linux/macOS box, you can use option -n to indicate how many cores can be used (see __Note __^[This will parallelize BLASTN and HMMER jobs, but not the clustering steps.]).
 
 ```{r, engine='bash', eval=FALSE}
 
@@ -323,14 +329,14 @@ $GETHOMS/get_homologues-est.pl -d cds -D -m cluster -o &> log.cds.pfam
 # cluster_directory = cds_est_homologues/Alexis_0taxa_algOMCL_e0_
 $GETHOMS/get_homologues-est.pl -d cds -M -t 0 -m cluster &> log.cds
 
-# get non-cloud clusters and POCS matrix
+# get non-cloud clusters and percentage of conserved sequence clusters (POCS) matrix
 # cluster_list = cds_est_homologues/Alexis_3taxa_algOMCL_e0_.cluster_list
 # cluster_directory = cds_est_homologues/Alexis_3taxa_algOMCL_e0_
 # percent_conserved_sequences_file = cds_est_homologues/Alexis_3taxa_algOMCL_e0_POCS.tab
 $GETHOMS/get_homologues-est.pl -d cds -M -t 3 -P -m cluster &> log.cds.t3
 
 # single-copy clusters with high occupancy & Average Nucleotide Identity
-# [Note that flag -e leaves out clusters with inparalogues]
+# [Note that flag -e filters out clusters with inparalogues]
 # Only high-confidence clusters, containing sequences from at least 10 barleys
 # This produces cds_est_homologues/Alexis_10taxa_algOMCL_e1_Avg_identity.tab
 # as a summary of 2254 clusters
@@ -346,7 +352,7 @@ $GETHOMS/get_homologues-est.pl -d cds -M -m cluster -e &> log.cds.core.e
 # This requires some R dependencies, see install instructions with 
 $GETHOMS/plot_matrix_heatmap.sh -M
 
-# You also probably want to edit/shorten the labels in ANI tab file
+# You may also want to edit/shorten the labels in ANI tab file
 # This produces several outfiles:
 # 1) Alexis_10taxa_algOMCL_e1_Avg_identity_heatmap.pdf (Figure 4)
 # 2) Alexis_10taxa_algOMCL_e1_Avg_identity_BioNJ.ph (Neighbor Joining Newick file)
@@ -358,13 +364,13 @@ $GETHOMS/plot_matrix_heatmap.sh -i cds_est_homologues/Alexis_10taxa_algOMCL_e1_A
   -H 10 -W 15 -t "ANI of single-copy transcripts (occupancy > 9)" -N -o pdf -d 2
 ```
 
-Noy you should check the log files to make sure there are no errors and useful information such as the output mask:
+Now you should check the log files to make sure there are no errors and useful information such as the output mask:
 
     # mask=Alexis_0taxa_algOMCL_e0_ (_0taxa_algOMCL)
 
-This mask is a prefix added to the output folder. In this case tells that the reference genomes is 'Alexis', that no occupancy cutoff was set (t0), the clustering algorithm is OMCL and clusters with inparalogues are considered (e0, see __Note __^[Inparalogues are sequences whose best BLASTN hit is in the same genome.]). 
+This mask is a prefix added to the output folder. In this case it tells that the reference genomes is 'Alexis', that no occupancy cutoff was set (t0), that the clustering algorithm used is OMCL and that clusters with inparalogues were included (e0, see __Note __^[Inparalogues are sequences whose best BLASTN hit is from the same genome.]). 
 
-Note that internally sequences are numbered with natural numbers, in this case starting with Alexis.
+Note that internally sequences are numbered with natural numbers, in this case starting with our reference Alexis. This is important because the resulting clusters are also numbered accordingly.
 
 The resulting heatmap summarizing the ANI matrix in the example is shown in __Figure 4__. In our experience, ANI matrices computed from core genes can recapitulate the expected phylogeny of your input set [@ContrerasMoreira2017].
 
@@ -386,25 +392,25 @@ For instance, file cds_est_homologues/Alexis_3taxa_leaf.list_algOMCL_e0_.cluster
     ...
     : Yiwuerleng.trinity.fna.bz2_l50_E1e-05.diamond.cds.fna.gz.nucl
 
-It contains 22 sequences from 14 barleys, so it belongs to the soft-core occupancy class.
-As our input are CDS we have actually two FASTA files for this cluster:
+It contains 22 sequences from 14 barleys, so it belongs to the soft-core occupancy class. As our input are CDS we have two FASTA files for this cluster, one with the nucleotide sequences and another with the amino acid sequences:
 
     cds_est_homologues/Alexis_3taxa_leaf.list_algOMCL_e0_/3_TR4758-c0_g1_i1.fna
     cds_est_homologues/Alexis_3taxa_leaf.list_algOMCL_e0_/3_TR4758-c0_g1_i1.faa
 
-The contents look like this:
+Their contents look like:
 
     >TR4758|c0_g1_i1 [Alexis.trinity.fna.bz2_l50_E1e-05.diamond.cds.fna.gz] | aligned:1-10896 (10896)
     ATGGCAGCGGCGGCGATGGCAGCGCACAGGGCCAGTTTCCCACTGCGGCTGCAGCAGATCCTGTCTGGCAGCCGCGCCGTGTCGCCGGCGATCAAAG...
     
-and this:
+and:
 
     >TR4758|c0_g1_i1 [Alexis.trinity.fna.bz2_l50_E1e-05.diamond.cds.fna.gz]
     MAAAAMAAHRASFPLRLQQILSGSRAVSPAIKVESEPPAKVKAFIDRVINIPLHDIAIPLSGFHWEFNKGN...
     
 In this section we will see how to further annotate these clusters.
 
-For instance, you might want to see the BLASTN evidence supporting this cluster (sequence id=3, full name TR4758|c0_g1_i1). Note that option -D would output also the Pfam domains called in these sequences:
+For instance, you might want to see the BLASTN evidence supporting this cluster (sequence id=3, full name TR4758|c0_g1_i1). Note that option -D would output also the Pfam domains called in these sequences, provided that $GETHOMS/get_homologues-est.pl -D was called beforehand:
+
 
 ```{r, engine='bash', eval=FALSE}
 
@@ -447,15 +453,15 @@ We can simulate how a pangenome grows as new genomes are added. In the main scri
 
  + CDS sequences from WGS genomes, as in the pioneer work of Tettelin [@Tettelin2005]. This is probably the best possible data, provided that the assemblies are of similar quality and the gene annotation obtained with the same methodology.
  
- + With transcripts from the same tissue of several genotypes. Note that samples should be from the developmental stage, and that might be quite difficult to manage even in controlled experiments. 
+ + Transcripts from the same tissue of several genotypes. Note that samples should be from the same developmental stage, and that might be quite difficult to manage even in controlled experiments. 
  
- + With conserved non-coding sequences or annotated transposons.
+ + Conserved non-coding sequences or annotated transposons.
 
- + With random genome/transcriptome fragments of the same size (k-mers), as done in a recent barley study [@Jayakodi2020].
+ + Random genome/transcriptome fragments of the same size (k-mers), as done in a recent barley study [@Jayakodi2020].
  
 In this protocol we will compare leaf tissue CDS sequences from 14 barley cultivars and ecotypes. Note that we use option -z to make a soft-core simulation in addition to the default core and pan simulations. Examples of the resulting plots are shown on __Figure 6__.
 
-Moreover, we also produce pangenome matrices and used them to estimate the size of the different pangenome compartments. The matrices are created with script _compare_clusters.pl_ with option -m. Note that option -n uses nucleotide clusters for building the matrix. In the example we actually call this script twice; the second time cloud clusters are filtered out, as they were found to be the most unreliable in our benchmarks [@ContrerasMoreira2017]. A totaa
+Moreover, we also produced pangenome matrices and used them to estimate the size of the different pangenome compartments. The matrices are created with the script _compare_clusters.pl_ with option -m. Note that option -n uses nucleotide clusters for building the matrix. In the example we actually call this script twice; the second time cloud clusters are filtered out, as they were found to be the most unreliable in our benchmarks [@ContrerasMoreira2017]. 
 
 Another script, _parse_pangenome_matrix.pl_ can be used to consume the matrices and produce compartment plots and size estimates. In this example it estimates a core-genome of 9815 CDS and a pan-genome of 33648 CDS clusters and produces __Figure 7__:
 
@@ -469,7 +475,7 @@ $GETHOMS/get_homologues-est.pl -d cds -c -z \
   
 # make pan-genome growth plots
 
-# first core plot bith two types of fits (Tettelin & Willenbrock)
+# first core plot with two types of fits (Tettelin & Willenbrock)
 $GETHOMS/plot_pancore_matrix.pl -i cds_est_homologues/core_genome_leaf.list_algOMCL.tab \
 	-f core_both 
 # outfiles: 
@@ -592,13 +598,23 @@ If you are looking for accessory genes and transcripts, as in the first example 
 
 #### 3.3.6 Downstream phylogenomic analyses 
 
-GET_HOMOLOGUES-EST produces two types of output which can be further processed with the GET_PHYLOMARKERS pipeline [@Vinuesa2018] (<https://github.com/vinuesa/get_phylomarkers>) to compute robust molecular phylogenies: 
+GET_HOMOLOGUES-EST produces two types of output which can be further processed with the GET_PHYLOMARKERS 
+pipeline [@Vinuesa2018] (<https://github.com/vinuesa/get_phylomarkers>) to compute robust molecular phylogenies: 
 
- + Single-copy core clusters (twin .fna & .faa FASTA files). These can be CDS sequences annotated in WGS genomes or deduced from transcriptomes. These are used to compute gene trees which are quality-controlled and eventually concatenated. In our experience this provides useful insights at the Genus level or beyond. As mentioned on section 3.3.1, outgroups will be required to root the resulting trees.
+ + Single-copy core clusters (twin .fna & .faa FASTA files). 
+ These can be CDS sequences annotated in WGS genomes, or deduced from transcriptomes, 
+ which can used to compute gene trees which are quality-controlled and eventually concatenated. 
+ In our experience this provides useful insights at the Genus level or beyond. 
+ As mentioned on section 3.3.1, outgroups will be required to root the resulting trees.
 
- + Pangenome matrices, ideally of CDS sequences from WGS genomes, as our benchmarks with transcript-based matrices do not reconstruct the expected topologies [@ContrerasMoreira2017].
+ + Pangenome matrices, ideally of CDS sequences from WGS genomes, 
+ as our benchmarks with transcript-based matrices do not always reconstruct the expected topologies [@ContrerasMoreira2017].
 
-Both strategies use IQ-TREE [@Nguyen2015] and are explained in detail on a dedicated tutorial (see __Note __^[See <https://vinuesa.github.io/get_phylomarkers> , it includes documentation on how to run a Docker container bundled with both GET_HOMOLOGUES and GET_PHYLOMARKERS. This minimizes trouble installing dependencies and produces reproducible analyses.]), here we will briefly demonstrate how to use them.
+Both strategies use IQ-TREE [@Nguyen2015] and are explained in detail on a dedicated tutorial 
+(see __Note __^[See <https://vinuesa.github.io/get_phylomarkers> , 
+it includes documentation on how to run a Docker container bundled with both GET_HOMOLOGUES and GET_PHYLOMARKERS. 
+This minimizes trouble installing dependencies and produces reproducible analyses.]), 
+here we will briefly demonstrate how to use them.
 
 ```{r, engine='bash', eval=FALSE}
 # set GET_PHYLOMARKERS path, for example:
@@ -649,7 +665,8 @@ ${GETPHYLO}/run_get_phylomarkers_pipeline.sh -R 1 -t DNA -f EST
 # concat_nonRecomb_KdeFilt_iqtree_GTR+F+ASC+G4_ed.sptree
 ```
 
-The resulting trees are in Newick format and can be plotted with tools such as FigTree or iToL or any other preferred software (see __Note __^[See <http://tree.bio.ed.ac.uk/software/figtree> and <https://itol.embl.de>.]).
+The resulting trees are in Newick format and can be plotted with tools such as FigTree or iToL 
+or any other preferred software (see __Note __^[See <http://tree.bio.ed.ac.uk/software/figtree> and <https://itol.embl.de>.]).
 
 
 ## 4. Notes
@@ -682,7 +699,7 @@ Values are average nucleotide identities among sequences clustered together by G
 
 **Figure 5.** Summary of script _annotate_clusters.pl_. A cluster of transcript sequences (top) is processed for further downstream analyses by alignment to an external reference sequence (-r), collapsing overlapping sequences of the same taxon (-c) or making the alignment block blunt (-b). In addition, private variants to a group of taxa can be extracted, and Pfam domains called by translating the longest sequence.
 
-**Figure 6.** Soft-core leaf pan-transcriptome after comparing 14 barley cultivars and ecotypes. Left) Snapshot of the simulation after 2 replicates are complete. The data points for the first replicate are in black, and those for the second in gree. Right) Fitted Tettelin function after 20 replicates are complete. 
+**Figure 6.** Soft-core leaf pan-transcriptome after comparing 14 barley cultivars and ecotypes. Left) Snapshot of the simulation after 2 replicates are complete. The data points for the first replicate are in black, and those for the second in green. Right) Fitted Tettelin function after 20 replicates are complete. 
 
 **Figure 7.** Distribution of leaf CDS clusters from 15 barleys as a function of their occupancy. Occupancy classes are colored as core, soft-core and shell members. Cloud clusters were filtered out (-t 3). 
 
