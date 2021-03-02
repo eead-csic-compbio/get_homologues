@@ -3,18 +3,18 @@ title: 'Pangenome analysis of plant transcripts and coding sequences'
 bibliography: bib_myarticles.bib
 csl: springerprotocols.csl
 output:
-  word_document: default
-  pdf_document:
-    fig_caption: yes
-    highlight: zenburn
-    toc: yes
-    toc_depth: 4
   html_document:
     fig_caption: yes
     highlight: zenburn
     theme: cerulean
     toc: yes
     toc_depth: 4
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 4
+  word_document: default
 ---
 
 ```{r knitr setup, include=FALSE,  eval=TRUE, echo=FALSE, warning=FALSE}
@@ -524,7 +524,7 @@ Core.size Pan.size BIC LogLikelihood
 
 ![](Figures/Figure6.png)
 
- As you can see from the output, script _compare_clusters.pl_ produces several versions of the same matrix, which describe a pan-gene set (see __Note __^[Similar matrices can be obtained for clades in Ensembl Plants with scripts at <https://github.com/Ensembl/plant_tools/tree/master/phylogenomics>]):
+ As you can see from the output, script _compare_clusters.pl_ produces several versions of the same matrix, which describe a pan-gene set (see __Note __^[Similar matrices can be obtained for clades in Ensembl Plants with scripts at <https://github.com/Ensembl/plant-scripts/tree/master/phylogenomics>]):
 
  + _pangenome_matrix_t0.tab_ is a numeric matrix with tab-separated (TSV) columns, with taxa/genomes as rows and sequence clusters as columns, in which cells with natural numbers indicate whether a given taxa contains 1+ sequences from a given cluster. It can be read and edited with any text editor or spreadsheet software, and is also produced in transposed form for convenience. For example, users might want to sort the clusters by position on a reference genome and use these matrices to visualize results.
 
