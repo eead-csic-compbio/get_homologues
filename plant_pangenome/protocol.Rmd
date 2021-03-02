@@ -34,7 +34,7 @@ Bruno Contreras-Moreira (1)*, Alvaro Rodriguez del Rio (1), Carlos P. Cantalapie
 
 ## i. Summary/Abstract
 
-The pangenome of a species is the sum of the genomes of its individuals. As coding sequences often represent only a small fraction of each genome, analyzing the pan-gene set can be a cost-effective strategy for plants with large genomes or highly heterozygous species. Here we describe a step-by-step protocol to analyze plant pan-gene sets with the software GET_HOMOLOGUES-EST. After a short introduction, where the main concepts are illustrated, the remaining sections cover the installation and typical operations required to analyze and annotate pan-transcriptomes and gene sets of plants. The recipes include instructions on how to call core and accessory genes, how to compute a presence-absence pan-genome matrix and how to identify and analyze private genes, present only in some genotypes. Downstream phylogenetic analyses are also discussed.
+The pangenome of a species is the sum of the genomes of its individuals. As coding sequences often represent only a small fraction of each genome, analyzing the pan-gene set can be a cost-effective strategy for plants with large genomes or highly heterozygous species. Here we describe a step-by-step protocol to analyze plant pan-gene sets with the software GET_HOMOLOGUES-EST. After a short introduction, where the main concepts are illustrated, the remaining sections cover the installation and typical operations required to analyze and annotate pan-transcriptomes and gene sets of plants. The recipes include instructions on how to call core and accessory genes, how to compute a presence-absence pangenome matrix and how to identify and analyze private genes, present only in some genotypes. Downstream phylogenetic analyses are also discussed.
 
 ### ii. Key Words
 
@@ -49,16 +49,16 @@ Defining pan-gene sets with GET_HOMOLOGUES-EST
 
 ### 1.1 Background
 
-A pangenome can be defined as the sum of the core genome, shared by all individuals of a species, plus the dispensable genome, which includes partially shared and population-specific genes [@Tettelin2005].  Among plants, previous work has compared ecotypes of model species and cultivars of crops such as maize, barley, soybean, or rice, revealing that dispensable genes play important roles in evolution, and in the complex interplay between plants and the environment (reviewed at [@Golicz2020]). Moreover, accounting for accessory genomic features improves the association of genotypes to phenotypes beyond SNPs called on a single reference genome [@Yano2016; @Coletta2021]. For these reasons we prefer to rename dispensable genes as “accessory” or "shell" genes, terms borrowed from microbiology [@Laing2010]. In summary, pangenomes are the new reference sequences for plant genomic studies [@Bayer2020].
+A pangenome can be defined as the sum of the core genome, shared by all individuals of a species, plus the dispensable genome, which includes partially shared and population-specific genes [@Tettelin2005].  Among plants, previous works have compared ecotypes of model species and cultivars of crops such as maize, barley, soybean, or rice, revealing that dispensable genes play important roles in evolution, and in the complex interplay between plants and the environment (reviewed at [@Golicz2020]). Moreover, accounting for accessory genomic features improves the association of genotypes to phenotypes beyond SNPs called on a single reference genome [@Yano2016; @Coletta2021]. For these reasons we prefer to rename dispensable genes as “accessory” or "shell" genes, terms borrowed from microbiology [@Laing2010]. In summary, pangenomes are the new reference sequences for plant genomic studies [@Bayer2020].
 
-The data structures used to represent pangenomes are evolving in parallel with the sequencing technologies, and the state-of-the-art are the so called pangenome graphs, which significantly improve variant calling by read mapping [@Eizenga2020; @Coletta2021] and have multiple implementations (see for instance [@Sheikhizadeh2016]). However, there are currently no community accepted solutions for visualizing or setting coordinate systemsd in genome graphs. More importantly, the input genome sequences used to construct a graph need to be highly contiguous. This contrasts with most plant genome assemblies found in the public archives, which are often fragmented, particularly for species with large, highly repetitive, heterozygous and polyploid genomes. For these reasons, approaches that do not require a fully-assembled reference genome are of interest for plant breeding and ecology. Some of those strategies reduce the natural complexity of genomes by computing the frequency of nucleotide words and looking for enriched subsets of sequences [@Arora2019; @Voichek2020]. Other strategies, like the one presented in this protocol around GET_HOMOLOGUES-EST [@ContrerasMoreira2017], take transcripts or coding sequences as the genomic unit of interest (see examples at [@Gordon2017; @Gordon2020]).
+The data structures used to represent pangenomes are evolving in parallel with the sequencing technologies, and the state-of-the-art are the so called pangenome graphs, which significantly improve variant calling by read mapping [@Eizenga2020; @Coletta2021] and have multiple implementations (see for instance [@Sheikhizadeh2016]). However, there are currently no community accepted solutions for visualizing or setting coordinate systems in genome graphs. More importantly, the input genome sequences used to construct a graph need to be highly contiguous. This contrasts with most plant genome assemblies found in the public archives, which are often fragmented, particularly for species with large, highly repetitive, heterozygous and polyploid genomes. For these reasons, approaches that do not require a fully-assembled reference genome are of interest for plant breeding and ecology. Some of those strategies reduce the natural complexity of genomes by computing the frequency of nucleotide words and looking for enriched subsets of sequences [@Arora2019; @Voichek2020]. Other strategies, like the one presented in this protocol around GET_HOMOLOGUES-EST [@ContrerasMoreira2017], take transcripts or coding sequences (CDS) as the genomic unit of interest (see examples at [@Gordon2017; @Gordon2020]).
 Therefore, a more appropriate name for this approach would be pan-gene set analysis. 
 
-Compared to whole genome sequencing (WGS) and assembling, pan-gene analyses have the advantage of sampling only the expressed part of genome, the transcriptome, which is a only a fraction of the complete genome. Recent technological advances, such as single-molecule long-read sequencing, are producing transcripts with unprecedented accuracy [@Wang2016], even without a reference genome [@Minio2019]. Their main disadvantage is that genetic variation in non-expressed sequences cannot be sampled. Nevertheless, the definition of pan-gene sets is a necessary step for pangenome projects of crops and plants, as a way to deduce consistent gene collections with uniform nomenclature across genotypes.
+Compared to whole genome sequencing (WGS) and assembling, pan-gene analyses have the advantage of sampling only the expressed part of genome, the transcriptome, which is only a fraction of the complete genome. Recent technological advances, such as single-molecule long-read sequencing, are producing transcripts with unprecedented accuracy [@Wang2016], even without a reference genome [@Minio2019]. Their main disadvantage is that genetic variation in non-expressed sequences cannot be sampled. Nevertheless, the definition of pan-gene sets is a necessary step for pangenome projects of crops and plants, as a way to deduce consistent gene collections with uniform nomenclature across genotypes.
 
 ### 1.2 Pangenome history and concepts
 
-In 2002 Welch and colleagues [@Welch2002] compared the genome sequences of three strains of the bacteria *Escherichia coli*, two of them pathogens, and found shared genes, which mostly conserve their positions in the genome, and also accessory genes, which are encoded only in some strains. Three years later, Tettelin and collaborators [@Tettelin2005] analyzed 8 strains of a Gram+ bacteria and for the first time defined the pangenome as a core genome shared by all strains, plus a dispensable genome consisting of partially shared and strain-specific genes. In addition, a mathematical model suggested that the pan-genome of *Streptococcus agalactiae* might be very large (open) and that unique genes would continue to be identified in newly sequenced strains. In 2007 Morgante and co-workers [@Morgante2007] took these ideas and proposed a role for transposable elements (TEs) in generating the dispensable genomic components that differentiate maize inbred lines B73 and Mo17. A few years later they concluded that these components might not be dispensable after all [@Marroni2014]. In order to make this classification problem more tractable, dispensability scores are now being computed [@Sielemann2021].
+In 2002 Welch and colleagues [@Welch2002] compared the genome sequences of three strains of the bacteria *Escherichia coli*, two of them pathogens, and found shared genes, which mostly conserve their positions in the genome, and also accessory genes, which are encoded only in some strains. Three years later, Tettelin and collaborators [@Tettelin2005] analyzed 8 strains of a Gram+ bacteria and for the first time defined the pangenome as a core genome shared by all strains, plus a dispensable genome consisting of partially shared and strain-specific genes. In addition, a mathematical model suggested that the pangenome of *Streptococcus agalactiae* might be very large (open) and that unique genes would continue to be identified in newly sequenced strains. In 2007 Morgante and co-workers [@Morgante2007] took these ideas and proposed a role for transposable elements (TEs) in generating the dispensable genomic components that differentiate maize inbred lines B73 and Mo17. A few years later they concluded that these components might not be dispensable after all [@Marroni2014]. In order to make this classification problem more tractable, dispensability scores are now being computed [@Sielemann2021].
 
 __Figure 1__ summarizes the computational analysis of the pan-gene set of three toy genomes with GET_HOMOLOGUES-EST. Note that occupancy is defined as the number of genomes/cultivars/ecotypes present in a sequence cluster and in this example takes values from 1 to 3 (see also definitions in __Table 1__). Core loci are found in all three genomes and hence have occupancy=3 in the example. Accessory loci are allocated to shell and cloud compartments. Although not shown in the figure, it's often convenient to define a fourth class, the soft-core, which is a relaxed core that tolerates assembly and annotation errors.
 
@@ -102,7 +102,7 @@ sudo cpan -i Inline::C Inline::CPP
 
 #### 2.1.2 GitHub clone / pull
 
-A more sustainable way of obtaining the software is to use the software git.
+A more sustainable way of obtaining the software is to use the software _git_.
 For this you might need to install *git* in your system. Note also that the *git* protocol requires having network port 9418 open, which might be blocked by your firewall. This method does not include the binary dependencies, which must downloaded during installation:
 
 ```{r, engine='bash', eval=FALSE}
@@ -121,7 +121,7 @@ git pull
 
 #### 2.1.3 Recommended optional dependencies, such as Pfam and SwissProt
 
-In order to annotate protein domains and to translate open reading frames (ORFs) a couple of databases must be downloaded and formatted. These are Pfam [@Mistry2021] and SwissProt [@Bateman2021], which you can download and format as follows in the terminal:
+In order to annotate protein domains and to translate open reading frames (ORFs) a couple of databases must be downloaded and formatted. These are Pfam [@Mistry2021] and SwissProt [@Bateman2021], which you can download and format it as follows in the terminal:
 
 ```{r, engine='bash', eval=FALSE}
 cd soft/get_homologues
@@ -173,7 +173,7 @@ GET_HOMOLOGUES-EST has been adapted to the large size of plant genomic data sets
 As summarized in __Figure 3__, the main script _get_homologues-est.pl_ can produce different outputs:
 
  + Sequence clusters based on nucleotide similarity, which provide higher resolution than peptide comparisons.
- + Presence-absence pan-genome matrices in different formats, which can be easily transformed and exported for different applications.
+ + Presence-absence pangenome matrices in different formats, which can be easily transformed and exported for different applications.
  + Simulations on the growth of the pangenome at the gene level using different fits [@Tettelin2005; @Willenbrock2007] and mixture models [@Snipen2009].
  + Average nucleotide sequence identity (ANI) matrices, which contain average sequence identity values among pairs of genomes, computed from clustered sequences. These values are derived from BLASTN alignments. 
  + Matrices of percentage of conserved sequence clusters (POCS), which contain the % of clusters that contain sequence from every two species being compared [@Qin2014].
@@ -189,21 +189,21 @@ A few scripts are bundled with GET_HOMOLOGUES-EST to assist in the interpretatio
 
  + _compare_clusters.pl_ primarily calculates the intersection between cluster sets, which can be used to select clusters supported by different algorithms or settings. This script can also produce pangenome matrices and Venn diagrams.
 
- + _parse_pangenome_matrix.pl_ can be used to analyze pan-genome sets, in order to find transcripts/genes present in a group A of strains which are absent in set B. This script can also be used for calculating and plotting cloud, shell and core genome compartments with mixture models.
+ + _parse_pangenome_matrix.pl_ can be used to analyze pangenome sets, in order to find transcripts/genes present in a group A of strains which are absent in set B. This script can also be used for calculating and plotting cloud, shell and core genome compartments with mixture models.
 
  + _plot_pancore_matrix.pl_ plots pan/soft/core-genome sampling results and fits regression curves with help from R functions.
 
  + _check_BDBHs.pl_ can be used, after a previous _get_homologues-est.pl_ run, to find out the bidirectional best hits of a sequence identifier chosen by the user. It can also retrieve its Pfam annotations.
 
- + _annotate_cluster.pl_ produces a multiple alignment view of the supporting local BLAST alignments of sequences in a cluster. It can also annotate Pfam domains and find private sequence variants private to an arbitrary group of sequences.
+ + _annotate_cluster.pl_ produces a multiple alignment view of the supporting local BLAST alignments of sequences in a cluster. It can also annotate Pfam domains and find private sequence variants to an arbitrary group of sequences.
 
- + _plot_matrix_heatmap.sh_ calculates ordered heatmaps with attached row and column dendrograms from tab-separated numeric matrices, which can be presence/absence pangenomic matrices or identity matrices as those produced by get_homologues-est with flag -A. Requires R packages ape [@Popescu2012], dendextend, factoextra and gplots (see __Note __^[See
+ + _plot_matrix_heatmap.sh_ calculates ordered heatmaps with attached row and column dendrograms from tab-separated numeric matrices, which can be presence/absence pangenomic matrices or identity matrices as those produced by get_homologues-est with flag -A. Requires R packages _ape_ [@Popescu2012], _dendextend_, _factoextra_ and _gplots_ (see __Note __^[See
  <https://cran.r-project.org/package=ape>,
  <https://cran.r-project.org/package=dendextend>, <https://cran.r-project.org/package=factoextra> and <https://cran.r-project.org/package=gplots>.]).
 
  + _pfam_enrich.pl_ calculates the enrichment of a set of sequence clusters in terms of Pfam domains, by using Fisher's exact test.
 
-Apart from these, scripts *transcripts2cds.pl* and *transcripts2cdsCPP.pl* are also bundled to assist in the analysis of transcripts. They can be used to annotate potential ORFs contained within raw transcripts, which might be truncated or contain retained introns. The CPP version is faster but requires some optional Perl dependencies (which you should have installed earlier). These scripts use TransDecoder and BLASTX (see __Table 3__) to scan protein sequences in SWISSPROT (see __Note __^[See benchmark in c; DIAMOND can also be used with significant gains in computing time and very small sensitivity losses, as shown in the manual.]). 
+Apart from these, scripts *transcripts2cds.pl* and *transcripts2cdsCPP.pl* are also bundled to assist in the analysis of transcripts. They can be used to annotate potential ORFs contained within raw transcripts, which might be truncated or contain retained introns. The CPP version is faster but requires some optional Perl dependencies (which you should have installed earlier). These scripts use TransDecoder and BLASTX (see __Table 3__) to scan protein sequences in SWISSPROT (see __Note __^[See benchmark in [@ContrerasMoreira2017]; DIAMOND can also be used with significant gains in computing time and very small sensitivity losses, as shown in the manual.]). 
 
 ### 3.3 Protocol for plant transcripts and CDS sequences
 
@@ -226,7 +226,7 @@ export GETHOMS=~/soft/get_homologues
 
 #### 3.3.1 Preparing input sequences, outgroups and extracting CDS from transcripts
 
-The main script reads in sequences in FASTA format, which might be GZIP- or BZIP2-compressed, contained in a folder containing at least two files with extension .fna, one per cultivar/ecotype. You should consider adding sequences from one or more outgroup taxa if you plan to run downstream phylogenomic analyses with the resulting clusters (see __Note __^[An outgroup is a
+The main script reads in sequences in FASTA format, which might be GZIP- or BZIP2-compressed, from a folder containing at least two files with extension .fna, one per cultivar/ecotype. You should consider adding sequences from one or more outgroup taxa if you plan to run downstream phylogenomic analyses with the resulting clusters (see __Note __^[An outgroup is a
 taxon or lineage that falls outside the clade being studied (ingroup) but it is closely related. It helps root the tree.]).
 
 Files with .fna extension allow clustering any kind of nucleotide sequences, such as conserved intergenic regions or transposons.
@@ -254,7 +254,7 @@ $GETHOMS/transcripts2cds.pl -n 3 $GETHOMS/sample_transcripts.fna
 
 Other analyses you might want to carry out on your input sequences include computing their coding potential or their gene completeness (see __Note __^[Software choices include CPC2 and RNAsamba [@Kang2017; @Camargo2020], trained on human truth sets, and BUSCO [@Seppey2019]]).
 
-Note that file names matching the tag 'flcdna' are handled as full-length transcripts, and this information will be used downstream in order to estimate coverage. By default only sequences with length length $\geq 20$ bases are considered (see __Note __^[Global variable $MINSEQLENGTH controls the minimum length of sequences to be considered; the default value is 20 but you can edit in the source to increase it. Similarly, $MAXSEQLENGTH limits the max length for input sequences, 25Kb by default. In our barley tests we found some high-quality flcDNAs reach 23Kb.]).
+Note that file names matching the tag 'flcdna' are handled as full-length transcripts, and this information will be used downstream in order to estimate coverage. By default only sequences with length $\geq 20$ bases are considered (see __Note __^[Global variable $MINSEQLENGTH controls the minimum length of sequences to be considered; the default value is 20 but you can edit in the source to increase it. Similarly, $MAXSEQLENGTH limits the max length for input sequences, 25Kb by default. In our barley tests we found some high-quality flcDNAs reach 23Kb.]).
 
 Let's now get all the barley sequences and extract CDS from them, which takes several hours:
 
@@ -368,7 +368,7 @@ Now you should check the log files to make sure there are no errors and useful i
 
     # mask=Alexis_0taxa_algOMCL_e0_ (_0taxa_algOMCL)
 
-This mask is a prefix added to the output folder. In this case it tells that the reference genomes is 'Alexis', that no occupancy cutoff was set (t0), that the clustering algorithm used is OMCL and that clusters with inparalogues were included (e0, see __Note __^[Inparalogues are sequences whose best BLASTN hit is from the same genome.]). 
+This mask is a prefix added to the output folder. In this case it tells that the reference genomes is 'Alexis', that no occupancy cutoff was set (t0), the clustering algorithm used was OMCL and that clusters containing inparalogues were included (e0, see __Note __^[Inparalogues are sequences whose best BLASTN hit is from the same genome.]). 
 
 Note that internally sequences are numbered with natural numbers, in this case starting with our reference Alexis. This is important because the resulting clusters are also numbered accordingly.
 
@@ -463,7 +463,7 @@ In this protocol we will compare leaf tissue CDS sequences from 14 barley cultiv
 
 Moreover, we also produced pangenome matrices and used them to estimate the size of the different pangenome compartments. The matrices are created with the script _compare_clusters.pl_ with option -m. Note that option -n uses nucleotide clusters for building the matrix. In the example we actually call this script twice; the second time cloud clusters are filtered out, as they were found to be the most unreliable in our benchmarks [@ContrerasMoreira2017]. 
 
-Another script, _parse_pangenome_matrix.pl_ can be used to consume the matrices and produce compartment plots and size estimates. In this example it estimates a core-genome of 9815 CDS and a pan-genome of 33648 CDS clusters and produces __Figure 7__:
+Another script, _parse_pangenome_matrix.pl_ can be used to consume the matrices and produce compartment plots and size estimates. In this example it estimates a core-genome of 9815 CDS and a pangenome of 33648 CDS clusters and produces __Figure 7__:
 
 ```{r, engine='bash', eval=FALSE}
 
@@ -473,7 +473,7 @@ Another script, _parse_pangenome_matrix.pl_ can be used to consume the matrices 
 $GETHOMS/get_homologues-est.pl -d cds -c -z \
   -I cds/leaf.list -M -t 3 -m cluster &> log.cds.leaf.t3.c
   
-# make pan-genome growth plots
+# make pangenome growth plots
 
 # first core plot with two types of fits (Tettelin & Willenbrock)
 $GETHOMS/plot_pancore_matrix.pl -i cds_est_homologues/core_genome_leaf.list_algOMCL.tab \
@@ -489,7 +489,7 @@ $GETHOMS/plot_pancore_matrix.pl -i cds_est_homologues/soft-core_genome_leaf.list
 # finally pan	
 $GETHOMS/plot_pancore_matrix.pl -i cds_est_homologues/pan_genome_leaf.list_algOMCL.tab -f pan 
   
-## produce pan-genome matrices and allocate clusters to occupancy classes
+## produce pangenome matrices and allocate clusters to occupancy classes
 
 # all occupancies, produces folder clusters_cds/
 $GETHOMS/compare_clusters.pl -d cds_est_homologues/Alexis_0taxa_algOMCL_e0_ \
@@ -509,7 +509,7 @@ cat log.compare_clusters.cds
 # pangenome_FASTA file = clusters_cds/pangenome_matrix_t0.fasta
 # pangenome CSV file (Scoary) = clusters_cds/pangenome_matrix_t0.tr.csv
   
-# plot compartments and perform mixture model pan-genome size estimates   
+# plot compartments and perform mixture model pangenome size estimates   
 # creates _list.txt files with clusters in each compartment 
 $GETHOMS/parse_pangenome_matrix.pl -m clusters_cds_t3/pangenome_matrix_t0.tab -s \
   &> log.parse_pangenome_matrix.cds.t3
@@ -517,7 +517,7 @@ $GETHOMS/parse_pangenome_matrix.pl -m clusters_cds_t3/pangenome_matrix_t0.tab -s
 cat log.parse_pangenome_matrix.cds.t3
 # matrix contains 33644 clusters and 15 taxa
 # ...
-# pan-genome size estimates (Snipen mixture model PMID:19691844): clusters_cds_t3/pangenome_matrix_t0__shell_estimates.tab
+# pangenome size estimates (Snipen mixture model PMID:19691844): clusters_cds_t3/pangenome_matrix_t0__shell_estimates.tab
 Core.size Pan.size BIC LogLikelihood
 2 components 9815 33648 198886.077102331 -99427.4031661459
 ```
@@ -538,7 +538,7 @@ Core.size Pan.size BIC LogLikelihood
  
 These presence-absence matrices can be used directly to infer population phylogenies (see __Note __^[You might want to try _compare_clusters.pl_ -T for a PHYLIP pars parsimony tree or GET_PHYLOMARKERS pipeline, as explained on section 3.3.6]), particularly if your data are CDS sequences from WGS genomes [@Gordon2017]. 
 
-Moreover, it is possible to annotate pan-genome clusters with script _make_nr_pangenome_matrix.pl_ and a user-provided FASTA file of curated sequences. For instance, you might want to identify clusters containing genes from transposable elements (see __Note __^[See for instance the nrTEplants library at <https://github.com/Ensembl/plant-scripts/releases/download/v0.3/nrTEplantsJune2020.fna.bz2>, described at <https://github.com/Ensembl/plant_tools/tree/master/bench/repeat_libs>]), or low copy genes of flowering plants (see __Note __^[See <https://github.com/mossmatters/Angiosperms353> [@Johnson2019] or <http://sftp.kew.org/pub/treeoflife/current_release/fasta/by_gene> [@Baker2021]]). 
+Moreover, it is possible to annotate pangenome clusters with script _make_nr_pangenome_matrix.pl_ and a user-provided FASTA file of curated sequences. For instance, you might want to identify clusters containing genes from transposable elements (see __Note __^[See for instance the nrTEplants library at <https://github.com/Ensembl/plant-scripts/releases/download/v0.3/nrTEplantsJune2020.fna.bz2>, described at <https://github.com/Ensembl/plant_tools/tree/master/bench/repeat_libs>]), or low copy genes of flowering plants (see __Note __^[See <https://github.com/mossmatters/Angiosperms353> [@Johnson2019] or <http://sftp.kew.org/pub/treeoflife/current_release/fasta/by_gene> [@Baker2021]]). 
 
 ![](Figures/Figure7.png)
 
@@ -591,7 +591,7 @@ If you are looking for accessory genes and transcripts, as in the first example 
  
  + A small assembly error might cause a genuine gene to be split in two gene models. In our _B. distachyon_ benchmarks these would be clustered together in most cases, but it is worth double-checking [@ContrerasMoreira2017].
  
- + When working with transcripts, a CDS sequence might be missing due to insufficient sequencing depth, weak expression or a tissue sampled in the wrongt developmental stage.
+ + When working with transcripts, a CDS sequence might be missing due to insufficient sequencing depth, weak expression or a tissue sampled in the wrong developmental stage.
  
  + Soft-core genes and transcripts are robust to those factors to some extent.
 
@@ -692,14 +692,14 @@ The first version of this protocol was funded by Centro de Bioinformática y Bio
 
 **Figure 2.** Functional annotations (COGs) of protein-coding genes classified in occupancy classes in two bacterial sets.
 
-**Figure 3.** Features of GET_HOMOLOGUES-EST. (A) Flowchart of the main tasks and deliverables. BLASTN and optional Pfam scans, as well as BDBH and OMCL clustering, can be run on a local computer, preferably multi-core, or over a HPC cluster. Resulting clusters are post-processed to produce pan-genome or average nucleotide identity matrices, as well as to estimate pan-, soft-core-, and core-genomes. Note that both clustering algorithms can be fine-tuned by customizing an array of parameters, of which alignment coverage (-C) and same Pfam domain composition (-D) are perhaps the most important. While OMCL is adequate for most applications, BDBH is faster for the calculation of core sequences within large datasets. 
+**Figure 3.** Features of GET_HOMOLOGUES-EST. (A) Flowchart of the main tasks and deliverables. BLASTN and optional Pfam scans, as well as BDBH and OMCL clustering, can be run on a local computer, preferably multi-core, or over a HPC cluster. Resulting clusters are post-processed to produce pangenome or average nucleotide identity matrices, as well as to estimate pan-, soft-core-, and core-genomes. Note that both clustering algorithms can be fine-tuned by customizing an array of parameters, of which alignment coverage (-C) and same Pfam domain composition (-D) are perhaps the most important. While OMCL is adequate for most applications, BDBH is faster for the calculation of core sequences within large datasets. 
 
 **Figure 4.** Average nucleotide % identity matrix and ordered heat map of 2254 single-copy core barley CDS.
 Values are average nucleotide identities among sequences clustered together by GET_HOMOLOGUES-EST. This figure was produced with script _plot_matrix_heatmap.sh_, which calls heatmap.2 function from the gplots R package. The dendrograms were computed by complete linkage clustering and Euclidean distances computed among ANI columns. 
 
 **Figure 5.** Summary of script _annotate_clusters.pl_. A cluster of transcript sequences (top) is processed for further downstream analyses by alignment to an external reference sequence (-r), collapsing overlapping sequences of the same taxon (-c) or making the alignment block blunt (-b). In addition, private variants to a group of taxa can be extracted, and Pfam domains called by translating the longest sequence.
 
-**Figure 6.** Soft-core leaf pan-transcriptome after comparing 14 barley cultivars and ecotypes. Left) Snapshot of the simulation after 2 replicates are complete. The data points for the first replicate are in black, and those for the second in green. Right) Fitted Tettelin function after 20 replicates are complete. 
+**Figure 6.** Soft-core leaf pan-transcriptome after comparing 14 barley cultivars and ecotypes. (Left) Snapshot of the simulation after 2 replicates are complete. The data points for the first replicate are in black, and those for the second in green. (Right) Fitted Tettelin function after 20 replicates are complete. 
 
 **Figure 7.** Distribution of leaf CDS clusters from 15 barleys as a function of their occupancy. Occupancy classes are colored as core, soft-core and shell members. Cloud clusters were filtered out (-t 3). 
 
