@@ -54,7 +54,7 @@ A pangenome can be defined as the sum of the core genome, shared by all individu
 The data structures used to represent pangenomes are evolving in parallel with the sequencing technologies, and the state-of-the-art are the so called pangenome graphs, which significantly improve variant calling by read mapping [@Eizenga2020; @Coletta2021] and have multiple implementations (see for instance [@Sheikhizadeh2016]). However, there are currently no community accepted solutions for visualizing or setting coordinate systems in genome graphs. More importantly, the input genome sequences used to construct a graph need to be highly contiguous. This contrasts with most plant genome assemblies found in the public archives, which are often fragmented, particularly for species with large, highly repetitive, heterozygous and polyploid genomes. For these reasons, approaches that do not require a fully-assembled reference genome are of interest for plant breeding and ecology. Some of those strategies reduce the natural complexity of genomes by computing the frequency of nucleotide words and looking for enriched subsets of sequences [@Arora2019; @Voichek2020]. Other strategies, like the one presented in this protocol around GET_HOMOLOGUES-EST [@ContrerasMoreira2017], take transcripts or coding sequences (CDS) as the genomic unit of interest (see examples at [@Gordon2017; @Gordon2020]).
 Therefore, a more appropriate name for this approach would be pan-gene set analysis. 
 
-Compared to whole genome sequencing (WGS) and assembling, pan-gene analyses have the advantage of sampling only the expressed part of genome, the transcriptome, which is only a fraction of the complete genome. Recent technological advances, such as single-molecule long-read sequencing, are producing transcripts with unprecedented accuracy [@Wang2016], even without a reference genome [@Minio2019]. Their main disadvantage is that genetic variation in non-expressed sequences cannot be sampled. Nevertheless, the definition of pan-gene sets is a necessary step for pangenome projects of crops and plants, as a way to deduce consistent gene collections with uniform nomenclature across genotypes.
+Compared to whole genome sequencing (WGS) and assembling, pan-gene analyses have the advantage of sampling only the expressed part of the genome, the transcriptome, which is only a fraction of the complete genome. Recent technological advances, such as single-molecule long-read sequencing, are producing transcripts with unprecedented accuracy [@Wang2016], even without a reference genome [@Minio2019]. Their main disadvantage is that genetic variation in non-expressed sequences cannot be sampled. Nevertheless, the definition of pan-gene sets is a necessary step for pangenome projects of crops and plants, as a way to deduce consistent gene collections with uniform nomenclature across genotypes.
 
 ### 1.2 Pangenome history and concepts
 
@@ -602,9 +602,8 @@ GET_HOMOLOGUES-EST produces two types of output which can be further processed w
 pipeline [@Vinuesa2018] (<https://github.com/vinuesa/get_phylomarkers>) to compute robust molecular phylogenies: 
 
  + Single-copy core clusters (twin .fna & .faa FASTA files). 
- These can be CDS sequences annotated in WGS genomes, or deduced from transcriptomes, 
- which can used to compute gene trees which are quality-controlled and eventually concatenated. 
- In our experience this provides useful insights at the Genus level or beyond. 
+ These can be CDS sequences annotated in WGS genomes, or deduced from transcriptomes, which can be used to compute gene trees which are quality-controlled and eventually concatenated. 
+ In our experience this provides useful insights at the genus level or beyond. 
  As mentioned on section 3.3.1, outgroups will be required to root the resulting trees.
 
  + Pangenome matrices, ideally of CDS sequences from WGS genomes, 
@@ -683,8 +682,7 @@ or any other preferred software (see __Note __^[See <http://tree.bio.ed.ac.uk/so
 
 ## Acknowledgements
 
-The first version of this protocol was funded by Centro de Bioinformática y Biología Computacional de Colombia – [BIOS](http://bios.co) for a workshop organized by Marco Cristancho at Manizales, Colombia, in March 2017.
-
+A first draft of this protocol was funded by Centro de Bioinformática y Biología Computacional de Colombia – [BIOS](http://bios.co) for a workshop organized by Marco Cristancho at Manizales, Colombia, in March 2017. We also received funding from Fundación ARAID and the Spanish Ministry of Economy and Competitivity (CSIC13‐4E‐249, AGL2016-80967-R and CGL2016‐79790-P). PV acknowledges support from CONACyT Mexico (A1-S-11242) and PAPIIT-UNAM (IN206318 and IN209321).
 
 ## Figure captions
 
