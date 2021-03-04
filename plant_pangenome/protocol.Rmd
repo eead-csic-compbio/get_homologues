@@ -34,15 +34,15 @@ Bruno Contreras-Moreira (1)*, Alvaro Rodriguez del Rio (1), Carlos P. Cantalapie
 
 ## i. Summary/Abstract
 
-The pangenome of a species is the sum of the genomes of its individuals. As coding sequences often represent only a small fraction of each genome, analyzing the pan-gene set can be a cost-effective strategy for plants with large genomes or highly heterozygous species. Here we describe a step-by-step protocol to analyze plant pan-gene sets with the software GET_HOMOLOGUES-EST. After a short introduction, where the main concepts are illustrated, the remaining sections cover the installation and typical operations required to analyze and annotate pan-transcriptomes and gene sets of plants. The recipes include instructions on how to call core and accessory genes, how to compute a presence-absence pangenome matrix and how to identify and analyze private genes, present only in some genotypes. Downstream phylogenetic analyses are also discussed.
+The pangenome of a species is the sum of the genomes of its individuals. As coding sequences often represent only a small fraction of each genome, analyzing the pangene set can be a cost-effective strategy for plants with large genomes or highly heterozygous species. Here we describe a step-by-step protocol to analyze plant pangene sets with the software GET_HOMOLOGUES-EST. After a short introduction, where the main concepts are illustrated, the remaining sections cover the installation and typical operations required to analyze and annotate pantranscriptomes and gene sets of plants. The recipes include instructions on how to call core and accessory genes, how to compute a presence-absence pangenome matrix and how to identify and analyze private genes, present only in some genotypes. Downstream phylogenetic analyses are also discussed.
 
 ### ii. Key Words
 
-- Pangenome, pan-gene set, crops, model plants, wild plants, polyploids, scripting
+- Pangenome, pangene set, crops, model plants, wild plants, polyploids, scripting
 
 ### iv. Running head
 
-Defining pan-gene sets with GET_HOMOLOGUES-EST
+Defining pangene sets with GET_HOMOLOGUES-EST
 
 
 ## 1. Introduction
@@ -51,31 +51,31 @@ Defining pan-gene sets with GET_HOMOLOGUES-EST
 
 A pangenome can be defined as the sum of the core genome, shared by all individuals of a species, plus the dispensable genome, which includes partially shared and population-specific genes [@Tettelin2005].  Among plants, previous works have compared ecotypes of model species and cultivars of crops such as maize, barley, soybean, or rice, revealing that dispensable genes play important roles in evolution, and in the complex interplay between plants and the environment (reviewed at [@Golicz2020]). Moreover, accounting for accessory genomic features improves the association of genotypes to phenotypes beyond SNPs called on a single reference genome [@Yano2016; @Coletta2021]. For these reasons we prefer to rename dispensable genes as “accessory” or "shell" genes, terms borrowed from microbiology [@Laing2010]. In summary, pangenomes are the new reference sequences for plant genomic studies [@Bayer2020].
 
-The data structures used to represent pangenomes are evolving in parallel with the sequencing technologies, and the state-of-the-art are the so called pangenome graphs, which significantly improve variant calling by read mapping [@Eizenga2020; @Coletta2021] and have multiple implementations (see for instance [@Sheikhizadeh2016]). However, there are currently no community accepted solutions for visualizing or setting coordinate systems in genome graphs. More importantly, the input genome sequences used to construct a graph need to be highly contiguous. This contrasts with most plant genome assemblies found in the public archives, which are often fragmented, particularly for species with large, highly repetitive, heterozygous and polyploid genomes. For these reasons, approaches that do not require a fully-assembled reference genome are of interest for plant breeding and ecology. Some of those strategies reduce the natural complexity of genomes by computing the frequency of nucleotide words and looking for enriched subsets of sequences [@Arora2019; @Voichek2020]. Other strategies, like the one presented in this protocol around GET_HOMOLOGUES-EST [@ContrerasMoreira2017], take transcripts or coding sequences (CDS) as the genomic unit of interest (see examples at [@Gordon2017; @Gordon2020]).
-Therefore, a more appropriate name for this approach would be pan-gene set analysis. 
+The data structures used to represent pangenomes are evolving in parallel with the sequencing technologies, and the state-of-the-art are the so called pangenome graphs, which significantly improve variant calling by read mapping [@Eizenga2020; @Coletta2021] and have multiple implementations (see for instance [@Sheikhizadeh2016]). However, there are currently no community accepted solutions for visualizing or setting coordinate systems in genome graphs. More importantly, the input genome sequences used to construct a graph need to be highly contiguous. This contrasts with most plant genome assemblies found in the public archives, which are often fragmented, particularly for species with large, highly repetitive, heterozygous and polyploid genomes. For these reasons, approaches that do not require a fully-assembled reference genome are of interest for plant breeding and ecology. Some of these strategies reduce the natural complexity of genomes by computing the frequency of nucleotide words and looking for enriched subsets of sequences [@Voichek2020; @Arora2019]. Other strategies, like the one presented in this protocol around GET_HOMOLOGUES-EST [@ContrerasMoreira2017], take transcripts or coding sequences (CDS) as the genomic unit of interest (see examples at [@Gordon2017; @Gordon2020]).
+Therefore, a more appropriate name for this approach would be pangene set analysis. 
 
-Compared to whole genome sequencing (WGS) and assembling, pan-gene analyses have the advantage of sampling only the expressed part of the genome, the transcriptome, which is only a fraction of the complete genome. Recent technological advances, such as single-molecule long-read sequencing, are producing transcripts with unprecedented accuracy [@Wang2016], even without a reference genome [@Minio2019]. Their main disadvantage is that genetic variation in non-expressed sequences cannot be sampled. Nevertheless, the definition of pan-gene sets is a necessary step for pangenome projects of crops and plants, as a way to deduce consistent gene collections with uniform nomenclature across genotypes.
+Compared to whole genome sequencing (WGS) and assembling, pangene analyses have the advantage of sampling only the expressed part of the genome, the transcriptome, which is only a fraction of the complete genome. Recent technological advances, such as single-molecule long-read sequencing, are producing transcripts with unprecedented accuracy [@Wang2016], even without a reference genome [@Minio2019]. Their main disadvantage is that genetic variation in non-expressed sequences cannot be sampled. Nevertheless, the definition of pangene sets is a necessary step for pangenome projects of crops and plants, as a way to deduce consistent gene collections with uniform nomenclature across genotypes.
 
 ### 1.2 Pangenome history and concepts
 
-In 2002 Welch and colleagues [@Welch2002] compared the genome sequences of three strains of the bacteria *Escherichia coli*, two of them pathogens, and found shared genes, which mostly conserve their positions in the genome, and also accessory genes, which are encoded only in some strains. Three years later, Tettelin and collaborators [@Tettelin2005] analyzed 8 strains of a Gram+ bacteria and for the first time defined the pangenome as a core genome shared by all strains, plus a dispensable genome consisting of partially shared and strain-specific genes. In addition, a mathematical model suggested that the pangenome of *Streptococcus agalactiae* might be very large (open) and that unique genes would continue to be identified in newly sequenced strains. In 2007 Morgante and co-workers [@Morgante2007] took these ideas and proposed a role for transposable elements (TEs) in generating the dispensable genomic components that differentiate maize inbred lines B73 and Mo17. A few years later they concluded that these components might not be dispensable after all [@Marroni2014]. In order to make this classification problem more tractable, dispensability scores are now being computed [@Sielemann2021].
+In 2002 Welch and colleagues [@Welch2002] compared the genome sequences of three strains of the bacteria *Escherichia coli*, two of them pathogens, and found shared genes, which mostly conserve their positions in the genome, and also accessory genes, which are encoded only in some strains. Three years later, Tettelin and collaborators [@Tettelin2005] analyzed 8 strains of a Gram+ bacteria and, for the first time, defined the pangenome as a core genome shared by all strains, plus a dispensable genome consisting of partially shared and strain-specific genes. In addition, a mathematical model suggested that the pangenome of *Streptococcus agalactiae* might be very large and open, as novel genes would continue to be identified in newly sequenced strains. In 2007 Morgante and co-workers [@Morgante2007] took these ideas and proposed a role for transposable elements (TEs) in generating the dispensable genomic components that differentiate maize inbred lines B73 and Mo17. A few years later they concluded that these components might not be dispensable after all [@Marroni2014]. In order to make this classification problem more tractable, dispensability scores are now being computed [@Sielemann2021].
 
-__Figure 1__ summarizes the computational analysis of the pan-gene set of three toy genomes with GET_HOMOLOGUES-EST. Note that occupancy is defined as the number of genomes/cultivars/ecotypes present in a sequence cluster and in this example takes values from 1 to 3 (see also definitions in __Table 1__). Core loci are found in all three genomes and hence have occupancy=3 in the example. Accessory loci are allocated to shell and cloud compartments. Although not shown in the figure, it's often convenient to define a fourth class, the soft-core, which is a relaxed core that tolerates assembly and annotation errors.
+__Figure 1__ summarizes the computational analysis of the pangene set of three toy genomes with GET_HOMOLOGUES-EST. Note that occupancy is defined as the number of genomes/cultivars/ecotypes present in a sequence cluster and in this example takes values from 1 to 3 (see also definitions in __Table 1__). Core loci are found in all three genomes and hence have occupancy=3 in the example. Accessory loci are allocated to shell and cloud compartments. Although not shown in the figure, it's often convenient to define a fourth class, the soft-core, which is a relaxed core that tolerates assembly and annotation errors.
 
 ![](Figures/Figure1.png)
 
-In addition to occupancy differences, previous benchmarks have shown that occupancy-based classes differ in their functional annotations. The examples in __Figure 2__ highlight the different functions of core and accessory genes in two bacterial clades; note that similar observations have been made in plants [@ContrerasMoreira2017; @Gordon2017]:
+In addition to occupancy differences, previous benchmarks have shown that occupancy-based classes differ in their functional annotations. The examples in __Figure 2__ highlight the different functions of core and accessory genes in two bacterial clades; note that similar observations have been made in plants [@ContrerasMoreira2017; @Gordon2017].
 
 ![](Figures/Figure2.png) 
 
 ## 2. Materials
 
-The **GET_HOMOLOGUES** software was originally designed for the analysis of bacterial genomes, and has been described in [@ContrerasMoreira2013; @Vinuesa2015]. That software was then adapted to the study of intra-specific eukaryotic pan-gene sets, as described in [@ContrerasMoreira2017], taking the **GET_HOMOLOGUES-EST** name. Its source code and documentation can be found at <https://github.com/eead-csic-compbio/get_homologues>. __Table 2__ summarizes the main differences between the two flavours of the software. In this protocol we will use GET_HOMOLOGUES-EST (see __Note __^[Read [@Golicz2016] for other alternatives.]).
+The **GET_HOMOLOGUES** software was originally designed for the analysis of bacterial genomes, and has been described in [@ContrerasMoreira2013; @Vinuesa2015]. That software was then adapted to the study of intra-specific eukaryotic pangene sets, as described in [@ContrerasMoreira2017], taking the **GET_HOMOLOGUES-EST** name. Its source code and documentation can be found at <https://github.com/eead-csic-compbio/get_homologues>. __Table 2__ summarizes the main differences between the two flavours of the software. In this protocol we will use GET_HOMOLOGUES-EST (see __Note __^[Read [@Golicz2016] for other alternatives.]).
 
 ### 2.1 Installation and up-to-date documentation
 
-GET_HOMOLOGUES-EST is an open source software package, written in Perl and R, 
-available for Linux and MacOS systems. A manual is available at <http://eead-csic-compbio.github.io/get_homologues/manual-est> (see __Note __^[The bacterial manual at <http://eead-csic-compbio.github.io/get_homologues/manual> can also be useful.]).
+GET_HOMOLOGUES-EST is an open source software package, written in Perl, R and bash, available for Linux and MacOS systems. A manual is available at <http://eead-csic-compbio.github.io/get_homologues/manual-est> (see __Note __^[The bacterial manual at <http://eead-csic-compbio.github.io/get_homologues/manual> can also be useful.]). There are different ways to install GET_HOMOLOGUES-EST, 
+as shown in the next subsections.
 
 #### 2.1.1 Latest binary release
 
@@ -447,7 +447,7 @@ There are many possible uses for clusters produced by GET_HOMOLOGUES-EST:
 
 #### 3.3.4 Pangenome analyses
 
-The raw clusters from the previous sections can be analyzed in bulk in order to discover properties of the resulting pangenome or pan-transcriptome.
+The raw clusters from the previous sections can be analyzed in bulk in order to discover properties of the resulting pangenome or pantranscriptome.
 
 We can simulate how a pangenome grows as new genomes are added. In the main script this option is named genome composition (option -c). This is really a simulation where the input sequence sets are sampled in random order and added sequentially. After a new genome is added the algorithm checks whether previous clusters gain sequences or new clusters are added. The process is repeated 20 times (see __Note __^[You can control this with global variable $NOFSAMPLESREPORT]). This kind of analyses can be done with:
 
@@ -467,7 +467,7 @@ Another script, _parse_pangenome_matrix.pl_ can be used to consume the matrices 
 
 ```{r, engine='bash', eval=FALSE}
 
-# leaf clusters and pan-transcriptome growth simulations with soft-core (-z)
+# leaf clusters and pantranscriptome growth simulations with soft-core (-z)
 # produces 3 genome composition matrices in cds_est_homologues/:
 # [core|soft-core|pan]_genome_leaf.list_algOMCL.tab
 $GETHOMS/get_homologues-est.pl -d cds -c -z \
@@ -524,7 +524,7 @@ Core.size Pan.size BIC LogLikelihood
 
 ![](Figures/Figure6.png)
 
- As you can see from the output, script _compare_clusters.pl_ produces several versions of the same matrix, which describe a pan-gene set (see __Note __^[Similar matrices can be obtained for clades in Ensembl Plants with scripts at <https://github.com/Ensembl/plant-scripts/tree/master/phylogenomics>]):
+ As you can see from the output, script _compare_clusters.pl_ produces several versions of the same matrix, which describe a pangene set (see __Note __^[Similar matrices can be obtained for clades in Ensembl Plants with scripts at <https://github.com/Ensembl/plant-scripts/tree/master/phylogenomics>]):
 
  + _pangenome_matrix_t0.tab_ is a numeric matrix with tab-separated (TSV) columns, with taxa/genomes as rows and sequence clusters as columns, in which cells with natural numbers indicate whether a given taxa contains 1+ sequences from a given cluster. It can be read and edited with any text editor or spreadsheet software, and is also produced in transposed form for convenience. For example, users might want to sort the clusters by position on a reference genome and use these matrices to visualize results.
 
@@ -686,7 +686,7 @@ A first draft of this protocol was funded by Centro de Bioinformática y Biolog�
 
 ## Figure captions
 
-**Figure 1.** Pan-gene set of three genomes (A, B and C). In this example there are 101 core loci and 44 (11+9+24) shell loci are found in two accessions. Moreover, 82 (35+25+22) cloud loci are annotated only in one genome. The pan-gene set size is 82+44+101=227 loci. The table below shows four example clusters and their occupancy, computed using the rules in __Table 1__.
+**Figure 1.** pangene set of three genomes (A, B and C). In this example there are 101 core loci and 44 (11+9+24) shell loci are found in two accessions. Moreover, 82 (35+25+22) cloud loci are annotated only in one genome. The pangene set size is 82+44+101=227 loci. The table below shows four example clusters and their occupancy, computed using the rules in __Table 1__.
 
 **Figure 2.** Functional annotations (COGs) of protein-coding genes classified in occupancy classes in two bacterial sets.
 
@@ -697,7 +697,7 @@ Values are average nucleotide identities among sequences clustered together by G
 
 **Figure 5.** Summary of script _annotate_clusters.pl_. A cluster of transcript sequences (top) is processed for further downstream analyses by alignment to an external reference sequence (-r), collapsing overlapping sequences of the same taxon (-c) or making the alignment block blunt (-b). In addition, private variants to a group of taxa can be extracted, and Pfam domains called by translating the longest sequence.
 
-**Figure 6.** Soft-core leaf pan-transcriptome after comparing 14 barley cultivars and ecotypes. (Left) Snapshot of the simulation after 2 replicates are complete. The data points for the first replicate are in black, and those for the second in green. (Right) Fitted Tettelin function after 20 replicates are complete. 
+**Figure 6.** Soft-core leaf pantranscriptome after comparing 14 barley cultivars and ecotypes. (Left) Snapshot of the simulation after 2 replicates are complete. The data points for the first replicate are in black, and those for the second in green. (Right) Fitted Tettelin function after 20 replicates are complete. 
 
 **Figure 7.** Distribution of leaf CDS clusters from 15 barleys as a function of their occupancy. Occupancy classes are colored as core, soft-core and shell members. Cloud clusters were filtered out (-t 3). 
 
