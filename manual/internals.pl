@@ -50,6 +50,10 @@ $key = q/downGenBank/;
 $ref_files{$key} = "$dir".q|manual.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/dryrun/;
+$ref_files{$key} = "$dir".q|manual.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/enrich/;
 $ref_files{$key} = "$dir".q|manual.html|; 
 $noresave{$key} = "$nosave";

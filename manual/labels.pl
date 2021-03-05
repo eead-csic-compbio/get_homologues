@@ -50,6 +50,10 @@ $key = q/downGenBank/;
 $external_labels{$key} = "$URL/" . q|manual.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/dryrun/;
+$external_labels{$key} = "$URL/" . q|manual.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/enrich/;
 $external_labels{$key} = "$URL/" . q|manual.html|; 
 $noresave{$key} = "$nosave";
@@ -226,11 +230,11 @@ $external_latex_labels{$key} = q|4.1|;
 $noresave{$key} = "$nosave";
 
 $key = q/HOWTOTettelin/;
-$external_latex_labels{$key} = q|4.9|; 
+$external_latex_labels{$key} = q|4.10|; 
 $noresave{$key} = "$nosave";
 
 $key = q/PfamClusters/;
-$external_latex_labels{$key} = q|4.4|; 
+$external_latex_labels{$key} = q|4.5|; 
 $noresave{$key} = "$nosave";
 
 $key = q/_/;
@@ -238,7 +242,7 @@ $external_latex_labels{$key} = q|<|;
 $noresave{$key} = "$nosave";
 
 $key = q/avgidmatrix/;
-$external_latex_labels{$key} = q|4.8.6|; 
+$external_latex_labels{$key} = q|4.9.6|; 
 $noresave{$key} = "$nosave";
 
 $key = q/binaries/;
@@ -246,11 +250,11 @@ $external_latex_labels{$key} = q|2.2|;
 $noresave{$key} = "$nosave";
 
 $key = q/checkBDBH/;
-$external_latex_labels{$key} = q|4.8.7|; 
+$external_latex_labels{$key} = q|4.9.7|; 
 $noresave{$key} = "$nosave";
 
 $key = q/composition/;
-$external_latex_labels{$key} = q|4.8.4|; 
+$external_latex_labels{$key} = q|4.9.4|; 
 $noresave{$key} = "$nosave";
 
 $key = q/default/;
@@ -265,12 +269,16 @@ $key = q/downGenBank/;
 $external_latex_labels{$key} = q|3.2|; 
 $noresave{$key} = "$nosave";
 
+$key = q/dryrun/;
+$external_latex_labels{$key} = q|4.2|; 
+$noresave{$key} = "$nosave";
+
 $key = q/enrich/;
-$external_latex_labels{$key} = q|4.8.5|; 
+$external_latex_labels{$key} = q|4.9.5|; 
 $noresave{$key} = "$nosave";
 
 $key = q/fig:ANImap/;
-$external_latex_labels{$key} = q|4.8.6|; 
+$external_latex_labels{$key} = q|4.9.6|; 
 $noresave{$key} = "$nosave";
 
 $key = q/fig:BDBHmin/;
@@ -290,11 +298,11 @@ $external_latex_labels{$key} = q|21|;
 $noresave{$key} = "$nosave";
 
 $key = q/fig:core/;
-$external_latex_labels{$key} = q|4.8.4|; 
+$external_latex_labels{$key} = q|4.9.4|; 
 $noresave{$key} = "$nosave";
 
 $key = q/fig:core2/;
-$external_latex_labels{$key} = q|4.8.4|; 
+$external_latex_labels{$key} = q|4.9.4|; 
 $noresave{$key} = "$nosave";
 
 $key = q/fig:diamondpangenome/;
@@ -318,19 +326,19 @@ $external_latex_labels{$key} = q|11|;
 $noresave{$key} = "$nosave";
 
 $key = q/fig:pan/;
-$external_latex_labels{$key} = q|4.8.4|; 
+$external_latex_labels{$key} = q|4.9.4|; 
 $noresave{$key} = "$nosave";
 
 $key = q/fig:pangemat/;
-$external_latex_labels{$key} = q|4.8.2|; 
+$external_latex_labels{$key} = q|4.9.2|; 
 $noresave{$key} = "$nosave";
 
 $key = q/fig:pangematbar/;
-$external_latex_labels{$key} = q|4.8.3|; 
+$external_latex_labels{$key} = q|4.9.3|; 
 $noresave{$key} = "$nosave";
 
 $key = q/fig:pangematbar2/;
-$external_latex_labels{$key} = q|4.8.3|; 
+$external_latex_labels{$key} = q|4.9.3|; 
 $noresave{$key} = "$nosave";
 
 $key = q/fig:panheatmap/;
@@ -350,7 +358,7 @@ $external_latex_labels{$key} = q|8|;
 $noresave{$key} = "$nosave";
 
 $key = q/gbkfiles/;
-$external_latex_labels{$key} = q|4.3|; 
+$external_latex_labels{$key} = q|4.4|; 
 $noresave{$key} = "$nosave";
 
 $key = q/input/;
@@ -366,7 +374,7 @@ $external_latex_labels{$key} = q|3.4|;
 $noresave{$key} = "$nosave";
 
 $key = q/intergen/;
-$external_latex_labels{$key} = q|4.7|; 
+$external_latex_labels{$key} = q|4.8|; 
 $noresave{$key} = "$nosave";
 
 $key = q/options/;
@@ -374,11 +382,11 @@ $external_latex_labels{$key} = q|3.4|;
 $noresave{$key} = "$nosave";
 
 $key = q/pange/;
-$external_latex_labels{$key} = q|4.8.1|; 
+$external_latex_labels{$key} = q|4.9.1|; 
 $noresave{$key} = "$nosave";
 
 $key = q/pangeplot/;
-$external_latex_labels{$key} = q|4.8.2|; 
+$external_latex_labels{$key} = q|4.9.2|; 
 $noresave{$key} = "$nosave";
 
 $key = q/perlmods/;
@@ -386,15 +394,15 @@ $external_latex_labels{$key} = q|2.1|;
 $noresave{$key} = "$nosave";
 
 $key = q/shellplot/;
-$external_latex_labels{$key} = q|4.8.3|; 
+$external_latex_labels{$key} = q|4.9.3|; 
 $noresave{$key} = "$nosave";
 
 $key = q/singleFASTA/;
-$external_latex_labels{$key} = q|4.2|; 
+$external_latex_labels{$key} = q|4.3|; 
 $noresave{$key} = "$nosave";
 
 $key = q/synteny/;
-$external_latex_labels{$key} = q|4.5|; 
+$external_latex_labels{$key} = q|4.6|; 
 $noresave{$key} = "$nosave";
 
 $key = q/tab:algs/;

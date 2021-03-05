@@ -1,4 +1,4 @@
-# LaTeX2HTML 2018.2 (Released May 16, 2018)
+# LaTeX2HTML 2019.2 (Released June 5, 2019)
 # Associate internals original text with physical files.
 
 
@@ -19,6 +19,10 @@ $ref_files{$key} = "$dir".q|manual-est.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/dependencies/;
+$ref_files{$key} = "$dir".q|manual-est.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/dryrun/;
 $ref_files{$key} = "$dir".q|manual-est.html|; 
 $noresave{$key} = "$nosave";
 

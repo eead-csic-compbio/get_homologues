@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.1.23)  17 FEB 2021 12:20
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.1.23)  5 MAR 2021 16:30
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -475,45 +475,45 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7.4> not available
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 176.
 
-:tex2html_wrap_inline2389:lthtmlCropMarkHeight:=16.67496pt
+:tex2html_wrap_inline2408:lthtmlCropMarkHeight:=16.67496pt
 
-:tex2html_wrap_inline2389:lthtmlCropMarkDepth:=6.05234pt:1ex:=4.49998pt
+:tex2html_wrap_inline2408:lthtmlCropMarkDepth:=6.05234pt:1ex:=4.49998pt
 Preview: Tightpage -32891 -32891 32891 32891
 [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
 
-:tex2html_wrap_inline2391:lthtmlCropMarkHeight:=12.7199pt
+:tex2html_wrap_inline2410:lthtmlCropMarkHeight:=12.7199pt
 
-:tex2html_wrap_inline2391:lthtmlCropMarkDepth:=1.58131pt:1ex:=4.49998pt
+:tex2html_wrap_inline2410:lthtmlCropMarkDepth:=1.58131pt:1ex:=4.49998pt
 [2]
 
-:tex2html_wrap_inline2393:lthtmlCropMarkHeight:=12.7199pt
+:tex2html_wrap_inline2412:lthtmlCropMarkHeight:=12.7199pt
 
-:tex2html_wrap_inline2393:lthtmlCropMarkDepth:=3.04655pt:1ex:=4.49998pt
+:tex2html_wrap_inline2412:lthtmlCropMarkDepth:=3.04655pt:1ex:=4.49998pt
 [3]
 
-:tex2html_wrap_inline2395:lthtmlCropMarkHeight:=12.88493pt
+:tex2html_wrap_inline2414:lthtmlCropMarkHeight:=12.88493pt
 
-:tex2html_wrap_inline2395:lthtmlCropMarkDepth:=1.58131pt:1ex:=4.49998pt
+:tex2html_wrap_inline2414:lthtmlCropMarkDepth:=1.58131pt:1ex:=4.49998pt
 [4]
 
-:tex2html_wrap_inline2397:lthtmlCropMarkHeight:=12.88493pt
+:tex2html_wrap_inline2416:lthtmlCropMarkHeight:=12.88493pt
 
-:tex2html_wrap_inline2397:lthtmlCropMarkDepth:=3.04655pt:1ex:=4.49998pt
+:tex2html_wrap_inline2416:lthtmlCropMarkDepth:=3.04655pt:1ex:=4.49998pt
 [5]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 216.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 216.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 217.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 217.
 (./images.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 216.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 216.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 217.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 217.
 Package rerunfilecheck Info: File `images.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 216.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 217.
  ) 
 Here is how much of TeX's memory you used:
- 7463 strings out of 494788
- 105273 string characters out of 6177222
- 195780 words of memory out of 5000000
- 10688 multiletter control sequences out of 15000+600000
+ 7464 strings out of 494788
+ 105281 string characters out of 6177222
+ 195899 words of memory out of 5000000
+ 10689 multiletter control sequences out of 15000+600000
  21850 words of font info for 52 fonts, out of 8000000 for 9000
  85 hyphenation exceptions out of 8191
  28i,5n,35p,554b,344s stack positions out of 5000i,500n,10000p,200000b,80000s

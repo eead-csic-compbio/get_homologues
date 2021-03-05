@@ -22,6 +22,10 @@ $key = q/dependencies/;
 $external_labels{$key} = "$URL/" . q|manual-est.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/dryrun/;
+$external_labels{$key} = "$URL/" . q|manual-est.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/fig:ANImat/;
 $external_labels{$key} = "$URL/" . q|manual-est.html|; 
 $noresave{$key} = "$nosave";
@@ -147,6 +151,10 @@ $noresave{$key} = "$nosave";
 
 $key = q/dependencies/;
 $external_latex_labels{$key} = q|2.3|; 
+$noresave{$key} = "$nosave";
+
+$key = q/dryrun/;
+$external_latex_labels{$key} = q|4.3|; 
 $noresave{$key} = "$nosave";
 
 $key = q/fig:ANImat/;
