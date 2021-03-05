@@ -80,7 +80,7 @@ There are two ways to install GET_HOMOLOGUES-EST, as a bundled release or by clo
 Assuming we are in Ubuntu, these can be installed as follows:
 
 ```{r, engine='bash', eval=FALSE}
-sudo apt-get -y install r-base r-base-dev 
+sudo apt-get -y install r-base r-base-dev parallel
 sudo cpan -i Inline::C Inline::CPP
 ```
 
@@ -145,8 +145,7 @@ You should be able to control the installation process by typing Y or N in the t
 
 #### 2.1.4 Docker container
 
-A way to use GET_HOMOLOGUES-EST with all dependencies pre-installed is the Docker image available at 
-[dockerhub](https://hub.docker.com/r/csicunam/get_homologues). This container also includes [GET_PHYLOMARKERS](https://github.com/vinuesa/get_phylomarkers). 
+A way to use GET_HOMOLOGUES-EST with all dependencies pre-installed is the Docker image available at <https://hub.docker.com/r/csicunam/get_homologues>. This container also includes GET_PHYLOMARKERS (see section 3.3.6). 
 
 #### 2.1.5 High performance cluster (HPC) configuration
 
@@ -173,8 +172,7 @@ In order to prepare your installation to run on a computer cluster please follow
     DELEXE	scancel
     ERROR	F
 
-
-While calling GET_HOMOLOGUES-EST with several CPU cores speeds up the batch of BLASTN jobs, only when using a cluster the actual sequence clustering can be done in parallel, which is recommended particularly if you plan to analyze a large number of transcriptomes.
+Running GET_HOMOLOGUES-EST on a computer cluster parallelizes both the batches of BLASTN/HMMER jobs and the actual clustering steps (isoforms, orthologues, inparalogues), which is recommended if you plan to analyze a large number of sequence sets.
 
 ## 3. Methods
 
@@ -322,8 +320,6 @@ Option -t allows you to control the minimum occupancy of the output clusters. By
 
 Option -A, used in the last example below, requests an ANI matrix. In this case it is combined with flag -e to exclude clusters with inparalogues and therefore minimize biases when averaging observed identities. ANI matrices are useful to robustly compute the similarity among your input genotypes and to cluster them, so that redundancy can easily be managed. If you have outgroups among the input sequences you can also check them in the ANI matrix.
 
-Note that the examples below use -m cluster to parallelize most tasks (see section 2.1.5). If your cluster manager is not supported you can always use -m dryrun to generate batch files that should be able to execute. If you are running GET_HOMOLOGUES-EST on a multicore Linux/macOS box, you can use option -n to indicate how many cores can be used (see __Note __^[This will parallelize BLASTN and HMMER jobs, but not the clustering steps.]).
-
 ```{r, engine='bash', eval=FALSE}
 
 # precompute (-o) sequence similarities and protein domain frequencies (-D);
@@ -388,6 +384,25 @@ The resulting heatmap summarizing the ANI matrix in the example is shown in __Fi
 ![](Figures/Figure4.png)
 
 A sample of the resulting POCS matrix is shown in __Table 4__.
+
+Note that the examples above use -m cluster to parallelize most tasks (see section 2.1.5). If your cluster manager is not supported you can always use -m dryrun to generate batch files that should be able to execute. 
+
+If you are running GET_HOMOLOGUES-EST on a multicore Linux/macOS box, you can use options -o -n to indicate how many cores should be used to parallelize BLASTN and HMMER jobs. Once those jobs are completed, you can still use -m dryrun to produce batch files for the remaining steps, which can then be parallelized with the command-line tool _parallel_:
+
+```{r, engine='bash', eval=FALSE}
+# 1) run BLASTN (and HMMER) in batches
+${GETHOMS}/get_homologues-est.pl -d cds -o
+
+# 2) run in -m dryrun mode
+${GETHOMS}/get_homologues-est.pl -d cds -m dryrun
+# ...
+# EXIT: check the list of pending commands at /home/contrera/test_barley/cds_est_homologues/dryrun.txt
+parallel < cds_est_homologues/dryrun.txt
+
+# repeat 2) until completion
+${GETHOMS}/get_homologues-est.pl -d cds -m dryrun
+# ... 
+```
 
 #### 3.3.3 Annotation of clusters 
 
