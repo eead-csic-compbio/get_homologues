@@ -70,14 +70,23 @@ In addition to occupancy differences, previous benchmarks have shown that occupa
 
 ## 2. Materials
 
-The **GET_HOMOLOGUES** software was originally designed for the analysis of bacterial genomes, and has been described in [@ContrerasMoreira2013; @Vinuesa2015]. That software was then adapted to the study of intra-specific eukaryotic pangene sets, as described in [@ContrerasMoreira2017], taking the **GET_HOMOLOGUES-EST** name. Its source code and documentation can be found at <https://github.com/eead-csic-compbio/get_homologues>. __Table 2__ summarizes the main differences between the two flavours of the software. In this protocol we will use GET_HOMOLOGUES-EST (see __Note __^[Read [@Golicz2016] for other alternatives.]).
+The **GET_HOMOLOGUES** software was originally designed for the analysis of bacterial genomes, and has been described in [@ContrerasMoreira2013; @Vinuesa2015]. That software was then adapted to the study of intra-specific eukaryotic pangene sets, as described in [@ContrerasMoreira2017], taking the **GET_HOMOLOGUES-EST** name. Its source code and documentation can be found at <https://github.com/eead-csic-compbio/get_homologues>. __Table 2__ summarizes the main differences between the two flavours of the software. In this protocol we will use GET_HOMOLOGUES-EST (see __Note __^[Read [@Golicz2016; @Vernikos2020] for other alternatives.]).
 
 ### 2.1 Installation and up-to-date documentation
 
-GET_HOMOLOGUES-EST is an open source software package, written in Perl, R and bash, available for Linux and MacOS systems. A manual is available at <http://eead-csic-compbio.github.io/get_homologues/manual-est> (see __Note __^[The bacterial manual at <http://eead-csic-compbio.github.io/get_homologues/manual> can also be useful.]). There are different ways to install GET_HOMOLOGUES-EST, 
-as shown in the next subsections.
+GET_HOMOLOGUES-EST is an open source software package, written in Perl, R and bash, available for Linux and MacOS systems. A manual is available at <http://eead-csic-compbio.github.io/get_homologues/manual-est> (see __Note __^[The bacterial manual at <http://eead-csic-compbio.github.io/get_homologues/manual> can also be useful.]). Some of the scripts included in the package require additional software dependencies, as described in detail in the manual. 
 
-#### 2.1.1 Latest binary release
+There are two ways to install GET_HOMOLOGUES-EST, as a bundled release or by cloning the GitHub repository. Both options, described below, will need the installation of a few dependencies in order to follow this tutorial.
+Assuming we are in Ubuntu, these can be installed as follows:
+
+```{r, engine='bash', eval=FALSE}
+sudo apt-get -y install r-base r-base-dev 
+sudo cpan -i Inline::C Inline::CPP
+```
+
+Instead, the Docker container described in section 2.1.3 is self-contained and does not require any extra installation steps.
+
+#### 2.1.1 Bundled release
 
 The simplest way to get the current release of GET_HOMOLOGUES is to check
 <https://github.com/eead-csic-compbio/get_homologues/releases>, download it and extract it in your local filesystem. Let's assume we have a dedicated folder called *soft*:
@@ -86,30 +95,26 @@ The simplest way to get the current release of GET_HOMOLOGUES is to check
 cd soft
 
 # make sure you choose the right version
-wget -c https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.4.1/get_homologues-x86_64-20210217.tgz
-#get -c https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.4.1/get_homologues-macosx-20210217.tgz
+wget -c https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.4.2/get_homologues-x86_64-20210305.tgz
+# or
+# wget -c https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.4.2/get_homologues-macosx-20210305.tgz
 
-tar xvfz get_homologues-x86_64-20210217.tgz
+tar xvfz get_homologues-x86_64-20210305.tgz
 ```
 
-Releases include scripts (Perl and R), documentation, sample data and the required binary dependencies, which are listed in __Table 3__ and discussed in the manual. For this tutorial the following dependencies were also installed on Ubuntu:
-
-```{r, engine='bash', eval=FALSE}
-sudo apt-get install git htop geeqie evince default-jre
-sudo apt-get -y install r-base r-base-dev
-sudo cpan -i Inline::C Inline::CPP
-```
+Releases include scripts (Perl, R and bash), documentation, sample data and the required binary dependencies, which are listed in __Table 3__ and discussed in the manual.
 
 #### 2.1.2 GitHub clone / pull
 
 A more sustainable way of obtaining the software is to use the software _git_.
-For this you might need to install *git* in your system. Note also that the *git* protocol requires having network port 9418 open, which might be blocked by your firewall. This method does not include the binary dependencies, which must downloaded during installation:
+For this you might need to install *git* in your system. Note also that the *git* protocol requires having network port 9418 open, which might be blocked by your firewall. This method does not include the binary dependencies, 
+which must downloaded during installation:
 
 ```{r, engine='bash', eval=FALSE}
 cd soft
 git clone https://github.com/eead-csic-compbio/get_homologues.git
 cd get_homologues
-perl install.pl
+perl install.pl no_databases
 ```
 Note this will create a folder called *get_homologues*.
 
@@ -119,16 +124,24 @@ cd soft/get_homologues
 git pull
 ```
 
-#### 2.1.3 Recommended optional dependencies, such as Pfam and SwissProt
+#### 2.1.3 Environment and optional data (Pfam & SwissProt)
+
+Whatever way we installed the software we can now define an environment variable pointing to our install location:
+
+```{r, engine='bash', eval=FALSE}
+# set GET_HOMOLOGUES path, for example:
+export GETHOMS=~/soft/get_homologues
+# or
+# export GETHOMS=~/soft/get_homologues-x86_64-20210305
+```
 
 In order to annotate protein domains and to translate open reading frames (ORFs) a couple of databases must be downloaded and formatted. These are Pfam [@Mistry2021] and SwissProt [@Bateman2021], which you can download and format it as follows in the terminal:
 
 ```{r, engine='bash', eval=FALSE}
-cd soft/get_homologues
+cd $GETHOMS
 perl install.pl
 ```
-You should be able to control the installation process by typing Y or N in the terminal.
-Note that this script will also tell you of missing dependencies. 
+You should be able to control the installation process by typing Y or N in the terminal. This script will also tell you of any missing dependencies. 
 
 #### 2.1.4 Docker container
 
@@ -168,7 +181,7 @@ While calling GET_HOMOLOGUES-EST with several CPU cores speeds up the batch of B
 ### 3.1 Overview of the pipeline and the _get_homologues-est.pl_ script
 
 Unlike its predecessor, which was designed for the analysis of genes within fully sequenced genomes, 
-GET_HOMOLOGUES-EST has been adapted to the large size of plant genomic data sets, and adds new features to adequately handle redundant and fragmented transcript sequences, as those usually obtained from transcript profiling experiments, as well as incomplete/fragmented gene models from WGS assemblies. Sequence clusters can be produced using the bidirectional best-hit or the OrthoMCL [@Li2003] algorithms. The granularity of the clusters can be tuned by a configurable filtering strategy based on a combination of BLAST pairwise alignment parameters and, optionally, hmmscan-based scanning of Pfam domain composition of the proteins encoded in each cluster. By default redundant sequences are removed from input sets if they overlap a longer identical sequence over a length $\geq 40$ or when they are completely matched. This is to prevent BLAST results being biased by transcript isoforms [@Pertea2003]. If your input are annotated CDS sequences this behavior can be disabled with option -i 0 . 
+GET_HOMOLOGUES-EST has been adapted to the large size of plant genomic data sets, and adds new features to adequately handle redundant and fragmented transcript sequences, as those usually obtained from transcript profiling experiments, as well as incomplete/fragmented gene models from WGS assemblies. Sequence clusters can be produced using the bidirectional best-hit (BDBH) or the OrthoMCL [@Li2003] (OMCL) algorithms. The granularity of the clusters can be tuned by a configurable filtering strategy based on a combination of BLAST pairwise alignment parameters and, optionally, hmmscan-based scanning of Pfam domain composition of the proteins encoded in each cluster. By default redundant sequences are removed from input sets if they overlap a longer identical sequence over a length $\geq 40$ or when they are completely matched. This is to prevent BLAST results being biased by transcript isoforms [@Pertea2003]. If your input are annotated CDS sequences this behavior can be disabled with option -i 0 . 
 
 As summarized in __Figure 3__, the main script _get_homologues-est.pl_ can produce different outputs:
 
@@ -208,26 +221,14 @@ Apart from these, scripts *transcripts2cds.pl* and *transcripts2cdsCPP.pl* are a
 ### 3.3 Protocol for plant transcripts and CDS sequences
 
 In this section we present a step-by-step protocol for the analysis of *Hordeum vulgare* WGS-based cDNA sequences, annotated in reference cultivars *Morex* and *Haruna Nijo*, and *de novo* assembled transcriptomes.
-These sequence sets were first used in [@ContrerasMoreira2017]. For convenience, these barley sequences can be obtained as explained below from files included in the *test_barley* folder, which should be bundled with your copy of GET_HOMOLOGUES. Similar analyses could be performed with the  *Arabidopsis thaliana* and *Brachypodium hybridum* sequences at <http://floresta.eead.csic.es/plant-pan-genomes/>
-
-We can start by defining an environment variable pointing to our install destination:
-
-```{r, engine='bash', eval=FALSE}
-# set GET_HOMOLOGUES path, for example:
-export GETHOMS=~/soft/get_homologues
-```
-
-<!-- 
-4.2 Clustering orthologous transcripts from FASTA files, one per strain
-4.3 Producing a nucleotide-based pangenome matrix
-4.4 Estimating protein domain enrichment of some sequence clusters
-4.5 Making and annotating a non-redundant pangenome matrix
-4.6 Annotating a sequence cluster -->
+These sequence sets were first used in [@ContrerasMoreira2017]. For convenience, these barley sequences can be obtained as explained below from files included in the *test_barley* folder, which should be bundled with your copy of GET_HOMOLOGUES (see __Note __^[Similar analyses can be performed with the  *Arabidopsis thaliana* and *Brachypodium hybridum* sequences at <http://floresta.eead.csic.es/plant-pan-genomes/>]). 
 
 #### 3.3.1 Preparing input sequences, outgroups and extracting CDS from transcripts
 
 The main script reads in sequences in FASTA format, which might be GZIP- or BZIP2-compressed, from a folder containing at least two files with extension .fna, one per cultivar/ecotype. You should consider adding sequences from one or more outgroup taxa if you plan to run downstream phylogenomic analyses with the resulting clusters (see __Note __^[An outgroup is a
 taxon or lineage that falls outside the clade being studied (ingroup) but it is closely related. It helps root the tree.]).
+
+By default only sequences with length $\geq 20$ bases are considered (see __Note __^[Global variable $MINSEQLENGTH controls the minimum length of sequences to be considered; the default value is 20 but you can edit in the source to increase it. Similarly, $MAXSEQLENGTH limits the max length for input sequences, 25Kb by default. In our barley tests we found some high-quality full-length cDNAs reach 23Kb [@Sato2015].]).
 
 Files with .fna extension allow clustering any kind of nucleotide sequences, such as conserved intergenic regions or transposons.
 However, if you are only interested in the analysis of CDS sequences, .fna files might optionally have twin .faa files with translated amino acid sequences in the same order. Note that you will need .faa files to run Pfam-based analyses and the phylogenomics recipes of GET_PHYLOMARKERS [@Vinuesa2018] (see section 3.3.6). 
@@ -252,9 +253,9 @@ $GETHOMS/transcripts2cds.pl -n 3 $GETHOMS/sample_transcripts.fna
 # output files: sample_transcripts.fna_l50_E1e-05.transcript.fna , sample_transcripts.fna_l50_E1e-05.cds.fna , sample_transcripts.fna_l50_E1e-05.cds.faa , sample_transcripts.fna_l50_E1e-05.noORF.fna
 ```
 
-Other analyses you might want to carry out on your input sequences include computing their coding potential or their gene completeness (see __Note __^[Software choices include CPC2 and RNAsamba [@Kang2017; @Camargo2020], trained on human truth sets, and BUSCO [@Seppey2019]]).
+If some of your input files contain high-quality sequences, such as full-length cDNA sequences, you can add the tag 'flcdna' to their file names. By doing this you make sure that the length of these sequences is used downstream in order to estimate coverage alignment with high confidence. For example, if we wanted to add cultivar _Haruna Nijo_ sequences [@Sato2015] to an analysis, we could put them in a file named HarunaNijo.flcdna.fna. 
 
-Note that file names matching the tag 'flcdna' are handled as full-length transcripts, and this information will be used downstream in order to estimate coverage. By default only sequences with length $\geq 20$ bases are considered (see __Note __^[Global variable $MINSEQLENGTH controls the minimum length of sequences to be considered; the default value is 20 but you can edit in the source to increase it. Similarly, $MAXSEQLENGTH limits the max length for input sequences, 25Kb by default. In our barley tests we found some high-quality flcDNAs reach 23Kb.]).
+Other analyses you might want to carry out on your input sequences include computing their coding potential or their gene completeness (see __Note __^[Software choices include CPC2 and RNAsamba [@Kang2017; @Camargo2020], trained on human truth sets, and BUSCO [@Seppey2019]]).
 
 Let's now get all the barley sequences and extract CDS from them, which takes several hours:
 
@@ -266,21 +267,17 @@ cd seqs
 # download all transcriptomes
 wget -c -i wgetlist.txt
 
-# Extract CDS sequences 
-# choose cdsCPP.sh if dependency Inline::CPP is available in your system
+# Extract CDS sequences (run transcripts2cds.pl for each transcriptome).
+# Choose cdsCPP.sh if dependency Inline::CPP is available in your system
 # the script will use 20 CPU cores, please adapt it to your system
 ./cds.sh 
 
-# clean and compress
-rm -f _* *noORF* *transcript*
+# clean and compress (we want only in the CDS files)
+rm -f _* *noORF* *transcript* # might be useful, but not used
 gzip *diamond*
 
 # put cds sequences aside
-mv *cds.f*gz ../cds
-cd ..
-
-# check lists of accessions are in place (see HOWTO.txt there)
-ls cds/*list
+mv *cds.f*gz ../cds && cd ..
 ```
 
 Alternatively, it is possible to get precomputed CDS sequences (170MB) ready to go:
@@ -290,14 +287,27 @@ Alternatively, it is possible to get precomputed CDS sequences (170MB) ready to 
 cd ${GETHOMS}/test_barley
 wget http://floresta.eead.csic.es/plant-pan-genomes/barley_transcripts/cds.tgz .
 tar xvfz cds.tgz
+
+# Make sure files with lists of accessions are in place
+ls cds/*list
+```
+
+Either way, make sure files with lists of accessions are in place; these will be used later on to compare input subsets:
+
+```{r, engine='bash', eval=FALSE}
+ls cds/*list
+
+#cds/leaf.list  
+#cds/ref.list  
+#...
 ```
 
 #### 3.3.2 Clustering sequences 
 
 In this step we will use the main script _get_homologues-est.pl_.
-The only required option is -d, which indicates an input folder or directory. It is important to remark that in principle only files with extensions .fna / .fa / .fasta and optionally .faa are considered when parsing the -d directory. The use of an input folder allows for new files to be added there in the future, reducing the computing required for updated analyses. For instance, if a user does a first analysis with 5 input genomes today, it is possible to check how the resulting clusters would change when adding an extra 10 genomes tomorrow, by copying these new 10 .fna input files to the pre-existing -d folder, so that all previous BLASTN searches are re-used.
+The only required option is -d, which indicates an input folder or directory. It is important to remark that in principle only files with extensions .fna / .fa / .fasta and optionally .faa are considered when parsing the -d directory. The use of an input folder allows for new files to be added there in the future, reducing the computing required for updated analyses. For instance, if a user does a first analysis with 5 input genomes today, it is possible to check how the resulting clusters would change when adding 10 new genomes tomorrow, by copying the new .fna input files to the pre-existing -d folder, so that all previous BLASTN searches are re-used.
 
-All remaining flags are options that can modify the default behavior of the program, which is to use the bidirectional best hit algorithm (BDBH) in order to compile core clusters of DNA sequences based on BLASTN megablast searches requiring 95% sequence identity (-S 95) and 75% alignment coverage (-C 75). The available clustering algorithms are:
+All remaining flags are options that can modify the default behavior of the program, which is to use the BDBH algorithm in order to compile core clusters of DNA sequences based on BLASTN megablast searches requiring 95% sequence identity (-S 95) and 75% alignment coverage (-C 75). The available clustering algorithms are:
 
  + BDBH (default) ; starting from a reference genome, keep adding genomes stepwise while storing the sequence clusters that result from merging the latest bidirectional best hits.
  + OMCL (-M) ; uses the Markov Cluster Algorithm to group sequences, with inflation (-F) controlling cluster granularity, as described in [@Li2003].
@@ -310,7 +320,7 @@ By default the input set with least sequences is taken as a reference. However, 
 
 Option -t allows you to control the minimum occupancy of the output clusters. By default only core clusters are produced, while with -t 0 clusters of any size, including singletons and cloud clusters, are output. The latter are named 'control' clusters as they will be used to compute the background frequencies of Pfam domains in later sections.
 
-Option -A, used in the last example, requests an ANI matrix. In this case it is combined with flag -e to exclude clusters with inparalogues and therefore minimize biases when averaging observed identities. ANI matrices are useful to robustly compute the similarity among your input genotypes and to cluster them, so that redundancy can easily be managed. If you had outgroups in your input sequences you can also check them in the ANI matrix.
+Option -A, used in the last example below, requests an ANI matrix. In this case it is combined with flag -e to exclude clusters with inparalogues and therefore minimize biases when averaging observed identities. ANI matrices are useful to robustly compute the similarity among your input genotypes and to cluster them, so that redundancy can easily be managed. If you have outgroups among the input sequences you can also check them in the ANI matrix.
 
 Note that the examples below use -m cluster to parallelize most tasks (see section 2.1.5). If your cluster manager is not supported you can always use -m dryrun to generate batch files that should be able to execute. If you are running GET_HOMOLOGUES-EST on a multicore Linux/macOS box, you can use option -n to indicate how many cores can be used (see __Note __^[This will parallelize BLASTN and HMMER jobs, but not the clustering steps.]).
 
@@ -324,25 +334,25 @@ $GETHOMS/get_homologues-est.pl -d cds -D -m cluster -o &> log.cds.pfam
 # alternatively, if not running in a SGE cluster, taking for instance 4 CPUs 
 # $GETHOMS/get_homologues-est.pl -d cds -D -n 4 -o &> log.cds.pfam
 
-# calculate 'control' cds clusters
+# calculate 'control' cds clusters (-t 0) using OMCL (-M)
 # cluster_list = cds_est_homologues/Alexis_0taxa_algOMCL_e0_.cluster_list
 # cluster_directory = cds_est_homologues/Alexis_0taxa_algOMCL_e0_
 $GETHOMS/get_homologues-est.pl -d cds -M -t 0 -m cluster &> log.cds
 
-# get non-cloud clusters and percentage of conserved sequence clusters (POCS) matrix
+# get non-cloud clusters (-t 3) and percentage of conserved sequence clusters (POCS) matrix (-P)
 # cluster_list = cds_est_homologues/Alexis_3taxa_algOMCL_e0_.cluster_list
 # cluster_directory = cds_est_homologues/Alexis_3taxa_algOMCL_e0_
 # percent_conserved_sequences_file = cds_est_homologues/Alexis_3taxa_algOMCL_e0_POCS.tab
 $GETHOMS/get_homologues-est.pl -d cds -M -t 3 -P -m cluster &> log.cds.t3
 
-# single-copy clusters with high occupancy & Average Nucleotide Identity
+# single-copy (-e) clusters with high occupancy (-t 10) & Average Nucleotide Identity (-A)
 # [Note that flag -e filters out clusters with inparalogues]
 # Only high-confidence clusters, containing sequences from at least 10 barleys
 # This produces cds_est_homologues/Alexis_10taxa_algOMCL_e1_Avg_identity.tab
 # as a summary of 2254 clusters
 $GETHOMS/get_homologues-est.pl -d cds -M -t 10 -m cluster -A -e &> log.cds.t10.e
 
-# single-copy core clusters for phylogenomic analyses (see section 3.3.6)
+# single-copy (-e) core clusters for phylogenomic analyses (see section 3.3.6)
 # number_of_clusters = 883
 # cluster_directory = cds_est_homologues/Alexis_alltaxa_algOMCL_e1_
 $GETHOMS/get_homologues-est.pl -d cds -M -m cluster -e &> log.cds.core.e
@@ -364,13 +374,14 @@ $GETHOMS/plot_matrix_heatmap.sh -i cds_est_homologues/Alexis_10taxa_algOMCL_e1_A
   -H 10 -W 15 -t "ANI of single-copy transcripts (occupancy > 9)" -N -o pdf -d 2
 ```
 
-Now you should check the log files to make sure there are no errors and useful information such as the output mask:
+It's a good idea to inspect the log files to check the version of the software and to make sure that no errors occurred. The logs contain useful information such as the output mask:
 
     # mask=Alexis_0taxa_algOMCL_e0_ (_0taxa_algOMCL)
 
-This mask is a prefix added to the output folder. In this case it tells that the reference genomes is 'Alexis', that no occupancy cutoff was set (t0), the clustering algorithm used was OMCL and that clusters containing inparalogues were included (e0, see __Note __^[Inparalogues are sequences whose best BLASTN hit is from the same genome.]). 
+This mask is a prefix added to the output folder. In this case it tells that the reference genomes is 'Alexis', that no occupancy cutoff was set (0taxa), the clustering algorithm used was OMCL and that clusters containing inparalogues were included (e0, see __Note __^[Inparalogues are sequences whose best BLASTN hit is from the same genome.]). 
 
-Note that internally sequences are numbered with natural numbers, in this case starting with our reference Alexis. This is important because the resulting clusters are also numbered accordingly.
+Note that internally sequences are numbered with natural numbers, called sequence ids.
+These numbers start counting from the reference genome, in this case Alexis. This is important because the resulting clusters are also numbered accordingly.
 
 The resulting heatmap summarizing the ANI matrix in the example is shown in __Figure 4__. In our experience, ANI matrices computed from core genes can recapitulate the expected phylogeny of your input set [@ContrerasMoreira2017].
 
@@ -380,8 +391,9 @@ A sample of the resulting POCS matrix is shown in __Table 4__.
 
 #### 3.3.3 Annotation of clusters 
 
-The main output of GET_HOMOLOGUES-EST are the clusters generated in the previous section.
-For instance, file cds_est_homologues/Alexis_3taxa_leaf.list_algOMCL_e0_.cluster_list lists all non-cloud clusters, with occupancy $\geq 2$. Let's see one of those clusters, that of sequence number 3 of cultivar Alexis:
+The main output of GET_HOMOLOGUES-EST are the clusters generated in the previous section. For instance, file cds_est_homologues/Alexis_3taxa_leaf.list_algOMCL_e0_.cluster_list 
+lists all non-cloud clusters, with occupancy $\geq 3$. Let's see one of those clusters,
+3_TR4758-c0_g1_i1.fna, which contains sequence number 3 of cultivar Alexis:
 
     cluster 3_TR4758-c0_g1_i1 size=22 taxa=14 file: 3_TR4758-c0_g1_i1.fna aminofile: 3_TR4758-c0_g1_i1.faa
     : Alexis.trinity.fna.bz2_l50_E1e-05.diamond.cds.fna.gz.nucl
@@ -391,6 +403,8 @@ For instance, file cds_est_homologues/Alexis_3taxa_leaf.list_algOMCL_e0_.cluster
     : Esterel.trinity.fna.bz2_l50_E1e-05.diamond.cds.fna.gz.nucl
     ...
     : Yiwuerleng.trinity.fna.bz2_l50_E1e-05.diamond.cds.fna.gz.nucl
+
+In general, clusters are numbered after the sequence id of the first sequence from the reference set included. In this example, the sequence TR4758-c0_g1_i1 was assigned the id 3. If a cluster does not contain any sequence from the reference, then it takes the number from the id of the sequence from the next species.
 
 It contains 22 sequences from 14 barleys, so it belongs to the soft-core occupancy class. As our input are CDS we have two FASTA files for this cluster, one with the nucleotide sequences and another with the amino acid sequences:
 
@@ -409,7 +423,7 @@ and:
     
 In this section we will see how to further annotate these clusters.
 
-For instance, you might want to see the BLASTN evidence supporting this cluster (sequence id=3, full name TR4758|c0_g1_i1). Note that option -D would output also the Pfam domains called in these sequences, provided that $GETHOMS/get_homologues-est.pl -D was called beforehand:
+For instance, you might want to check the BLASTN evidence supporting this cluster, named after the CDS TR4758|c0_g1_i1, which was assigned sequence id=3. Note that option -D would output also the Pfam domains called in these sequences, provided that $GETHOMS/get_homologues-est.pl -D was called beforehand:
 
 
 ```{r, engine='bash', eval=FALSE}
@@ -682,7 +696,7 @@ or any other preferred software (see __Note __^[See <http://tree.bio.ed.ac.uk/so
 
 ## Acknowledgements
 
-A first draft of this protocol was funded by Centro de Bioinformática y Biología Computacional de Colombia – [BIOS](http://bios.co) for a workshop organized by Marco Cristancho at Manizales, Colombia, in March 2017. We also received funding from Fundación ARAID and the Spanish Ministry of Economy and Competitivity (CSIC13‐4E‐249, AGL2016-80967-R and CGL2016‐79790-P). PV acknowledges support from CONACyT Mexico (A1-S-11242) and PAPIIT-UNAM (IN206318 and IN209321).
+A first draft of this protocol was funded by Centro de Bioinformática y Biología Computacional de Colombia – [BIOS](http://bios.co) for a workshop organized by Marco Cristancho at Manizales, Colombia, in March 2017. We also received funding from Fundación ARAID and the Spanish Ministry of Economy and Competitivity (CSIC13‐4E‐249, AGL2013-48756-R, AGL2016-80967-R, CGL2016‐79790-P). PV acknowledges support from CONACyT Mexico (A1-S-11242) and PAPIIT-UNAM (IN206318 and IN209321).
 
 ## Figure captions
 
@@ -690,12 +704,12 @@ A first draft of this protocol was funded by Centro de Bioinformática y Biolog�
 
 **Figure 2.** Functional annotations (COGs) of protein-coding genes classified in occupancy classes in two bacterial sets.
 
-**Figure 3.** Features of GET_HOMOLOGUES-EST. (A) Flowchart of the main tasks and deliverables. BLASTN and optional Pfam scans, as well as BDBH and OMCL clustering, can be run on a local computer, preferably multi-core, or over a HPC cluster. Resulting clusters are post-processed to produce pangenome or average nucleotide identity matrices, as well as to estimate pan-, soft-core-, and core-genomes. Note that both clustering algorithms can be fine-tuned by customizing an array of parameters, of which alignment coverage (-C) and same Pfam domain composition (-D) are perhaps the most important. While OMCL is adequate for most applications, BDBH is faster for the calculation of core sequences within large datasets. 
+**Figure 3.** Features of GET_HOMOLOGUES-EST. Flowchart of the main tasks and deliverables. BLASTN and optional Pfam scans, as well as BDBH and OMCL clustering, can be run on a local computer, preferably multi-core, or over a HPC cluster. Resulting clusters are post-processed to produce pangenome or average nucleotide identity matrices, as well as to estimate pan-, soft-core-, and core-genomes. Note that both clustering algorithms can be fine-tuned by customizing an array of parameters, of which alignment coverage (-C) and same Pfam domain composition (-D) are perhaps the most important. While OMCL is adequate for most applications, BDBH is faster for the calculation of core sequences within large datasets. 
 
 **Figure 4.** Average nucleotide % identity matrix and ordered heat map of 2254 single-copy core barley CDS.
 Values are average nucleotide identities among sequences clustered together by GET_HOMOLOGUES-EST. This figure was produced with script _plot_matrix_heatmap.sh_, which calls heatmap.2 function from the gplots R package. The dendrograms were computed by complete linkage clustering and Euclidean distances computed among ANI columns. 
 
-**Figure 5.** Summary of script _annotate_clusters.pl_. A cluster of transcript sequences (top) is processed for further downstream analyses by alignment to an external reference sequence (-r), collapsing overlapping sequences of the same taxon (-c) or making the alignment block blunt (-b). In addition, private variants to a group of taxa can be extracted, and Pfam domains called by translating the longest sequence.
+**Figure 5.** Summary of script _annotate_clusters.pl_. A cluster of transcript sequences (top) is processed for further downstream analyses by alignment to an external reference sequence (-r), collapsing overlapping sequences of the same taxon (-c) or making the alignment block blunt (-b). In addition, private variants to a group of taxa can be extracted (bottom), and Pfam domains called by translating the longest sequence.
 
 **Figure 6.** Soft-core leaf pantranscriptome after comparing 14 barley cultivars and ecotypes. (Left) Snapshot of the simulation after 2 replicates are complete. The data points for the first replicate are in black, and those for the second in green. (Right) Fitted Tettelin function after 20 replicates are complete. 
 
@@ -703,7 +717,7 @@ Values are average nucleotide identities among sequences clustered together by G
 
 ## Table captions
 
-**Table 1.** Definition of occupancy classes used by the software GET_HOMOLOGUES-EST.
+**Table 1.** Definition of occupancy-based classes used by the software GET_HOMOLOGUES-EST.
 
 **Table 2.** Summary of features and differences of GET_HOMOLOGUES and GET_HOMOLOGUES-EST. Note that GET_HOMOLOGUES can also cluster user-selected nucleotide features in GenBank files, and in this case BLASTN is used as well.
 
