@@ -1,5 +1,6 @@
 requires 'Cwd';
 requires 'FindBin';
+requires 'DB_File';
 requires 'File::Basename';
 requires 'File::Spec';
 requires 'File::Temp';
