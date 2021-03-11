@@ -3,18 +3,18 @@ title: 'Pangenome analysis of plant transcripts and coding sequences'
 bibliography: bib_myarticles.bib
 csl: springerprotocols.csl
 output:
-  word_document: default
-  pdf_document:
-    fig_caption: yes
-    highlight: zenburn
-    toc: yes
-    toc_depth: 4
   html_document:
     fig_caption: yes
     highlight: zenburn
     theme: cerulean
     toc: yes
     toc_depth: 4
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 4
+  word_document: default
 ---
 
 ```{r knitr setup, include=FALSE,  eval=TRUE, echo=FALSE, warning=FALSE}
@@ -113,11 +113,13 @@ which must downloaded during installation:
 ```{r, engine='bash', eval=FALSE}
 cd soft
 git clone https://github.com/eead-csic-compbio/get_homologues.git
+
+# this creates a folder called get_homologues which does not 
+# include the binary dependencies; these must be downloaded:
+
 cd get_homologues
 perl install.pl no_databases
 ```
-Note this will create a folder called *get_homologues*.
-
 This approach makes future updates very simple, after moving to the git repository:
 ```{r, engine='bash', eval=FALSE}
 cd soft/get_homologues
@@ -172,7 +174,7 @@ In order to prepare your installation to run on a computer cluster please follow
     DELEXE	scancel
     ERROR	F
 
-Running GET_HOMOLOGUES-EST on a computer cluster parallelizes both the batches of BLASTN/HMMER jobs and the actual clustering steps (isoforms, orthologues, inparalogues), which is recommended if you plan to analyze a large number of sequence sets.
+Running GET_HOMOLOGUES-EST on a computer cluster distributes batches of BLASTN/HMMER jobs and the actual clustering tasks (isoforms, orthologues, inparalogues), which is recommended if you plan to analyze a large number of sequence sets.
 
 ## 3. Methods
 
@@ -396,7 +398,7 @@ ${GETHOMS}/get_homologues-est.pl -d cds -o
 # 2) run in -m dryrun mode
 ${GETHOMS}/get_homologues-est.pl -d cds -m dryrun
 # ...
-# EXIT: check the list of pending commands at /home/contrera/test_barley/cds_est_homologues/dryrun.txt
+# EXIT: check the list of pending commands at cds_est_homologues/dryrun.txt
 parallel < cds_est_homologues/dryrun.txt
 
 # repeat 2) until completion

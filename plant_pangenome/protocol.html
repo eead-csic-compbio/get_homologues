@@ -346,9 +346,12 @@ pre code {
 <p>A more sustainable way of obtaining the software is to use the software <em>git</em>. For this you might need to install <em>git</em> in your system. Note also that the <em>git</em> protocol requires having network port 9418 open, which might be blocked by your firewall. This method does not include the binary dependencies, which must downloaded during installation:</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="bu">cd</span> soft
 <span class="fu">git</span> clone https://github.com/eead-csic-compbio/get_homologues.git
+
+<span class="co"># this creates a folder called get_homologues which does not </span>
+<span class="co"># include the binary dependencies; these must now be downloaded</span>
+
 <span class="bu">cd</span> get_homologues
 <span class="fu">perl</span> install.pl no_databases</code></pre></div>
-<p>Note this will create a folder called <em>get_homologues</em>.</p>
 <p>This approach makes future updates very simple, after moving to the git repository:</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="bu">cd</span> soft/get_homologues
 <span class="fu">git</span> pull</code></pre></div>
@@ -567,7 +570,7 @@ ERROR   F</code></pre>
 <span class="co"># 2) run in -m dryrun mode</span>
 <span class="va">${GETHOMS}</span><span class="ex">/get_homologues-est.pl</span> -d cds -m dryrun
 <span class="co"># ...</span>
-<span class="co"># EXIT: check the list of pending commands at /home/contrera/test_barley/cds_est_homologues/dryrun.txt</span>
+<span class="co"># EXIT: check the list of pending commands at cds_est_homologues/dryrun.txt</span>
 <span class="ex">parallel</span> <span class="op">&lt;</span> cds_est_homologues/dryrun.txt
 
 <span class="co"># repeat 2) until completion</span>
