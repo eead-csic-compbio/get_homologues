@@ -25,6 +25,8 @@ Current list of ideas to improve/update GET_HOMOLOGUES:
      * https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-018-07669-x/MediaObjects/41467_2018_7669_MOESM1_ESM.docx
      * https://pubmed.ncbi.nlm.nih.gov/22217600/
 
+* Explore hmmpgmd to speed up hmmscan (see hmm_server.py & hmm_mapper.py from eggnog-mapper)
+
 * Speed-up/paralellize marfil_homology::blast_parse. This can be done by:
   a) port sub to C++
   b) do parsing in parallel splitting (sorted) infile in chunks without braking consecutive HSPs
@@ -32,13 +34,18 @@ Current list of ideas to improve/update GET_HOMOLOGUES:
 
 * Print clusters in pangenome matrix (PGM) sorted by their (consensus) physical/genetic position
 
-* Compute tree determinants of PGM
+  + compare_clusters.pl -O gene_order (can be subset of genes) to produce sorted submatrix
 
-* Script to produce VCF/MFA after parsing sorted DNA clusters 
+* Print haplotypes of clusters (ref or !ref) with parse_pangenome_clusters.pl 
+
+* Script to produce VCF/MFA after parsing sorted DNA clusters
+
+* Compute tree determinants of PGM
 
 * Add taxon names to tmp/blast.bpo file 
 
-* Add evidences to produced clusters
+* Improve graphical output and possibilities
 
-* Improve graphical output and help users with external users
-  Read: https://bmcgenomics.biomedcentral.com/track/pdf/10.1186/1471-2164-15-8 , http://higlass.io
+  + https://bmcgenomics.biomedcentral.com/track/pdf/10.1186/1471-2164-15-8 , http://higlass.io
+  + https://legumeinfo.org/gcv2/instructions
+

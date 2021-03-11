@@ -356,3 +356,4 @@
 19022021: removed HarunaNijo from test_barley 
 19022021: pfam_enrich.pl allows for missing PFam annot
 05032021: added dryrun examples to manuals
+11032021: updated TODO.txt
