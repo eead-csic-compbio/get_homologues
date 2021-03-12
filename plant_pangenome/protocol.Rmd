@@ -151,7 +151,7 @@ A way to use GET_HOMOLOGUES-EST with all dependencies pre-installed is the Docke
 
 #### 2.1.5 High performance cluster (HPC) configuration
 
-In order to prepare your installation to run on a computer cluster please follow the instructions in section "Optional software dependencies" of the manual. Three job managers are currently supported: gridengine, LSF and Slurm. The default configuration is for gridengine, but this can be changed by creating a file named "HPC.conf" and setting appropriate values and paths for your HPC cluster. The sample configuration file looks like this:
+In order to prepare your installation to run on a computer cluster please follow the instructions in section "Optional software dependencies" of the manual. Three job managers are currently supported: gridengine, LSF and Slurm. The default configuration is for gridengine, but this can be changed by creating a file named "HPC.conf" and setting appropriate values and paths for your HPC cluster (see __Note __^[This will only work if GET_HOMOLOGUES-EST is installed where the compute cluster management software is accessible. This is usually not the case for Docker containers.]). This file should be placed at $GETHOMS. The sample configuration file looks like this:
 
     cat sample.HPC.conf 
     # cluster/farm configuration file, edit as needed (use spaces or tabs)
@@ -220,7 +220,7 @@ Apart from these, scripts *transcripts2cds.pl* and *transcripts2cdsCPP.pl* are a
 
 ### 3.3 Protocol for plant transcripts and CDS sequences
 
-In this section we present a step-by-step protocol for the analysis of *Hordeum vulgare* WGS-based cDNA sequences, annotated in reference cultivars *Morex* and *Haruna Nijo*, and *de novo* assembled transcriptomes.
+In this section we present a step-by-step protocol for the analysis of *Hordeum vulgare* WGS-based cDNA sequences (from reference cultivar *Morex*) and *de novo* assembled transcriptomes.
 These sequence sets were first used in [@ContrerasMoreira2017]. For convenience, these barley sequences can be obtained as explained below from files included in the *test_barley* folder, which should be bundled with your copy of GET_HOMOLOGUES (see __Note __^[Similar analyses can be performed with the  *Arabidopsis thaliana* and *Brachypodium hybridum* sequences at <http://floresta.eead.csic.es/plant-pan-genomes/>]). 
 
 #### 3.3.1 Preparing input sequences, outgroups and extracting CDS from transcripts
@@ -253,7 +253,7 @@ $GETHOMS/transcripts2cds.pl -n 3 $GETHOMS/sample_transcripts.fna
 # output files: sample_transcripts.fna_l50_E1e-05.transcript.fna , sample_transcripts.fna_l50_E1e-05.cds.fna , sample_transcripts.fna_l50_E1e-05.cds.faa , sample_transcripts.fna_l50_E1e-05.noORF.fna
 ```
 
-If some of your input files contain high-quality sequences, such as full-length cDNA sequences, you can add the tag 'flcdna' to their file names. By doing this you make sure that the length of these sequences is used downstream in order to estimate coverage alignment with high confidence. For example, if we wanted to add cultivar _Haruna Nijo_ sequences [@Sato2015] to an analysis, we could put them in a file named HarunaNijo.flcdna.fna. 
+If some of your input files contain high-quality sequences, such as full-length cDNA sequences, you can add the tag 'flcdna' to their file names. By doing this you make sure that the length of these sequences is used downstream in order to estimate coverage alignment with high confidence. For example, if we wanted to add cultivar _Haruna Nijo_ sequences [@Sato2015] to our analysis, we could put them in a file named HarunaNijo.flcdna.fna. 
 
 Other analyses you might want to carry out on your input sequences include computing their coding potential or their gene completeness (see __Note __^[Software choices include CPC2 and RNAsamba [@Kang2017; @Camargo2020], trained on human truth sets, and BUSCO [@Seppey2019]]).
 
@@ -713,7 +713,7 @@ or any other preferred software (see __Note __^[See <http://tree.bio.ed.ac.uk/so
 
 ## Acknowledgements
 
-A first draft of this protocol was funded by Centro de Bioinformática y Biología Computacional de Colombia – [BIOS](http://bios.co) for a workshop organized by Marco Cristancho at Manizales, Colombia, in March 2017. We also received funding from Fundación ARAID and the Spanish Ministry of Economy and Competitivity (CSIC13‐4E‐249, AGL2013-48756-R, AGL2016-80967-R, CGL2016‐79790-P). PV acknowledges support from CONACyT Mexico (A1-S-11242) and PAPIIT-UNAM (IN206318 and IN209321).
+A first draft of this protocol was funded by Centro de Bioinformática y Biología Computacional de Colombia – [BIOS](http://bios.co) for a workshop organized by Marco Cristancho at Manizales, Colombia, in March 2017. We also received funding from Fundación ARAID and the Spanish Ministry of Economy and Competitivity (CSIC13‐4E‐249, AGL2013-48756-R, AGL2016-80967-R, CGL2016‐79790-P). PV acknowledges support from CONACyT Mexico (A1-S-11242) and PAPIIT-UNAM (IN206318 and IN209321). We thank Brett Chapman for proof-reading this manuscript. 
 
 ## Figure captions
 
