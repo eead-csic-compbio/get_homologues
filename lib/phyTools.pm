@@ -1759,11 +1759,12 @@ sub collapse_taxon_alignments
 }
 
 # based on http://www.unix.org.ua/orelly/perl/cookbook/ch04_18.htm
-# generates a random permutation of @array in place
+# generates a random permutation of @array in place and returns 
+# string with concatenated elements
 sub fisher_yates_shuffle
 {
-  my $array = shift;
-  my ($i,$j,$array_string);
+  my ($array) = (@_);
+  my ($i,$j);
 
   for ($i = @$array; --$i; )
   {
