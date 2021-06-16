@@ -780,8 +780,11 @@ if($n_of_dirs <=3 && $n_of_dirs > 1)
   my ($k,@venn,@sector,$shortn,$shortn2);
   my $tmp_input_file = $INP_output_dir.'/_input_file_list.txt';
   my $venn_file = $INP_output_dir."/venn$params\.pdf";
+  my $venn_file_svg = $INP_output_dir."/venn$params\.svg";
+
 
   if(-s $venn_file){ unlink($venn_file) }
+  if(-s $venn_file_svg){ unlink($venn_file_svg) }
 
   check_installed_features(@FEATURES2CHECK);
   my $Rok = feature_is_installed('R');
@@ -890,7 +893,7 @@ circle <- function(x, y, r, ...)
 }
 
 # adapted from http://stackoverflow.com/questions/1428946/venn-diagrams-with-r
-venndia <- function(pdf_file,labels, A, B, C, ...)
+venndia <- function(pdf_file, svg_file, labels, A, B, C, ...)
 {
     cMissing <- missing(C)
     if(cMissing){ C <- c() }
@@ -941,20 +944,49 @@ venndia <- function(pdf_file,labels, A, B, C, ...)
         circle(x=4.5, y=3, r=3, col=rgb(0,0,1,.5), border=NA)
         text( x=c(1,8,4.5), y=c(6,6,0.8), labels, cex=1.5, col="gray90" )
         text( x=c(2, 7, 4.5, 4.5, 3, 6, 4.5), y=c(7, 7, 2, 7, 4, 4, 5), 
-        c(nA, nB, nC, nAB, nAC, nBC, nABC), cex=2)
-	
-        # return sectors, including intersections of two sets
-        list(uniqueA,uniqueB,uniqueC,intersAB,intersAC,intersBC)
+            c(nA, nB, nC, nAB, nAC, nBC, nABC), cex=2)
     }
     else
     {
         text( x=c(1.9, 7.2), y=c(7.8, 7.8), labels, cex=1.5, col="gray90" )
-        text( x=c(2, 7, 4.5), y=c(6, 6, 6), 
-        c(nA, nB, nAB), cex=2)
-		
-        # return sectors
+        text( x=c(2, 7, 4.5), y=c(6, 6, 6), c(nA, nB, nAB), cex=2)
+    }
+    dev.off()
+
+    svg(file=svg_file)
+    par(mar=c(2,2,0,0))
+    plot(-10,-10,ylim=c(0,9), xlim=c(0,9),axes=F)
+    #mtext(c('$INP_dirs'),side=1,cex=0.4,adj=0)
+    #mtext(c('$params'),side=1,cex=0.4,adj=0)
+    circle(x=3, y=6, r=3, col=rgb(1,0,0,.5), border=NA)
+    circle(x=6, y=6, r=3, col=rgb(0,.5,.1,.5), border=NA)
+    if(cMissing == F)
+    {
+        circle(x=4.5, y=3, r=3, col=rgb(0,0,1,.5), border=NA)
+        text( x=c(1,8,4.5), y=c(6,6,0.8), labels, cex=1.5, col="gray90" )
+        text( x=c(2, 7, 4.5, 4.5, 3, 6, 4.5), y=c(7, 7, 2, 7, 4, 4, 5), 
+            c(nA, nB, nC, nAB, nAC, nBC, nABC), cex=2)
+    }
+    else
+    {
+        text( x=c(1.9, 7.2), y=c(7.8, 7.8), labels, cex=1.5, col="gray90" )
+        text( x=c(2, 7, 4.5), y=c(6, 6, 6), c(nA, nB, nAB), cex=2)
+    }
+    dev.off()
+
+
+    # return sector lists
+    if(cMissing == F)
+    {
+        # including intersections of two sets
+        list(uniqueA,uniqueB,uniqueC,intersAB,intersAC,intersBC)
+    }
+    else
+    {
+        # ni intersection
         list(uniqueA,uniqueB)
     }
+
 }
 
 input_files = read.table('$tmp_input_file',header=F)
@@ -967,7 +999,7 @@ if(nrow(input_files) == 6)
 {
     set3 = read.table(toString(input_files[3,1]),sep="\n",colClasses="character")
     labels[3] <- toString(input_files[3,2])
-    sectors = venndia('$venn_file',labels,set1[1]\$V1,set2[1]\$V1,set3[1]\$V1)
+    sectors = venndia('$venn_file','$venn_file_svg',labels,set1[1]\$V1,set2[1]\$V1,set3[1]\$V1)
     # print venn sectors to files
     # unique
     if(length(sectors[1])>0){ lapply(sectors[1],write,toString(input_files[1,3]),append=T,ncolumns=1) }
@@ -981,7 +1013,7 @@ if(nrow(input_files) == 6)
 
 if(nrow(input_files) == 2)
 { 
-    sectors = venndia('$venn_file',labels,set1[1]\$V1,set2[1]\$V1) 
+    sectors = venndia('$venn_file','$venn_file_svg',labels,set1[1]\$V1,set2[1]\$V1) 
     # print unique venn sectors to files
     if(length(sectors[1])>0){ lapply(sectors[1],write,toString(input_files[1,3]),append=T,ncolumns=1) }
     if(length(sectors[2])>0){ lapply(sectors[2],write,toString(input_files[2,3]),append=T,ncolumns=1) }
@@ -998,7 +1030,7 @@ EOF
     if(-s $venn_file)
     {
       my $n_of_lines;
-      print "\n# Venn diagram = $venn_file\n";
+      print "\n# Venn diagram = $venn_file $venn_file_svg\n";
       foreach $k (@sector)
       {
         $n_of_lines = 0;

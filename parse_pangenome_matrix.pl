@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# 2017-20 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2017-21 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -8,7 +8,7 @@
 
 # Takes 2 lists (A & B) with taxon names (as those used by get_homologues and compare_clusters)
 # in order to analyze clusters present/absent in one with respect to the other.
-# Can also be used to plot shell genome distribution (PDF and PNG, requires R http://www.r-project.org)
+# Can also be used to plot shell genome distribution (PDF, SVG and PNG, requires R http://www.r-project.org)
 
 # Please edit %RGBCOLORS variable below if you wish to change the default colors of pangenome compartments
 
@@ -200,7 +200,8 @@ my (%cluster_names,%pangemat,%included_taxa,$col,$cluster_dir);
 my (%included_input_filesA,%included_input_filesB);
 my ($n_of_clusters,$n_of_includedA,$n_of_includedB) = (0,0,0);
 my ($outfile_root,$outpanfileA,$outexpanfileA,$taxon);
-my ($shell_input,$shell_output_png,$shell_output_pdf,$shell_circle_png,$shell_circle_pdf,$shell_estimates);
+my ($shell_input,$shell_estimates,$shell_output_svg,$shell_circle_svg,);
+my ($shell_output_png,$shell_output_pdf,$shell_circle_png,$shell_circle_pdf);
 my ($cloudlistfile,$shelllistfile,$softcorelistfile,$corelistfile,$intersection_file);
 my (@pansetA,@pansetB,@expA,@expB,@shell);
 
@@ -214,8 +215,10 @@ $shell_input      = $outfile_root . '_shell_input.txt';
 $shell_estimates  = $outfile_root . '_shell_estimates.tab';
 $shell_output_png = $outfile_root . '_shell.png';
 $shell_output_pdf = $outfile_root . '_shell.pdf';
+$shell_output_svg = $outfile_root . '_shell.svg';
 $shell_circle_png = $outfile_root . '_shell_circle.png';
 $shell_circle_pdf = $outfile_root . '_shell_circle.pdf';
+$shell_circle_svg = $outfile_root . '_shell_circle.svg';
 $cloudlistfile    = $outfile_root . '_cloud_list.txt';
 $shelllistfile    = $outfile_root . '_shell_list.txt';
 $softcorelistfile = $outfile_root . '_softcore_list.txt';
@@ -636,7 +639,7 @@ if($INP_refgenome)
 # plot shell genome
 if($INP_plotshell)
 {
-  unlink($shell_output_png,$shell_output_pdf);
+  unlink($shell_output_png,$shell_output_pdf,$shell_output_svg);
   my @taxa = sort keys(%pangemat);
   my @occup_class = qw( cloud shell soft_core core );
   my $n_of_taxa = scalar(@taxa);
@@ -752,166 +755,203 @@ if($INP_plotshell)
 
     open(RSHELL,"|R --no-save $Rparams ") || die "# cannot call R: $!\n";
     print RSHELL<<EOR;
-		shell = read.table("$shell_input",header=F);
-		colors = c( rep($colors{'cloud'},each=$cloudpos), 
-      rep($colors{'shell'},each=$softcorepos-$cloudpos-1), 
-		  rep($colors{'soft_core'},each=$n_of_taxa-$softcorepos), 
-      $colors{'core'}
+
+    shell = read.table("$shell_input",header=F);
+    colors = c( 
+        rep($colors{'cloud'},each=$cloudpos), 
+        rep($colors{'shell'},each=$softcorepos-$cloudpos-1), 
+        rep($colors{'soft_core'},each=$n_of_taxa-$softcorepos), 
+        $colors{'core'}
     );
 	
     pdf(file="$shell_output_pdf");
-	  bars = barplot(shell\$V1,xlab='number of genomes in clusters (occupancy)',ylab='number of gene clusters',
-      main='',names.arg=1:$n_of_taxa,col=colors,ylim=c(0,$YLIMRATIO*max(shell\$V1)));
+    bars = barplot(shell\$V1,xlab='number of genomes in clusters (occupancy)',ylab='number of gene clusters',
+        main='',names.arg=1:$n_of_taxa,col=colors,ylim=c(0,$YLIMRATIO*max(shell\$V1)));
       
-		mtext(sprintf("total clusters = %s",format($n_of_clusters,big.mark=",",scientific=FALSE)),side=3,cex=0.8,line=0.5);
-		#text(x=bars[$n_of_taxa],y=$stats{$n_of_taxa}/2,labels=sprintf("%d",$stats{$n_of_taxa}),cex=0.8); # core size
-		legend('top', c('cloud','shell','soft core','core'), cex=1.0, 
-      fill=c($colors{'cloud'},$colors{'shell'},$colors{'soft_core'},$colors{'core'}) );
-	
+    mtext(sprintf("total clusters = %s",format($n_of_clusters,big.mark=",",scientific=FALSE)),side=3,cex=0.8,line=0.5);
+    #text(x=bars[$n_of_taxa],y=$stats{$n_of_taxa}/2,labels=sprintf("%d",$stats{$n_of_taxa}),cex=0.8); # core size
+    legend('top', c('cloud','shell','soft core','core'), cex=1.0, 
+    fill=c($colors{'cloud'},$colors{'shell'},$colors{'soft_core'},$colors{'core'}) );
+    dev.off()	
+
     png(file="$shell_output_png");
-		bars = barplot(shell\$V1,xlab='number of genomes in clusters (occupancy)',ylab='number of gene clusters',
-		  main='',names.arg=1:$n_of_taxa,col=colors,ylim=c(0,$YLIMRATIO*max(shell\$V1))); 
+    bars = barplot(shell\$V1,xlab='number of genomes in clusters (occupancy)',ylab='number of gene clusters',
+    main='',names.arg=1:$n_of_taxa,col=colors,ylim=c(0,$YLIMRATIO*max(shell\$V1))); 
     mtext(sprintf("total clusters = %s",format($n_of_clusters,big.mark=",",scientific=FALSE)),side=3,cex=0.8,line=0.5);
     #text(x=bars[$n_of_taxa],y=$stats{$n_of_taxa}/2,labels=sprintf("%d",$stats{$n_of_taxa}),cex=0.8);        
-		legend('top', c('cloud','shell','soft core','core'), cex=1.0, 
-      fill=c($colors{'cloud'},$colors{'shell'},$colors{'soft_core'},$colors{'core'}) );
+    legend('top', c('cloud','shell','soft core','core'), cex=1.0, 
+    fill=c($colors{'cloud'},$colors{'shell'},$colors{'soft_core'},$colors{'core'}) );
+    dev.off()
 
-		## now make circle plots
-		circle <- function(x, y, r, ...)
-		{
-			ang <- seq(0, 2*pi, length = 100)
-			xx <- x + r * cos(ang)
-			yy <- y + r * sin(ang)
-			polygon(xx, yy, ...)
-		}
+    svg(file="$shell_output_svg");
+    bars = barplot(shell\$V1,xlab='number of genomes in clusters (occupancy)',ylab='number of gene clusters',
+    main='',names.arg=1:$n_of_taxa,col=colors,ylim=c(0,$YLIMRATIO*max(shell\$V1))); 
+    mtext(sprintf("total clusters = %s",format($n_of_clusters,big.mark=",",scientific=FALSE)),side=3,cex=0.8,line=0.5);
+    #text(x=bars[$n_of_taxa],y=$stats{$n_of_taxa}/2,labels=sprintf("%d",$stats{$n_of_taxa}),cex=0.8);        
+    legend('top', c('cloud','shell','soft core','core'), cex=1.0, 
+    fill=c($colors{'cloud'},$colors{'shell'},$colors{'soft_core'},$colors{'core'}) );
+    dev.off()
+	
 
-		pdf(file="$shell_circle_pdf");
-		par(mar=c(0,0,0,0));
-		plot(-3,-3,ylim=c(0,3), xlim=c(0,3),axes=F);
-		circle(x=1.5,y=1.5,r=$radius[0],col=$color[0], border=NA);
-		circle(x=1.5,y=1.5,r=$radius[1],col=$color[1], border=NA);
-		circle(x=1.5,y=1.5,r=$radius[2],col=$color[2], border=NA);
-		circle(x=1.5,y=1.5,r=$radius[3],col=$color[3], border=NA);
-		text(1.5,0.25,sprintf("total gene clusters = %s   taxa = %d",
-      format($n_of_clusters,big.mark=",",scientific=FALSE),$n_of_taxa),cex=0.8);	
-		legend('topright', c(
-			"cloud  ($total{'cloud'} , genomes<=$cloudpos)",
-			"shell  ($total{'shell'})",
-			"soft core  ($total{'soft_core'} , genomes>=$softcorepos)",
-			"core  ($total{'core'} , genomes=$n_of_taxa)"),
-			cex=1.0, fill=c($colors{'cloud'},$colors{'shell'},$colors{'soft_core'},$colors{'core'}));
+    ## now make circle plots
+    circle <- function(x, y, r, ...)
+    {
+        ang <- seq(0, 2*pi, length = 100)
+        xx <- x + r * cos(ang)
+        yy <- y + r * sin(ang)
+        polygon(xx, yy, ...)
+    }
 
-		png(file="$shell_circle_png");
-		par(mar=c(0,0,0,0));
+    pdf(file="$shell_circle_pdf");
+    par(mar=c(0,0,0,0));
     plot(-3,-3,ylim=c(0,3), xlim=c(0,3),axes=F);
     circle(x=1.5,y=1.5,r=$radius[0],col=$color[0], border=NA);
     circle(x=1.5,y=1.5,r=$radius[1],col=$color[1], border=NA);
     circle(x=1.5,y=1.5,r=$radius[2],col=$color[2], border=NA);
     circle(x=1.5,y=1.5,r=$radius[3],col=$color[3], border=NA);
-		text(1.5,0.25,sprintf("total gene clusters = %s   taxa = %d",
-      format($n_of_clusters,big.mark=",",scientific=FALSE),$n_of_taxa),cex=0.8);
+    text(1.5,0.25,sprintf("total gene clusters = %s   taxa = %d",
+        format($n_of_clusters,big.mark=",",scientific=FALSE),$n_of_taxa),cex=0.8);	
     legend('topright', c(
-      "cloud  ($total{'cloud'} , genomes<=$cloudpos)",
-      "shell  ($total{'shell'})",
-      "soft core  ($total{'soft_core'} , genomes>=$softcorepos)",
-      "core  ($total{'core'} , genomes=$n_of_taxa)"),
-      cex=1.0, fill=c($colors{'cloud'},$colors{'shell'},$colors{'soft_core'},$colors{'core'}));
+        "cloud  ($total{'cloud'} , genomes<=$cloudpos)",
+        "shell  ($total{'shell'})",
+        "soft core  ($total{'soft_core'} , genomes>=$softcorepos)",
+        "core  ($total{'core'} , genomes=$n_of_taxa)"),
+        cex=1.0, fill=c($colors{'cloud'},$colors{'shell'},$colors{'soft_core'},$colors{'core'}
+    ) );
+    dev.off()
+
+    png(file="$shell_circle_png");
+    par(mar=c(0,0,0,0));
+    plot(-3,-3,ylim=c(0,3), xlim=c(0,3),axes=F);
+    circle(x=1.5,y=1.5,r=$radius[0],col=$color[0], border=NA);
+    circle(x=1.5,y=1.5,r=$radius[1],col=$color[1], border=NA);
+    circle(x=1.5,y=1.5,r=$radius[2],col=$color[2], border=NA);
+    circle(x=1.5,y=1.5,r=$radius[3],col=$color[3], border=NA);
+    text(1.5,0.25,sprintf("total gene clusters = %s   taxa = %d",
+        format($n_of_clusters,big.mark=",",scientific=FALSE),$n_of_taxa),cex=0.8);
+    legend('topright', c(
+        "cloud  ($total{'cloud'} , genomes<=$cloudpos)",
+        "shell  ($total{'shell'})",
+        "soft core  ($total{'soft_core'} , genomes>=$softcorepos)",
+        "core  ($total{'core'} , genomes=$n_of_taxa)"),
+        cex=1.0, fill=c($colors{'cloud'},$colors{'shell'},$colors{'soft_core'},$colors{'core'}
+    ));
+    dev.off()
+
+	svg(file="$shell_circle_svg");
+    par(mar=c(0,0,0,0));
+    plot(-3,-3,ylim=c(0,3), xlim=c(0,3),axes=F);
+    circle(x=1.5,y=1.5,r=$radius[0],col=$color[0], border=NA);
+    circle(x=1.5,y=1.5,r=$radius[1],col=$color[1], border=NA);
+    circle(x=1.5,y=1.5,r=$radius[2],col=$color[2], border=NA);
+    circle(x=1.5,y=1.5,r=$radius[3],col=$color[3], border=NA);
+    text(1.5,0.25,sprintf("total gene clusters = %s   taxa = %d",
+        format($n_of_clusters,big.mark=",",scientific=FALSE),$n_of_taxa),cex=0.8);
+    legend('topright', c(
+        "cloud  ($total{'cloud'} , genomes<=$cloudpos)",
+        "shell  ($total{'shell'})",
+        "soft core  ($total{'soft_core'} , genomes>=$softcorepos)",
+        "core  ($total{'core'} , genomes=$n_of_taxa)"),
+        cex=1.0, fill=c($colors{'cloud'},$colors{'shell'},$colors{'soft_core'},$colors{'core'}
+    ));
+    dev.off()
 	
-		negTruncLogLike <- function( p, y, core.p )
-		{
-			#   The negative zero-truncated log-likelihood function to be minimized
-			#   by binomix.
-			#   Originally by Lars Snipen
-			#   Biostatistics, Norwegian University of Life Sciences.
-      np <- length( p )/2
-		  p.det <- c( core.p, p[(np+1):length(p)] )
-		  p.mix <- c( 1-sum( p[1:np] ), p[1:np] )
-			G <- length( y )
-		  K <- length( p.mix )
-		  n <- sum( y )
+    negTruncLogLike <- function( p, y, core.p )
+    {
+        #   The negative zero-truncated log-likelihood function to be minimized
+        #   by binomix.
+        #   Originally by Lars Snipen
+        #   Biostatistics, Norwegian University of Life Sciences.
+        np <- length( p )/2
+        p.det <- c( core.p, p[(np+1):length(p)] )
+        p.mix <- c( 1-sum( p[1:np] ), p[1:np] )
+        G <- length( y )
+        K <- length( p.mix )
+        n <- sum( y )
     
-	    theta_0 <- choose( G, 0 ) * sum( p.mix * (1-p.det)^G )
-			L <- -n* log( 1 - theta_0 )
-			for( g in 1:G )
-			{
-        theta_g <- choose( G, g ) * sum( p.mix * p.det^g * (1-p.det)^(G-g) )
-        L <- L + y[g] * log( theta_g )
-    	}
-    	return( -L )
-		}
+        theta_0 <- choose( G, 0 ) * sum( p.mix * (1-p.det)^G )
+        L <- -n* log( 1 - theta_0 )
+        for( g in 1:G )
+        {
+            theta_g <- choose( G, g ) * sum( p.mix * p.det^g * (1-p.det)^(G-g) )
+            L <- L + y[g] * log( theta_g )
+        }
+        
+        return( -L )
+    }
 
-		binomix <- function( y, ncomp=(2:5), core.detect.prob=1.0 )
-		{   
-			#   Function that estimates pan- and core-genome size using the zero-truncated
-			#   binomial mixture model.
-			#   
-			#   y must be the number of genes found in 1,...,G genomes. ncomp must be a 
-			#   vector specifying the possible number of components (2 or more) to consider.
-			#   core.detect.prob is the fixed detection probability of the core component. Usually
-			#   core genes have detection probability 1.0, i.e. always detected, but due to
-			#   inaccuracies in all computations, some core genes may not be detected in some 
-			#   genomes, hence the detection probability could be set fractionally less than 1.0.
-			#   
-			#   A matrix of results is returned, together with a list of mixture models, one 
-			#   for each possible number of components specified in ncomp. The result matrix
-			#   has one row for each number of components, and four columns. The columns are
-			#   Core.size, Pan.size, BIC and LogLikelihood.
-			#   
-			#   Originally by Lars Snipen
-			#   Biostatistics, Norwegian University of Life Sciences.
-			#   http://www.biomedcentral.com/content/pdf/1471-2164-10-385.pdf
-			#   BMC Genomics 2009,10:385 doi:10.1186/1471-2164-10-385
+    binomix <- function( y, ncomp=(2:5), core.detect.prob=1.0 )
+    {   
+        #   Function that estimates pan- and core-genome size using the zero-truncated
+        #   binomial mixture model.
+        #   
+        #   y must be the number of genes found in 1,...,G genomes. ncomp must be a 
+        #   vector specifying the possible number of components (2 or more) to consider.
+        #   core.detect.prob is the fixed detection probability of the core component. Usually
+        #   core genes have detection probability 1.0, i.e. always detected, but due to
+        #   inaccuracies in all computations, some core genes may not be detected in some 
+        #   genomes, hence the detection probability could be set fractionally less than 1.0.
+        #   
+        #   A matrix of results is returned, together with a list of mixture models, one 
+        #   for each possible number of components specified in ncomp. The result matrix
+        #   has one row for each number of components, and four columns. The columns are
+        #   Core.size, Pan.size, BIC and LogLikelihood.
+        #   
+        #   Originally by Lars Snipen
+        #   Biostatistics, Norwegian University of Life Sciences.
+        #   http://www.biomedcentral.com/content/pdf/1471-2164-10-385.pdf
+        #   BMC Genomics 2009,10:385 doi:10.1186/1471-2164-10-385
 
-			n <- sum( y )
-			G <- length( y )
+        n <- sum( y )
+        G <- length( y )
    	 
-			res.tab <- matrix( NA, nrow=length(ncomp)+1, ncol=4 )
-		    	colnames( res.tab ) <- c( "Core.size", "Pan.size", "BIC", "LogLikelihood" )
-			rownames( res.tab ) <- c( paste( ncomp, "components" ), "Sample" )
-		    	mix.list <- list( length(ncomp) )
-		    	ctr <- list( maxit=300, reltol=1e-6 )
-			for( i in 1:length( ncomp ) )
-			{
-        nc <- ncomp[i]
-			  np <- nc - 1
-			  pmix0 <- rep( 1, np )/nc            # flat mixture proportions
-			  pdet0 <- (1:np)/(np+1)              # "all" possible detection probabilities
-        p.initial <- c(pmix0,pdet0)
-			  A <- rbind( c(rep(1,np),rep(0,np)), c(rep(-1,np),rep(0,np)), diag(np+np), -1*diag(np+np) )
-			  b <- c(0,-1,rep(0,np+np),rep(-1,np+np))
+        res.tab <- matrix( NA, nrow=length(ncomp)+1, ncol=4 )
+        colnames( res.tab ) <- c( "Core.size", "Pan.size", "BIC", "LogLikelihood" )
+        rownames( res.tab ) <- c( paste( ncomp, "components" ), "Sample" )
+        mix.list <- list( length(ncomp) )
+        ctr <- list( maxit=300, reltol=1e-6 )
+        for( i in 1:length( ncomp ) )
+        {
+            nc <- ncomp[i]
+            np <- nc - 1
+            pmix0 <- rep( 1, np )/nc            # flat mixture proportions
+            pdet0 <- (1:np)/(np+1)              # "all" possible detection probabilities
+            p.initial <- c(pmix0,pdet0)
+            A <- rbind( c(rep(1,np),rep(0,np)), c(rep(-1,np),rep(0,np)), diag(np+np), -1*diag(np+np) )
+            b <- c(0,-1,rep(0,np+np),rep(-1,np+np))
 		        
-			  est <- constrOptim( theta=p.initial, f=negTruncLogLike, grad=NULL, 
-				method="Nelder-Mead", control=ctr, ui=A, ci=b, y=y, core.p=core.detect.prob )
-			  res.tab[i,4] <- -1*est\$value                        # the log-likelihood
-			  res.tab[i,3] <- -2*res.tab[i,4] + log(n)*(np+nc)    # the BIC-criterion
-			  p.mix <- c( 1 - sum( est\$par[1:np] ), est\$par[1:np] )
-			  p.det <- c( core.detect.prob, est\$par[(np+1):length( est\$par )] )
+            est <- constrOptim( theta=p.initial, f=negTruncLogLike, grad=NULL, 
+            method="Nelder-Mead", control=ctr, ui=A, ci=b, y=y, core.p=core.detect.prob )
+            res.tab[i,4] <- -1*est\$value                        # the log-likelihood
+            res.tab[i,3] <- -2*res.tab[i,4] + log(n)*(np+nc)    # the BIC-criterion
+            p.mix <- c( 1 - sum( est\$par[1:np] ), est\$par[1:np] )
+            p.det <- c( core.detect.prob, est\$par[(np+1):length( est\$par )] )
 			        
-			  theta_0 <- choose( G, 0 ) * sum( p.mix * (1-p.det)^G )
-			  y_0 <- n * theta_0/(1-theta_0)
-			  res.tab[i,2] <- n + round( y_0 )
-			  ixx <- which( p.det >= core.detect.prob )
-			  res.tab[i,1] <- round( res.tab[i,2] * sum( p.mix[ixx] ) )
+            theta_0 <- choose( G, 0 ) * sum( p.mix * (1-p.det)^G )
+            y_0 <- n * theta_0/(1-theta_0)
+            res.tab[i,2] <- n + round( y_0 )
+            ixx <- which( p.det >= core.detect.prob )
+            res.tab[i,1] <- round( res.tab[i,2] * sum( p.mix[ixx] ) )
 			        
-			  mix.list[[i]] <- list( Mixing.prop=p.mix, Detect.prob=p.det )
-		  }
+            mix.list[[i]] <- list( Mixing.prop=p.mix, Detect.prob=p.det )
+        }
 			
-			res.tab[(length(ncomp)+1),2] <- n
-			res.tab[(length(ncomp)+1),1] <- y[length(y)]
-			return( list( Result.matrix=res.tab, Mix.list=mix.list ) )
-		}
+        res.tab[(length(ncomp)+1),2] <- n
+        res.tab[(length(ncomp)+1),1] <- y[length(y)]
+        return( list( Result.matrix=res.tab, Mix.list=mix.list ) )
+    }
 	
-		maxcomp <- min($n_of_taxa,10)	
-		estimates <- binomix( shell\$V1 , ncomp=2:maxcomp )
-		write.table(estimates\$Result.matrix,quote=F,file="$shell_estimates")
+    maxcomp <- min($n_of_taxa,10)	
+    estimates <- binomix( shell\$V1 , ncomp=2:maxcomp )
+    write.table(estimates\$Result.matrix,quote=F,file="$shell_estimates")
 		
-		q()
+    q()
 EOR
 
     close(RSHELL);
 
-    print "\n# shell bar plots: $shell_output_png , $shell_output_pdf\n";
-    print "# shell circle plots: $shell_circle_png , $shell_circle_pdf\n\n";
+    print "\n# shell bar plots: $shell_output_png , $shell_output_pdf , $shell_output_svg\n";
+    print "# shell circle plots: $shell_circle_png , $shell_circle_pdf , $shell_circle_svg\n\n";
 
     print "# pan-genome size estimates (Snipen mixture model PMID:19691844): $shell_estimates\n";
     open(MIXTMOD,$shell_estimates);
