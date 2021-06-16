@@ -25,6 +25,8 @@ Current list of ideas to improve/update GET_HOMOLOGUES:
      * https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-018-07669-x/MediaObjects/41467_2018_7669_MOESM1_ESM.docx
      * https://pubmed.ncbi.nlm.nih.gov/22217600/
 
+   + liftoff
+
 * Explore hmmpgmd to speed up hmmscan (see hmm_server.py & hmm_mapper.py from eggnog-mapper)
 
 * Speed-up/paralellize marfil_homology::blast_parse. This can be done by:
