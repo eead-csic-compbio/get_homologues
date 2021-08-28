@@ -1397,8 +1397,10 @@ else
 
 if($do_genome_composition) # 3.0) make transcriptome composition report if required
 {
-  my ($s,$t,$t2,@pangenome,@coregenome,@softcore,$n_of_permutations,$soft_taxa); #$s = sample, $t=taxon to be added, $t2=taxon to compare
-  my ($mean,$sd,$data_file,$sort,$ref_hash_cloud_genes,%previous_sorts,%inparalogues,%homol_registry,@sample,@clusters);
+  #$s = sample, $t=taxon to be added, $t2=taxon to compare	
+  my ($s,$t,$t2,@pangenome,@coregenome,@softcore,$n_of_permutations,$soft_taxa);
+  my ($mean,$sd,$data_file,$sort,$ref_hash_cloud_genes);
+  my (%previous_sorts,%inparalogues,%homol_registry,%seendry,@sample,@clusters);
   my @tmptaxa = @taxa;
   my $n_of_taxa = scalar(@tmptaxa);
 
@@ -1411,7 +1413,8 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
   {
     $n_of_permutations = sprintf("%g",factorial($n_of_taxa));
     if($n_of_permutations < $NOFSAMPLESREPORT){ $NOFSAMPLESREPORT = $n_of_permutations; }
-    print "\n# genome composition report (samples=$NOFSAMPLESREPORT,permutations=$n_of_permutations,seed=$random_number_generator_seed)\n";
+    print "\n# genome composition report (samples=$NOFSAMPLESREPORT,".
+      "permutations=$n_of_permutations,seed=$random_number_generator_seed)\n";
   }
 
   for($s=0;$s<$NOFSAMPLESREPORT;$s++) # random-sort the list of taxa $NOFSAMPLESREPORT times
@@ -1430,7 +1433,8 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
   
   if($do_soft)
   {
-    print "# genomic composition parameters: MIN_PERSEQID_HOM=$MIN_PERSEQID_HOM MIN_COVERAGE_HOM=$MIN_COVERAGE_HOM SOFTCOREFRACTION=$SOFTCOREFRACTION ";
+    print "# genomic composition parameters: MIN_PERSEQID_HOM=$MIN_PERSEQID_HOM ".
+      "MIN_COVERAGE_HOM=$MIN_COVERAGE_HOM SOFTCOREFRACTION=$SOFTCOREFRACTION ";
   }
   else{ print "# genomic composition parameters: MIN_PERSEQID_HOM=$MIN_PERSEQID_HOM MIN_COVERAGE_HOM=$MIN_COVERAGE_HOM "; }
   print "(set in lib/marfil_homology.pm)\n# genome order:\n";
@@ -1475,8 +1479,12 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
       }
 	  else
       {
-        print DRYRUNLOG "$command\n";
-        $total_dry++;
+        if(!$seendry{$command})
+        {
+          print DRYRUNLOG "$command\n";
+          $seendry{$command} = 1;
+          $total_dry++;
+        }
       }
     }
     if(@to_be_deleted)
@@ -1521,8 +1529,12 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
           }
           else
           {
-            print DRYRUNLOG "$command\n";
-            $total_dry++;
+            if(!$seendry{$command})
+            {
+              print DRYRUNLOG "$command\n";
+              $seendry{$command} = 1;
+              $total_dry++;
+            }
           }
         }
       }
@@ -1584,8 +1596,12 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
           }
           else
           {
-            print DRYRUNLOG "$command\n";
-            $total_dry++;
+            if(!$seendry{$command})
+            {
+              print DRYRUNLOG "$command\n";
+              $seendry{$command} = 1;
+              $total_dry++;
+            }
           }
         }
       }
@@ -1677,8 +1693,12 @@ if($do_genome_composition) # 3.0) make transcriptome composition report if requi
           }
           else
           {
-            print DRYRUNLOG "$command\n";
-            $total_dry++;
+            if(!$seendry{$command})
+            {
+              print DRYRUNLOG "$command\n";
+              $seendry{$command} = 1;
+              $total_dry++;
+            }
           }
         }
       }

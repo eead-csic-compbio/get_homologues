@@ -1738,7 +1738,8 @@ if($do_genome_composition)
 {
   #$s = sample, $t=taxon to be added, $t2=taxon to compare
   my ($s,$t,$t2,@pangenome,@coregenome,@softcore,$n_of_permutations,$soft_taxa);
-  my ($mean,$sd,$data_file,$sort,%previous_sorts,%inparalogues,%homol_registry,@sample,@clusters);
+  my ($mean,$sd,$data_file,$sort);
+  my (%previous_sorts,%inparalogues,%homol_registry,%seendry,@sample,@clusters);
   my @tmptaxa = @taxa;
   my $n_of_taxa = scalar(@tmptaxa);
 
@@ -1813,8 +1814,12 @@ if($do_genome_composition)
         } 
         else 
         {
-          print DRYRUNLOG "$command\n";
-          $total_dry++;
+          if(!$seendry{$command})
+          {
+            print DRYRUNLOG "$command\n";
+            $seendry{$command} = 1;
+            $total_dry++;
+          }
         }
       }
 
@@ -1857,8 +1862,12 @@ if($do_genome_composition)
           }
           else
           {
-            print DRYRUNLOG "$command\n";
-            $total_dry++;
+            if(!$seendry{$command})
+            {
+              print DRYRUNLOG "$command\n";
+              $seendry{$command} = 1;
+              $total_dry++;
+            }
           }
         }
       }
@@ -1917,8 +1926,12 @@ if($do_genome_composition)
           }
           else
           {
-            print DRYRUNLOG "$command\n";
-            $total_dry++;
+            if(!$seendry{$command})
+            {
+              print DRYRUNLOG "$command\n";
+              $seendry{$command} = 1;
+              $total_dry++;
+            }
           }
         }
       }
@@ -2036,8 +2049,12 @@ if($do_genome_composition)
           }
           else
           {
-            print DRYRUNLOG "$command\n";
-            $total_dry++;
+            if(!$seendry{$command})
+            {
+              print DRYRUNLOG "$command\n";
+              $seendry{$command} = 1;
+              $total_dry++;
+            }
           }
         }
       }

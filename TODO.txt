@@ -17,15 +17,29 @@ Current list of ideas to improve/update GET_HOMOLOGUES:
 		
    + Buscar segmentos synt con Blastn desde FASTA ordenados , bench con brassicas?
 
-   + min quality: 
+   + min quality of assembly N50 1Mbp (C.elegans): 
      * https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5791376/
 	 * https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0092621
 
-   + Mirar GENESPACE (synteny-constrained BDBH)
-     * https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-018-07669-x/MediaObjects/41467_2018_7669_MOESM1_ESM.docx
-     * https://pubmed.ncbi.nlm.nih.gov/22217600/
+   + MCScanX 
+     * https://academic.oup.com/nar/article/40/7/e49/1202057
+     * https://github.com/wyp1125/MCScanX
+     * Panicum (GENESPACE, synteny-constrained BDBH)
+       - https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-018-07669-x/MediaObjects/41467_2018_7669_MOESM1_ESM.docx
+       - We find collinear blocks of genes from culled BLASTp hits, via MCScanX using the following parameters: 
+         -s 5 (min block size) -m 10 (maximum number of gaps) -a (only ouput collinearity file). 
+         We then merge overlapping MCScanX blocks, so that no block exists entirely (or partially) 
+         within the xy gene-position rank space of another block; blocks overlapping by > 1 ordered hit are merged. 
+     * Angiosperms microsynteny
+       - https://www.nature.com/articles/s41467-021-23665-0
+       - MCScanX which was used for pairwise synteny block detection. Parameter settings of MCScanX for angiosperms have been 
+         tested and compared before (https://github.com/zhaotao1987/SynNet-Pipeline) here we adopt ‘b5s5m25’ 
+         (b: number of top homologous pairs, s: number of minimum matched syntenic anchors, m: number of max gene gaps), 
+         which has proven to be appropriate by various studies for the evolutionary distances among angiosperm genomes. 
+         To avoid large numbers of local collinear gene pairs due to tandem arrays, if consecutive homologs (up to five genes apart) 
+         share a common gene, homologs are collapsed to one representative pair (with the smallest E-value).
 
-   + liftoff
+   + liftoff https://github.com/agshumate/Liftoff
 
 * Explore hmmpgmd to speed up hmmscan (see hmm_server.py & hmm_mapper.py from eggnog-mapper)
 
