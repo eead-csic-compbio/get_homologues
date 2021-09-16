@@ -12,17 +12,24 @@
 
 
 progname=${0##*/} 
-VERSION='v1.1_26Jan18' # NOTE: July 31, 2020 - downgrade of the script form v2.4_20Apr20 to v1.1_26Jan18, which corresponds to 
-                       #    the one released with the GET_PHYLOMARKERS paper in 2018.                    
-                       # v1.1_26Jan18 changed fviz_dend for dendextend to plot clustering results for better control of plot params
-                       #     and proper plotting of scale-bar in gower-distances-based hclus plots, which don't render 
-		       #     correctly with fviz_dend. changed default distance back to gower. Improved documentation
-		       #     Now depends also on 
+VERSION='1.2_16Sep21' # v1.2_16Sep21
+                       # * added functions cleanup_R_script & print_version
+		       # * thoroughly checked and fixed options and associated names
+		       # * added options -v, -h
+                       # * improved output file checking
+		       # * 100% schellcheck compliance
+		       
+         # NOTE: July 31, 2020 - downgrade of the script form v2.4_20Apr20 to v1.1_26Jan18, which corresponds to 
+         #    the one released with the GET_PHYLOMARKERS paper in 2018. 		   
+         # v1.1_26Jan18 changed fviz_dend for dendextend to plot clustering results for better control of plot params
+         #     and proper plotting of scale-bar in gower-distances-based hclus plots, which don't render 
+	 #     correctly with fviz_dend. changed default distance back to gower. Improved documentation
+	 #     Now depends also on 
 
-                       #  v1.1_25Jan18; Major upgrade: added the gap- and silhouette meand width goodness of clustering statistics
-                       #  to determine the optimal number of clusters automatically.
-		       # Calls new package factoextra; fviz_dend; fviz_gap_stat
-		       # Improved/updated documentation and extended user input checking
+         #  v1.1_25Jan18; Major upgrade: added the gap- and silhouette meand width goodness of clustering statistics
+         #  to determine the optimal number of clusters automatically.
+	 # Calls new package factoextra; fviz_dend; fviz_gap_stat
+	 # Improved/updated documentation and extended user input checking
          # v0.6_124Dec17: remove the invariant (core-genome) and singleton columns from input table
          #v'0.5_14Oct17'; added options -A and -X to control the angle 
                       #                and character eXpansion factor of leaf labels
@@ -114,10 +121,10 @@ NOTES
 
 function check_dependencies()
 {
-    for prog in R
+    for prog in awk R
     do 
        bin=$(type -P $prog)
-       if [ -z $bin ]; then
+       if [ -z "$bin" ]; then
           echo
           echo "# ERROR: $prog not in place!"
           echo "# ... you will need to install \"$prog\" first or include it in \$PATH"
@@ -129,6 +136,22 @@ function check_dependencies()
     echo
     echo '# Run check_dependencies() ... looks good: R is installed.'
     echo   
+}
+#---------------------------------------------------------------------------
+
+function  cleanup_R_script()
+{
+   R_script=$1
+   
+   perl -pe 's/^[>\+]//; s/^(pdf|svg)\b//; s/\h+2\b//' "$R_script" > "${R_script}.tmp"
+   mv "${R_script}.tmp" "$R_script" 
+}
+#---------------------------------------------------------------------------
+
+function print_version()
+{
+  echo "$progname v.${VERSION}"
+  exit 0
 }
 #---------------------------------------------------------------------------
 
@@ -146,10 +169,11 @@ function print_help()
        -a <string> algorithm/method for clustering 
              [ward.D|ward.D2|single|complete|average(=UPGMA)] [def: $algorithm]
        -d <string> distance type [euclidean|manhattan|gower]  [def: $distance]
+
      * Goodness of clustering
        -s <string> goodness of clustering statistic [gap|sil] [def: $clust_stat]
        -S <integer> number of random starts (gap statistic)   [def: $n_start]
-       -M <string>  method: [firstSEmax|Tibs2001SEmax|
+       -m <string>  method: [firstSEmax|Tibs2001SEmax|
                              globalSEmax|firstmax|globalmax]  [def: $gap_method]
        -n <integer> num. of bootstrap replicates (gap stat.)  [def: $n_boot]                                                   
        -k <integer> max. number of clusters                   [def: ${k}; NOTE: 2<= k <= n-1 ]
@@ -157,12 +181,12 @@ function print_help()
      * Plotting
        -c <int> 1|0 to display or not the distace values      [def:$cell_note]
                     in the heatmap cells 
-       -f <int> maximum number of decimals in matrix display  [1,2; def:$decimals]
-       -t <string> text for Main title                        [def:$text]
-       -m <integer> margins_horizontal                        [def:$margin_hor]
-       -v <integer> margins_vertical                          [def:$margin_vert]
-       -o <string> output file format  [svg|pdf]              [def:$outformat]
-       -p <integer> points for plotting device                [def:$points]    
+       -F <int> maximum number of decimals in matrix display  [1,2; def:$decimals]
+       -T <string> text for Main title                        [def:$text]
+       -M <integer> margins_horizontal                        [def:$margin_hor]
+       -V <integer> margins_vertical                          [def:$margin_vert]
+       -O <string> output file format  [svg|pdf]              [def:$outformat]
+       -P <integer> points for plotting device                [def:$points]    
        -H <integer> ouptupt device height                     [def:$height]    
        -W <integer> ouptupt device width                      [def:$width]     
        -A <'integer,integer'> angle to rotate row,col labels  [def $angle]
@@ -173,9 +197,10 @@ function print_help()
        
      * Miscelaneous
        -N <flag> print Notes and exit                         [flag]
+       -v <flag> print version and exit                       [flag]
 
     EXAMPLE:
-      $progname -i pangenome_matrix_t0.tab -t "Pan-genome tree" -a ward.D2 -d gower -o pdf -x 'maltoph|genosp' -A 'NULL,45' -X 0.8 -s gap -S 25 -n 500
+      $progname -i pangenome_matrix_t0.tab -T "Pan-genome tree" -a ward.D2 -d gower -O pdf -A 'NULL,45' -X 0.8 -s sil
 
     AIM: compute a distance matrix from a pangenome_matrix.tab file produced after running 
          get_homologues.pl and compare_clusters.pl with options -t 0 -m .
@@ -198,7 +223,7 @@ function print_help()
 	   much faster to run, although also less powerful and much more conservative.
 HELP
 
-  check_dependencies
+  [ "$check_dep" -gt 0 ] && check_dependencies
 
 exit 0
 
@@ -210,19 +235,20 @@ exit 0
 tab_file=
 regex=
 
-runmode=0
 check_dep=0
 cell_note=0
 decimals=2
 
 algorithm=ward.D2
 distance=gower
+#cut_height=0.04
 
 clust_stat=sil
 n_start=25
 n_boot=100     
 k=15
 gap_method=Tibs2001SEmax
+#reorder_clusters=0
 
 text="Pan-genome tree; "
 width=17
@@ -238,9 +264,8 @@ angle='NULL,NULL'
 
 subset_matrix=0
 
-
 # See bash cookbook 13.1 and 13.2
-while getopts ':a:A:c:d:f:i:k:t:m:M:n:o:p:s:S:v:x:X:H:W:R:hND?:' OPTIONS
+while getopts ':a:A:c:d:F:H:i:k:m:M:n:O:P:P:s:S:T:V:x:X:W:hNDv?:' OPTIONS
 do
    case $OPTIONS in
 
@@ -252,103 +277,101 @@ do
         ;;
    d)   distance=$OPTARG
         ;;
-   f)   decimals=$OPTARG
+   D)   DEBUG=$OPTARG
+        ;;
+   F)   decimals=$OPTARG
+        ;;
+   h)   print_help
+        ;;
+   H)   height=$OPTARG
         ;;
    i)   tab_file=$OPTARG
         ;;
    k)	k=$OPTARG
 	;;
-   m)   margin_hor=$OPTARG
+   m)   gap_method=$OPTARG
         ;;
-   M)   gap_method=$OPTARG
+   M)   margin_hor=$OPTARG
         ;;
    n)	n_boot=$OPTARG
         ;;	
-   v)   margin_vert=$OPTARG
+   N)   print_notes
         ;;
-   o)   outformat=$OPTARG
+   O)   outformat=$OPTARG
         ;;
-   p)   points=$OPTARG
+   P)   points=$OPTARG
         ;;
    s)   clust_stat=$OPTARG
         ;;
    S)   n_start=$OPTARG
         ;;
-   t)   text=$OPTARG
+   T)   text=$OPTARG
+        ;;
+   v)   print_version
+        ;;
+   V)   margin_vert=$OPTARG
+        ;;
+   W)   width=$OPTARG
         ;;
    x)   regex=$OPTARG
         ;;
    X)   charExp=$OPTARG
         ;;
-   C)   reorder_clusters=0
-        ;;
-   H)   height=$OPTARG
-        ;;
-   W)   width=$OPTARG
-        ;;
-   R)   runmode=$OPTARG
-        ;;
-   N)   print_notes
-        ;;
-   D)   DEBUG=$OPTARG
-        ;;
-   \:)   printf "argument missing from -%s option\n" $OPTARG
-   	 print_help
-     	 exit 2 
-     	 ;;
-   \?)   echo "need the following args: "
-   	 print_help
-         exit 3
-	 ;;
-    *)   echo "An  unexpected parsing error occurred"
-         echo
-         print_help
-	 exit 4
-	 ;;	 
+   :)   printf "argument missing from -%s option\n" "$OPTARG"
+   	print_help
+     	exit 2 
+     	;;
+   \?)  echo "need the following args: "
+   	print_help
+        exit 3
+	;;
+    *)  echo "An  unexpected parsing error occurred"
+        echo
+        print_help
+	exit 4
+	;;	
    esac >&2   # print the ERROR MESSAGES to STDERR
 done
 
-shift $(($OPTIND - 1))
+shift $((OPTIND - 1))
 
-if [ -z $tab_file ]
+if [ -z "$tab_file" ]
 then
        echo "# ERROR: no input tab file defined!"
        print_help
        exit 1    
 fi
 
-if [ $clust_stat != "sil" -a $clust_stat != "gap" ]
+if [ "$clust_stat" != "sil" ] && [ "$clust_stat" != "gap" ]
 then
        echo "# ERROR: goodness of clustering stats must be sil|gap"
        print_help
        exit 1	 
 fi
 
-if [ $distance != "gower" -a $distance != "manhattan" -a $distance != "euclidean" ]
+if [ "$distance" != "gower" ] && [ "$distance" != "manhattan" ] && [ "$distance" != "euclidean" ]
 then
        echo "# ERROR: distances must be one of gower|manhattan|euclidean"
        print_help
        exit 1	 
 fi
 
-
-if [ -z $DEBUG ]
+if [ -z "$DEBUG" ]
 then
      DEBUG=0 
 fi
 
-
 if [ -z "$text" ]
 then
-    text=$(echo $tab_file)
+    text="$tab_file"
 fi
 
-if [ ! -z "$regex" ]
+if [ -n "$regex" ]
 then
     subset_matrix=1
 fi
 
-if [ $gap_method != "Tibs2001SEmax" -a $gap_method != "firstSEmax" -a $gap_method != "globalSEmax" -a $gap_method != "firstmax" -a $gap_method != "globalmax" ]
+if [ "$gap_method" != "Tibs2001SEmax" ] && [ "$gap_method" != "firstSEmax" ] && [ "$gap_method" != "globalSEmax" ] && [ "$gap_method" != "firstmax" ] && [ "$gap_method" != "globalmax" ]
 then
     echo "ERROR: gat_metod must be one of: firstSEmax|Tibs2001SEmax|globalSEmax|firstmax|globalmax"
     print_help
@@ -370,7 +393,7 @@ cat << PARAMS
 	# General
 	working direcotry:$wkdir
         input tab_file:$tab_file | regex:$regex
-	distance:$distance|dist_cutoff:$dist_cutoff|hclustering_meth:$algorithm
+	distance:$distance|hclustering_meth:$algorithm
 	
 	# Heatmaps
 	cell_note:$cell_note
@@ -380,14 +403,13 @@ cat << PARAMS
 	
 	# Goodnes of clustering stats
           * gap satistic
-	     n_start:$n_start|n_boot:$n_boot|gap_model:$gap_model
+	     n_start:$n_start|n_boot:$n_boot|gap_method:$gap_method
 	  * gap and silhouette width
 	     k:$k
 	      
 ##############################################################################################
 
 PARAMS
-
 
 # 1) prepare R's output file names
 heatmap_outfile="hclust_${distance}-${algorithm}_${tab_file%.*}_heatmap.$outformat"
@@ -400,16 +422,15 @@ newick_file=${newick_file//\//_}
 aRow=$(echo "$angle" | cut -d, -f1)
 aCol=$(echo "$angle" | cut -d, -f2)
 
-
 echo ">>> Plotting files $tree_file and $heatmap_outfile ..."
-echo "     this will take some time, please be patient"
+echo "     this will take some time, please be patient ..."
 echo
 
 # 2) replace path with "Genome" in first col of 1st row of source $tab_file (pangenome_matrix_t0.tab)
-perl -pe 's/^source\S+/Genome/' $tab_file | sed 's/\.f[an]a//g; s/\.gbk//g; s/-/_/g; s/__/_/g' > ${tab_file}ed
+perl -pe 's/^source\S+/Genome/' "$tab_file" | sed 's/\.f[an]a//g; s/\.gbk//g; s/-/_/g; s/__/_/g' > "${tab_file}ed"
 
 # 3) call R using a heredoc and write the resulting script to file 
-R --no-save -q <<RCMD > ${progname%.*}_script_run_at_${start_time}.R
+R --no-save -q <<RCMD > "${progname%.*}"_script_run_at_"${start_time}".R
 suppressPackageStartupMessages(library("gplots"))
 library("cluster")
 library("ape")
@@ -473,13 +494,13 @@ nwk_tree <- as.phylo(hclust(my_dist, method="$algorithm"), hang=-1, main="$algor
 write.tree(phy=nwk_tree, file="$newick_file")
 
 # 7,2 plot the dendrogram
-$outformat("$tree_file", width=$width, height=$height, pointsize=$pointsize)
+$outformat("$tree_file", width="$width", height="$height", pointsize=$points)
 plot(hclust(my_dist, method="$algorithm"), hang=-1, main="$algorithm clustering with $distance dist", cex = $charExp)
 dev.off()
     
 # 8.1 Plot heatmaps without cell values
 if($cell_note == 0){
-   $outformat(file="$heatmap_outfile", width=$width, height=$height, pointsize=$pointsize)
+   $outformat(file="$heatmap_outfile", width=$width, height=$height, pointsize=$points)
        heatmap.2(as.matrix(my_dist), main="$text $distance dist.", notecol="black", density.info="none", trace="none", dendrogram="row", 
        margins=c($margin_vert,$margin_hor), lhei = c(1,5),
        cexRow=$charExp, cexCol=$charExp, 
@@ -489,7 +510,7 @@ if($cell_note == 0){
 
 # 8.2 Plot heatmaps with cell values
 if($cell_note == 1){
-   $outformat(file="$heatmap_outfile", width=$width, height=$height, pointsize=$pointsize)
+   $outformat(file="$heatmap_outfile", width=$width, height=$height, pointsize=$points)
        heatmap.2(as.matrix(my_dist), cellnote=round(as.matrix(my_dist),$decimals), main="$text $distance dist.", 
        notecol="black", density.info="none", trace="none", dendrogram="row", 
        margins=c($margin_vert,$margin_hor), lhei = c(1,5),
@@ -568,48 +589,72 @@ if("$clust_stat" == "sil"){
 
 RCMD
 
-if [ -s $tree_file ]
+# Check outputs
+if [ -s "$tree_file" ]
 then
      echo ">>> File $tree_file was generated"
 else
      echo ">>> ERROR: File $tree_file was  NOT generated!"
 fi
 
-
-if [ -s ${distance}_dist_matrix.tab ]
+if [ -s "${distance}"_dist_matrix.tab ]
 then
      echo ">>> File ${distance}_dist_matrix.tab was generated"
 else
      echo ">>> ERROR: File ${distance}_dist_matrix.tab was NOT generated!"
 fi
 
-if [ -s $heatmap_outfile ] 
+if [ -s "$heatmap_outfile" ] 
 then
      echo ">>> File $heatmap_outfile was generated"
 else
      echo ">>> ERROR: File $heatmap_outfile was NOT generated!"
 fi
 
-if [ -s $newick_file ] 
+if [ -s "$newick_file" ] 
 then
      echo ">>> File $newick_file was generated"
 else
      echo ">>> ERROR: File $newick_file was NOT generated!"
 fi
 
-goodness_of_clust_plot=$(find . -name '*statistic_plot*')
-if [ -s $goodness_of_clust_plot ]
+if [[ "$clust_stat" =~ sil ]]
 then
-     echo ">>> File $goodness_of_clust_plot was generated"
-else
-     echo ">>> ERROR: File $goodness_of_clust_plot was NOT generated!"
+    goodness_of_clust_plot=$(find . -name 'silhouette_width_statistic_plot*')
+    if [ -s "$goodness_of_clust_plot" ]
+    then
+         echo ">>> File $goodness_of_clust_plot was generated"
+    else
+         echo ">>> ERROR: File $goodness_of_clust_plot was NOT generated!"
+    fi
+    
+    if ls ./*cut_at_silhouette_mean_width*."${outformat}" &> /dev/null; 
+    then
+         dendro_cut_file=$( find . -maxdepth 1 -name "*cut_at_silhouette_mean_width*.${outformat}")
+	 echo ">>> File $dendro_cut_file was generated"
+    else
+         echo ">>>  ERROR: File $dendro_cut_file was NOT generated!"
+    fi
+elif [[ "$clust_stat" =~ gap ]]
+then
+    goodness_of_clust_plot=$(find . -name 'gap-statistic_plot*')
+    if [ -s "$goodness_of_clust_plot" ]
+    then
+         echo ">>> File $goodness_of_clust_plot was generated"
+    else
+         echo ">>> ERROR: File $goodness_of_clust_plot was NOT generated!"
+    fi
+    
+    if ls ./*cut_at_gap-stat*."${outformat}" &> /dev/null; 
+    then
+         dendro_cut_file=$( find . -maxdepth 1 -name "*cut_at_gap-stat*.${outformat}")
+	 echo ">>> File $dendro_cut_file was generated"
+    else
+         echo ">>>  ERROR: File $dendro_cut_file was NOT generated!"
+    fi
 fi
 
-dendro_cut_file=$(find . -name 'hclust*cut_at*')
-if [ -s $dendro_cut_file ]
-then
-     echo ">>> File $dendro_cut_file was generated"
-else
-     echo ">>> ERROR: File $dendro_cut_file was NOT generated!"
-fi
-
+# cleanup
+cleanup_R_script "${progname%.*}_script_run_at_${start_time}.R"
+[ -s "$R_script" ] && echo ">>> wrote $R_script"
+[ -s Rplots.pdf ] && rm Rplots.pdf
