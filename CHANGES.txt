@@ -360,3 +360,4 @@
 17032021: edited fisher_yates_shuffle 
 16062021: added SVG outfiles to plot_pancore_matrix.pl, parse_pangenome_matrix.pl, compare_clusters.pl
 28082021: -m dryrun -c now prints only unique batch jobs to dryrun.txt (thanks @carolynzy!)
+16092021: updated hcluster_pangenome_matrix.sh: added functions cleanup_R_script & print_version; checked and fixed options and associated names; added options -v, -h; improved output file checking; 100% schellcheck compliance
