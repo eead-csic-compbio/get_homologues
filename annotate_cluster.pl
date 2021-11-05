@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# 2020 Bruno Contreras-Moreira (1), Ruben Sancho (1,2) and Pablo Vinuesa (3):
+# 2021 Bruno Contreras-Moreira (1), Ruben Sancho (1,2) and Pablo Vinuesa (3):
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei-CSIC/Fundacion ARAID, Spain)
 # 2: Grupo Bioflora, EPS, Universidad de Zaragoza, Spain
 # 3: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
@@ -46,7 +46,7 @@ my ($INP_nucleotides,$INP_blunt,$do_PFAM,$INP_clusterfile,$INP_outfile,$INP_ref_
 my ($INP_includeA,$INP_includeB) = ('','');
 
 my $warning = <<'END_WARN';
-WARNING: Clusters of transcripts often contain a fraction of BLASTN hits that do not match 
+WARNING1: Clusters of transcripts often contain a fraction of BLAST hits that do not match 
 the longest sequence; instead, they align towards the 5' or 3' of other sequences and are 
 not included in the produced cumulative multiple sequence alignment (MSA):
  
@@ -58,6 +58,21 @@ not included in the produced cumulative multiple sequence alignment (MSA):
                       ....    <= sequences not included in MSA
                        ..
 
+WARNING2: The resulting multiple alignment is produced by MVIEW, which does not record
+deletions in the longest/reference sequence. This means that an alignment like this:
+
+ ------  -----------            <= longest/reference sequence
+    ---..----------             <= .. fragment not included in MSA
+ ------  -----
+   ----  --------
+
+will in fact be saved as:
+
+-----------------            
+   -------------             
+-----------
+  ------------
+
 END_WARN
 
 getopts('hDbPf:o:r:c:A:B:', \%opts);
@@ -68,7 +83,7 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   print   "-h this message\n";
   print   "-f input cluster FASTA file          (expects nucleotides, aligns longest seq to rest of cluster)\n";        
   print   "-o output alignment file             (optional, produces FASTA format)\n";
-  print   "-P sequences are peptides            (optional)\n";
+  print   "-P sequences are peptides            (optional, uses BLASTP instead of BLASTN)\n";
   print   "-r reference sequence FASTA          (optional, aligns cluster sequences to this external seq)\n";
   print   "-b blunt alignment borders           (optional, also annotates SNPs and parsimony-informative sites)\n";
   print   "-A file with taxon names of group A  (optional, identifies private variants of group A vs 'rest')\n";
