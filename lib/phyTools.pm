@@ -912,7 +912,7 @@ sub extract_features_from_genbank
 
         next if(!$coords->{'seq'});
         
-		  $start = $f->start(); # 1..n naturals
+        $start = $f->start(); # 1..n naturals
         $end   = $f->end();
         $strand = $f->location()->strand();
         if(!$gi) # in cases such as nonCDS items in Smelilloti Jul2012
@@ -1038,7 +1038,8 @@ sub extract_CDSs_from_genbank
         {
           $crossrefs = join(',',sort $f->each_tag_value('db_xref'));
           #if($crossrefs =~ /(GI\:\d+)/){ $gi = $1; $crossrefs =~ s/$gi// }
-          if($crossrefs =~ /SEED:fig\|([\w\.]+)/){ $gi = $1; } # Rast support Jul2016
+          if($crossrefs =~ /SEED:fig\|([\w\.]+)/ || 
+            $crossrefs =~ /RAST\d*:fig\|([\w\.]+)/){ $gi = $1; } # RAST support
           next if($crossrefs =~ /PSEUDO:/); # no sabemos si es universal, funciona con Bradyrizobium_ORS278.gb
         }
         
