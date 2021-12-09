@@ -5,14 +5,16 @@
 # 2: Grupo Bioflora, EPS, Universidad de Zaragoza, Spain
 # 3: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
-# This script produces a multiple alignment view of BLAST locally-aligned sequences clustered by get_homologues[-est].pl
+# This script produces a multiple alignment view of BLAST locally-aligned sequences clustered by
+# get_homologues[-est].pl
 # It works by aligning all sequences in the cluster to the longest/user-selected sequence.
 # It does not necessarily conserve the original sequence order. 
 # Any sequence stretches masked by BLAST will appear as Xs.
 
 # Uses third-party software:
-# MVIEW (https://github.com/desmid/mview) Brown NP, Leroy C, Sander C (1998) MView: A Web compatible database search or 
-# multiple alignment viewer. Bioinformatics. 14 (4):380-381.
+# MVIEW (https://github.com/desmid/mview) Brown NP, Leroy C, Sander C (1998) 
+# MView: A Web compatible database search or multiple alignment viewer. 
+# Bioinformatics. 14 (4):380-381.
 
 $|=1;
 
@@ -115,7 +117,7 @@ if(defined($opts{'P'})){  $INP_nucleotides = 0 }
 
 if(defined($opts{'b'}))
 { 
-	$INP_blunt = $MINBLUNTBLOCK;
+  $INP_blunt = $MINBLUNTBLOCK;
 }
 
 if(defined($opts{'D'}))
@@ -193,20 +195,22 @@ foreach $seq (0 .. $#{$cluster_ref})
     $cluster_ref->[$seq][NAME] =~ m/^(\S+).*?\[(.+?)\]\s\|/ ||
     $cluster_ref->[$seq][NAME] =~ m/^(\S+).*?\[(.+?)\]/)
   {
-    $taxon = (split(/\.f/,$2))[0];
-    $seqname = "$1\[$taxon]"; 
+    ($seqid,$taxon) = ($1,$2);
+
+    $taxon = (split(/\.f/,$taxon))[0];
+    $seqname = "$seqid\[$taxon]"; 
     $seqname =~ s/\s+/_/g;
     
     $intaxa{$taxon}++;
     
     # link id to taxon, as ids are less likely to be truncated in BLAST output
-    $id2taxon{$1} = $taxon;
+    $id2taxon{$seqid} = $taxon;
   }
   else
   {
     $seqname = (split(/\s+/,$cluster_ref->[$seq][NAME]))[0];
   }
-  
+ 
   # shorten name and remove forbidden chars, otherwise it might break mview downstream
   if(length($seqname) > $MAXSEQNAMELEN ){ $seqname = substr($seqname,0,$MAXSEQNAMELEN); } 
   
@@ -238,7 +242,8 @@ foreach $seq (0 .. $#{$cluster_ref})
   }
 }
 
-printf(STDERR "\n# total   sequences: %d taxa: %d\n",$#{$cluster_ref}+1,scalar(keys(%intaxa))); 
+printf(STDERR "\n# total   sequences: %d taxa: %d\n",
+  $#{$cluster_ref}+1,scalar(keys(%intaxa))); 
 
 if($#{$cluster_ref} == -1)
 {
@@ -414,13 +419,15 @@ close($fhdb);
 if($INP_nucleotides)
 {
   executeFORMATDB($filenamedb,1,1); 
-  $command = format_BLASTN_command_aligns($filenameq,$filenameb,$filenamedb,$DEFEVALUE,$DEFBLASTNTASK);
+  $command = format_BLASTN_command_aligns($filenameq,$filenameb,
+    $filenamedb,$DEFEVALUE,$DEFBLASTNTASK,$#{$cluster_ref}+1);
   push(@trash,$filenamedb.'.nsq', $filenamedb.'.nin', $filenamedb.'.nhr');
 }
 else
 {
   executeFORMATDB($filenamedb,0,1);
-  $command = format_BLASTP_command_aligns($filenameq,$filenameb,$filenamedb,$DEFEVALUE);
+  $command = format_BLASTP_command_aligns($filenameq,$filenameb,$filenamedb,
+    $DEFEVALUE,$#{$cluster_ref}+1);
   push(@trash,$filenamedb.'.psq', $filenamedb.'.pin', $filenamedb.'.phr');
 }
 
@@ -438,7 +445,7 @@ else
 
 ## format raw alignment  (note that sequence ids are truncated to 60chr, and that MVIEW adds sequence number
 $command = "$ENV{'EXE_MVIEW'} -in blast -out fasta $filenameb | perl -lne 's/^>\\d+:/>/; print' > $filenamer"; 
-system($command); 
+system($command);  
 
 # substitute MVIEW forbidden char place holders and save output in open filehandle $fha
 open(MVIEWRAW,"<",$filenamer) || die "# ERROR: cannot open mview outfile $filenamer\n";
@@ -460,7 +467,8 @@ close($fha);
 my ($align_ref,$nSNPS,$npars,$npriv,$SNPs,$pars,$priv,$missA,$missB) = 
   check_variants_FASTA_alignment($filenamea,!$INP_nucleotides,$INP_blunt,\@listA,\@listB);
   
-printf(STDERR "# aligned sequences: %d width:   %d\n\n",$#{$align_ref}+1,length($align_ref->[0][SEQ])); 
+printf(STDERR "# aligned sequences: %d width:   %d\n\n",
+  $#{$align_ref}+1,length($align_ref->[0][SEQ])); 
 
 if($INP_includeA)
 {

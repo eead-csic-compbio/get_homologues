@@ -366,3 +366,5 @@
 05112021: compare_clusters.pl now prints all duplicated clusters to duplicated.cluster_list ; explained in manual
 08112021: updated manual/HOWTOsge.txt
 03122021: genbank files produced by PATRIC/RAST2 can now be parsed (thanks Irene Ortega!)
+09122021: updated format_BLAST[NP]_command_aligns to take a max number of hits to report,
+09212021: this fixes a bug in annotate_clusters.pl that affected clusters > 250 seqs (thanks carolynzi!)

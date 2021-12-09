@@ -447,33 +447,35 @@ sub executeFORMATDB
 } 
 
 # prepares a string with the right syntax to call BLASTP
-# Up to 5 arguments:
-# 1. String Variable: fasta file name
-# 2. String Variable: blast out file name
-# 3. String Variable: database name
-# 4. String Variable: pvalue cutoff
+# Up to 5 params:
+# 1. Scalar: fasta file name
+# 2. Scalar: blast out file name
+# 3. Scalar: database name
+# 4. Scalar: pvalue cutoff
+# 5. Scalar: max number of hits to report
 # Bruno, Feb2016
 # Do not mask sequences as we want the alignment
 sub format_BLASTP_command_aligns
 {
-  my ($infile,$outfile,$db,$Evalue) = @_;
+  my ($infile,$outfile,$db,$Evalue,$maxhits) = @_;
 
   my $command = "$BLASTP -dbsize $BLAST_DB_SIZE " .
       #"-seg yes -soft_masking true " . 
-      "-query $infile -evalue $Evalue -db $db -out $outfile ";
+      "-query $infile -evalue $Evalue -db $db -max_target_seqs $maxhits -out $outfile ";
 
   return $command;
 }
 
-# Bruno, Feb2016
+# Same params as previous sub, plus 
+# 6. Scalar: BLASTN algorithm (optional)
 # Do not mask sequences as we want the alignment
 sub format_BLASTN_command_aligns
 {
-  my ($infile,$outfile,$db,$Evalue,$task) = @_;
+  my ($infile,$outfile,$db,$Evalue,$maxhits,$task) = @_;
 
   my $command = "$BLASTN -dbsize $BLAST_DB_SIZE " . 
       #"-soft_masking true " . #"-outfmt 4 " .
-      "-query $infile -evalue $Evalue -db $db -out $outfile ";
+      "-query $infile -evalue $Evalue -db $db -max_target_seqs $maxhits -out $outfile ";
 
   if($task){ $command .= "-task $task "; }
   else{ $command .= "-task megablast "; }
