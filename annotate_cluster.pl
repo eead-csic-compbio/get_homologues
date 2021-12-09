@@ -420,7 +420,7 @@ if($INP_nucleotides)
 {
   executeFORMATDB($filenamedb,1,1); 
   $command = format_BLASTN_command_aligns($filenameq,$filenameb,
-    $filenamedb,$DEFEVALUE,$DEFBLASTNTASK,$#{$cluster_ref}+1);
+    $filenamedb,$DEFEVALUE,$#{$cluster_ref}+1,$DEFBLASTNTASK);
   push(@trash,$filenamedb.'.nsq', $filenamedb.'.nin', $filenamedb.'.nhr');
 }
 else
