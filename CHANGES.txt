@@ -368,3 +368,5 @@
 03122021: genbank files produced by PATRIC/RAST2 can now be parsed (thanks Irene Ortega!)
 09122021: updated format_BLAST[NP]_command_aligns to take a max number of hits to report,
 09212021: this fixes a bug in annotate_clusters.pl that affected clusters > 250 seqs (thanks carolynzi!)
+22122021: made %feature_output non-redundant
+15022022: make_nr_pangenome_matrix.pl now produces logfile to see date of redundant sequences (thanks carolynzi!)

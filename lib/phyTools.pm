@@ -56,7 +56,7 @@ my %feature_output = (
   'EXE_HMMPFAM'=>'Usage:','EXE_COGTRI'=>'Error opening', #'EXE_COGTRI'=>'Runs',
   'EXE_INPARA'=>'usage','EXE_ORTHO'=>'usage','EXE_HOMOL'=>'usage','EXE_ISOFORM'=>'usage','EXE_SPLITBLAST'=>'Usage',
   'EXE_SPLITHMMPFAM'=>'Usage','EXE_MVIEW'=>'usage',
-  'EXE_BLASTX_EST'=>'BLAST','EXE_FORMATDB'=>'database','EXE_TRANSDECOD_EST'=>'transcript',
+  'EXE_BLASTX_EST'=>'BLAST','EXE_TRANSDECOD_EST'=>'transcript',
   'EXE_DMNDX_EST'=>'diamond'
   );
 

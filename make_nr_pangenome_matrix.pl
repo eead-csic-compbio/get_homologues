@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# 2017-8 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2017-22 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Laboratory of Computational Biology, EEAD/CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -141,6 +141,7 @@ my $nr_pangenome_fasta_file = $outfile_root;
 my $nr_pangenome_blast_file = $outfile_root . '.blast';
 my $nr_pangenome_bpo_file = $outfile_root . '.bpo';
 my $nr_pangenome_file = $outfile_root.'.tab';
+my $nr_pangenome_log_file = $outfile_root.'.log';
 
 if($INP_reference_file || $INP_reference_cluster_dir)
 { 
@@ -262,6 +263,7 @@ foreach $col (sort {$length[$b] <=> $length[$a]} @filtered)
   $clust2col{$filtered_clusters} = $col;
 
   print FASTA ">$filtered_clusters $col $cluster_names[$col]\n$median_seq[$col]\n";
+
   $median_length{$filtered_clusters} = $length[$col];
 }  
 close(FASTA); 
@@ -312,6 +314,8 @@ blast_parse($nr_pangenome_blast_file,$nr_pangenome_bpo_file,\%median_length,$BLA
 
 unlink($nr_pangenome_fasta_file);
 
+open(LOG,">",$nr_pangenome_log_file) || die "# ERROR : cannot create $nr_pangenome_log_file, cannot proceed\n";
+
 open(BPO,$nr_pangenome_bpo_file) || die "# ERROR : cannot find $nr_pangenome_bpo_file, cannot proceed\n";
 while(<BPO>)
 {
@@ -345,9 +349,12 @@ while(<BPO>)
     # record parent cluster and merge
     $redundant{$clust2col{$pQid}}++;
     push(@{$nr{$clust2col{$pSid}}},$clust2col{$pQid}); 
+    print LOG "$pQid ($cluster_names[$pQid]) is redundant with $pSid ($cluster_names[$pSid]) : $ppercID $cover\n";
   }
 }
 close(BPO);
+
+close(LOG);
 
 open(NR,">$nr_pangenome_fasta_file") || die "# ERROR : cannot create $nr_pangenome_fasta_file\n";
 #foreach $col (sort {$length[$b] <=> $length[$a]} @filtered)
@@ -361,6 +368,8 @@ close(NR);
  
 print "\n# $merged_clusters non-redundant clusters\n";
 print "# created: $nr_pangenome_fasta_file\n";
+print "# see log: $nr_pangenome_log_file\n";
+
 
 ## 6) if required match nr clusters to external reference sequences
 if($INP_reference_file || $INP_reference_cluster_dir)
