@@ -686,7 +686,7 @@ print "# created: $nr_pangenome_file\n";
 print "\n# NOTE: matrix can be transposed for your convenience with:\n\n";
   
 print <<'TRANS';
-  perl -F'\t' -ane '$r++;for(1 .. @F){$m[$r][$_]=$F[$_-1]};$mx=@F;END{for(1 .. $mx){for $t(1 .. $r){print"$m[$t][$_]\t"}print"\n"}}' \
+  perl -F'\t' -ane '$F[$#F]=~s/\n//g;$r++;for(1 .. @F){$m[$r][$_]=$F[$_-1]};$mx=@F;END{for(1 .. $mx){for $t(1 .. $r){print"$m[$t][$_]\t"}print"\n"}}' \
 TRANS
 
   print "   $nr_pangenome_file\n";
