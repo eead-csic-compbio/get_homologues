@@ -1,6 +1,6 @@
 #!/usr/bin/env perl 
 
-# 2021 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2022 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei-CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -761,7 +761,7 @@ if($inputDIR)
         else{ die "# ERROR: could not extract feature sequences from file $inputDIR/$infile\n"; }
       }
       else
-      {
+      { 
         if(-s $prot_tmp_file ||
           extract_CDSs_from_genbank($inputDIR."/".$infile,$prot_tmp_file,$dna_tmp_file) > 0)
         {
@@ -1049,6 +1049,11 @@ else # 1.2) input single FASTA file with [taxon names] in headers, order not che
   close(COGCSV);
 
   if($min_cluster_size eq 'all'){ $min_cluster_size = $n_of_taxa; } # size of clusters in section 4
+}
+
+if($n_of_sequences == 0) 
+{
+  die "# EXIT: failed reading input files, make sure they have accepted extensions (.gb .gbk .fna .faa)\n";
 }
 
 # 1.2.5) read taxa labels and concatenate FASTA files ($all_fa_file is put in $newDIR/tmp, global @taxa is filled in here)
