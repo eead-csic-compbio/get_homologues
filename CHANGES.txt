@@ -371,3 +371,4 @@
 22122021: made %feature_output non-redundant
 15022022: make_nr_pangenome_matrix.pl now produces logfile to see date of redundant sequences (thanks carolynzi!)
 21022022: updated transpose oneliner in make_nr_pangenome_matrix.pl (thanks carolynzi!)
+23022022: make_nr_pangenome_matrix.pl now logs recursive list of redundant clusters (thanks carolynzi!)

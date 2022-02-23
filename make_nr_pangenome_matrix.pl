@@ -130,7 +130,7 @@ printf("\n# %s -m %s -t %d -l %d -C %d -S %d -P %s -f %s -r %s -c %d -s %d -e %d
 my (@cluster_names,@header,@taxa,@length,@filtered,@median_seq,@id2name,@trash);
 my (%pangemat,%redundant,%nr,%clust2col,%median_length,%matched_clusters,%ref_match);
 my ($n_of_clusters,$filtered_clusters,$merged_clusters,$taxon,$cluster_name,$command) = (0,0,0);
-my ($col2,$seq,$size,$median,$l,$col,$cluster_dir,$red_name,$pQcov,$pScov);
+my ($col2,$col3,$seq,$size,$median,$l,$col,$cluster_dir,$red_name,$pQcov,$pScov);
 my ($pQid,$querylen,$pSid,$subjectlen,$pEvalue,$ppercID,$simspan,$pbits,$cover);
 
 my $outfile_root = $INP_matrix; $outfile_root =~ s/\.tab//g;
@@ -212,7 +212,10 @@ foreach $col (1 .. $n_of_clusters)
   $size = 0;
   $cluster_name = $cluster_names[$col];
   my $fasta_ref = read_FASTA_file_array( $cluster_dir.'/'.$cluster_name );
-  if(!@$fasta_ref){ die "# ERROR: could not read $cluster_dir/$cluster_name, please check your matrix and the path to clusters therein\n" }
+  if(!@$fasta_ref){ 
+    die "# ERROR: could not read $cluster_dir/$cluster_name, ".
+        "please check your matrix and the path to clusters therein\n" 
+  }
   my @cluster_l;
  
   foreach $seq ( 0 .. $#{$fasta_ref} )
@@ -252,7 +255,7 @@ print "# $filtered_clusters clusters with taxa >= $INP_taxa and sequence length 
 
 
 
-## 3) sort clusters by length, number them and get representative sequence from each (the middle-length one)
+## 3) sort clusters by length, number them and get representative sequence from each
 print "\n# sorting clusters and extracting median sequence ...\n";
 $filtered_clusters = 0;
 
@@ -323,15 +326,12 @@ while(<BPO>)
   #16;2;274;37937;274;1e-103;66;1:5-272:6-274.;375
   #313	313	100.00	291	0	0	1	291	1	291	0.0	 590
   #313	93	26.69	236	166	4	40	273	279	509	6e-21	95.5
-  #($hit,$pQid,$querylen,$pSid,$subjectlen,$pEvalue,$ppercID,$simspan,$pbits) = split(/;/,$_);
   ($pQid,$pSid,$pEvalue,$ppercID,$pQcov,$pScov,$querylen,$subjectlen,$simspan,$pbits) = split(/\t/,$_);
   
-  # redundant cluster are $pQid > $pSid
-  next if($pQid eq $pSid || $pQid < $pSid);
+  # redundant clusters are $pQid > $pSid, as seqs are length-sorted
+  next if($pQid <= $pSid);
   
   next if($ppercID < $INP_identity);
-  
-  #$cover = simspan_hsps($querylen,$subjectlen,$simspan,$INP_use_short_sequence);
   
   if($INP_use_short_sequence)
   {
@@ -347,17 +347,21 @@ while(<BPO>)
   if($cover >= $INP_cover) 
   {
     # record parent cluster and merge
+    # Note: cluster ids are converted to columns
     $redundant{$clust2col{$pQid}}++;
-    push(@{$nr{$clust2col{$pSid}}},$clust2col{$pQid}); 
-    print LOG "$pQid ($cluster_names[$pQid]) is redundant with $pSid ($cluster_names[$pSid]) : $ppercID $cover\n";
+    push(@{$nr{$clust2col{$pSid}}},$clust2col{$pQid});
+
+    # log redundant clusters
+    print LOG "$pQid ($cluster_names[$clust2col{$pQid}]) is redundant with $pSid ".
+      "($cluster_names[$clust2col{$pSid}]) : $ppercID $cover\n";
   }
 }
 close(BPO);
 
 close(LOG);
 
-open(NR,">$nr_pangenome_fasta_file") || die "# ERROR : cannot create $nr_pangenome_fasta_file\n";
-#foreach $col (sort {$length[$b] <=> $length[$a]} @filtered)
+open(NR,">$nr_pangenome_fasta_file") || 
+  die "# ERROR : cannot create $nr_pangenome_fasta_file\n";
 foreach $col (@filtered)
 {
   next if($redundant{$col}); 
@@ -558,10 +562,12 @@ if($INP_reference_file || $INP_reference_cluster_dir)
     print "\n# WARNING: remove this file if trying different reference sequences\n";
   }
 
-  blast_parse($nr_pangenome_reference_blast_file,$nr_pangenome_reference_bpo_file,\%ref_length,$BLAST_PVALUE_CUTOFF_DEFAULT,1);
+  blast_parse($nr_pangenome_reference_blast_file,$nr_pangenome_reference_bpo_file,
+    \%ref_length,$BLAST_PVALUE_CUTOFF_DEFAULT,1);
 
   print "\n# matching nr clusters to reference (\%alignment coverage cutoff=$INP_reference_cover) ...\n";
-  open(BPO,$nr_pangenome_reference_bpo_file) || die "# ERROR : cannot find $nr_pangenome_reference_bpo_file, cannot proceed\n";
+  open(BPO,$nr_pangenome_reference_bpo_file) || 
+    die "# ERROR : cannot find $nr_pangenome_reference_bpo_file, cannot proceed\n";
   while(<BPO>)
   {
     # col -> nr sequence, actually a column of the pangenome matrix
@@ -572,7 +578,6 @@ if($INP_reference_file || $INP_reference_cluster_dir)
 
     next if($ref_match{$col} && $ONLYBESTREFHIT); 
   
-    #$cover = simspan_hsps($querylen,$subjectlen,$simspan,0);    
     if($INP_use_short_sequence)
     {
       if($querylen < $subjectlen){ $cover = $pQcov }
@@ -605,16 +610,32 @@ if($INP_reference_file || $INP_reference_cluster_dir)
 
 ## 7) print nr pangenome matrix
 print "\n# printing nr pangenome matrix ...\n";
+
+my ($num_red, @red_cols, %recursive_red_cols);
+
 open(NRMAT,">$nr_pangenome_file");
 print NRMAT "non-redundant";
 foreach $col (@filtered)
 {
   next if($redundant{$col});
+  
   $cluster_name = $cluster_names[$col]; 
+  @red_cols = ();
+
   if($nr{$col})
-  { 
-    $cluster_name .= '+'.scalar(@{$nr{$col}});
-  }
+  {
+    # recursively compile list of redundant clusters
+    @red_cols = ($col);
+    $num_red = get_redundant_cols(1, \@red_cols, \%nr);
+    while($num_red > 0) {
+        $num_red = get_redundant_cols($num_red, \@red_cols, \%nr);
+    }
+    push(@{ $recursive_red_cols{$col} }, @red_cols);
+
+    # concat number of redundant clusters    
+    $cluster_name .= sprintf("+%d",scalar(@red_cols)-1);
+  } 
+
   print NRMAT "\t$cluster_name";
 } print NRMAT "\t\n";
 
@@ -651,8 +672,11 @@ foreach $col (@filtered)
   next if($redundant{$col});
   if($nr{$col})
   {
-    $red_name = $cluster_names[$col];
-    foreach $col2 (@{$nr{$col}}){ $red_name .= ",$cluster_names[$col2]" }
+    # concatenate names of redundant clusters
+    $red_name = ''; 
+    foreach $col2 (@{$recursive_red_cols{$col}} ){ 
+      $red_name .= "$cluster_names[$col2],"; 
+    }
   }
   else{ $red_name = 'NA' }
   print NRMAT "\t$red_name";
@@ -683,7 +707,7 @@ close(NRMAT);
 
 print "# created: $nr_pangenome_file\n";
 
-print "\n# NOTE: matrix can be transposed for your convenience with:\n\n";
+print "\n# NOTE: matrix can be transposed for convenience with:\n\n";
   
 print <<'TRANS';
   perl -F'\t' -ane '$F[$#F]=~s/\n//g;$r++;for(1 .. @F){$m[$r][$_]=$F[$_-1]};$mx=@F;END{for(1 .. $mx){for $t(1 .. $r){print"$m[$t][$_]\t"}print"\n"}}' \
@@ -696,4 +720,33 @@ unlink($nr_pangenome_bpo_file,@trash);
 if($INP_reference_cluster_dir)
 {
   unlink($nr_pangenome_reference_fasta_file,$nr_pangenome_reference_bpo_file,$nr_pangenome_tmp_fasta_file);
-}    
+}   
+
+###########################################
+
+# Takes 3 args:
+# i) number of elements to take from the end of ii)
+# ii) ref to list with elements, new redundant ones pushed to end
+# iii) ref to hash of lists of redundant elements
+sub get_redundant_cols
+{
+  my ($lastn, $ref_list, $ref_hash) = @_;
+  my ($new_redundants, $index, $elem, $elem2) = (0);
+  my $first = scalar(@$ref_list)-($lastn+1);
+  if($first < 0){ $first = 0 }
+  my $last = scalar(@$ref_list)-1;
+
+  foreach $index ($first .. $last)
+  {
+    $elem = $ref_list->[$index];
+    foreach $elem2 (@{ $ref_hash->{$elem} })
+    {
+      next if(grep(/^$elem2$/,@$ref_list));
+      push(@$ref_list, $elem2);
+      $new_redundants++;
+    }
+  }
+
+  return $new_redundants;
+}
+
