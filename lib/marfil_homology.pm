@@ -738,7 +738,7 @@ sub sort_blast_results
 {
   my ($sorted_outfile,$keep_secondary_hsps,$compress_blast,@blast_outfiles) = @_;
 
-  my ($file,$size,$files,$n_of_files,$root,$cleantmpfile,$tmpfile,$sortedtmpfile);
+  my ($file,$size,$files,$n_of_files,$root,$cleantmpfile,$sortedtmpfile);
   my (@tmpfiles,@roots,%cluster);
 
   # check max file descriptors in OS
@@ -834,7 +834,7 @@ sub sort_blast_results
     #hits are sorted by query ID and E-value
     #hits with same E-value and diff bitscore will be taken care later 
     #asumes BLAST results are ordered
-	 #tries to read & merge all individual files at once to avoid temp files
+    #tries to read & merge all individual files at once to avoid temp files
     #https://stackoverflow.com/questions/6598573/how-to-merge-sorted-files-without-using-a-temporary-file
     if($n_of_files > $max_os_files){ $n_of_files = $max_os_files }
     system("$SORTBIN --temporary-directory=$TMP_DIR --batch-size=$n_of_files -s -k1g -k11g -m $files > $sortedtmpfile");
@@ -1171,7 +1171,7 @@ sub nr_blast_report
 {
   my ($blastfile,$nrblastfile,$ref_rd_sequences) = @_;
 
-  my ($nr_lines,$Qid,$Sid) = (0);
+  my ($nr_lines) = (0);
 
   open (NRBLAST,">$nrblastfile") || die "# nr_blast_parse : cannot create $nrblastfile\n";
 
@@ -1643,7 +1643,7 @@ sub parse_MCL_clusters
 
   foreach $cluster (@mcl)
   {
-    my (@cluster,@otaxa) = (split(/\s+/,$cluster));
+    my (@cluster) = (split(/\s+/,$cluster));
 
     # record taxa composition as well
     $ref = $cluster[0];
@@ -1867,7 +1867,7 @@ sub makeInparalog
   }
 
   # default behaviour, calculate best hits by parsing blast output
-  my (%inbest,%pvalue,%sim,$qid,$sid,$ev,$pi,$line);
+  my (%inbest,%pvalue,$qid,$sid,$ev,$pi,$line);
   my ($qcov,$scov,%data_structure);
 
   if($saveRAM){ construct_indexes($bpo_file,($taxon=>1)) }
@@ -2099,7 +2099,7 @@ sub makeOrtholog
   }
 
   # default behaviour, calculate best hits by parsing blast output
-  my (@seqs,%best,%sim,%pvalue,$pfamq,$pfams,$sid,$ev,$pi,%data_structure);
+  my (%best,%sim,%pvalue,$pfamq,$pfams,$sid,$ev,$pi,%data_structure);
   my ($lastev,$hit_id,$qid,$q,$line,$qcov,$scov);
 
   if($saveRAM)
@@ -2116,7 +2116,7 @@ sub makeOrtholog
     my $ref_lines = getblock_from_bpofile($blastquery{$qid}[0],$blastquery{$qid}[1],6);
     foreach $line (@{$ref_lines})
     {
-		#$pQid\t$pSid\t$pEvalue\t$ppercID\t$Qcov\t$Scov\t$pQlength\t$pSlength\t$simspan\t$pbits
+      #$pQid\t$pSid\t$pEvalue\t$ppercID\t$Qcov\t$Scov\t$pQlength\t$pSlength\t$simspan\t$pbits
       ($sid,$ev,$pi,$qcov,$scov) = @$line[1,2,3,4,5];
 
       if(defined($gindex2[$sid]))
@@ -2312,7 +2312,7 @@ sub makeHomolog
   }
 
   # default behaviour, calculate best hits by parsing blast output
-  my (@seqs,%homologues,%sim,$qid,$sid,$ev,$pi,$line,$qcov,$scov);
+  my (%homologues,$qid,$sid,$ev,$pi,$line,$qcov,$scov);
 
   if($saveRAM){ construct_indexes($bpo_file,($ta=>1,$tb=>1)) }
 
@@ -2530,7 +2530,7 @@ sub simspan_hsps_overlap
   my ($lengthq,$lengths,$hsps) = @_;
 
   my (%sub_start, %sub_length, %query_start, %query_length, $overlap);
-  my ($sub_segment_first,$sub_segment_last,$query_segment_first,$query_segment_last,$max_segment) = ('','','','');
+  my ($sub_segment_first,$sub_segment_last,$query_segment_first,$query_segment_last) = ('','','','');
 
   my @hsp=split ('\.',$hsps);#"1:10-22:2-14.2:25-75:15-65";
   foreach (@hsp)
@@ -2581,11 +2581,11 @@ sub simspan_hsps
   my ($lengthq,$lengths,$hsps,$use_short_sequence) = @_;
 
   my (%sub_start, %sub_length, %query_start, %query_length);
-  my @hsp=split ('\.',$hsps);
-  my ($sub_segment_first,$sub_segment_last,$query_segment_first,$query_segment_last,$max_segment) = ('','','','');
+  my @hsp=split ('\.',$hsps); #my $max_segment;
+  my ($sub_segment_first,$sub_segment_last,$query_segment_first,$query_segment_last) = ('','','','');
 
-#$simspan .= "1:10-22:2-14.2:25-75:15-65"; # hsps are sorted by e-value, not position
-#note that coords might be reversed for DNA alignments on reverse strand
+  #$simspan .= "1:10-22:2-14.2:25-75:15-65"; # hsps are sorted by e-value, not position
+  #note that coords might be reversed for DNA alignments on reverse strand
   foreach (@hsp)
   {
     if (/(\d+)\:(\d+)\-(\d+)\:(\d+)\-(\d+)/)
@@ -2631,13 +2631,13 @@ sub simspan_hsps
     if($lengths > $lengthq)
     {
 
-     #$max_segment = 100* ($sub_segment_last - $sub_segment_first + 1)/$lengths;
+      #$max_segment = 100* ($sub_segment_last - $sub_segment_first + 1)/$lengths;
       return ( 100*matchlen(\%sub_start,\%sub_length)/$lengths );
     }
     else
     {
 
- #$max_segment = 100* ($query_segment_last - $query_segment_first + 1)/$lengthq;
+       #$max_segment = 100* ($query_segment_last - $query_segment_first + 1)/$lengthq;
       return ( 100*matchlen(\%query_start,\%query_length)/$lengthq );
     }
   }
@@ -3137,7 +3137,7 @@ sub find_PARANOID_clusters
 {
   my ($saveRAM,$bitscore_cutoff,$pmatch_cutoff,$psegment_cutoff,$path,$force_parsing,@taxa) = @_;
 
-  my ($i,$j,%ortho,%connect,@inparanoids,$inparaoutfile);
+  my ($i,$j,@inparanoids,$inparaoutfile);
   my (%raw_clusters,%orthologues,%orth_taxa,$cluster,$orth,$ref,$taxon);
   my $rerun = 0;
   my $multiparanoid_command = "$MULTIPARANOID ";
@@ -3380,8 +3380,8 @@ sub findAllOrthologiesORTHMCL
   my ($saveRAM, $pv_cutoff, $pi_cutoff, $pmatch_cutoff, $neighbor_corr_cutoff,
     $inparalogues_are_sorted, $redo_inparal, $redo_orth, $ref_taxa, $ref_full_sequence_taxa) = @_;
 
-  my ($p,$i,$j,$n,$k,$l,$taxon,$pv1,$pv2,$partial_sequences,@ortho,@taxa);
-  my ($qlength,$sid,$slength,$pm,$pe,$pi,$span,$wt,$avgw,$ref,$refi);
+  my ($p,$i,$j,$n,$k,$partial_sequences,@ortho,@taxa);
+  my ($avgw,$ref,$refi);
 
   @taxa = @$ref_taxa;
 
