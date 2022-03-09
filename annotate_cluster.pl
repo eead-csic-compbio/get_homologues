@@ -249,6 +249,11 @@ if($#{$cluster_ref} == -1)
 {
   warn "# Cannot read input sequences, exit. Please set -P if using a peptide cluster.\n";
   exit;
+} 
+elsif($#{$cluster_ref}+1 < 2)
+{
+  warn "# Need at least two input sequences, exit.\n";
+  exit;
 }
 
 ## read include lists
