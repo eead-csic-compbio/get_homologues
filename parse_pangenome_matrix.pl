@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# 2017-21 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2017-22 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -199,6 +199,7 @@ $CUTOFF /= 100; # use 0-1 float from now on
 my (%cluster_names,%pangemat,%included_taxa,$col,$cluster_dir);
 my (%included_input_filesA,%included_input_filesB);
 my ($n_of_clusters,$n_of_includedA,$n_of_includedB) = (0,0,0);
+my ($real_clusters, $chrcolumns) = (0,0);
 my ($outfile_root,$outpanfileA,$outexpanfileA,$taxon);
 my ($shell_input,$shell_estimates,$shell_output_svg,$shell_circle_svg,);
 my ($shell_output_png,$shell_output_pdf,$shell_circle_png,$shell_circle_pdf);
@@ -253,7 +254,9 @@ while(<MAT>)
   my @data = split(/\t/,$_);
   
   next if($data[0] =~ /^reference/ || $data[0] =~ /^redundant/); # nr matrices
-  
+ 
+  #source:path/to/clusters/t101964_thrB.fna/t101965_thrC.fna/t...
+  #source:path/to/clusters/tchr:../t101964_thrB.fna/t101965_thrC.fna/t... 
   if($data[0] =~ /^source:(\S+)/) #source:path/to/clusters/t101964_thrB.fna/t101965_thrC.fna/t...
   {
     $cluster_dir = $1;
@@ -305,15 +308,25 @@ while(<MAT>)
     # skip taxon if not in include file, only if requested
     next if($INP_taxa_file && !$included_taxa{$data[0]});
 
+    $chrcolumns = 0;
     foreach $col (1 .. $#data)
     {
       $pangemat{$data[0]}[$col] = $data[$col];
-      $shell[$col]++ if($data[$col] > 0);
+      if($data[$col] eq 'NA')
+      {
+        $chrcolumns++;
+      } 
+      else 
+      {
+        $shell[$col]++ if($data[$col] > 0)
+      }
     }
   }
 }
 close(MAT);
-print "# matrix contains $n_of_clusters clusters and ".scalar(keys(%pangemat))." taxa\n\n"; 
+
+$real_clusters = $n_of_clusters - $chrcolumns; 
+print "# matrix contains $real_clusters clusters and ".scalar(keys(%pangemat))." taxa\n\n"; 
 
 if($needB)
 {

@@ -375,3 +375,4 @@
 23022022: get_homologues.pl stops if no input sequences are parsed and remined accepted extensions (thanks apoorva004!)
 28022022: removed unsed vars from lib/marfil_homology.pm (thanks https://metacpan.org/pod/App::perlvars)
 09032022: annotate_cluster.pl stops if < 2 sequences
+16032022: parse_pangenome_matrix.pl can read pangene_matrix.tab produced at https://github.com/Ensembl/plant-scripts/tree/master/pangenes
