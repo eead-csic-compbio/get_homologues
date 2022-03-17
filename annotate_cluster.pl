@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# 2021 Bruno Contreras-Moreira (1), Ruben Sancho (1,2) and Pablo Vinuesa (3):
+# 2022 Bruno Contreras-Moreira (1), Ruben Sancho (1,2) and Pablo Vinuesa (3):
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei-CSIC/Fundacion ARAID, Spain)
 # 2: Grupo Bioflora, EPS, Universidad de Zaragoza, Spain
 # 3: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
@@ -143,8 +143,8 @@ warn "\n# DEFBLASTNTASK=$DEFBLASTNTASK DEFEVALUE=$DEFEVALUE\n";
 warn "# MINBLUNTBLOCK=$MINBLUNTBLOCK MAXSEQNAMELEN=$MAXSEQNAMELEN\n";
 warn "# MAXMISMCOLLAP=$MAXMISMCOLLAP MAXGAPSCOLLAP=$MAXGAPSCOLLAP\n";
 
-printf(STDERR "\n# %s -f %s -r %s -o %s -P %s -b %s -D %s -c %d -A %s -B %s\n",
-  $0,$INP_clusterfile,$INP_ref_file,$INP_outfile,$INP_nucleotides,
+printf(STDERR "\n# %s -f %s -r %s -o %s -P %d -b %s -D %s -c %d -A %s -B %s\n",
+  $0,$INP_clusterfile,$INP_ref_file,$INP_outfile,!$INP_nucleotides,
   $INP_blunt,$do_PFAM,$INP_collapse,$INP_includeA,$INP_includeB);
 
 ##########################################################################
@@ -212,7 +212,10 @@ foreach $seq (0 .. $#{$cluster_ref})
   }
  
   # shorten name and remove forbidden chars, otherwise it might break mview downstream
-  if(length($seqname) > $MAXSEQNAMELEN ){ $seqname = substr($seqname,0,$MAXSEQNAMELEN); } 
+  if(length($seqname) > $MAXSEQNAMELEN )
+  { 
+    $seqname = substr($seqname,0,$MAXSEQNAMELEN); 
+  } 
   
   $short_names{$seq} = $seqname;
 
@@ -243,7 +246,10 @@ foreach $seq (0 .. $#{$cluster_ref})
 }
 
 printf(STDERR "\n# total   sequences: %d taxa: %d\n",
-  $#{$cluster_ref}+1,scalar(keys(%intaxa))); 
+  $#{$cluster_ref}+1,scalar(keys(%intaxa)));
+printf(STDERR "# longest sequence: %d (%s)\n",
+  $maxlength, (split(/\s+/,$cluster_ref->[$longest_seq][NAME]))[0]);
+ 
 
 if($#{$cluster_ref} == -1)
 {
@@ -426,7 +432,7 @@ if($INP_nucleotides)
   executeFORMATDB($filenamedb,1,1); 
   $command = format_BLASTN_command_aligns($filenameq,$filenameb,
     $filenamedb,$DEFEVALUE,$#{$cluster_ref}+1,$DEFBLASTNTASK);
-  push(@trash,$filenamedb.'.nsq', $filenamedb.'.nin', $filenamedb.'.nhr');
+  push(@trash,$filenamedb.'.nsq', $filenamedb.'.nin', $filenamedb.'.nhr'); 
 }
 else
 {

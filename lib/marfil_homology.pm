@@ -475,7 +475,7 @@ sub format_BLASTN_command_aligns
 
   my $command = "$BLASTN -dbsize $BLAST_DB_SIZE " . 
       #"-soft_masking true " . #"-outfmt 4 " .
-      "-query $infile -evalue $Evalue -db $db -max_target_seqs $maxhits -out $outfile ";
+      "-query $infile -evalue $Evalue -db $db -max_target_seqs $maxhits -max_hsps 1 -out $outfile ";
 
   if($task){ $command .= "-task $task "; }
   else{ $command .= "-task megablast "; }
