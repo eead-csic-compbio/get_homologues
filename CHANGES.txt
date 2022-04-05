@@ -378,3 +378,4 @@
 16032022: parse_pangenome_matrix.pl can read pangene_matrix.tab produced at https://github.com/Ensembl/plant-scripts/tree/master/pangenes
 17032022: format_BLASTN_command_aligns now takes only one 1hsp per query (thanks carolynzi!)
 17032022: annotate_cluster.pl now prints the name of longest sequence
+05042022: updated TODO
