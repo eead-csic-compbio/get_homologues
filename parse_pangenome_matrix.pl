@@ -56,9 +56,9 @@ check_installed_features(@FEATURES2CHECK);
 
 my ($INP_matrix,$INP_absent,$INP_expansions,$INP_includeA,$INP_includeB,%opts) = ('',0,0,'','');
 my ($INP_refgenome,$INP_list_taxa,$INP_plotshell,$INP_cutoff,$needAB,$Rparams) = ('',0,0,$CUTOFF,0,'');
-my ($INP_absentB,$INP_skip_singletons,$INP_shared_matrix,$INP_taxa_file,$needB) = (0,0,0,'');
+my ($INP_nocloud,$INP_absentB,$INP_skip_singletons,$INP_shared_matrix,$INP_taxa_file,$needB) = (0,0,0,0,'');
 
-getopts('hagselxp:m:I:A:B:P:S:', \%opts);
+getopts('hagselxnp:m:I:A:B:P:S:', \%opts);
 
 if(($opts{'h'})||(scalar(keys(%opts))==0))
 {
@@ -67,7 +67,8 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   print   "-m \t input pangenome matrix .tab                               (required, made by compare_clusters.pl)\n"; #, ideally with -t 0)\n";
   print   "-s \t report cloud,shell,soft core and core clusters            (optional, creates plot if R is installed)\n";
   print   "-l \t list taxa names present in clusters reported in -m matrix (optional, recommended before using -p option)\n";
-  print   "-x \t produce matrix of intersection pangenome clusters         (optional, requires -s)\n";
+  print   "-n \t do not compute cloud, matrix does not have cloud clusters (optional, requires -s)\n";
+  print   "-x \t produce matrix of intersection pangenome clusters         (optional, requires -s)\n"; 
   print   "-I \t use only taxon names included in file                     (optional, ignores -A,-g,-e)\n";
   print   "-A \t file with taxon names (.faa,.gbk,.nucl files) of group A  (optional, example -A clade_list_pathogenic.txt)\n";
   print   "-B \t file with taxon names (.faa,.gbk,.nucl files) of group B  (optional, example -B clade_list_symbiotic.txt)\n";
@@ -100,17 +101,22 @@ if(defined($opts{'l'})){ $INP_list_taxa = 1 }
 
 if(defined($opts{'s'}))
 {
-	$INP_plotshell = 1;
+  $INP_plotshell = 1;
 	
-	if(defined($opts{'x'}))
-	{
-		$INP_shared_matrix = 1;
+  if(defined($opts{'n'}))
+  {
+    $INP_nocloud = 1;
+  }
 
-		if($opts{'S'} && $opts{'S'} > 0)
-		{
-			$INP_skip_singletons = $opts{'S'};
-		}
-	}
+  if(defined($opts{'x'}))
+  {
+    $INP_shared_matrix = 1;
+
+    if($opts{'S'} && $opts{'S'} > 0)
+    {
+      $INP_skip_singletons = $opts{'S'};
+    }
+  }
 }
 
 if(defined($opts{'I'}))
@@ -182,9 +188,9 @@ else
   }
 }
 
-printf("\n# %s -m %s -I %s -A %s -B %s -a %d -g %d -e %d -p %s -s %d -l %d -x %d -P %d -S %d\n\n",
+printf("\n# %s -m %s -I %s -A %s -B %s -a %d -g %d -e %d -p %s -s %d -n %d -l %d -x %d -P %d -S %d\n\n",
 	$0,$INP_matrix,$INP_taxa_file,$INP_includeA,$INP_includeB,$INP_absentB,$INP_absent,
-	$INP_expansions,$INP_refgenome,$INP_plotshell,$INP_list_taxa,$INP_shared_matrix,
+	$INP_expansions,$INP_refgenome,$INP_plotshell,$INP_nocloud,$INP_list_taxa,$INP_shared_matrix,
 	$INP_cutoff,$INP_skip_singletons);
 
 if(!$needB && !$needAB && !$INP_plotshell && !$INP_list_taxa)
@@ -678,13 +684,18 @@ if($INP_plotshell)
   foreach $s (sort {$a<=>$b} keys(%stats))
   {
     print SINP "$stats{$s}\n";
-    if($stats{$s}>$cloudmax && $s+1 < $softcorepos)
+    if($INP_nocloud == 0 && $stats{$s}>$cloudmax && $s+1 < $softcorepos)
     {
       $cloudmax = $stats{$s};
       $cloudpos = $s + 1 ; # arbitrarily take max plus next column in plot
     }
   }
   close(SINP); 
+  
+  if($INP_nocloud)
+  {
+    $cloudpos = 0; 
+  }
 
   # print lists of genomic compartments
   open(CLOUDF,">$cloudlistfile") || die "# EXIT : cannot create $cloudlistfile\n";
