@@ -380,3 +380,4 @@
 17032022: annotate_cluster.pl now prints the name of longest sequence
 05042022: updated TODO & license
 20042022: added parse_pangenome_matrix.pl -n for matrices that do not include cloud clusters (thanks Ammar!)
+21042022: transcripts2cdsCPP.pl not tested by default with make test, as bioconda lacks Inline::CPP 

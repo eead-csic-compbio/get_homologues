@@ -1,4 +1,4 @@
-source:/home/bcontreras/ownCloud/codigo/cvs/get_homologues-est/sample_intersection	E_coli_ST131_plasmid_pKC394.gb	E_coli_plasmid_pMUR050.gb	IncN_plasmid_R46.gb	K_oxytoca_plasmid_pKOX105.gb	K_pneumoniae_12_plasmid_12.gb	K_pneumoniae_9_plasmid_9.gb	K_pneumoniae_KP96_plasmid_pKP96.gb	S_enterica_subsp_enterica_serovar_Dublin_plasmid_pMAK2.gb	Uncultured_bacterium_plasmid_pRSB201.gb	Uncultured_bacterium_plasmid_pRSB203.gb	Uncultured_bacterium_plasmid_pRSB205.gb	Uncultured_bacterium_plasmid_pRSB206.gb	
+source:/home/contrera/Nextcloud/codigo/get_homologues-est/sample_intersection	E_coli_ST131_plasmid_pKC394.gb	E_coli_plasmid_pMUR050.gb	IncN_plasmid_R46.gb	K_oxytoca_plasmid_pKOX105.gb	K_pneumoniae_12_plasmid_12.gb	K_pneumoniae_9_plasmid_9.gb	K_pneumoniae_KP96_plasmid_pKP96.gb	S_enterica_subsp_enterica_serovar_Dublin_plasmid_pMAK2.gb	Uncultured_bacterium_plasmid_pRSB201.gb	Uncultured_bacterium_plasmid_pRSB203.gb	Uncultured_bacterium_plasmid_pRSB205.gb	Uncultured_bacterium_plasmid_pRSB206.gb	
 7_transposase_A.faa	1	0	0	0	0	0	0	0	0	0	0	0	
 8_tnpA.faa	2	0	0	0	0	0	0	0	0	0	0	0	
 9_mphA.faa	1	0	0	0	0	0	0	0	0	0	0	0	
