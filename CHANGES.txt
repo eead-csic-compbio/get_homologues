@@ -383,3 +383,4 @@
 21042022: transcripts2cdsCPP.pl not tested by default with make test, as bioconda lacks Inline::CPP
 21042022: if bin/ not in place phyTools::set_phyTools_env assumes binary dependencies in PATH
 21042022: updated install.pl so that it copes with binary dependencies in PATH
+21042022: added install_cogs, which only gets/compiles COGS, so that other binaries can be taken from PATH

@@ -1,6 +1,9 @@
 # Makefile for Travis CI tests and installation
 # https://docs.travis-ci.com/user/languages/perl
 
+install_cogs:
+	perl install.pl no_databases COGS
+
 test:
 	perl test_get_homologues.t
 
@@ -28,4 +31,4 @@ install_swissprot:
 	perl install.pl swissprot
 
 install_auto:
-	perl install.pl no_databases 
+	perl install.pl no_databases

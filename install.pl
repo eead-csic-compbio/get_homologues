@@ -8,6 +8,7 @@ use strict;
 use warnings;
 use Cwd;
 use FindBin '$Bin';
+use File::Path qw(remove_tree);
 use lib "$Bin/lib";
 use lib "$Bin/lib/est";
 use lib "$Bin/lib/bioperl-1.5.2_102/";
@@ -39,8 +40,11 @@ my %packages =
   'GD'=>['libgd-gd2-perl','perl-GD','perl-GD','gd']
   );
 
+my $nonCOGS = 'diamond-0.8.25 hmmer-3.1b2 mcl-14-137 ncbi-blast-2.8.1+ phylip-3.695';
+
 my ($SOguess,$output,$command,$cwd) = ('','','',getcwd());
 my ($downloadOK,$force_unsupervised,$noDBs) = (0,0,0);
+my ($COGSonly) = (0);
 
 # unsupervised, forced install
 if(defined($ARGV[0]))
@@ -64,6 +68,14 @@ if(defined($ARGV[0]))
   {
     print "# testing only\n";
     exit(0);
+  }
+} 
+
+if(defined($ARGV[1]))
+{
+  if($ARGV[1] eq 'COGS')
+  {
+    $COGSonly = 1
   }
 }
 
@@ -135,6 +147,14 @@ if(! -e $ENV{'MARFIL'}.'/bin/COGsoft/' || !-e $ENV{'EXE_BLASTP'})
     {
       print "# extracting $BINTGZFILE ...\n";
       system("tar xfz $BINTGZFILE");
+
+      if($COGSonly)
+      {
+        mkdir('remove/');
+        system("mv $nonCOGS remove/");	
+        remove_tree('remove/');
+      }
+
       unlink($BINTGZFILE);
       chdir($cwd);
       $downloadOK = 1;
@@ -145,39 +165,42 @@ else{ print ">> OK\n"; }
 
 
 # check required precompiled binaries
-print "\n## checking mcl-14-137 (lib/phyTools: \$ENV{'EXE_MCL'})\n";
 
-if($downloadOK){
-  $ENV{'EXE_MCL'} = $ENV{'MARFIL'}.'/bin/mcl-14-137/src/shmcl/mcl'
-}
-
-$output = `$ENV{'EXE_MCL'} 2>&1`;
-if(!$output || $output !~ /usage/)
+if(!$COGSonly)
 {
-  print "\n# compiling mcl-14-137 ...\n"; # requires gcc
+  print "\n## checking mcl (lib/phyTools: \$ENV{'EXE_MCL'})\n";
 
-  if(!-s $ENV{'MARFIL'}.'/bin/mcl-14-137')
-  {
-    warn "# mcl binaries are missing,\n".
-      "# please re-run perl install.pl and type Y when asked to download source and binaries\n";
-    exit(-1);   
+  if($downloadOK){
+    $ENV{'EXE_MCL'} = $ENV{'MARFIL'}.'/bin/mcl-14-137/src/shmcl/mcl'
   }
-  
-  chdir($ENV{'MARFIL'}.'/bin/mcl-14-137');
-  system("./configure 2>&1");
-  system("make clean 2>&1");
-  system("make 2>&1");
-  chdir($cwd); 
 
   $output = `$ENV{'EXE_MCL'} 2>&1`;
-  if($output !~ /usage/)
+  if(!$output || $output !~ /usage/)
   {
-    die "<< Cannot run $ENV{'EXE_MCL'}, please check the manual for compilation instructions and re-run.\n";
+    print "\n# compiling mcl-14-137 ...\n"; # requires gcc
+
+    if(!-s $ENV{'MARFIL'}.'/bin/mcl-14-137')
+    {
+      warn "# mcl binaries are missing,\n".
+        "# please re-run perl install.pl and type Y when asked to download source and binaries\n";
+      exit(-1);   
+    }
+  
+    chdir($ENV{'MARFIL'}.'/bin/mcl-14-137');
+    system("./configure 2>&1");
+    system("make clean 2>&1");
+    system("make 2>&1");
+    chdir($cwd); 
+
+    $output = `$ENV{'EXE_MCL'} 2>&1`;
+    if($output !~ /usage/)
+    {
+      die "<< Cannot run $ENV{'EXE_MCL'}, please check the manual for compilation instructions and re-run.\n";
+    }
+    else{ print ">> OK\n"; }
   }
   else{ print ">> OK\n"; }
 }
-else{ print ">> OK\n"; }
-
 
 my %cogs = ("EXE_COGLSE"=>'COGlse',"EXE_MAKEHASH"=>'COGmakehash',
   "EXE_READBLAST"=>'COGreadblast',"EXE_COGTRI"=>'COGtriangles');
@@ -215,43 +238,49 @@ foreach my $exe (keys(%cogs))
   else{ print ">> OK\n"; }
 }
 
-# NCBI blast+
-print "## Checking blast (lib/phyTools: \$ENV{'EXE_BLASTP'})\n";
-
-if($downloadOK){
-    $ENV{'EXE_BLASTP'} = $ENV{'MARFIL'}."/bin/ncbi-blast-2.8.1+/bin/blastp"
-}
-
-$output = `$ENV{'EXE_BLASTP'} 2>&1`;
-if(!$output || $output !~ /BLAST/)
+if(!$COGSonly)
 {
-  die "<< Cannot run shipped blastp, please download it from $BLASTEXEPATH ,\n".
-    "<< install it and edit variable BLAST_PATH as explained in the manual\n".
-    "<< (inside set_phyTools_env in file lib/phyTools.pm) .\n".
-    "<< Then re-run\n";
+  # NCBI blast+
+  print "## Checking blast (lib/phyTools: \$ENV{'EXE_BLASTP'})\n";
+
+  if($downloadOK){
+      $ENV{'EXE_BLASTP'} = $ENV{'MARFIL'}."/bin/ncbi-blast-2.8.1+/bin/blastp"
+  }
+
+  $output = `$ENV{'EXE_BLASTP'} 2>&1`;
+  if(!$output || $output !~ /BLAST/)
+  {
+    die "<< Cannot run shipped blastp, please download it from $BLASTEXEPATH ,\n".
+      "<< install it and edit variable BLAST_PATH as explained in the manual\n".
+      "<< (inside set_phyTools_env in file lib/phyTools.pm) .\n".
+      "<< Then re-run\n";
+  }
+  else{ print ">> OK\n"; }
 }
-else{ print ">> OK\n"; }
 
 ######################################################################################################
 
 print "\n### 2) checking optional parts: \n\n";
 
-# check PFAM binary and DB
-print "\n## checking optional HMMER binaries (lib/phyTools: \$ENV{'EXE_HMMPFAM'})\n";
-print "# required by get_homologues.pl -D\n";
-
-if($downloadOK){
-    $ENV{'EXE_HMMPFAM'} = $ENV{'MARFIL'}."/bin/hmmer-3.1b2/binaries/hmmscan"
-}
-
-$output = `$ENV{'EXE_HMMPFAM'} 2>&1`;
-if($output =~ /Usage:/){ print ">> OK\n"; }
-else
+if(!$COGSonly)
 {
-  die "<< Cannot run shipped hmmscan, please download hmmer 3.1b2 from http://hmmer.janelia.org ,\n".
-    "<< install it and edit variable EXE_HMMPFAM as explained in the manual\n".
-    "<<(inside set_phyTools_env in file lib/phyTools.pm) .\n".
-    "<< Then re-run\n";
+  # check PFAM binary and DB
+  print "\n## checking optional HMMER binaries (lib/phyTools: \$ENV{'EXE_HMMPFAM'})\n";
+  print "# required by get_homologues.pl -D\n";
+
+  if($downloadOK){
+    $ENV{'EXE_HMMPFAM'} = $ENV{'MARFIL'}."/bin/hmmer-3.1b2/binaries/hmmscan"
+  }
+
+  $output = `$ENV{'EXE_HMMPFAM'} 2>&1`;
+  if($output =~ /Usage:/){ print ">> OK\n"; }
+  else
+  {
+    die "<< Cannot run shipped hmmscan, please download hmmer 3.1b2 from http://hmmer.janelia.org ,\n".
+      "<< install it and edit variable EXE_HMMPFAM as explained in the manual\n".
+      "<<(inside set_phyTools_env in file lib/phyTools.pm) .\n".
+      "<< Then re-run\n";
+  }
 }
 
 if(!$noDBs || $noDBs==1)
