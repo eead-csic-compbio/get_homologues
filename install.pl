@@ -240,6 +240,10 @@ print "\n### 2) checking optional parts: \n\n";
 print "\n## checking optional HMMER binaries (lib/phyTools: \$ENV{'EXE_HMMPFAM'})\n";
 print "# required by get_homologues.pl -D\n";
 
+if($downloadOK){
+    $ENV{'EXE_HMMPFAM'} = $ENV{'MARFIL'}."/bin/hmmer-3.1b2/binaries/hmmscan"
+}
+
 $output = `$ENV{'EXE_HMMPFAM'} 2>&1`;
 if($output =~ /Usage:/){ print ">> OK\n"; }
 else
