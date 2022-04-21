@@ -1,5 +1,5 @@
 # Bruno Contreras-Moreira, Pablo Vinuesa
-# 2005-20 CCG/UNAM, Mexico, EEAD/CSIC, Zaragoza, Spain
+# 2005-22 CCG/UNAM, Mexico, EEAD/CSIC, Zaragoza, Spain
 # This is a collection of subroutines used in our projects,
 # including primers4clades and get_homologues.pl
 
@@ -72,45 +72,91 @@ sub set_phyTools_env
 {
   if( ! defined($ENV{'MARFIL_MISSING_BINARIES'}) ) { $ENV{'MARFIL_MISSING_BINARIES'} =  ''; }
   if( ! defined($ENV{'MARFIL'}) ) { $ENV{'MARFIL'} =  $MARFILPATH .'/'; }
-  if( ! defined($ENV{"PFAMDB"}) ) { $ENV{"PFAMDB"} = $ENV{'MARFIL'}."db/Pfam-A.hmm"; } # HMMER3.0 is not compatible with Pfam > 27
-  if( ! defined($ENV{'BLAST_PATH'}) ){ $ENV{'BLAST_PATH'} = $ENV{'MARFIL'}.'bin/ncbi-blast-2.8.1+/bin/'; }
-  if( ! defined($ENV{'EXE_BLASTP'}) ){ $ENV{'EXE_BLASTP'} = $ENV{'BLAST_PATH'}.'blastp'; }
-  if( ! defined($ENV{'EXE_BLASTN'}) ){ $ENV{'EXE_BLASTN'} = $ENV{'BLAST_PATH'}.'blastn'; }
-  if( ! defined($ENV{'EXE_FORMATDB'}) ){ $ENV{'EXE_FORMATDB'} = $ENV{'BLAST_PATH'}.'makeblastdb'; }
+  
+  # data 
+  if( ! defined($ENV{"PFAMDB"}) ) { $ENV{"PFAMDB"} = $ENV{'MARFIL'}."db/Pfam-A.hmm"; } # HMMER3.0 not compatible with Pfam > 27
+  if( ! defined($ENV{'BLASTXDB'}) ){ $ENV{'BLASTXDB'} = $ENV{'MARFIL'}."db/uniprot_sprot.fasta"; }
+
+  # scripts
   if( ! defined($ENV{"EXE_SPLITBLAST"}) ){ $ENV{"EXE_SPLITBLAST"} = $ENV{'MARFIL'}."_split_blast.pl"; }
   if( ! defined($ENV{"EXE_SPLITHMMPFAM"}) ){ $ENV{"EXE_SPLITHMMPFAM"} = $ENV{'MARFIL'}."_split_hmmscan.pl"; }
-  if( ! defined($ENV{'EXE_PARS'}) ){ $ENV{'EXE_PARS'} = $ENV{'MARFIL'}.'bin/phylip-3.695/exe/pars'; }
-  #if( ! defined($ENV{"EXE_MCL"}) ){ $ENV{"EXE_MCL"} = $ENV{'MARFIL'}."/bin/mcl-02-063/shmcl/mcl"; }
-  if( ! defined($ENV{"EXE_MCL"}) ){ $ENV{"EXE_MCL"} = $ENV{'MARFIL'}."/bin/mcl-14-137/src/shmcl/mcl"; }
   if( ! defined($ENV{"EXE_INPARA"}) ){ $ENV{"EXE_INPARA"} = $ENV{'MARFIL'}."_cluster_makeInparalog.pl"; }
   if( ! defined($ENV{"EXE_ORTHO"}) ){ $ENV{"EXE_ORTHO"} = $ENV{'MARFIL'}."_cluster_makeOrtholog.pl"; }
   if( ! defined($ENV{"EXE_HOMOL"}) ){ $ENV{"EXE_HOMOL"} = $ENV{'MARFIL'}."_cluster_makeHomolog.pl"; }
   if( ! defined($ENV{"EXE_ISOFORM"}) ){ $ENV{"EXE_ISOFORM"} = $ENV{'MARFIL'}."_cluster_makeIsoform.pl"; }
-  #if( ! defined($ENV{"EXE_HMMPFAM"}) ){ $ENV{"EXE_HMMPFAM"} = $ENV{'MARFIL'}."/bin/hmmer-3.0/src/hmmscan64 --noali --acc --cut_ga "; } 
-  if( ! defined($ENV{"EXE_HMMPFAM"}) ){ $ENV{"EXE_HMMPFAM"} = $ENV{'MARFIL'}."/bin/hmmer-3.1b2/binaries/hmmscan --noali --acc --cut_ga "; } 
-  if( ! defined($ENV{"EXE_MAKEHASH"}) ){ $ENV{"EXE_MAKEHASH"} = $ENV{'MARFIL'}."/bin/COGsoft/COGmakehash/COGmakehash "; }
-  if( ! defined($ENV{"EXE_READBLAST"}) ){ $ENV{"EXE_READBLAST"} = $ENV{'MARFIL'}."/bin/COGsoft/COGreadblast/COGreadblast "; }
-  if( ! defined($ENV{"EXE_COGLSE"}) ){ $ENV{"EXE_COGLSE"} = $ENV{'MARFIL'}."/bin/COGsoft/COGlse/COGlse "; }
-  if( ! defined($ENV{"EXE_COGTRI"}) ){ $ENV{"EXE_COGTRI"} = $ENV{'MARFIL'}."/bin/COGsoft/COGtriangles/COGtriangles "; }
+
+  # BLAST
+  if( ! defined($ENV{'BLAST_PATH'}) ){ 
+    $ENV{'BLAST_PATH'} = $ENV{'MARFIL'}.'bin/ncbi-blast-2.8.1+/bin/'; 
+    if(!-e $ENV{'BLAST_PATH'}){ 
+      $ENV{'BLAST_PATH'} = ''; # should work if in PATH
+    } 
+  }
+  if( ! defined($ENV{'EXE_BLASTP'}) ){ $ENV{'EXE_BLASTP'} = $ENV{'BLAST_PATH'}.'blastp'; }
+  if( ! defined($ENV{'EXE_BLASTN'}) ){ $ENV{'EXE_BLASTN'} = $ENV{'BLAST_PATH'}.'blastn'; }
+  if( ! defined($ENV{'EXE_FORMATDB'}) ){ $ENV{'EXE_FORMATDB'} = $ENV{'BLAST_PATH'}.'makeblastdb'; }
+  
+  # PHYLIP PARS
+  if( ! defined($ENV{'EXE_PARS'}) ){ 
+    $ENV{'EXE_PARS'} = $ENV{'MARFIL'}.'bin/phylip-3.695/exe/pars'; 
+    if(!-e $ENV{'EXE_PARS'}){
+      $ENV{'EXE_PARS'} = 'pars'; # should work if in PATH
+    }	    
+  }
+
+  # mcl
+  if( ! defined($ENV{"EXE_MCL"}) ){ 
+    $ENV{"EXE_MCL"} = $ENV{'MARFIL'}."/bin/mcl-14-137/src/shmcl/mcl"; 
+    if(!-e $ENV{"EXE_MCL"}){
+      $ENV{"EXE_MCL"} = 'mcl'; # should work if in PATH
+    }	  
+  }
+
+  # HMMER
+  if( ! defined($ENV{"EXE_HMMPFAM"}) ){ 
+    $ENV{"EXE_HMMPFAM"} = $ENV{'MARFIL'}."/bin/hmmer-3.1b2/binaries/hmmscan --noali --acc --cut_ga "; 
+    if(!-e $ENV{'MARFIL'}."/bin/hmmer-3.1b2/binaries/hmmscan"){
+      $ENV{"EXE_HMMPFAM"} = 'hmmscan'; # should work if in PATH
+    }	    
+  }
+
+  # COGS
+  if( ! defined($ENV{"COGS_PATH"}) ){ 
+    $ENV{"COGS_PATH"} = $ENV{'MARFIL'}."/bin/COGsoft";
+    if(!-e $ENV{"COGS_PATH"}){
+      if( ! defined($ENV{"EXE_MAKEHASH"}) ){ $ENV{"EXE_MAKEHASH"} = "COGmakehash "; }
+      if( ! defined($ENV{"EXE_READBLAST"}) ){ $ENV{"EXE_READBLAST"} = "COGreadblast "; }
+      if( ! defined($ENV{"EXE_COGLSE"}) ){ $ENV{"EXE_COGLSE"} = "COGlse "; }
+      if( ! defined($ENV{"EXE_COGTRI"}) ){ $ENV{"EXE_COGTRI"} = "COGtriangles "; }
+
+    } else {
+      if( ! defined($ENV{"EXE_MAKEHASH"}) ){ $ENV{"EXE_MAKEHASH"} = $ENV{'COGS_PATH'}."/COGmakehash/COGmakehash "; }
+      if( ! defined($ENV{"EXE_READBLAST"}) ){ $ENV{"EXE_READBLAST"} = $ENV{'COGS_PATH'}."/COGreadblast/COGreadblast "; }
+      if( ! defined($ENV{"EXE_COGLSE"}) ){ $ENV{"EXE_COGLSE"} = $ENV{'COGS_PATH'}."/COGlse/COGlse "; }
+      if( ! defined($ENV{"EXE_COGTRI"}) ){ $ENV{"EXE_COGTRI"} = $ENV{'COGS_PATH'}."/COGtriangles/COGtriangles "; }
+    }
+  }
+
+  # MVIEW
   if( ! defined($ENV{"EXE_MVIEW"}) ){ $ENV{"EXE_MVIEW"} = $ENV{'MARFIL'}."lib/mview/bin/mview "; }
   
-  # transcripts/ETSs
+  # transcripts/ESTs
   if( ! defined($ENV{"EXE_TRANSDECOD_EST"}) ){ $ENV{"EXE_TRANSDECOD_EST"} = $ENV{'MARFIL'}."/lib/est/TransDecoder_r20140704/TransDecoder "; }
   if( ! defined($ENV{'BLAST_PATH_EST'}) ){ $ENV{'BLAST_PATH_EST'} = $ENV{'BLAST_PATH'}; }
   if( ! defined($ENV{'EXE_BLASTX_EST'}) ){ $ENV{'EXE_BLASTX_EST'} = $ENV{'BLAST_PATH_EST'}.'blastx'; }
   if( ! defined($ENV{'EXE_FORMATDB_EST'}) ){ $ENV{'EXE_FORMATDB_EST'} = $ENV{'BLAST_PATH_EST'}.'makeblastdb'; }
   
-  # diamond software
-  if( ! defined($ENV{'DMND_PATH'}) ){ $ENV{'DMND_PATH'} = $ENV{'MARFIL'}.'bin/diamond-0.8.25/'; }
+  # diamond 
+  if( ! defined($ENV{'DMND_PATH'}) ){ 
+    $ENV{'DMND_PATH'} = $ENV{'MARFIL'}.'bin/diamond-0.8.25/'; 
+    if(!-e $ENV{'DMND_PATH'}){
+      $ENV{'DMND_PATH'} = ''; # should work if in PATH
+    }	    
+  }
   if( ! defined($ENV{'EXE_DMNFT'}) ){ $ENV{'EXE_DMNFT'} = $ENV{'DMND_PATH'}.'diamond makedb'; }
   if( ! defined($ENV{'EXE_DMNDP'}) ){ $ENV{'EXE_DMNDP'} = $ENV{'DMND_PATH'}.'diamond blastp'; }
   if( ! defined($ENV{'EXE_DMNDX_EST'}) ){ $ENV{'EXE_DMNDX_EST'} = $ENV{'DMND_PATH'}.'diamond blastx'; }
   
-  if( ! defined($ENV{'BLASTXDB'}) ){ $ENV{'BLASTXDB'} = $ENV{'MARFIL'}."db/uniprot_sprot.fasta"; }
-  
-  #if( ! defined($ENV{"EXE_GMAP"}) ){ $ENV{"EXE_GMAP"} = $ENV{'MARFIL'}."/bin/est/gmap-2014-02-20/src/gmap "; }
-  #if( ! defined($ENV{"EXE_GMAPBUILD"}) ){ $ENV{"EXE_GMAPBUILD"} = $ENV{'MARFIL'}."/bin/est/gmap-2014-02-20/util/gmap_build "; }
-
   if( ! defined($ENV{"EXE_R"}) ){ $ENV{"EXE_R"} = "R " } # expected to be in the path
   if( ! defined($ENV{"TRAILINGZEROS"}) ){ $ENV{"TRAILINGZEROS"} = 3; } # trailing zeros for sequence identifiers, produced by read_FASTA_sequences, (3 for max 999 sequences)
 }
