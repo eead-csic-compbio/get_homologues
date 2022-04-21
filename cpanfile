@@ -4,6 +4,7 @@ requires 'DB_File';
 requires 'File::Basename';
 requires 'File::Spec';
 requires 'File::Temp';
+requires 'File::Path';
 requires 'FileHandle';
 requires 'List::Util';
 requires 'Getopt::Std';
