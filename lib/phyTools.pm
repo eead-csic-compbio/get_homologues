@@ -116,7 +116,7 @@ sub set_phyTools_env
   if( ! defined($ENV{"EXE_HMMPFAM"}) ){ 
     $ENV{"EXE_HMMPFAM"} = $ENV{'MARFIL'}."/bin/hmmer-3.1b2/binaries/hmmscan --noali --acc --cut_ga "; 
     if(!-e $ENV{'MARFIL'}."/bin/hmmer-3.1b2/binaries/hmmscan"){
-      $ENV{"EXE_HMMPFAM"} = 'hmmscan'; # should work if in PATH
+      $ENV{"EXE_HMMPFAM"} = 'hmmscan --noali --acc --cut_ga '; # should work if in PATH
     }	    
   }
 
