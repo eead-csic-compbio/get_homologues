@@ -14,6 +14,8 @@ use lib "$Bin/lib/bioperl-1.5.2_102/";
 require phyTools;
 use transcripts;
 
+$|=1;
+
 my $DOWNLOADEXE = 'wget'; # add path if required, curl in MacOS
 my $BINTGZFILE = 'bin.tgz';
 my $BINOSXTGZFILE = 'binosx.tgz';
@@ -38,7 +40,7 @@ my %packages =
   );
 
 my ($SOguess,$output,$command,$cwd) = ('','','',getcwd());
-my ($force_unsupervised,$noDBs) = (0,0);
+my ($downloadOK,$force_unsupervised,$noDBs) = (0,0,0);
 
 # unsupervised, forced install
 if(defined($ARGV[0]))
@@ -135,6 +137,7 @@ if(! -e $ENV{'MARFIL'}.'/bin/COGsoft/' || !-e $ENV{'EXE_BLASTP'})
       system("tar xfz $BINTGZFILE");
       unlink($BINTGZFILE);
       chdir($cwd);
+      $downloadOK = 1;
     }         
   }          
 }
@@ -143,23 +146,28 @@ else{ print ">> OK\n"; }
 
 # check required precompiled binaries
 print "\n## checking mcl-14-137 (lib/phyTools: \$ENV{'EXE_MCL'})\n";
+
+if($downloadOK){
+  $ENV{'EXE_MCL'} = $ENV{'MARFIL'}.'/bin/mcl-14-137/src/shmcl/mcl'
+}
+
 $output = `$ENV{'EXE_MCL'} 2>&1`;
 if(!$output || $output !~ /usage/)
 {
   print "\n# compiling mcl-14-137 ...\n"; # requires gcc
-  
+
   if(!-s $ENV{'MARFIL'}.'/bin/mcl-14-137')
   {
-    warn "# mcl binaries are missing\n".
-      "# please re-run perl install.pl and type Y when asked to download source and binaries\n".
+    warn "# mcl binaries are missing,\n".
+      "# please re-run perl install.pl and type Y when asked to download source and binaries\n";
     exit(-1);   
   }
-
+  
   chdir($ENV{'MARFIL'}.'/bin/mcl-14-137');
   system("./configure 2>&1");
   system("make clean 2>&1");
   system("make 2>&1");
-  chdir($cwd);
+  chdir($cwd); 
 
   $output = `$ENV{'EXE_MCL'} 2>&1`;
   if($output !~ /usage/)
@@ -177,6 +185,11 @@ my %cogs = ("EXE_COGLSE"=>'COGlse',"EXE_MAKEHASH"=>'COGmakehash',
 foreach my $exe (keys(%cogs))
 {
   print "## checking COGsoft/$cogs{$exe} (lib/phyTools: \$ENV{'$exe'})\n";
+
+  if($downloadOK){
+    $ENV{$exe} = $ENV{'MARFIL'}."/bin/COGsoft/$cogs{$exe}/$cogs{$exe}"
+  }
+
   $output = `$ENV{$exe} 2>&1`;
   if(!$output || ($output !~ /Usage/ && $output !~ /Error/ && $output !~ /open output/))
   {
@@ -184,8 +197,8 @@ foreach my $exe (keys(%cogs))
 
     if(!-s $ENV{'MARFIL'}.'/bin/COGsoft/'.$cogs{$exe})
     {
-      warn "# COGS binaries are missing\n".
-      "# please re-run perl install.pl and type Y when asked to download source and binaries\n".
+      warn "# COGS binaries are missing,\n".
+      "# please re-run perl install.pl and type Y when asked to download source and binaries\n";
       exit(-1);
     }
 
@@ -193,7 +206,7 @@ foreach my $exe (keys(%cogs))
     system("make 2>&1");
     chdir($cwd);
 
-    $output = `$ENV{'MARFIL'}."/bin/COGsoft/$cogs{$exe}/$cogs{$exe}" 2>&1`;
+    $output = `$ENV{$exe} 2>&1`;
     if(!$output || ($output !~ /Usage/ && $output !~ /Error/ && $output !~ /open output/))
     {
       die "<< Cannot run $cogs{$exe}, please check the manual for compilation instructions and re-run ().\n";
