@@ -193,10 +193,10 @@ foreach my $exe (keys(%cogs))
     system("make 2>&1");
     chdir($cwd);
 
-    $output = `$ENV{$exe} 2>&1`;
-    if($output !~ /Usage/ && $output !~ /Error/ && $output !~ /open output/)
+    $output = `$ENV{'MARFIL'}."/bin/COGsoft/$cogs{$exe}/$cogs{$exe}" 2>&1`;
+    if(!$output || ($output !~ /Usage/ && $output !~ /Error/ && $output !~ /open output/))
     {
-      die "<< Cannot run $cogs{$exe}, please check the manual for compilation instructions and re-run.\n";
+      die "<< Cannot run $cogs{$exe}, please check the manual for compilation instructions and re-run ().\n";
     }
   }
   else{ print ">> OK\n"; }
