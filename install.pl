@@ -2,7 +2,7 @@
 
 # Script that checks/compiles software required by get_homologues[-est] and 
 # checks dependencies for first-time users.
-# last checked Feb2021
+# last checked Apr2022
 
 use strict;
 use warnings;
@@ -144,15 +144,14 @@ else{ print ">> OK\n"; }
 # check required precompiled binaries
 print "\n## checking mcl-14-137 (lib/phyTools: \$ENV{'EXE_MCL'})\n";
 $output = `$ENV{'EXE_MCL'} 2>&1`;
-if($output !~ /usage/)
+if(!$output || $output !~ /usage/)
 {
   print "\n# compiling mcl-14-137 ...\n"; # requires gcc
   
   if(!-s $ENV{'MARFIL'}.'/bin/mcl-14-137')
   {
     warn "# mcl binaries are missing\n".
-      "# If you just git cloned you should also get the latest release,\n".
-      "# unpack it and copy the contents of the bin/ folder to your local repo bin/\n";
+      "# please re-run perl install.pl and type Y when asked to download source and binaries\n".
     exit(-1);   
   }
 
@@ -179,9 +178,17 @@ foreach my $exe (keys(%cogs))
 {
   print "## checking COGsoft/$cogs{$exe} (lib/phyTools: \$ENV{'$exe'})\n";
   $output = `$ENV{$exe} 2>&1`;
-  if($output !~ /Usage/ && $output !~ /Error/ && $output !~ /open output/)
+  if(!$output || ($output !~ /Usage/ && $output !~ /Error/ && $output !~ /open output/))
   {
     print "\n# compiling COGsoft/$cogs{$exe} ...\n"; # requires g++
+
+    if(!-s $ENV{'MARFIL'}.'/bin/COGsoft/'.$cogs{$exe})
+    {
+      warn "# COGS binaries are missing\n".
+      "# please re-run perl install.pl and type Y when asked to download source and binaries\n".
+      exit(-1);
+    }
+
     chdir($ENV{'MARFIL'}.'/bin/COGsoft/'.$cogs{$exe});
     system("make 2>&1");
     chdir($cwd);
