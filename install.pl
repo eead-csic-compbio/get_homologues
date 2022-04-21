@@ -217,6 +217,11 @@ foreach my $exe (keys(%cogs))
 
 # NCBI blast+
 print "## Checking blast (lib/phyTools: \$ENV{'EXE_BLASTP'})\n";
+
+if($downloadOK){
+    $ENV{'EXE_BLASTP'} = $ENV{'MARFIL'}."/bin/ncbi-blast-2.8.1+/bin/blastp"
+}
+
 $output = `$ENV{'EXE_BLASTP'} 2>&1`;
 if(!$output || $output !~ /BLAST/)
 {
@@ -234,6 +239,7 @@ print "\n### 2) checking optional parts: \n\n";
 # check PFAM binary and DB
 print "\n## checking optional HMMER binaries (lib/phyTools: \$ENV{'EXE_HMMPFAM'})\n";
 print "# required by get_homologues.pl -D\n";
+
 $output = `$ENV{'EXE_HMMPFAM'} 2>&1`;
 if($output =~ /Usage:/){ print ">> OK\n"; }
 else
