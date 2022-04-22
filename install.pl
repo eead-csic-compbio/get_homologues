@@ -226,13 +226,13 @@ foreach my $exe (keys(%cogs))
     }
 
     chdir($ENV{'MARFIL'}.'/bin/COGsoft/'.$cogs{$exe});
-    system("make 2>&1");
+    system("make clean; make 2>&1");
     chdir($cwd);
 
     $output = `$ENV{$exe} 2>&1`;
     if(!$output || ($output !~ /Usage/ && $output !~ /Error/ && $output !~ /open output/))
     {
-      die "<< Cannot run $cogs{$exe}, please check the manual for compilation instructions and re-run ().\n";
+      die "<< Cannot run $ENV{$exe}, please check the manual for compilation instructions and re-run ($output).\n";
     }
   }
   else{ print ">> OK\n"; }
