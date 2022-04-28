@@ -1,14 +1,14 @@
 # Makefile for Travis CI tests and installation
 # https://docs.travis-ci.com/user/languages/perl
 
-install_cogs:
-	perl install.pl no_databases COGS
-
 test:
 	perl test_get_homologues.t
 
 testR:
 	perl test_get_homologues.t testR
+
+test_swiss:
+	perl test_get_homologues.t swiss
 
 clean:	
 	rm -rf sample_plasmids_gbk_homologues/tmp/ 
