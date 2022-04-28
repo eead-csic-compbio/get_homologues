@@ -386,5 +386,5 @@
 21042022: install.pl no_databases COGS only gets/compiles COGS, so that other binaries can be taken from PATH ()
 22042022: added CODE_OF_CONDUCT
 28042022: added test_swiss to Makefile
-28042022: added compila_conda.pl to bin/COGsoft to export it as a conda recipe (macosx-intel copy still the same)
+28042022: added compila_conda.pl to bin/COGsoft & added $(CXX) to Makefiles to use in conda recipe (macosx-intel copy still the same)
 28042022: COGsoft source released as https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.4.6/COGsoft.tgz
