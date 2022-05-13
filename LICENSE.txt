@@ -3,10 +3,10 @@
                                 =======
  
 GET_HOMOLOGUES is designed, created and maintained both at the Laboratory 
-of Computational Biology at Estacion Experimental de Aula Dei (EEAD/CSIC, 
-http://www.eead.csic.es/compbio) in Zaragoza,Spain and at the Center for
-Genomic Sciences of Universidad Nacional Autonoma de Mexico (CCG/UNAM,
-http://www.ccg.unam.mx/~vinuesa).
+of Computational Biology at Estacion Experimental de Aula Dei (EEAD-CSIC, 
+https://www.eead.csic.es/compbio) in Zaragoza,Spain and at the Center for
+Genomic Sciences of Universidad Nacional Autonoma de Mexico (CCG-UNAM,
+https://www.ccg.unam.mx/~vinuesa/).
 
 The code has been written by Bruno Contreras-Moreira and Pablo Vinuesa and 
 we kindly ask you to report errors or bugs in the program to the authors 
