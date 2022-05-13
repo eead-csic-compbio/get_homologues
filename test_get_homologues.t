@@ -1,8 +1,13 @@
+#!/usr/bin/env perl 
+
 use strict;
 use warnings;
 use Test::More;
-use lib "lib";
-use lib "lib/bioperl-1.5.2_102/";
+use FindBin '$Bin';
+use lib "$Bin/lib";
+use lib "$Bin/lib/bioperl-1.5.2_102/";
+
+chdir($Bin);
 
 BEGIN { use_ok('ForkManager') };
 
@@ -54,7 +59,7 @@ ok( eval{ `perl ./transcripts2cds.pl` } =~ /\[options\]/ , 'transcripts2cds.pl' 
 # implicitly tests modules in libs/est/
 
 if($testSP){
-	# requires optional module Inline::CPP, not available in bioconda Apr2022
+	# requires optional module Inline::CPP, not available in bioconda May2022
 	ok( eval{ `perl ./transcripts2cdsCPP.pl sample_cluster.fna` } =~ /sample_cluster.fna_l50_E1e-05.cds/ , 'transcripts2cdsCPP.pl' );
 } 
 
@@ -76,7 +81,7 @@ ok( eval{ `perl ./parse_pangenome_matrix.pl -m sample_intersection/pangenome_mat
 # uses lib/mview
 ok( eval{ `perl ./annotate_cluster.pl -f sample_cluster.fna -b 2>&1` } =~ /taxa included in alignment: 14/, 'annotate_cluster.pl -f sample_cluster -b' );
 
-# require R dependencies
+# requires R dependencies
 if($testR == 1){
 	ok( eval{ `bash ./hcluster_pangenome_matrix.sh -i sample_intersection/pangenome_matrix_t0.tab 2>&1` } =~ 
 		/heatmap.pdf was generated/ , 'hcluster_pangenome_matrix.sh -i ' );

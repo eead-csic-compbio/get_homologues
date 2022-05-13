@@ -389,3 +389,4 @@
 28042022: added compila_conda.pl to bin/COGsoft & added $(CXX) to Makefiles to use in conda recipe (macosx-intel copy still the same)
 28042022: COGsoft source released as https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.4.6/COGsoft.tgz
 28042022: released updated bin.tgz (v3.5)
+13052022: test_get_homologues.t made executable for conda tests
