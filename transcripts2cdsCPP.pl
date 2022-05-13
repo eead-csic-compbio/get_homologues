@@ -1,9 +1,11 @@
 #!/usr/bin/env perl
 
-# 2015-19 Bruno Contreras-Moreira (1)
+# 2015-22 Bruno Contreras-Moreira (1)
 # 1: http://www.eead.csic.es/compbio (Laboratory of Computational Biology, EEAD/CSIC, Spain)
 
-# This script can be used to extract coding sequences encoded in input transcripts
+# This script can be used to extract coding sequences encoded in input transcripts.
+
+# May2022 this won't run in bioconda as Inline:CPP is not available
 
 # Uses some code from third-party software:
 # TransDecoder (http://transdecoder.sourceforge.net), primarily maintained by Brian Haas at the Broad Institute and
