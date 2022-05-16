@@ -11,7 +11,7 @@ The original version, **suitable for bacterial genomes**, was described in:
 
 [Vinuesa P, Contreras-Moreira B (2015) Methods in Molecular Biology Volume 1231, 203-232](http://link.springer.com/protocol/10.1007%2F978-1-4939-1720-4_14)
 
-The software was then adapted to the study of **intra-specific eukaryotic pan-genomes** resulting in script GET_HOMOLOGUES-EST, described in:
+The software was subsequently adapted to the study of **intra-specific eukaryotic pan-genomes** resulting in script GET_HOMOLOGUES-EST, described in:
 
 ![**Legend.** Flowchart and features of GET_HOMOLOGUES-EST.](./pics/EST.jpg)
 
@@ -21,15 +21,15 @@ GET_HOMOLOGUES-EST was benchmarked with genomes and transcriptomes of *Arabidops
 
 A [tutorial](http://eead-csic-compbio.github.io/get_homologues/tutorial/pangenome_tutorial.html) is available, covering typical examples of both GET_HOMOLOGUES (bacteria) and GET_HOMOLOGUES-EST (plants). 
 
-<!--There are also afew examples on how to analyze data from [Ensembl Plants](http://plants.ensembl.org) at [https://github.com/Ensembl/plant_tools/tree/master/compara](https://github.com/Ensembl/plant_tools/tree/master/compara). -->
+Installation instructions, including the bioconda package, are available in the 
+[manual](http://eead-csic-compbio.github.io/get_homologues/manual/manual.html#SECTION00030000000000000000).
 
 A [Docker image](https://hub.docker.com/r/csicunam/get_homologues) is available with GET_HOMOLOGUES 
 bundled with [GET_PHYLOMARKERS](https://github.com/vinuesa/get_phylomarkers), ready to use. 
 The GET_PHYLOMARKERS [manual](https://vinuesa.github.io/get_phylomarkers) 
 explains how to use nucleotide & peptide clusters produced by GET_HOMOLOGUES to compute robust multi-gene and pangenome phylogenies.
 
-The code is regularly patched (see [CHANGES.txt](./CHANGES.txt) in each release, <!--and [TODO.txt](./TODO.txt)),-->
-and has been used in a variety of studies 
+The code is regularly patched (see [CHANGES.txt](./CHANGES.txt) in each release, and has been used in a variety of studies 
 (see citing papers [here](https://scholar.google.es/scholar?start=0&hl=en&as_sdt=2005&cites=5259912818944685430) and 
 [here](https://scholar.google.es/scholar?oi=bibs&hl=en&cites=14330917787074873427&as_sdt=5), respectively).
 
