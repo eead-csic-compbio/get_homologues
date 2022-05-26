@@ -1,6 +1,7 @@
 ## GET_HOMOLOGUES: a versatile software package for pan-genome analysis
 
 [![Build Status](https://travis-ci.com/eead-csic-compbio/get_homologues.svg?branch=master)](https://travis-ci.com/eead-csic-compbio/get_homologues)
+[![Anaconda-Server Badge](https://anaconda.org/bioconda/get_homologues/badges/installer/conda.svg)](https://conda.anaconda.org/bioconda)
 
 This software is maintained by Bruno Contreras-Moreira (bcontreras _at_ eead.csic.es) and Pablo Vinuesa (vinuesa _at_ ccg.unam.mx). 
 The original version, **suitable for bacterial genomes**, was described in:
@@ -21,7 +22,7 @@ GET_HOMOLOGUES-EST was benchmarked with genomes and transcriptomes of *Arabidops
 
 A [tutorial](http://eead-csic-compbio.github.io/get_homologues/tutorial/pangenome_tutorial.html) is available, covering typical examples of both GET_HOMOLOGUES (bacteria) and GET_HOMOLOGUES-EST (plants). 
 
-Installation instructions, including the bioconda package, are available in the 
+Installation instructions, including the [bioconda package](https://anaconda.org/bioconda/get_homologues), are available in the 
 [manual](http://eead-csic-compbio.github.io/get_homologues/manual/manual.html#SECTION00030000000000000000).
 
 A [Docker image](https://hub.docker.com/r/csicunam/get_homologues) is available with GET_HOMOLOGUES 
