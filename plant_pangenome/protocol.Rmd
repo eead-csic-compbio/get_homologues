@@ -3,18 +3,18 @@ title: 'Pangenome analysis of plant transcripts and coding sequences'
 bibliography: bib_myarticles.bib
 csl: springerprotocols.csl
 output:
-  word_document: default
-  pdf_document:
-    fig_caption: yes
-    highlight: zenburn
-    toc: yes
-    toc_depth: 4
   html_document:
     fig_caption: yes
     highlight: zenburn
     theme: cerulean
     toc: yes
     toc_depth: 4
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 4
+  word_document: default
 ---
 
 ```{r knitr setup, include=FALSE,  eval=TRUE, echo=FALSE, warning=FALSE}
@@ -35,6 +35,8 @@ Bruno Contreras-Moreira (1)*, Alvaro Rodriguez del Rio (1), Carlos P. Cantalapie
 ## i. Summary/Abstract
 
 The pangenome of a species is the sum of the genomes of its individuals. As coding sequences often represent only a small fraction of each genome, analyzing the pangene set can be a cost-effective strategy for plants with large genomes or highly heterozygous species. Here we describe a step-by-step protocol to analyze plant pangene sets with the software GET_HOMOLOGUES-EST. After a short introduction, where the main concepts are illustrated, the remaining sections cover the installation and typical operations required to analyze and annotate pantranscriptomes and gene sets of plants. The recipes include instructions on how to call core and accessory genes, how to compute a presence-absence pangenome matrix and how to identify and analyze private genes, present only in some genotypes. Downstream phylogenetic analyses are also discussed.
+
+An early version of this protocol was published in 2022 as a chapter of the book [Plant Comparative Genomics](https://link.springer.com/book/9781071624289). 
 
 ### ii. Key Words
 
@@ -63,14 +65,33 @@ In 2002 Welch and colleagues [@Welch2002] compared the genome sequences of three
 __Figure 1__ summarizes the computational analysis of the pangene set of three toy genomes with GET_HOMOLOGUES-EST. Note that occupancy is defined as the number of genomes/cultivars/ecotypes present in a sequence cluster and in this example takes values from 1 to 3 (see also definitions in __Table 1__). Core loci are found in all three genomes and hence have occupancy=3 in the example. Accessory loci are allocated to shell and cloud compartments. Although not shown in the figure, it's often convenient to define a fourth class, the soft-core, which is a relaxed core that tolerates assembly and annotation errors.
 
 ![](Figures/Figure1.png)
+**Figure 1.** pangene set of three genomes (A, B and C). In this example there are 101 core loci and 44 (11+9+24) shell loci are found in two accessions. Moreover, 82 (35+25+22) cloud loci are annotated only in one genome. The pangene set size is 82+44+101=227 loci. The table below shows four example clusters and their occupancy, computed using the rules in __Table 1__.
+
+| class or compartment | definition                                            |
+| ------- | ------------------------------------------------------------------ |
+| core | Genes contained in all considered genomes/taxa. |
+| soft-core | Genes contained in 95% of the considered genomes/taxa, as in [@Kaas2012]. |
+| cloud | Genes present only in a few genomes/taxa, generally $\leq 2$. The cutoff is defined as the class next to the most populated non-core cluster class. |
+| shell | Remaining genes, present in several genomes/taxa. |
+**Table 1.** Definition of occupancy-based classes used by the software GET_HOMOLOGUES-EST.
+
 
 In addition to occupancy differences, previous benchmarks have shown that occupancy-based classes differ in their functional annotations. The examples in __Figure 2__ highlight the different functions of core and accessory genes in two bacterial clades; note that similar observations have been made in plants [@ContrerasMoreira2017; @Gordon2017].
 
 ![](Figures/Figure2.png) 
+**Figure 2.** Functional annotations (COGs) of protein-coding genes classified in occupancy classes in two bacterial sets.
+
+
 
 ## 2. Materials
 
 The **GET_HOMOLOGUES** software was originally designed for the analysis of bacterial genomes, and has been described in [@ContrerasMoreira2013; @Vinuesa2015]. That software was then adapted to the study of intra-specific eukaryotic pangene sets, as described in [@ContrerasMoreira2017], taking the **GET_HOMOLOGUES-EST** name. Its source code and documentation can be found at <https://github.com/eead-csic-compbio/get_homologues>. __Table 2__ summarizes the main differences between the two flavours of the software. In this protocol we will use GET_HOMOLOGUES-EST (see __Note __^[Read [@Golicz2016; @Vernikos2020] for other alternatives.]).
+
+| version     | primary input | primary engine | align coverage | COGS | isoforms filtered |
+| ----------- | --------------| ---------| ----------------------| --- | --- |
+| GET_HOMS    | peptides | BLASTP / DIAMOND | query sequence | yes | no |
+|GET_HOMS-EST | nucleotides | BLASTN | shortest sequence | no | yes |
+**Table 2.** Summary of features and differences of GET_HOMOLOGUES and GET_HOMOLOGUES-EST. Note that GET_HOMOLOGUES can also cluster user-selected nucleotide features in GenBank files, and in this case BLASTN is used as well.
 
 ### 2.1 Installation and up-to-date documentation
 
@@ -104,6 +125,19 @@ tar xvfz get_homologues-x86_64-20210305.tgz
 
 Releases include scripts (Perl, R and bash), documentation, sample data and the required binary dependencies, which are listed in __Table 3__ and discussed in the manual.
 
+software | source | citation
+--------------| --------------------------------------------------- | -----------
+mcl v14-137   | <http://micans.org/mcl> | @Enright2002
+NCBI Blast-2.8.1+ | <http://blast.ncbi.nlm.nih.gov> | @Altschul1997
+BioPerl v1.5.2 | <http://www.bioperl.org> | @Stajich2002
+HMMER 3.1b2 | <http://hmmer.org> | 
+Pfam | <http://pfam.xfam.org> | @Mistry2021
+PHYLIP 3.695 | <http://evolution.genetics.washington.edu/phylip> | 
+Transdecoder r20140704 | <http://transdecoder.sf.net> | @Haas2013
+MVIEW 1.60.1 | <https://github.com/desmid/mview> | @Brown1998
+diamond 0.8.25 | <https://github.com/bbuchfink/diamond> | @Buchfink2015
+**Table 3.** Dependencies of GET_HOMOLOGUES-EST.
+
 #### 2.1.2 GitHub clone / pull
 
 A more sustainable way of obtaining the software is to use the software _git_.
@@ -126,9 +160,20 @@ cd soft/get_homologues
 git pull
 ```
 
-#### 2.1.3 Environment and optional data (Pfam & SwissProt)
+#### 2.1.3 Bioconda install
 
-Whatever way we installed the software we can now define an environment variable pointing to our install location:
+You can also install the software from [Bioconda](https://anaconda.org/bioconda/get_homologues) as follows:
+
+```{r, engine='bash', eval=FALSE}
+conda activate bioconda
+$ conda create -n get_homologues -c conda-forge -c bioconda get_homologues
+$ conda activate get_homologues
+```
+
+#### 2.1.4 Environment and optional data (Pfam & SwissProt)
+
+Whatever way we installed the software we can now define an environment variable pointing to our install location
+(note this won't be required with Bioconda):
 
 ```{r, engine='bash', eval=FALSE}
 # set GET_HOMOLOGUES path, for example:
@@ -145,11 +190,11 @@ perl install.pl
 ```
 You should be able to control the installation process by typing Y or N in the terminal. This script will also tell you of any missing dependencies. 
 
-#### 2.1.4 Docker container
+#### 2.1.5 Docker container
 
 A way to use GET_HOMOLOGUES-EST with all dependencies pre-installed is the Docker image available at <https://hub.docker.com/r/csicunam/get_homologues>. This container also includes GET_PHYLOMARKERS (see section 3.3.6). 
 
-#### 2.1.5 High performance cluster (HPC) configuration
+#### 2.1.6 High performance cluster (HPC) configuration
 
 In order to prepare your installation to run on a computer cluster please follow the instructions in section "Optional software dependencies" of the manual. Three job managers are currently supported: gridengine, LSF and Slurm. The default configuration is for gridengine, but this can be changed by creating a file named "HPC.conf" and setting appropriate values and paths for your HPC cluster (see __Note __^[This will only work if GET_HOMOLOGUES-EST is installed where the compute cluster management software is accessible. This is usually not the case for Docker containers.]). This file should be placed at $GETHOMS. The sample configuration file looks like this:
 
@@ -192,6 +237,10 @@ As summarized in __Figure 3__, the main script _get_homologues-est.pl_ can produ
  + Matrices of percentage of conserved sequence clusters (POCS), which contain the % of clusters that contain sequence from every two species being compared [@Qin2014].
 
 ![](Figures/Figure3.png)
+
+**Figure 3.** Features of GET_HOMOLOGUES-EST. Flowchart of the main tasks and deliverables. BLASTN and optional Pfam scans, as well as BDBH and OMCL clustering, can be run on a local computer, preferably multi-core, or over a HPC cluster. Resulting clusters are post-processed to produce pangenome or average nucleotide identity matrices, as well as to estimate pan-, soft-core-, and core-genomes. Note that both clustering algorithms can be fine-tuned by customizing an array of parameters, of which alignment coverage (-C) and same Pfam domain composition (-D) are perhaps the most important. While OMCL is adequate for most applications, BDBH is faster for the calculation of core sequences within large datasets. 
+
+
 
 As assembled transcripts are often incomplete, and gene models might contain errors, by default GET_HOMOLOGUES-EST computes alignment coverage with respect to the shortest sequence. This adds robustness against split genes, partial genes and genes or transcripts with retained introns [@ContrerasMoreira2017]. 
 
@@ -384,8 +433,21 @@ These numbers start counting from the reference genome, in this case Alexis. Thi
 The resulting heatmap summarizing the ANI matrix in the example is shown in __Figure 4__. In our experience, ANI matrices computed from core genes can recapitulate the expected phylogeny of your input set [@ContrerasMoreira2017].
 
 ![](Figures/Figure4.png)
+**Figure 4.** Average nucleotide % identity matrix and ordered heat map of 2254 single-copy core barley CDS.
+Values are average nucleotide identities among sequences clustered together by GET_HOMOLOGUES-EST. This figure was produced with script _plot_matrix_heatmap.sh_, which calls heatmap.2 function from the gplots R package. The dendrograms were computed by complete linkage clustering and Euclidean distances computed among ANI columns. 
+
 
 A sample of the resulting POCS matrix is shown in __Table 4__.
+
+genomes	| Alexis | AmagiNijo | Beiqing5	| Esterel | Franka | Himala2
+ :-- | :--: | :--: | :--: | :--: | :--: | :--: 
+Alexis | 100 | 71.54 | 70.76 | 72.43 | 72.06 | 70.46
+AmagiNijo	| 71.54 |	100	| 70.89	| 71.38	| 70.90	| 70.40		
+Beiqing5 | 70.76 | 70.89 | 100 | 71.14 | 71.18 | 71.80
+Esterel |	72.43	| 71.38 |	71.14 | 100 | 73.66 |	70.79	
+Franka | 72.06 | 70.90 | 71.18 | 73.66 | 100 |70.74	
+Himala2	| 70.46 | 70.40 | 71.80 | 70.79 |	70.74 |	100	
+**Table 4.** Excerpt of percentage of conserved sequences (POCS) matrix. Values are percentages of conserved sequence clusters among pairs of taxa. In other words, these values summarize how many clusters of one genome contain also sequences from another. 
 
 Note that the examples above use -m cluster to parallelize most tasks (see section 2.1.5). If your cluster manager is not supported you can always use -m dryrun to generate batch files that should be able to execute. 
 
@@ -469,6 +531,9 @@ dir	query	sbjct	bits	Eval	%ident	cover	Pfam	annotation
 Another useful script to annotate individual clusters is _annotate_cluster.pl_, which produces a multiple alignment (MSA) view of the locally-aligned sequences that make up the cluster. It works by aligning all sequences in the cluster to the longest/user-selected sequence (see __Note __^[It does not necessarily conserve the original sequence order. Any sequence stretches masked by BLAST will appear as Xs. Clusters of transcripts might contain sequences that do not match the longest sequence; instead, they align towards the 5' or 3' of other sequences and are not included in the produced cumulative MSA.]). __Figure 5__ summarizes the output of this script, which is particularly useful for raw transcripts.
 
 ![](Figures/Figure5.png)
+**Figure 5.** Summary of script _annotate_clusters.pl_. A cluster of transcript sequences (top) is processed for further downstream analyses by alignment to an external reference sequence (-r), collapsing overlapping sequences of the same taxon (-c) or making the alignment block blunt (-b). In addition, private variants to a group of taxa can be extracted (bottom), and Pfam domains called by translating the longest sequence.
+
+
 
 There are many possible uses for clusters produced by GET_HOMOLOGUES-EST:
 
@@ -554,8 +619,10 @@ Core.size Pan.size BIC LogLikelihood
 ```
 
 ![](Figures/Figure6.png)
+**Figure 6.** Soft-core leaf pantranscriptome after comparing 14 barley cultivars and ecotypes. (Left) Snapshot of the simulation after 2 replicates are complete. The data points for the first replicate are in black, and those for the second in green. (Right) Fitted Tettelin function after 20 replicates are complete. 
 
- As you can see from the output, script _compare_clusters.pl_ produces several versions of the same matrix, which describe a pangene set (see __Note __^[Similar matrices can be obtained for clades in Ensembl Plants with scripts at <https://github.com/Ensembl/plant-scripts/tree/master/phylogenomics>]):
+
+As you can see from the output, script _compare_clusters.pl_ produces several versions of the same matrix, which describe a pangene set (see __Note __^[Similar matrices can be obtained for clades in Ensembl Plants with scripts at <https://github.com/Ensembl/plant-scripts/tree/master/phylogenomics>]):
 
  + _pangenome_matrix_t0.tab_ is a numeric matrix with tab-separated (TSV) columns, with taxa/genomes as rows and sequence clusters as columns, in which cells with natural numbers indicate whether a given taxa contains 1+ sequences from a given cluster. It can be read and edited with any text editor or spreadsheet software, and is also produced in transposed form for convenience. For example, users might want to sort the clusters by position on a reference genome and use these matrices to visualize results.
 
@@ -572,6 +639,8 @@ These presence-absence matrices can be used directly to infer population phyloge
 Moreover, it is possible to annotate pangenome clusters with script _make_nr_pangenome_matrix.pl_ and a user-provided FASTA file of curated sequences. For instance, you might want to identify clusters containing genes from transposable elements (see __Note __^[See for instance the nrTEplants library at <https://github.com/Ensembl/plant-scripts/releases/download/v0.3/nrTEplantsJune2020.fna.bz2>, described at <https://github.com/Ensembl/plant_tools/tree/master/bench/repeat_libs>]), or low copy genes of flowering plants (see __Note __^[See <https://github.com/mossmatters/Angiosperms353> [@Johnson2019] or <http://sftp.kew.org/pub/treeoflife/current_release/fasta/by_gene> [@Baker2021]]). 
 
 ![](Figures/Figure7.png)
+**Figure 7.** Distribution of leaf CDS clusters from 15 barleys as a function of their occupancy. Occupancy classes are colored as core, soft-core and shell members. Cloud clusters were filtered out (-t 3). 
+
 
 #### 3.3.5 Analysis of accessory genes/transcripts
 
@@ -615,6 +684,13 @@ $GETHOMS/pfam_enrich.pl -d cds_est_homologues -c clusters_cds -n \
 	-f SBCC073_accessory.fna > SBCC073_accessory.pfam.enrich.tab
 ```
 The top enriched domains of the last example are shown in __Table 5__.
+
+PfamID | counts(exp) | counts(ctr) | freq(exp) | freq(ctr) | p-value | p-value(adj) | description
+ :-- | --: | --: | --: | --: | --: | --: | :--
+PF13976|14|19|7.376e-03|9.715e-04|2.994e-07|3.855e-04|GAG-pre-integrase domain
+PF01535|59 | 305 | 3.109e-02 | 1.559e-02 | 5.950e-06 | 5.746e-03 | PPR repeat
+PF00560|32|128| 1.686e-02|6.545e-03|1.140e-05|8.810e-03|Leucine Rich Repeat
+**Table 5.** Top 3 enriched Pfam domains encoded in accessory (Exp) CDS found in barley landrace SBCC073 with respect to the complete CDS set (Ctr). Both raw and adjusted Fisher's test P-values are shown.
 
 If you are looking for accessory genes and transcripts, as in the first example of this section, there are several points that should be considered before doing any kind of biological interpretation:
 
@@ -699,98 +775,12 @@ The resulting trees are in Newick format and can be plotted with tools such as F
 or any other preferred software (see __Note __^[See <http://tree.bio.ed.ac.uk/software/figtree> and <https://itol.embl.de>.]).
 
 
-## 4. Notes
 
-<!--As we all know, even the simplest techniques go wrong from time to time. Would you therefore indicate any major problems or faults that can occur with your technique? Try to indicate the major sources of problems and how they can be identified and overcome. With reference to related techniques, any variations of the technique that you have described should also be made in this section, as well as--where relevant--an indication of the sensitivity of the method, timescale for the singled technique, etc. This "Notes" section is a hallmark of this series and has been singled out for praise by a number of reviewers. Please try and make this section as extensive as possible by putting on paper all of your various experiences with the technique. Each ‘Note’ should be cross-referenced with the ‘Materials’ and ‘Methods’ sections, e.g. (see Note 1) -->
-
-<!-- To be cut-pasted from the end of the Word document -->
-
-## 5. References
-
-
-<!-- To be cut-pasted from the end of the Word document -->
-
-
-## Acknowledgements
+## 4. Acknowledgements
 
 A first draft of this protocol was funded by Centro de Bioinformática y Biología Computacional de Colombia – [BIOS](http://bios.co) for a workshop organized by Marco Cristancho at Manizales, Colombia, in March 2017. We also received funding from Fundación ARAID and the Spanish Ministry of Economy and Competitivity (CSIC13‐4E‐249, AGL2013-48756-R, AGL2016-80967-R, CGL2016‐79790-P). PV acknowledges support from CONACyT Mexico (A1-S-11242) and PAPIIT-UNAM (IN206318 and IN209321). We thank Brett Chapman for proof-reading this manuscript. 
 
-## Figure captions
+## 5. References and notes
 
-**Figure 1.** pangene set of three genomes (A, B and C). In this example there are 101 core loci and 44 (11+9+24) shell loci are found in two accessions. Moreover, 82 (35+25+22) cloud loci are annotated only in one genome. The pangene set size is 82+44+101=227 loci. The table below shows four example clusters and their occupancy, computed using the rules in __Table 1__.
 
-**Figure 2.** Functional annotations (COGs) of protein-coding genes classified in occupancy classes in two bacterial sets.
 
-**Figure 3.** Features of GET_HOMOLOGUES-EST. Flowchart of the main tasks and deliverables. BLASTN and optional Pfam scans, as well as BDBH and OMCL clustering, can be run on a local computer, preferably multi-core, or over a HPC cluster. Resulting clusters are post-processed to produce pangenome or average nucleotide identity matrices, as well as to estimate pan-, soft-core-, and core-genomes. Note that both clustering algorithms can be fine-tuned by customizing an array of parameters, of which alignment coverage (-C) and same Pfam domain composition (-D) are perhaps the most important. While OMCL is adequate for most applications, BDBH is faster for the calculation of core sequences within large datasets. 
-
-**Figure 4.** Average nucleotide % identity matrix and ordered heat map of 2254 single-copy core barley CDS.
-Values are average nucleotide identities among sequences clustered together by GET_HOMOLOGUES-EST. This figure was produced with script _plot_matrix_heatmap.sh_, which calls heatmap.2 function from the gplots R package. The dendrograms were computed by complete linkage clustering and Euclidean distances computed among ANI columns. 
-
-**Figure 5.** Summary of script _annotate_clusters.pl_. A cluster of transcript sequences (top) is processed for further downstream analyses by alignment to an external reference sequence (-r), collapsing overlapping sequences of the same taxon (-c) or making the alignment block blunt (-b). In addition, private variants to a group of taxa can be extracted (bottom), and Pfam domains called by translating the longest sequence.
-
-**Figure 6.** Soft-core leaf pantranscriptome after comparing 14 barley cultivars and ecotypes. (Left) Snapshot of the simulation after 2 replicates are complete. The data points for the first replicate are in black, and those for the second in green. (Right) Fitted Tettelin function after 20 replicates are complete. 
-
-**Figure 7.** Distribution of leaf CDS clusters from 15 barleys as a function of their occupancy. Occupancy classes are colored as core, soft-core and shell members. Cloud clusters were filtered out (-t 3). 
-
-## Table captions
-
-**Table 1.** Definition of occupancy-based classes used by the software GET_HOMOLOGUES-EST.
-
-**Table 2.** Summary of features and differences of GET_HOMOLOGUES and GET_HOMOLOGUES-EST. Note that GET_HOMOLOGUES can also cluster user-selected nucleotide features in GenBank files, and in this case BLASTN is used as well.
-
-**Table 3.** Dependencies of GET_HOMOLOGUES-EST.
-
-**Table 4.** Excerpt of percentage of conserved sequences (POCS) matrix. Values are percentages of conserved sequence clusters among pairs of taxa. In other words, these values summarize how many clusters of one genome contain also sequences from another. 
-
-**Table 5.** Top 3 enriched Pfam domains encoded in accessory (Exp) CDS found in barley landrace SBCC073 with respect to the complete CDS set (Ctr). Both raw and adjusted Fisher's test P-values are shown.
-
-## Tables
-
-### Table 1
-
-| class or compartment | definition                                            |
-| ------- | ------------------------------------------------------------------ |
-| core | Genes contained in all considered genomes/taxa. |
-| soft-core | Genes contained in 95% of the considered genomes/taxa, as in [@Kaas2012]. |
-| cloud | Genes present only in a few genomes/taxa, generally $\leq 2$. The cutoff is defined as the class next to the most populated non-core cluster class. |
-| shell | Remaining genes, present in several genomes/taxa. |
-
-### Table 2
-
-| version     | primary input | primary engine | align coverage | COGS | isoforms filtered |
-| ----------- | --------------| ---------| ----------------------| --- | --- |
-| GET_HOMS    | peptides | BLASTP / DIAMOND | query sequence | yes | no |
-|GET_HOMS-EST | nucleotides | BLASTN | shortest sequence | no | yes |
-
-### Table 3
-
-software | source | citation
---------------| --------------------------------------------------- | -----------
-mcl v14-137   | <http://micans.org/mcl> | @Enright2002
-NCBI Blast-2.8.1+ | <http://blast.ncbi.nlm.nih.gov> | @Altschul1997
-BioPerl v1.5.2 | <http://www.bioperl.org> | @Stajich2002
-HMMER 3.1b2 | <http://hmmer.org> | 
-Pfam | <http://pfam.xfam.org> | @Mistry2021
-PHYLIP 3.695 | <http://evolution.genetics.washington.edu/phylip> | 
-Transdecoder r20140704 | <http://transdecoder.sf.net> | @Haas2013
-MVIEW 1.60.1 | <https://github.com/desmid/mview> | @Brown1998
-diamond 0.8.25 | <https://github.com/bbuchfink/diamond> | @Buchfink2015
-
-### Table 4
-
-genomes	| Alexis | AmagiNijo | Beiqing5	| Esterel | Franka | Himala2
- :-- | :--: | :--: | :--: | :--: | :--: | :--: 
-Alexis | 100 | 71.54 | 70.76 | 72.43 | 72.06 | 70.46
-AmagiNijo	| 71.54 |	100	| 70.89	| 71.38	| 70.90	| 70.40		
-Beiqing5 | 70.76 | 70.89 | 100 | 71.14 | 71.18 | 71.80
-Esterel |	72.43	| 71.38 |	71.14 | 100 | 73.66 |	70.79	
-Franka | 72.06 | 70.90 | 71.18 | 73.66 | 100 |70.74	
-Himala2	| 70.46 | 70.40 | 71.80 | 70.79 |	70.74 |	100	
-
-### Table 5
-
-PfamID | counts(exp) | counts(ctr) | freq(exp) | freq(ctr) | p-value | p-value(adj) | description
- :-- | --: | --: | --: | --: | --: | --: | :--
-PF13976|14|19|7.376e-03|9.715e-04|2.994e-07|3.855e-04|GAG-pre-integrase domain
-PF01535|59 | 305 | 3.109e-02 | 1.559e-02 | 5.950e-06 | 5.746e-03 | PPR repeat
-PF00560|32|128| 1.686e-02|6.545e-03|1.140e-05|8.810e-03|Leucine Rich Repeat
