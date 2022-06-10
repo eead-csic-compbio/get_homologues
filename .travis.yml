@@ -2,7 +2,7 @@ os: linux
 dist: focal
 language: perl
 perl:
-  - "5.30"
+  - "5.32"
 
 before_install:
   - "sudo apt-get update"
