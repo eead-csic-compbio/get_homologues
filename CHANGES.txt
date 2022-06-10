@@ -392,3 +392,4 @@
 13052022: test_get_homologues.t made executable for conda tests
 13052022: updated LICENSE URLs
 16052022: added conda installation instructions to manual
+10062022: annotate_cluster.pl -D can now annotate Pfam domains of singleton clusters
