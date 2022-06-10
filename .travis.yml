@@ -5,7 +5,7 @@ perl:
   - "5.32"
 
 before_install:
-  - "sudo apt-get update"
+        #- "sudo apt-get update"
   - "sudo apt-get install -y r-base libgd-dev"
   - "cpanm --sudo -v --installdeps --notest --cpanfile cpanfile ."
 
