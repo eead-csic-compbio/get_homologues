@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# 2013-21 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2013-22 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Laboratory of Computational Biology, EEAD-CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 #
@@ -201,27 +201,34 @@ foreach my $d (0 .. $#cluster_dirs)
       # cluster 76767_thrA size=20 taxa=20 Pfam=PF00696, file: 76767_thrA.faa dnafile: 76767_thrA.fna
       # cluster 1_Brdisv1ABR21035063m size=58 taxa=55 file: 1_Brdisv1ABR21035063m.fna aminofile: 1_Brdisv1ABR21035063m.faa
       # cluster 1_TR20326-c1_g1_i1 size=12 taxa=12 Pfam=PF13920, file: 1_TR20326-c1_g1_i1.fna aminofile: 1_TR20326-c1_g1_i1.faa
-            
+      # cluster ONIVA01G52120 size=3 taxa=3 taxa(gdna)=NA cdnafile: ...cdna.fna cdsfile: ...cds.fna pepfile: ...cds.faa gdnafile: void       
       if(/^cluster \S+ size=\d+ taxa=\d+ .*?file: (\S+) dnafile: (\S+)/)
       {
         if($INP_prot){ $file = $1 }
-        else{ $file = $2 }
+        else{ $file = $2 } 
 
         if($file ne 'void'){ push(@files,$file) }
       }
       elsif(/^cluster \S+ size=\d+ taxa=\d+ dnafile: (\S+)/)
       {
         $file = $1;
-        push(@files,$file);
+        push(@files,$file); 
+      }
+      elsif(/^cluster \S+ size=\d+ taxa=\d+ taxa\(gdna\)=\S+ cdnafile: \S+ cdsfile: (\S+) pepfile: (\S+) /)
+      {
+        if($INP_prot){ $file = $2 } 
+        else{ $file = $1 } 
+
+        if($file ne 'void'){ push(@files,$file) }
       }
       elsif(/^cluster \S+ size=\d+ taxa=\d+ file: (\S+) aminofile: (\S+)/ || 
         /^cluster \S+ size=\d+ taxa=\d+ .*?file: (\S+) aminofile: (\S+)/)
       {
         if($INP_prot){ $file = $2 }
-        else{ $file = $1 }
+        else{ $file = $1 } 
 
         if($file ne 'void'){ push(@files,$file); }
-      }
+      } 
       elsif(/^: (\S+)/ && $file ne 'void')
       {
         $taxa{$file}{$1}++;
@@ -318,7 +325,7 @@ foreach my $d (0 .. $#cluster_dirs)
 
       # fix header and remove possibly added bits: |intergenic199|,| aligned:1-296 (296)
       $seqname = $cluster_ref->[$seq][NAME];
-      $gi = (split(/\s/,$seqname))[0]; $gi =~ s/ //g;
+      $gi = (split(/\s/,$seqname))[0]; $gi =~ s/ //g; 
       
       next if($INP_include && !$included_input_files{$taxa{$file}{'sorted_taxa'}->[$seq]});
       push(@sorted_taxa,$taxa{$file}{'sorted_taxa'}->[$seq]);

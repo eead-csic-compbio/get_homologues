@@ -256,11 +256,6 @@ if($#{$cluster_ref} == -1)
   warn "# Cannot read input sequences, exit. Please set -P if using a peptide cluster.\n";
   exit;
 } 
-elsif($#{$cluster_ref}+1 < 2)
-{
-  warn "# Need at least two input sequences, exit.\n";
-  exit;
-}
 
 ## read include lists
 if($INP_includeA)
@@ -387,7 +382,14 @@ if($do_PFAM)
   printf(STDERR "\n# Pfam domains: %s\n",$Pfam_string); 
   printf(STDERR "# Pfam annotation: %s\n",$Pfam_full); 
 }  
-  
+ 
+if($#{$cluster_ref}+1 < 2)
+{
+  warn "\n# Need at least two input sequences to be aligned, exit\n";
+  exit;
+}
+
+
 ## align cluster sequences
 # temp files, removed automatically on exit
 my ($fhdb,$filenamedb) = tempfile(UNLINK => 1); # blast DB
