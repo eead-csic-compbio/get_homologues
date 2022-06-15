@@ -1,6 +1,6 @@
 #!/usr/bin/env perl 
 
-# 2021 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2015-22 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei-CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -33,8 +33,9 @@ my $VERSION = '3.x';
 my $BATCHSIZE = 1000; # after HS_BLASTN bench 
 
 ## global variables that control some algorithmic choices
-my $MINSEQLENGTH = 20;            # min length for input sequences to be considered (~ primer or miRNA)
-my $MAXSEQLENGTH = 25000;         # max length for input sequences, warning issued: long seqs often cause downstream problems 
+my $MINSEQLENGTH = 20;            # Min length for input sequences to be considered (~ primer or miRNA)
+my $MAXSEQLENGTH = 25000;         # Max length for input sequences, warning issued: long seqs often cause 
+                                  # downstream problems. 
                                   # In our barley tests with de novo Trinity assemblies, max length ~ 17Kb
                                   # HQ Haruna Nijo barley flcDNAs reach 23Kb
 
@@ -42,10 +43,12 @@ my $NOFSAMPLESREPORT = 20;        # number of genome samples used for the genera
 my $MAXEVALUEBLASTSEARCH = 0.01;  # required to reduce size of blast output files
 my $MAXPFAMSEQS          = 250;   # default for -m cluster jobs, it is updated to 1000 with -m local
 my $PRINTCLUSTERSSCREEN  = 0;     # whether cluster names should be printed to screen
-my $FULLENGTHFLAG = 'flcdna';     # input sequences in files with names containing this flag are considered full length, instead of fragments
+my $FULLENGTHFLAG = 'flcdna';     # Input sequences in files with names containing this flag are considered 
+                                  # full length, instead of fragments
 my $MINREDOVERLAP = 40;           # as in tgicl, min overlap to handle possibly redundant isoforms
 my $TRIMULTIHSP   = 1;            # correct overlaps when calculating cover of multi-hsp hits (alternative = 0)
-my $NOCLOUDINCORE = 1;            # when calling -M -c -t X initial core/pan size excludes cloud genes, those with occup < X 8alternative 0)
+my $NOCLOUDINCORE = 1;            # when calling -M -c -t X initial core/pan size excludes cloud genes, those 
+                                  # with occup < X (alternative 0)
 my $INCLUDEORDER  = 0;            # use implicit -I taxon order for -c composition analyses
 my $KEEPSCNDHSPS  = 1;            # by default only the first BLAST hsp is kept for further calculations
 my $COMPRESSBLAST = 1;            # save disk space by compressing BLASTN results, requires gzip
@@ -475,7 +478,8 @@ my $dryrun_file = $newDIR."/dryrun.txt";
 
 print "# version $VERSION\n";
 print "# results_directory=$newDIR\n";
-print "# parameters: MAXEVALUEBLASTSEARCH=$MAXEVALUEBLASTSEARCH MAXPFAMSEQS=$MAXPFAMSEQS BATCHSIZE=$BATCHSIZE MINSEQLENGTH=$MINSEQLENGTH MAXSEQLENGTH=$MAXSEQLENGTH\n";
+print "# parameters: MAXEVALUEBLASTSEARCH=$MAXEVALUEBLASTSEARCH MAXPFAMSEQS=$MAXPFAMSEQS ".
+    "BATCHSIZE=$BATCHSIZE MINSEQLENGTH=$MINSEQLENGTH MAXSEQLENGTH=$MAXSEQLENGTH\n";
 
 # 0.3) prepare dryrun file if required
 if($runmode eq 'dryrun')
@@ -537,7 +541,7 @@ if($inputDIR)
       chomp;
       ($order,$infile) = split(/\t/);
       if(!-s $inputDIR."/".$infile)
-      { die "# EXIT : cannot find previous input file $infile, please re-run everything\n"; }
+      { die "# EXIT : cannot find previous input file $infile, please re-run everything\n" }
 
       $previous_input_file{$infile} = 1;
       $new_order_input_files[$order] = $infile;
@@ -554,7 +558,7 @@ if($inputDIR)
       $n_of_new_infiles++;
     }
 
-    if($n_of_new_infiles){ print "# updating $input_order_file with $n_of_new_infiles new input files\n"; }
+    if($n_of_new_infiles){ print "# updating $input_order_file with $n_of_new_infiles new input files\n" }
     open(ORDER,">$input_order_file") || die "# EXIT : cannot write $input_order_file\n";
     $order=0;
     foreach $infile (@new_order_input_files)
@@ -588,7 +592,8 @@ if($inputDIR)
     ($genbankOK,$protOK,$clustersOK,$proteome_size) = (0,0,0,-1);
     ++$n_of_taxa;
 
-    if(($infile =~ /\.clusters$/ || $infile =~ /_$/) && -d $inputDIR.'/'.$infile) # subdirectory with cluster files in FASTA format
+    # subdirectory with cluster files in FASTA format
+    if(($infile =~ /\.clusters$/ || $infile =~ /_$/) && -d $inputDIR.'/'.$infile)
     {
       opendir(CLDIR,$inputDIR.'/'.$infile) || die "# EXIT : cannot list $inputDIR/$infile\n";
       my @clusterfiles = sort grep {/\.fna$/} readdir(CLDIR);
@@ -663,16 +668,19 @@ if($inputDIR)
       if($dnafile ne $protfile && -s $protfile )
       {
         $prot_fasta_ref = read_FASTA_file_array($protfile);
-        if($#{$fasta_ref} == $#{$prot_fasta_ref}){ $protOK = 1 }
+        if($#{$fasta_ref} == $#{$prot_fasta_ref} &&
+            same_sequence_order($fasta_ref, $prot_fasta_ref)){ 
+          $protOK = 1;
+        }
         else
         {
-          print "WARNING: cannot use protein sequences in file $protfile\n".
+          print "# WARNING: cannot use protein sequences in file $protfile\n".
             "# as they do not match those in file $dnafile\n";
         }
       }
     }
 
-    if(!defined($fasta_ref)){ die "# ERROR: could not extract nucleotide sequences from file $inputDIR/$infile\n"; }
+    if(!defined($fasta_ref)){ die "# ERROR: could not extract nucleotide sequences from file $inputDIR/$infile\n" }
     $proteome_size = scalar(@$fasta_ref);
     $psize{$infile} = $proteome_size;
 
