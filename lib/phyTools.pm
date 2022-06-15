@@ -1,7 +1,7 @@
 # Bruno Contreras-Moreira, Pablo Vinuesa
 # 2005-22 CCG/UNAM, Mexico, EEAD/CSIC, Zaragoza, Spain
 # This is a collection of subroutines used in our projects,
-# including primers4clades and get_homologues.pl
+# including primers4clades and get_homologues
 
 package phyTools;
 require Exporter;
@@ -11,8 +11,8 @@ require Exporter;
   set_phyTools_env $ERROR read_FASTA_sequence feature_is_installed check_installed_features
   extract_gene_name extract_CDSs_from_genbank extract_intergenic_from_genbank 
   extract_features_from_genbank extract_genes_from_genbank
-  find_taxa_FASTA_headers find_taxa_FASTA_array_headers read_FASTA_file_array run_PARS 
-  check_variants_FASTA_alignment collapse_taxon_alignments
+  find_taxa_FASTA_headers find_taxa_FASTA_array_headers read_FASTA_file_array 
+  same_sequence_order run_PARS check_variants_FASTA_alignment collapse_taxon_alignments
   fisher_yates_shuffle short_path factorial calc_mean calc_std_deviation 
   calc_memory_footprint warn_missing_soft
   NAME SEQ 
@@ -572,6 +572,36 @@ sub read_FASTA_file_array
     return \@nrFASTA;
   }
   else{ return \@FASTA }
+}
+
+sub same_sequence_order
+{
+  # Takes two refs to arrays of same length made by read_FASTA_sequence_array,
+  # 1st nucleotide CDS and 2nd peptide CDS.
+  # Returns 1 if sequences
+  # are in same order, otherwise 0
+  # Actually translates sequences, does not use sequence names
+
+  my ($refCDSnt, $refCDSaa) = @_;
+
+  my ($seq, $translated, $parsed);
+
+  foreach $seq (0 .. $#{$refCDSnt})
+  {
+    $translated = Bio::Seq->new(-seq => $refCDSnt->[$seq][SEQ])->translate()->seq();
+    $parsed = $refCDSaa->[$seq][SEQ];
+    $translated =~ s/\*$//g;
+    $parsed =~ s/\*$//g;
+
+    if($parsed ne $translated && 
+      $parsed !~ /$translated/ && $translated !~ /$parsed/) {
+      print "# same_sequence_order : sequence #$seq does not match: ".
+          "$refCDSnt->[$seq][SEQ]\n$translated\n$refCDSaa->[$seq][SEQ]\n";
+      return 0;
+    }
+  }
+
+  return 1;
 }
 
 sub find_taxa_FASTA_headers
