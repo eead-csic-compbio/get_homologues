@@ -610,7 +610,34 @@ if($inputDIR)
         if($protfile ne $dnafile && -s $protfile )
         {
           $prot_fasta_ref = read_FASTA_file_array($protfile);
-          if($#{$fasta_ref} == $#{$prot_fasta_ref}){ $cldnaOK = 1 }
+          if($#{$fasta_ref} == $#{$prot_fasta_ref})
+          { 
+            $cldnaOK = 1;
+            # make sure we got corresponding sequences
+            foreach $seq ( 0 .. $#{$fasta_ref} )
+            {
+              # get protein and CDS sequence names (without annotations)
+              my $cds_name = $fasta_ref->[$seq][NAME] =~ s/\s.*//r;
+              my $prot_name = $prot_fasta_ref->[$seq][NAME] =~ s/\s.*//r;
+              # get protein sequence and remove any trailing stop
+              my $prot = $prot_fasta_ref->[$seq][SEQ] =~ s/[\*\-]$//r;
+              my $expected_length = length($prot)*3;
+              my $cds_length = length($fasta_ref->[$seq][SEQ]);
+              # check corresponding sequence names
+              if ($cds_name ne $prot_name)
+              {
+                print "WARNING: cannot use protein sequences in file $protfile\n".
+                  "# as they do not match those in file $dnafile\n".
+                  "# it might be a problem of sequence name or order\n";
+                $cldnaOK = 0;
+                last;
+              }
+              elsif (($cds_length < $expected_length - 3) || ($cds_length > $expected_length + 3))
+              {
+                print "WARNING: " . $prot_fasta_ref->[$seq][NAME] . " protein content does not seem to match CDS content\n";
+              }
+            }
+          }
           else
           {
             print "WARNING: cannot use protein sequences in file $protfile\n".
@@ -663,7 +690,34 @@ if($inputDIR)
       if($dnafile ne $protfile && -s $protfile )
       {
         $prot_fasta_ref = read_FASTA_file_array($protfile);
-        if($#{$fasta_ref} == $#{$prot_fasta_ref}){ $protOK = 1 }
+        if($#{$fasta_ref} == $#{$prot_fasta_ref})
+        {
+          $protOK = 1;
+          # make sure we got corresponding sequences
+          foreach $seq ( 0 .. $#{$fasta_ref} )
+          {
+            # get protein and CDS sequence names (without annotations)
+            my $cds_name = $fasta_ref->[$seq][NAME] =~ s/\s.*//r;
+            my $prot_name = $prot_fasta_ref->[$seq][NAME] =~ s/\s.*//r;
+            # get protein sequence and remove any trailing stop
+            my $prot = $prot_fasta_ref->[$seq][SEQ] =~ s/\*+$//r;
+            my $expected_length = length($prot)*3;
+            my $cds_length = length($fasta_ref->[$seq][SEQ]);
+            # check corresponding sequence names
+            if ($cds_name ne $prot_name)
+            {
+              print "WARNING: cannot use protein sequences in file $protfile\n".
+                "# as they do not match those in file $dnafile\n".
+                "# it might be a problem of sequence name or order\n";
+              $protOK = 0;
+              last;
+            }
+            elsif (($cds_length < $expected_length - 3) || ($cds_length > $expected_length + 3))
+            {
+              print "WARNING: " . $prot_fasta_ref->[$seq][NAME] . " protein content does not seem to match CDS content\n";
+            }
+          }
+        }
         else
         {
           print "WARNING: cannot use protein sequences in file $protfile\n".

@@ -522,6 +522,20 @@ sub read_FASTA_file_array
   close(FASTA);
 
   if($n_of_sequences == -1){ return \@FASTA }
+
+  # Sort sequences by name to have the same order between .faa and .fna.
+  @FASTA = sort {
+    # keep numeric names in ascending order, sort text as text
+    if (($a->[NAME] =~ m/^\d+$/) && ($b->[NAME] =~ m/^\d+$/))
+    {
+      return $a->[NAME] <=> $b->[NAME];
+    }
+    else
+    {
+      return $a->[NAME] cmp $b->[NAME];
+    }
+  } @FASTA;
+
   if($skipamino || $skipidentical)
   {
     my ($n_of_nr_sequences,@nrFASTA,%identical) = 0;
