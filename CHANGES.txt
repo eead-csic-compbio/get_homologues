@@ -383,7 +383,7 @@
 21042022: transcripts2cdsCPP.pl not tested by default with make test, as bioconda lacks Inline::CPP
 21042022: if bin/ not in place phyTools::set_phyTools_env assumes binary dependencies in PATH
 21042022: updated install.pl so that it copes with binary dependencies in PATH
-21042022: install.pl no_databases COGS only gets/compiles COGS, so that other binaries can be taken from PATH ()
+21042022: install.pl no_databases COGS only gets/compiles COGS, so that other binaries can be taken from PATH
 22042022: added CODE_OF_CONDUCT
 28042022: added test_swiss to Makefile
 28042022: added compila_conda.pl to bin/COGsoft & added $(CXX) to Makefiles to use in conda recipe (macosx-intel copy still the same)
@@ -395,3 +395,5 @@
 10062022: annotate_cluster.pl -D can now annotate Pfam domains of singleton clusters
 10062022: updated .travis.yaml (perl 5.32, libdb-dev, do not apt update)
 14062022: compare_clusters.pl can read .cluster_list files from get_pangenes.pl
+15062022: added sub same_sequence_order to lib/phyTools.pm
+15062022: get_homologues-est.pl now checks that .fna & .faa sequences are in same order (thanks V Guignon!) 
