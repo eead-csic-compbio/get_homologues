@@ -578,9 +578,9 @@ sub same_sequence_order
 {
   # Takes two refs to arrays of same length made by read_FASTA_sequence_array,
   # 1st nucleotide CDS and 2nd peptide CDS.
-  # Returns 1 if sequences
-  # are in same order, otherwise 0
-  # Actually translates sequences, does not use sequence names
+  # Returns 1 if sequences are in same order, otherwise 0
+  # Actually translates sequences, does not use sequence names. 
+  # Note: sequences with N/X residues are not compared 
 
   my ($refCDSnt, $refCDSaa) = @_;
 
@@ -594,6 +594,7 @@ sub same_sequence_order
     $parsed =~ s/\*$//g;
 
     if($parsed ne $translated && 
+      $parsed !~ 'N' && $translated !~ 'X' &&
       $parsed !~ /$translated/ && $translated !~ /$parsed/) {
       print "# same_sequence_order : sequence #$seq does not match: ".
           "$refCDSnt->[$seq][SEQ]\n$translated\n$refCDSaa->[$seq][SEQ]\n";
