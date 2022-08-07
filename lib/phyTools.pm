@@ -588,7 +588,7 @@ sub same_sequence_order
 
   foreach $seq (0 .. $#{$refCDSnt})
   {
-    next if($refCDSnt->[$seq][SEQ] =~ /N/);
+    next if($refCDSnt->[$seq][SEQ] =~ /N/i);
   
     $translated = Bio::Seq->new(-seq => $refCDSnt->[$seq][SEQ])->translate()->seq();
     $parsed = $refCDSaa->[$seq][SEQ];
