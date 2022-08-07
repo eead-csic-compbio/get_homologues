@@ -580,7 +580,7 @@ sub same_sequence_order
   # 1st nucleotide CDS and 2nd peptide CDS.
   # Returns 1 if sequences are in same order, otherwise 0
   # Actually translates sequences, does not use sequence names. 
-  # Note: sequences with N/X residues are not compared 
+  # Note: nucleotide CDS with N residues are not compared 
 
   my ($refCDSnt, $refCDSaa) = @_;
 
@@ -588,13 +588,14 @@ sub same_sequence_order
 
   foreach $seq (0 .. $#{$refCDSnt})
   {
+    next if($refCDSnt->[$seq][SEQ] =~ /N/);
+  
     $translated = Bio::Seq->new(-seq => $refCDSnt->[$seq][SEQ])->translate()->seq();
     $parsed = $refCDSaa->[$seq][SEQ];
     $translated =~ s/\*$//g;
     $parsed =~ s/\*$//g;
 
-    if($parsed ne $translated && 
-      $parsed !~ 'N' && $translated !~ 'X' &&
+    if($parsed ne $translated &&
       $parsed !~ /$translated/ && $translated !~ /$parsed/) {
       print "# same_sequence_order : sequence #$seq does not match: ".
           "$refCDSnt->[$seq][SEQ]\n$translated\n$refCDSaa->[$seq][SEQ]\n";
