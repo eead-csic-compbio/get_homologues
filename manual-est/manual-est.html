@@ -39,56 +39,56 @@ Contents</A>
 <!--Table of Contents-->
 
 <UL CLASS="TofC">
-<LI><A ID="tex2html117"
+<LI><A ID="tex2html120"
   HREF="manual-est.html#SECTION00020000000000000000">1 Description</A>
-<LI><A ID="tex2html118"
+<LI><A ID="tex2html121"
   HREF="manual-est.html#SECTION00030000000000000000">2 Requirements and installation</A>
 <UL>
-<LI><A ID="tex2html119"
+<LI><A ID="tex2html122"
   HREF="manual-est.html#SECTION00031000000000000000">2.1 Perl modules</A>
-<LI><A ID="tex2html120"
+<LI><A ID="tex2html123"
   HREF="manual-est.html#SECTION00032000000000000000">2.2 Required binaries</A>
-<LI><A ID="tex2html121"
+<LI><A ID="tex2html124"
   HREF="manual-est.html#SECTION00033000000000000000">2.3 Optional software dependencies</A>
 </UL>
 <BR>
-<LI><A ID="tex2html122"
+<LI><A ID="tex2html125"
   HREF="manual-est.html#SECTION00040000000000000000">3 User manual</A>
 <UL>
-<LI><A ID="tex2html123"
+<LI><A ID="tex2html126"
   HREF="manual-est.html#SECTION00041000000000000000">3.1 Input data</A>
-<LI><A ID="tex2html124"
+<LI><A ID="tex2html127"
   HREF="manual-est.html#SECTION00042000000000000000">3.2 Program options</A>
-<LI><A ID="tex2html125"
+<LI><A ID="tex2html128"
   HREF="manual-est.html#SECTION00043000000000000000">3.3 Accompanying scripts</A>
 </UL>
 <BR>
-<LI><A ID="tex2html126"
+<LI><A ID="tex2html129"
   HREF="manual-est.html#SECTION00050000000000000000">4 A few examples</A>
 <UL>
-<LI><A ID="tex2html127"
-  HREF="manual-est.html#SECTION00051000000000000000">4.1 Extracting coding sequences (CDS) from transcripts</A>
-<LI><A ID="tex2html128"
-  HREF="manual-est.html#SECTION00052000000000000000">4.2 Clustering orthologous sequences from FASTA files, one per cultivar/ecotype/strain</A>
-<LI><A ID="tex2html129"
-  HREF="manual-est.html#SECTION00053000000000000000">4.3 Clustering sequences on a multicore Linux box, not a cluster</A>
 <LI><A ID="tex2html130"
-  HREF="manual-est.html#SECTION00054000000000000000">4.4 Producing a nucleotide-based pangenome matrix</A>
+  HREF="manual-est.html#SECTION00051000000000000000">4.1 Extracting coding sequences (CDS) from transcripts</A>
 <LI><A ID="tex2html131"
-  HREF="manual-est.html#SECTION00055000000000000000">4.5 Estimating protein domain enrichment of some sequence clusters</A>
+  HREF="manual-est.html#SECTION00052000000000000000">4.2 Clustering orthologous sequences from FASTA files, one per cultivar/ecotype/strain</A>
 <LI><A ID="tex2html132"
-  HREF="manual-est.html#SECTION00056000000000000000">4.6 Making and annotating a non-redundant pangenome matrix</A>
+  HREF="manual-est.html#SECTION00053000000000000000">4.3 Clustering sequences on a multicore Linux box, not a cluster</A>
 <LI><A ID="tex2html133"
-  HREF="manual-est.html#SECTION00057000000000000000">4.7 Annotating a sequence cluster</A>
+  HREF="manual-est.html#SECTION00054000000000000000">4.4 Producing a nucleotide-based pangenome matrix</A>
 <LI><A ID="tex2html134"
+  HREF="manual-est.html#SECTION00055000000000000000">4.5 Estimating protein domain enrichment of some sequence clusters</A>
+<LI><A ID="tex2html135"
+  HREF="manual-est.html#SECTION00056000000000000000">4.6 Making and annotating a non-redundant pangenome matrix</A>
+<LI><A ID="tex2html136"
+  HREF="manual-est.html#SECTION00057000000000000000">4.7 Annotating a sequence cluster</A>
+<LI><A ID="tex2html137"
   HREF="manual-est.html#SECTION00058000000000000000">4.8 Output files explained</A>
 </UL>
 <BR>
-<LI><A ID="tex2html135"
+<LI><A ID="tex2html138"
   HREF="manual-est.html#SECTION00060000000000000000">5 A step-by-step protocol with barley assembled transcripts</A>
-<LI><A ID="tex2html136"
+<LI><A ID="tex2html139"
   HREF="manual-est.html#SECTION00070000000000000000">6 Frequently asked questions (FAQs)</A>
-<LI><A ID="tex2html137"
+<LI><A ID="tex2html140"
   HREF="manual-est.html#SECTION00080000000000000000">7 Credits and references</A>
 </UL>
 <!--End of Table of Contents-->
@@ -134,7 +134,7 @@ although most have been backported.
 
 <P>
 <BR><P></P>
-<DIV class="CENTER"><A ID="620"></A>
+<DIV class="CENTER"><A ID="626"></A>
 <TABLE>
 <CAPTION><STRONG>Table 1:</STRONG>
 List of novel scripts/features in <SPAN  CLASS="textit">get_homologues-est</SPAN>.</CAPTION>
@@ -652,7 +652,8 @@ This section describes the available options for the <SPAN  CLASS="textit">get_h
 <P>
 This program takes input sequences in FASTA format, which might be GZIP- or BZIP2-compressed, contained in a 
 directory or folder containing several files with extension '.fna', which can have twin <code>.faa</code> files with 
-translated amino acid sequences for the corresponding CDSs. File names matching the tag 'flcdna' are handled as 
+translated amino acid sequences for the corresponding CDSs (expected to be in same order). 
+File names matching the tag 'flcdna' are handled as 
 full-length transcripts, and this information will be used downstream in order to estimate coverage.
 Global variable <code>$MINSEQLENGTH</code> controls the minimum length of sequences to be considered; the default value is 20.
 
@@ -1630,7 +1631,7 @@ in PubMed=<A ID="tex2html65"
 
 <P>
 
-<DIV class="CENTER"><A ID="fig:pangenomet"></A><A ID="624"></A>
+<DIV class="CENTER"><A ID="fig:pangenomet"></A><A ID="630"></A>
 <TABLE>
 <CAPTION class="BOTTOM"><STRONG>Figure 7:</STRONG>
 
@@ -1732,20 +1733,47 @@ without singletons with this command:
 
 # intersection list = outdir/intersection_t0.cluster_list
 
-# pangenome_file = outdir/pangenome_matrix_t0.tab
-# pangenome_phylip file = outdir/pangenome_matrix_t0.phylip
+# pangenome_file = outdir/pangenome_matrix_t0.tab (and transposed)
+# pangenome_genes = outdir/pangenome_matrix_genes_t0.tab (and transposed)
+# pangenome_phylip file = outdir/pangenome_matrix_t0.phylip 
+# pangenome_FASTA file = outdir/pangenome_matrix_t0.fasta
+# pangenome CSV file (Scoary) = outdir/pangenome_matrix_t0.tr.csv
 </PRE>
 
 <P>
-If the optional R modules described in 
+The following, taken from the 
 <A ID="tex2html67"
+  HREF="http://eead-csic-compbio.github.io/get_homologues/plant_pangenome/protocol.html#pangenome-analyses">tutorial</A>,
+explains the different versions of the same pangenome/pangene matrix:
+
+<P>
+<code>pangenome_matrix_t0.tab</code> is a numeric matrix with tab-separated (TSV) columns, with taxa/genomes as rows and sequence clusters as columns, in which cells with natural numbers indicate whether a given taxa contains 1+ sequences from a given cluster. It can be read and edited with any text editor or spreadsheet software, and is also produced in transposed form for convenience. For example, users might want to sort the clusters by position on a reference genome and use these matrices to visualize results.
+
+<P>
+<code>pangenome_matrix_genes_t0.tab</code> is similar to the previous one, but contains the actual sequence names in each cluster instead.
+
+<P>
+<code>pangenome_matrix_t0.phylip</code> is a reduced binary matrix in a format suitable for PHYLIP discrete character analysis software.
+
+<P>
+<code>pangenome_matrix_t0.fasta</code> is a reduced binary matrix in FASTA format suitable for binary character analysis software such as 
+<A ID="tex2html68"
+  HREF="http://www.iqtree.org">IQ-TREE</A>, which can compute bootstrap and aLRT support.
+
+<P>
+<code>pangenome_matrix_t0.tr.csv</code> is a transposed, reduced binary matrix in CSV format suitable for pangenome-wide association analysis with software <A ID="tex2html69"
+  HREF="https://github.com/AdmiralenOla/Scoary">Scoary</A>.
+
+<P>
+If the optional R modules described in 
+<A ID="tex2html70"
   HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>
 are installed, such a pangenome matrix can be used to hierarchically cluster strains with this command:
 <BR><code>./hcluster_pangenome_matrix.sh -i outdir/pangenome_matrix_t0.tab</code>
 
 <P>
 
-<DIV class="CENTER"><A ID="fig:hclustpange"></A><A ID="434"></A>
+<DIV class="CENTER"><A ID="fig:hclustpange"></A><A ID="440"></A>
 <TABLE>
 <CAPTION class="BOTTOM"><STRONG>Figure 9:</STRONG>
 Hierarchical grouping of strains based on pangenome matrix.</CAPTION>
@@ -1768,7 +1796,7 @@ Hierarchical grouping of strains based on pangenome matrix.</CAPTION>
 <P>
 This example uses data from the barley benchmark, the <code>test_barley/</code> folder,
 which contains instructions to download sequences from: 
-<A ID="tex2html68"
+<A ID="tex2html71"
   HREF="http://floresta.eead.csic.es/plant-pan-genomes">http://floresta.eead.csic.es/plant-pan-genomes</A>
 <P>
 After completing the downloads, the folder will contain FASTA files with nucleotide sequences of 14 de-novo assembled transcriptomes 
@@ -1948,7 +1976,7 @@ that sequences might be truncated (option <code>-e</code>) and using 10 processo
 
 <P>
 Note that the previous command can be modified to match external reference sequences, 
-for instance from <A ID="tex2html69"
+for instance from <A ID="tex2html72"
   HREF="http://www.ebi.ac.uk/uniprot">Swissprot</A>,
 or pre-computed clusters, such as groups of orthologous sequences, 
 so that the resulting matrix contains cross-references to those external clusters, and their annotations.
@@ -2007,7 +2035,7 @@ non-redundant	Franka.bz2.nucl	Esterel.bz2.nucl	flcdnas_Hnijo.gz.nucl	...	redunda
 
 <P>
 Pangenome matrices with more than 4 taxa can be plotted with help from script <SPAN  CLASS="textit">parse_pangenome_matrix.pl</SPAN>,
-as explained in <A ID="tex2html70"
+as explained in <A ID="tex2html73"
   HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>. 
 
 <P>
@@ -2063,11 +2091,11 @@ CCTGCTGGTGCATTTTTTTACAAACAGTTGGCACAGAGTATTTGTTGCTAATTGTGTTCGTTTTCTTGAA...
 
 <P>
 
-<DIV class="CENTER"><A ID="fig:annotcluster"></A><A ID="625"></A>
+<DIV class="CENTER"><A ID="fig:annotcluster"></A><A ID="631"></A>
 <TABLE>
 <CAPTION class="BOTTOM"><STRONG>Figure 10:</STRONG>
 Fragment of alignment produced by annotate_cluster.pl, 
-rendered with <A ID="tex2html71"
+rendered with <A ID="tex2html74"
   HREF="http://www.mbio.ncsu.edu/bioedit/bioedit.html">BioEdit</A>.</CAPTION>
 <TR><TD>
 <DIV class="CENTER">
@@ -2118,7 +2146,7 @@ other sequences of the clusters and are thus not included in the produced multip
 
 <P>
 We called these pseudo-multiple alignments as they are computed from pairwise alignments of the longest/reference (query) 
-to all other cluster sequences. The resulting alignment is produced by <A ID="tex2html74"
+to all other cluster sequences. The resulting alignment is produced by <A ID="tex2html77"
   HREF="https://github.com/desmid/mview">MVIEW</A>, 
 which does not record deletions in the query sequence. This means that an alignment like this:
 
@@ -2205,7 +2233,7 @@ let's review some of them:
 <UL>
 <LI><SPAN  CLASS="textbf">Pan-genome composition matrices</SPAN> (<code>pan_genome_algOMCL.tab, core_genome_algOMCL.tab</code>, see section <A HREF="#clustering">4.2</A>)
 contain the results of composition analyses, first described in the 
-<A ID="tex2html75"
+<A ID="tex2html78"
   HREF="http://eead-csic-compbio.github.io/get_homologues/manual/manual.html#SECTION00058400000000000000">get_homologues</A>
 manual.
 These tab-separated text files contain estimates of core and pan-genome growth when input genomes are sampled one by one
@@ -2406,7 +2434,7 @@ Rscript suppl_scripts/_plot_heatmap.R
 
 <P>
 Please see also the FAQs in
-<A ID="tex2html79"
+<A ID="tex2html82"
   HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/manual_get_homologues.pdf">manual_get_homologues.pdf</A>. 
 Most apply also to <SPAN  CLASS="textit">get_homologues-est.pl</SPAN>, such as running on a computer farm or on Windows systems.
 
@@ -2422,7 +2450,7 @@ in the figure, which combines data from the original benchmark and new data gene
 
 <P>
 
-<DIV class="CENTER"><A ID="fig:RAMtimev2"></A><A ID="534"></A>
+<DIV class="CENTER"><A ID="fig:RAMtimev2"></A><A ID="540"></A>
 <TABLE>
 <CAPTION class="BOTTOM"><STRONG>Figure 11:</STRONG>
 Computing time and RAM requirements of the original algorithm (OMCL, measured on 6 sequence sets) 
@@ -2449,7 +2477,7 @@ These three common situations are illustrated in the figure.
 
 <P>
 
-<DIV class="CENTER"><A ID="fig:ESTcaveats"></A><A ID="543"></A>
+<DIV class="CENTER"><A ID="fig:ESTcaveats"></A><A ID="549"></A>
 <TABLE>
 <CAPTION class="BOTTOM"><STRONG>Figure 12:</STRONG>
 Common problems faced when clustering transcripts/CDS sequences.</CAPTION>
@@ -2525,7 +2553,7 @@ to analyze conserved non-coding sequences among <SPAN  CLASS="textit">Brachypodi
 
 <P>
 
-<DIV class="CENTER"><A ID="fig:CNS"></A><A ID="558"></A>
+<DIV class="CENTER"><A ID="fig:CNS"></A><A ID="564"></A>
 <TABLE>
 <CAPTION class="BOTTOM"><STRONG>Figure 13:</STRONG>
 Core-genome composition analysis of conserved non-coding sequences (CNS) from 56 Brachypodium distachyon ecotypes and rice.</CAPTION>
@@ -2553,10 +2581,10 @@ Regarding the bootstrapping, you could write some R code (or in any other langua
 in the pangenome matrix with replacement to construct a new, bootstrapped matrix with the same number of columns 
 as the original one. You should generate 100 or 500 of these matrices and then run <code>pars</code> on each one of them. 
 Then run consense to obtain the mjr consensus tree and associated split frequencies (bootstrap support values for each bipartition).
-An easy way of achieving this would be with R's <A ID="tex2html80"
+An easy way of achieving this would be with R's <A ID="tex2html83"
   HREF="https://cran.r-project.org/web/packages/boot/boot.pdf">boot</A>
 package 
-(see <A ID="tex2html81"
+(see <A ID="tex2html84"
   HREF="http://www.statmethods.net/advstats/bootstrapping.html">example</A>).
 
 <P>
@@ -2572,16 +2600,16 @@ The node labels correspond to the number of bootstrap pseudoreplicates in which 
 <LI>How can I produce a maximum likelihood (ML) tree with bootstrap values from a pangenome matrix?
 
 <P>
-We recommend script <code>estimate_pangenome_trees.sh</code> from the <A ID="tex2html82"
+We recommend script <code>estimate_pangenome_trees.sh</code> from the <A ID="tex2html85"
   HREF="https://github.com/vinuesa/get_phylomarkers">GET_PHYLOMARKERS</A>
 pipeline. 
 
 <P>
 Another alternative is to use the <code>.fasta</code> version of the pangenome matrix produced by script <code>./compare_clusters.pl -m </code> ,
 next to the <code>.tab</code> and <code>.phy</code> files. 
-This FASTA file can be analyzed with ML software such as <A ID="tex2html83"
+This FASTA file can be analyzed with ML software such as <A ID="tex2html86"
   HREF="http://iqtree.cibiv.univie.ac.at">IQ-TREE</A>
-(PubMed=<A ID="tex2html84"
+(PubMed=<A ID="tex2html87"
   HREF="https://www.ncbi.nlm.nih.gov/pubmed/25371430">25371430</A>) both online or in the terminal with a command such as:
 <BR><code>path_to_iqtree -s pangenome_matrix_t0.fasta -st BIN -m TEST -bb 1000 -alrt 1000</code>
 <BR>
@@ -2637,7 +2665,7 @@ the value set for '-max_target_seqs'
 
 <P>
 BLAST parameter <code>-max_target_seqs</code> is set to the number of sequences of the query proteome, which usually is a large number
-that ensures all good quality hits are recovered. Read more <A ID="tex2html85"
+that ensures all good quality hits are recovered. Read more <A ID="tex2html88"
   HREF="https://github.com/eead-csic-compbio/get_homologues/issues/38">here</A>.
 
 <P>
@@ -2646,7 +2674,7 @@ that ensures all good quality hits are recovered. Read more <A ID="tex2html85"
 
 <P>
 It is possible to experimentally normalize the scores using the script 
-<A ID="tex2html86"
+<A ID="tex2html89"
   HREF="https://github.com/eead-csic-compbio/get_homologues/tree/master/user_utils/normalize">here</A>.
 However, our tests suggest this might cause unexpected consequences and for that reason this is not done by default.
 
@@ -2664,26 +2692,26 @@ However, our tests suggest this might cause unexpected consequences and for that
 
 <P>
 <SPAN  CLASS="textit">get_homologues-est.pl</SPAN> is designed, created and maintained at the 
-<A ID="tex2html87"
+<A ID="tex2html90"
   HREF="http://www.eead.csic.es/compbio">Laboratory of Computational Biology</A>
 at 
 Estación Experimental de Aula Dei/CSIC in Zaragoza (Spain) and at the 
-<A ID="tex2html88"
+<A ID="tex2html91"
   HREF="http://www.ccg.unam.mx/~vinuesa">Center for Genomic Sciences</A>
 of 
 Universidad Nacional Autónoma de México (CCG/UNAM).
 
 <P>
 The code was written mostly by Bruno Contreras-Moreira and Pablo Vinuesa, but it also includes 
-code and binaries from <A ID="tex2html89"
+code and binaries from <A ID="tex2html92"
   HREF="http://www.orthomcl.org">OrthoMCL v1.4</A>
 (algorithm OMCL, <code>-M</code>),
-<A ID="tex2html90"
-  HREF="http://blast.ncbi.nlm.nih.gov">NCBI Blast+</A>, <A ID="tex2html91"
+<A ID="tex2html93"
+  HREF="http://blast.ncbi.nlm.nih.gov">NCBI Blast+</A>, <A ID="tex2html94"
   HREF="https://github.com/desmid/mview">MVIEW</A>,
-<A ID="tex2html92"
+<A ID="tex2html95"
   HREF="https://github.com/bbuchfink/diamond">DIAMOND</A>
-and <A ID="tex2html93"
+and <A ID="tex2html96"
   HREF="http://www.bioperl.org">BioPerl 1.5.2</A>.
 
 <P>
@@ -2781,7 +2809,7 @@ This document was generated using the
 The command line arguments were: <BR>
  <kbd>latex2html manual-est -no_antialias_text -split 0 -dir manual-est -no_navigation -show_section_numbers</kbd>
 <P>
-The translation was initiated on 2022-05-16
+The translation was initiated on 2022-08-22
 <BR><HR>
 
 </BODY>
