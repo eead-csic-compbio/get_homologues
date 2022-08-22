@@ -369,7 +369,7 @@ sub read_FASTA_sequence
     else
     {
       $FASTA{$seqid}{'SEQ'} .= $_;
-		$FASTA{$seqid}{'SEQ'} =~ s/[\s|\n]//g;
+      $FASTA{$seqid}{'SEQ'} =~ s/[\s|\n]//g;
       $length = length($FASTA{$seqid}{'SEQ'});
       if($length > $maxlength){ $maxlength = $length; }
     }
@@ -515,7 +515,7 @@ sub read_FASTA_file_array
     }
     elsif($n_of_sequences>-1)
     {
-		$_ =~ s/[\s|\n|\-|\.]//g;
+      $_ =~ s/[\s|\n|\-|\.]//g;
       $FASTA[$n_of_sequences][SEQ] .= $_; # conserve case
     }
   }
@@ -578,9 +578,9 @@ sub same_sequence_order
 {
   # Takes two refs to arrays of same length made by read_FASTA_sequence_array,
   # 1st nucleotide CDS and 2nd peptide CDS.
-  # Returns 1 if sequences
-  # are in same order, otherwise 0
-  # Actually translates sequences, does not use sequence names
+  # Returns 1 if sequences are in same order, otherwise 0
+  # Actually translates sequences, does not use sequence names. 
+  # Note: nucleotide CDS with N residues are not compared 
 
   my ($refCDSnt, $refCDSaa) = @_;
 
@@ -588,6 +588,8 @@ sub same_sequence_order
 
   foreach $seq (0 .. $#{$refCDSnt})
   {
+    next if($refCDSnt->[$seq][SEQ] =~ /N/i);
+
     $translated = Bio::Seq->new(-seq => $refCDSnt->[$seq][SEQ])->translate()->seq();
     $parsed = $refCDSaa->[$seq][SEQ];
     $translated =~ s/\*$//g;

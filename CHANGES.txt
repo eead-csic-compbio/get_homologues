@@ -396,4 +396,5 @@
 10062022: updated .travis.yaml (perl 5.32, libdb-dev, do not apt update)
 14062022: compare_clusters.pl can read .cluster_list files from get_pangenes.pl
 15062022: added sub same_sequence_order to lib/phyTools.pm
-15062022: get_homologues-est.pl now checks that .fna & .faa sequences are in same order (thanks V Guignon!) 
+15062022: get_homologues-est.pl now checks that CDS .fna & .faa sequences are in same order (thanks V Guignon!)
+22082022: when checking that .fna & .faa sequences are in same order, CDSs with Ns are skipped (B Chapman) 
