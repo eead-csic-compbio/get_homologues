@@ -398,3 +398,4 @@
 15062022: added sub same_sequence_order to lib/phyTools.pm
 15062022: get_homologues-est.pl now checks that CDS .fna & .faa sequences are in same order (thanks V Guignon!)
 22082022: when checking that .fna & .faa sequences are in same order, CDSs with Ns are skipped (B Chapman) 
+22082022: updated manual-est with description of pangenome matrix versions taken from tutorial

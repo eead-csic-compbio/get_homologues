@@ -595,7 +595,7 @@ sub same_sequence_order
     $translated =~ s/\*$//g;
     $parsed =~ s/\*$//g;
 
-    if($parsed ne $translated &&
+    if($parsed ne $translated && 
       $parsed !~ /$translated/ && $translated !~ /$parsed/) {
       print "# same_sequence_order : sequence #$seq does not match: ".
           "$refCDSnt->[$seq][SEQ]\n$translated\n$refCDSaa->[$seq][SEQ]\n";
