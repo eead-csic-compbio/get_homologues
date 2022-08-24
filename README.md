@@ -18,6 +18,8 @@ The software was subsequently adapted to the study of **intra-specific eukaryoti
 
 [Contreras-Moreira B, Cantalapiedra CP et al (2017) Front. Plant Sci. 10.3389/fpls.2017.00184](http://journal.frontiersin.org/article/10.3389/fpls.2017.00184/full)
 
+[Contreras-Moreira B, Rodriguez del Rio A et al (2022) Methods in Molecular Biology https://doi.org/10.1007/978-1-0716-2429-6_9](https://link.springer.com/protocol/10.1007/978-1-0716-2429-6_9)
+
 GET_HOMOLOGUES-EST was benchmarked with genomes and transcriptomes of *Arabidopsis thaliana* and *Hordeum vulgare*, available at [http://floresta.eead.csic.es/plant-pan-genomes](http://floresta.eead.csic.es/plant-pan-genomes), and used to analyze the pan-genomes of [*Brachypodium distachyon*](https://brachypan.jgi.doe.gov) and [*Brachypodium hybridum*](http://floresta.eead.csic.es/plant-pan-genomes/Bhybridum) ([press release](https://jgi.doe.gov/more-the-merrier-making-case-for-plant-pan-genomes)).
 
 
