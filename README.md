@@ -21,16 +21,22 @@ The software was subsequently adapted to the study of **intra-specific eukaryoti
 GET_HOMOLOGUES-EST was benchmarked with genomes and transcriptomes of *Arabidopsis thaliana* and *Hordeum vulgare*, available at [http://floresta.eead.csic.es/plant-pan-genomes](http://floresta.eead.csic.es/plant-pan-genomes), and used to analyze the pan-genomes of [*Brachypodium distachyon*](https://brachypan.jgi.doe.gov) and [*Brachypodium hybridum*](http://floresta.eead.csic.es/plant-pan-genomes/Bhybridum) ([press release](https://jgi.doe.gov/more-the-merrier-making-case-for-plant-pan-genomes)).
 
 
-Two **tutorials** are available:*
+Two **tutorials** are available:
 * [Pangenome analysis of plant transcripts and coding sequences](http://eead-csic-compbio.github.io/get_homologues/plant_pangenome/protocol.html), published in 2022.
 
-* [From genomes to pangenomes: understanding variation among individuals and species](http://eead-csic-compbio.github.io/get_homologues/tutorial/pangenome_tutorial.html), which includes step by step instructions for both bacterial and plant data, written in 2017.
+* [From genomes to pangenomes: understanding variation among individuals and species](http://eead-csic-compbio.github.io/get_homologues/tutorial/pangenome_tutorial.html), which includes step by step instructions for both bacterial and plant data, first released in 2017.
  
 
 **Installation instructions**, including the [bioconda package](https://anaconda.org/bioconda/get_homologues), are available in the 
-[manual](http://eead-csic-compbio.github.io/get_homologues/manual/manual.html#SECTION00030000000000000000).
+[manual](http://eead-csic-compbio.github.io/get_homologues/manual/manual.html#SECTION00030000000000000000) 
+and the [README.txt](./README.txt) file.
 
-A [Docker image](https://hub.docker.com/r/csicunam/get_homologues) is available with GET_HOMOLOGUES 
+|version|HTML|
+|-------|----|
+|original, for the analysis of bacterial pan-genomes|[manual](http://eead-csic-compbio.github.io/get_homologues/manual/)|
+|EST, for the analysis of intra-species eukaryotic pan-genomes, tested on plants|[manual-est](http://eead-csic-compbio.github.io/get_homologues/manual-est/)|
+
+A **[Docker image](https://hub.docker.com/r/csicunam/get_homologues)** is also available with GET_HOMOLOGUES 
 bundled with [GET_PHYLOMARKERS](https://github.com/vinuesa/get_phylomarkers), ready to use. 
 The GET_PHYLOMARKERS [manual](https://vinuesa.github.io/get_phylomarkers) 
 explains how to use nucleotide & peptide clusters produced by GET_HOMOLOGUES to compute robust multi-gene and pangenome phylogenies.
@@ -39,16 +45,9 @@ The code is regularly patched (see [CHANGES.txt](./CHANGES.txt) in each release,
 (see citing papers [here](https://scholar.google.es/scholar?start=0&hl=en&as_sdt=2005&cites=5259912818944685430) and 
 [here](https://scholar.google.es/scholar?oi=bibs&hl=en&cites=14330917787074873427&as_sdt=5), respectively).
 
-We kindly ask you to report errors or bugs in the program to the authors and to acknowledge the use of the program in scientific publications.
+We kindly ask you to report errors or bugs to the authors and to acknowledge the use of the software in scientific publications.
 
 *Funding:* Fundacion ARAID, Consejo Superior de Investigaciones Cientificas, DGAPA-PAPIIT UNAM, CONACyT, FEDER, MINECO, DGA-Obra Social La Caixa.
 
 ![logo CSIC](pics/logoCSIC.png) ![logo ARAID](pics/logoARAID.gif) ![logo UNAM](pics/logoUNAM.png)
-
-Installation instructions are summarized on [README.txt](./README.txt) and full documentation is available in two flavours:
-
-|version|HTML|
-|-------|----|
-|original, for the analysis of bacterial pan-genomes|[manual](http://eead-csic-compbio.github.io/get_homologues/manual/)|
-|EST, for the analysis of intra-species eukaryotic pan-genomes, tested on plants|[manual-est](http://eead-csic-compbio.github.io/get_homologues/manual-est/)|
 
