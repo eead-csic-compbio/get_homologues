@@ -400,3 +400,4 @@
 22082022: when checking that .fna & .faa sequences are in same order, CDSs with Ns are skipped (B Chapman) 
 22082022: updated manual-est with description of pangenome matrix versions taken from tutorial
 24082022: updated README files and contributors in manuals
+07122022: compare_clusters.pl can intersect clusters from get_pangenes.pl
