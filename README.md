@@ -2,6 +2,8 @@
 
 [![Build Status](https://app.travis-ci.com/eead-csic-compbio/get_homologues.svg?branch=master)](https://travis-ci.com/eead-csic-compbio/get_homologues)
 [![Anaconda-Server Badge](https://anaconda.org/bioconda/get_homologues/badges/version.svg)](https://anaconda.org/bioconda/get_homologues)
+[![DockerHub](https://badgen.net/badge/icon/docker?icon=docker&label)](https://hub.docker.com/r/csicunam/get_homologues)
+
 
 This software is maintained by Bruno Contreras-Moreira (bcontreras _at_ eead.csic.es) and Pablo Vinuesa (vinuesa _at_ ccg.unam.mx). 
 The original version, **suitable for bacterial genomes**, was described in:
