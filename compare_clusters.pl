@@ -229,7 +229,11 @@ foreach my $d (0 .. $#cluster_dirs)
           $multi_isof{$file} = 1;
         }
 
-        $pangenesOK = 1 	
+        $pangenesOK = 1;
+
+        # cancel incompatible optiona choices	
+	if($INP_synt){ $INP_synt = 0 }
+        if($INP_pange){ $INP_pange = 0 }
       }
       elsif(/^cluster \S+ size=\d+ taxa=\d+ file: (\S+) aminofile: (\S+)/ || 
         /^cluster \S+ size=\d+ taxa=\d+ .*?file: (\S+) aminofile: (\S+)/)
