@@ -402,3 +402,4 @@
 24082022: updated README files and contributors in manuals
 07122022: compare_clusters.pl can intersect clusters from get_pangenes.pl
 10032023: check_BDBHs.pl now guesses -i strings literally, escaping special chars
+17032023: Release 22-282 of mcl is available, "but MCL itself is unchanged", we'll keep using mcl-14-137
