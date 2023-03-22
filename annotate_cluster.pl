@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# 2022 Bruno Contreras-Moreira (1), Ruben Sancho (1,2) and Pablo Vinuesa (3):
+# 2016-23 Bruno Contreras-Moreira (1), Ruben Sancho (1,2) and Pablo Vinuesa (3):
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei-CSIC/Fundacion ARAID, Spain)
 # 2: Grupo Bioflora, EPS, Universidad de Zaragoza, Spain
 # 3: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
@@ -43,9 +43,9 @@ my $MAXGAPSCOLLAP = 2; # natural, number of tolerated gaps in different places w
 my %CHARSFORMVIEW = ( '/' => '_fslash_' ); # chars that have to be removed before calling MVIEW
 my %CHARSFROMMVIEW = ( '_fslash_' => '/' );
 
-my $INP_collapse = 0;
-my ($INP_nucleotides,$INP_blunt,$do_PFAM,$INP_clusterfile,$INP_outfile,$INP_ref_file,%opts) = (1,0,0,'','','');
-my ($INP_includeA,$INP_includeB) = ('','');
+my ($INP_nucleotides,$INP_blunt,$do_PFAM,$INP_collapse) = (1,0,0,0);
+my ($INP_clusterfile,$INP_outfile,$INP_ref_file,%opts) = ('','','');
+my ($INP_unaligned,$INP_includeA,$INP_includeB) = (0,'','');
 
 my $warning = <<'END_WARN';
 WARNING1: Clusters of transcripts often contain a fraction of BLAST hits that do not match 
@@ -77,20 +77,21 @@ will in fact be saved as:
 
 END_WARN
 
-getopts('hDbPf:o:r:c:A:B:', \%opts);
+getopts('hDbPuf:o:r:c:A:B:', \%opts);
 
 if(($opts{'h'})||(scalar(keys(%opts))==0))
 {
   print   "\nusage: $0 [options]\n\n";
   print   "-h this message\n";
   print   "-f input cluster FASTA file          (expects nucleotides, aligns longest seq to rest of cluster)\n";        
-  print   "-o output alignment file             (optional, produces FASTA format)\n";
+  print   "-o output FASTA file                 (optional, by default prints alignment to standard output)\n";
   print   "-P sequences are peptides            (optional, uses BLASTP instead of BLASTN)\n";
   print   "-r reference sequence FASTA          (optional, aligns cluster sequences to this external seq)\n";
+  print   "-D match Pfam domains                (optional, annotates longest seq, nucleotides on 6 frames)\n";
+  print   "-u print unaligned sequences         (optional, flips seqs, handy for multiple alignments, skips option below\n";
   print   "-b blunt alignment borders           (optional, also annotates SNPs and parsimony-informative sites)\n";
   print   "-A file with taxon names of group A  (optional, identifies private variants of group A vs 'rest')\n";
   print   "-B file with taxon names of group B  (optional, requires -A, group B is used as 'rest')\n";
-  print   "-D match Pfam domains                (optional, annotates longest seq, nucleotides on 6 frames)\n";
   print   "-c collapse overlapping fragments    (optional, example -c 40 for overlaps >= 40 residues, requires -o,\n";
   print   "                                      this is useful to merge fragmented de-novo transcripts)\n\n$warning";
   exit(0);
@@ -105,20 +106,13 @@ if(defined($opts{'o'}))
 {  
   $INP_outfile = $opts{'o'}; 
 
-  if(defined($opts{'c'}) && $opts{'c'} > 0)
+  if(!defined($opts{'u'}) && defined($opts{'c'}) && $opts{'c'} > 0)
   {
     $INP_collapse = $opts{'c'};
   }
 }
 
 if(defined($opts{'r'})){  $INP_ref_file = $opts{'r'}; }
-
-if(defined($opts{'P'})){  $INP_nucleotides = 0 }
-
-if(defined($opts{'b'}))
-{ 
-  $INP_blunt = $MINBLUNTBLOCK;
-}
 
 if(defined($opts{'D'}))
 {
@@ -129,23 +123,35 @@ if(defined($opts{'D'}))
   else{ warn_missing_soft('PFAM') }
 }
 
-if(defined($opts{'A'}))
-{
-  $INP_includeA = $opts{'A'};
+if(defined($opts{'P'})){  $INP_nucleotides = 0 }
 
-  if(defined($opts{'B'}))
-  {
-    $INP_includeB = $opts{'B'};
+if(defined($opts{'u'})){  $INP_unaligned = 1 }
+else
+{
+  if(defined($opts{'b'}))
+  { 
+    $INP_blunt = $MINBLUNTBLOCK;
   }
+
+  if(defined($opts{'A'}))
+  {
+    $INP_includeA = $opts{'A'};
+
+    if(defined($opts{'B'}))
+    {
+      $INP_includeB = $opts{'B'};
+    }
+  }
+
 }
 
 warn "\n# DEFBLASTNTASK=$DEFBLASTNTASK DEFEVALUE=$DEFEVALUE\n";
 warn "# MINBLUNTBLOCK=$MINBLUNTBLOCK MAXSEQNAMELEN=$MAXSEQNAMELEN\n";
 warn "# MAXMISMCOLLAP=$MAXMISMCOLLAP MAXGAPSCOLLAP=$MAXGAPSCOLLAP\n";
 
-printf(STDERR "\n# %s -f %s -r %s -o %s -P %d -b %s -D %s -c %d -A %s -B %s\n",
+printf(STDERR "\n# %s -f %s -r %s -o %s -P %d -u %d -b %s -D %s -c %d -A %s -B %s\n",
   $0,$INP_clusterfile,$INP_ref_file,$INP_outfile,!$INP_nucleotides,
-  $INP_blunt,$do_PFAM,$INP_collapse,$INP_includeA,$INP_includeB);
+  $INP_unaligned,$INP_blunt,$do_PFAM,$INP_collapse,$INP_includeA,$INP_includeB);
 
 ##########################################################################
 
@@ -461,20 +467,97 @@ $command = "$ENV{'EXE_MVIEW'} -in blast -out fasta $filenameb | perl -lne 's/^>\
 system($command);  
 
 # substitute MVIEW forbidden char place holders and save output in open filehandle $fha
+my ($input_seq, @flipped_FASTA);
 open(MVIEWRAW,"<",$filenamer) || die "# ERROR: cannot open mview outfile $filenamer\n";
 while(my $line = <MVIEWRAW>)
 {
+  chomp($line);
   if($line =~ /^>/)
   {
     foreach $char (keys(%CHARSFROMMVIEW)){
       $line =~ s/$char/$CHARSFROMMVIEW{$char}/g;
     }
+
+    if($INP_unaligned)
+    {
+      # find input sequence that matches this header
+      $input_seq = -1;
+      foreach $seq (0 .. $#{$cluster_ref})
+      {
+        if($line =~ m/\Q$short_names{$seq}\E/)
+	{
+	  $input_seq = $seq;
+	  last;
+	}
+      }
+      
+      if($input_seq == -1)
+      {
+        warn "# $line not included in output, failed to align to longest/ref sequence\n"
+      }
+      else 
+      {
+        # header
+	if($do_PFAM)
+        {
+          push(@flipped_FASTA, ">$short_names{$input_seq} Pfam:$Pfam_full($Pfam_string)")
+        }
+        else
+        {
+          push(@flipped_FASTA, ">$short_names{$input_seq}")
+        }
+
+        #sequence, flip if required
+        $input_seq = $cluster_ref->[$input_seq][SEQ]; 	
+        if($line =~ /\+ \-/)
+	{ 
+	  $input_seq =~ tr/acgtACGT/tgcaTGCA/;
+          $input_seq = reverse($input_seq);	
+	}
+	push(@flipped_FASTA, $input_seq)
+      }  
+    }
+
+    print $fha "$line\n";
+
+  } else {
+
+    if($INP_unaligned == 0)
+    {
+      print $fha "$line\n";
+    }
   }
-  
-  print $fha $line;
 }
 close(MVIEWRAW);
 close($fha);
+
+if($INP_unaligned) {
+
+  # print output unaligned
+  if($INP_outfile)
+  {
+    $fh = FileHandle->new(">$INP_outfile");
+    if(!defined($fh))
+    {
+      die "# cannot create output file $INP_outfile\n";
+    }
+  }
+  else{ $fh = *STDOUT }
+
+  foreach $seq (@flipped_FASTA)
+  {
+    print $fh "$seq\n"
+  }
+
+  if($INP_outfile)
+  {
+    print STDERR "\n# unaligned (flipped) file: $INP_outfile\n";
+    close($fh);
+  }
+
+  exit(0);	
+}
+
 
 ## extract SNPs, parsimony-informative sites, private variants and trim alignment if required
 my ($align_ref,$nSNPS,$npars,$npriv,$SNPs,$pars,$priv,$missA,$missB) = 
@@ -622,7 +705,8 @@ if($INP_outfile && $#{$align_ref})
 if($INP_collapse && $INP_outfile)
 {
   warn "\n# collapsing taxon aligned sequences overlap >= $INP_collapse residues\n";
-  my $collapsed_align_ref = collapse_taxon_alignments($INP_outfile,!$INP_nucleotides,$INP_collapse,$MAXMISMCOLLAP,$MAXGAPSCOLLAP);
+  my $collapsed_align_ref = 
+    collapse_taxon_alignments($INP_outfile,!$INP_nucleotides,$INP_collapse,$MAXMISMCOLLAP,$MAXGAPSCOLLAP);
   
   my $collapsed_outfile_name;
   if($INP_outfile =~ m/(\S+?)\.(\S+)$/)
