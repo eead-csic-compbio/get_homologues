@@ -404,3 +404,4 @@
 10032023: check_BDBHs.pl now guesses -i strings literally, escaping special chars
 17032023: Release 22-282 of mcl is available, "but MCL itself is unchanged", we'll keep using mcl-14-137
 22032023: annotate_cluster.pl -u produces unaligned complete sequences, flipped if required to facilitate multiple alignments
+28032023: added more dependencies required for compiling R packages in install_R_deps.R
