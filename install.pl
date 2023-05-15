@@ -2,7 +2,7 @@
 
 # Script that checks/compiles software required by get_homologues[-est] and 
 # checks dependencies for first-time users.
-# last checked Apr2022
+# last checked May2023
 
 use strict;
 use warnings;
@@ -20,8 +20,8 @@ $|=1;
 my $DOWNLOADEXE = 'wget'; # add path if required, curl in MacOS
 my $BINTGZFILE = 'bin.tgz';
 my $BINOSXTGZFILE = 'binosx.tgz';
-my $BINURL = "https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.5/$BINTGZFILE";
-my $BINOSXURL = "https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.5/$BINOSXTGZFILE";
+my $BINURL = "https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.6/$BINTGZFILE";
+my $BINOSXURL = "https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.6/$BINOSXTGZFILE";
 
 my $PFAMSERVERURL   = 'ftp.ebi.ac.uk';
 my $PFAMFOLDER      = 'pub/databases/Pfam/current_release/';
@@ -40,7 +40,7 @@ my %packages =
   'GD'=>['libgd-gd2-perl','perl-GD','perl-GD','gd']
   );
 
-my $nonCOGS = 'diamond-0.8.25 hmmer-3.1b2 mcl-14-137 ncbi-blast-2.8.1+ phylip-3.695';
+my $nonCOGS = 'diamond-0.8.25 hmmer-3.1b2 mcl-14-137 ncbi-blast-2.14.0+ phylip-3.695';
 
 my ($SOguess,$output,$command,$cwd) = ('','','',getcwd());
 my ($downloadOK,$force_unsupervised,$noDBs) = (0,0,0);
@@ -244,7 +244,7 @@ if(!$COGSonly)
   print "## Checking blast (lib/phyTools: \$ENV{'EXE_BLASTP'})\n";
 
   if($downloadOK){
-      $ENV{'EXE_BLASTP'} = $ENV{'MARFIL'}."/bin/ncbi-blast-2.8.1+/bin/blastp"
+      $ENV{'EXE_BLASTP'} = $ENV{'MARFIL'}."/bin/ncbi-blast-2.14.0+/bin/blastp"
   }
 
   $output = `$ENV{'EXE_BLASTP'} 2>&1`;
