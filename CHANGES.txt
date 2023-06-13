@@ -408,3 +408,4 @@
 05052023: check that download_genomes_ncbi.pl still works with sample_genome.list
 15052023: updated BLAST to faster, smaller ncbi-blast-2.14.0+ binaries
 15052022: update install.pl and updated bin.tgz (v3.6)
+13062023: added new script MSA_Ka_Ks.pl to user_utils/dNdS

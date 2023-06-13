@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# 2013-22 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2013-23 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Laboratory of Computational Biology, EEAD-CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 #
@@ -516,11 +516,11 @@ foreach my $d (0 .. $#cluster_dirs)
         last CLUSTER2;
       }
     }
-
-# warning: a cluster can fail to be syntenic in one directory but confirmed as such in another,
-# thus removed the total number to avoid confusions
-#print "# number of clusters = $n_of_clusters syntenic = $n_of_syntenic_clusters\n";
   }
+
+  # warning: a cluster can fail to be syntenic in one directory but confirmed as such in another,
+  # thus removed the total number to avoid confusions
+  #print "# number of clusters = $n_of_clusters syntenic = $n_of_syntenic_clusters\n";
 
   print "# number of clusters = $n_of_clusters duplicated = $n_of_dupl\n";
 }

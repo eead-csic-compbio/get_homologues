@@ -7,11 +7,6 @@ clusters of coding sequences.
 
 We will use a set of codon-aligned sequences from barley used in https://www.frontiersin.org/articles/10.3389/fpls.2017.00184
 
-
-
-https://github.com/eead-csic-compbio/eead-csic-compbio.github.io/blob/master/scripts/MSA_Ka_Ks.pl
-
-
 ### Codon alignments and computation of Ka/Ks 
 
 #### In one step (recommended)
