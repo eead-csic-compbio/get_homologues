@@ -41,7 +41,11 @@ ok( eval{ `perl ./_cluster_makeIsoform.pl` } =~ /\[options\]/ , '_cluster_makeIs
 
 ok( eval{ `perl ./_cluster_makeOrtholog.pl` } =~ /\[options\]/ , '_cluster_makeOrtholog.pl' );
 
-ok( eval{ `perl ./download_genomes_ncbi.pl test` } =~ /\$NCBIHOST ok/ , 'download_genomes_ncbi.pl test' );
+if($ARGV[0] ne 'nonet') {
+  ok( eval{ `perl ./download_genomes_ncbi.pl test` } =~ /\$NCBIHOST ok/ , 'download_genomes_ncbi.pl test' );
+} else {
+  ok( eval{ `perl ./download_genomes_ncbi.pl 2>&1 ` } =~ /usage/ , 'download_genomes_ncbi.pl' );  
+}
 
 ok( eval{ `perl ./install.pl test` } =~ /testing only/ , 'install.pl test' );
 

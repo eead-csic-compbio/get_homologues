@@ -1,5 +1,4 @@
-# Makefile for Travis CI tests and installation
-# https://docs.travis-ci.com/user/languages/perl
+# Makefile for tests and installation
 
 test:
 	perl test_get_homologues.t
@@ -9,6 +8,9 @@ testR:
 
 test_swiss:
 	perl test_get_homologues.t swiss
+
+test_nonet:
+	perl test_get_homologues.t nonet
 
 clean:	
 	rm -rf sample_plasmids_gbk_homologues/tmp/ 
