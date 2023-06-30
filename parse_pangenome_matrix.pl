@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# 2017-22 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2017-23 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -26,7 +26,8 @@ use marfil_homology;
 use Bio::Graphics;
 use Bio::SeqFeature::Generic;
 
-my $CUTOFF = 100; # percentage of genomes to be used as cutoff for presence/absence
+my $CUTOFF  = 100; # percentage of genomes to be used as cutoff for presence/absence
+my $CUTOFFB = 100;
 
 # globals used while producing R plots
 my $VERBOSE   = 0;    # set to 1 to see R messages
@@ -56,9 +57,10 @@ check_installed_features(@FEATURES2CHECK);
 
 my ($INP_matrix,$INP_absent,$INP_expansions,$INP_includeA,$INP_includeB,%opts) = ('',0,0,'','');
 my ($INP_refgenome,$INP_list_taxa,$INP_plotshell,$INP_cutoff,$needAB,$Rparams) = ('',0,0,$CUTOFF,0,'');
-my ($INP_nocloud,$INP_absentB,$INP_skip_singletons,$INP_shared_matrix,$INP_taxa_file,$needB) = (0,0,0,0,'');
+my ($INP_nocloud,$INP_absentB,$INP_skip_singletons,$INP_shared_matrix,$INP_taxa_file) = (0,0,0,0,'');
+my ($INP_cutoffB,$needB) = (0);
 
-getopts('hagselxnp:m:I:A:B:P:S:', \%opts);
+getopts('hagselxnp:m:I:A:B:P:S:R:', \%opts);
 
 if(($opts{'h'})||(scalar(keys(%opts))==0))
 {
@@ -76,7 +78,8 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   print   "-g \t find genes/clusters present in A which are absent in B    (optional, requires -A & -B)\n";
   print   "-e \t find gene family expansions in A with respect to B        (optional, requires -A & -B)\n";
   print   "-S \t skip clusters with occupancy <S                           (optional, requires -x/-a/-g, example -S 2)\n";
-  print   "-P \t percentage of genomes that must comply presence/absence   (optional, default=$CUTOFF, requires -g)\n";
+  print   "-P \t % of -A & -B genomes that must comply presence/absence    (optional, default=$CUTOFF, requires -g)\n";
+  print   "-R \t % of -B genomes that must comply presence/absence         (optional, requires -g & -P, if set -P applies to -A only)\n";
   if(eval{ require GD } ) # show only if GD is available
   {
     print   "-p \t plot pangenes on the genome map of this group A taxon     ".
@@ -156,6 +159,16 @@ else
     {
       $CUTOFF = $opts{'P'};
       $INP_cutoff = $CUTOFF;
+
+      if(defined($opts{'R'}) && $opts{'R'} > 0 && $opts{'R'} <= 100) 
+      { 
+        $CUTOFFB = $opts{'R'};	      
+        $INP_cutoffB = $CUTOFFB;
+      } 
+      else
+      {
+        $CUTOFFB = $CUTOFF;
+      }
     }
   }
   elsif(defined($opts{'e'}))
@@ -188,10 +201,10 @@ else
   }
 }
 
-printf("\n# %s -m %s -I %s -A %s -B %s -a %d -g %d -e %d -p %s -s %d -n %d -l %d -x %d -P %d -S %d\n\n",
+printf("\n# %s -m %s -I %s -A %s -B %s -a %d -g %d -e %d -p %s -s %d -n %d -l %d -x %d -P %d -R %d -S %d\n\n",
 	$0,$INP_matrix,$INP_taxa_file,$INP_includeA,$INP_includeB,$INP_absentB,$INP_absent,
 	$INP_expansions,$INP_refgenome,$INP_plotshell,$INP_nocloud,$INP_list_taxa,$INP_shared_matrix,
-	$INP_cutoff,$INP_skip_singletons);
+	$INP_cutoff,$INP_cutoffB,$INP_skip_singletons);
 
 if(!$needB && !$needAB && !$INP_plotshell && !$INP_list_taxa)
 {
@@ -199,6 +212,7 @@ if(!$needB && !$needAB && !$INP_plotshell && !$INP_list_taxa)
 }
 
 $CUTOFF /= 100; # use 0-1 float from now on
+$CUTOFFB /= 100;
 
 #################################### MAIN PROGRAM  ################################################
 
@@ -454,14 +468,14 @@ elsif($INP_absent)
       }
     }
 
-    if($presentA >= ($n_of_includedA*$CUTOFF) && $absentB >= ($n_of_includedB*$CUTOFF))
+    if($presentA >= ($n_of_includedA*$CUTOFF) && $absentB >= ($n_of_includedB*$CUTOFFB))
     {
       # pan gene in set A
       #print "$cluster_names{$col} present only in ($n_of_includedA) taxa in set A\n";
       next if($INP_skip_singletons && $presentA < $INP_skip_singletons);
       push(@pansetA,$cluster_names{$col});
     }
-    elsif($presentB >= ($n_of_includedB*$CUTOFF) && $absentA >= ($n_of_includedA*$CUTOFF))
+    elsif($presentB >= ($n_of_includedB*$CUTOFFB) && $absentA >= ($n_of_includedA*$CUTOFF))
     {
       # pan gene in set B
       #print "$cluster_names{$col} present only in ($n_of_includedB) taxa in set B\n";
