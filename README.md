@@ -53,5 +53,9 @@ We kindly ask you to report errors or bugs to the authors and to acknowledge the
 
 *Funding:* Fundacion ARAID, Consejo Superior de Investigaciones Cientificas, DGAPA-PAPIIT UNAM, CONACyT, FEDER, MINECO, DGA-Obra Social La Caixa.
 
-![logo CSIC](pics/logoCSIC.png) ![logo ARAID](pics/logoARAID.gif) ![logo UNAM](pics/logoUNAM.png)
+![logo CSIC](pics/logoCSIC.png) ![logo ARAID](pics/logoARAID.gif) ![logo UNAM](pics/logoUNAM.png) 
+
+![logo_ELIXIRES](logoELIXIRES.png)
+
+
 
