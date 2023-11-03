@@ -593,13 +593,19 @@ sub same_sequence_order
     $translated = Bio::Seq->new(-seq => $refCDSnt->[$seq][SEQ])->translate()->seq();
     $parsed = $refCDSaa->[$seq][SEQ];
     $translated =~ s/\*$//g;
-    $parsed =~ s/\*$//g;
-
+    $parsed =~ s/\*$//gi;
+   
+    if($translated =~ m/\*/) {
+      print "# same_sequence_order : translation of $refCDSnt->[$seq][NAME] contains internal STOP codons (*): ".
+        "$translated\n";
+        return 0;
+    }   
+   
     if($parsed ne $translated && 
       $parsed !~ /$translated/ && $translated !~ /$parsed/) {
       print "# same_sequence_order : sequence #$seq does not match: ".
-          "$refCDSnt->[$seq][SEQ]\n$translated\n$refCDSaa->[$seq][SEQ]\n";
-      return 0;
+        "$refCDSnt->[$seq][SEQ]\n$translated\n$refCDSaa->[$seq][SEQ]\n";
+        return 0;
     }
   }
 

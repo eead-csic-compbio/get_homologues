@@ -412,3 +412,4 @@
 29062023: added target 'test nonet' to Makefile to allow tests in servers with closed ports
 30062023: added parse_pangenome_matrix.pl -R, which modifies -P to control %PAV only for -B
 23102023: registered https://bio.tools/get_homologues 
+03112023: phyTools::same_sequence_order checks for internal STOP codons in translated sequences
