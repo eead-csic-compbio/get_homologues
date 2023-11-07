@@ -413,3 +413,5 @@
 30062023: added parse_pangenome_matrix.pl -R, which modifies -P to control %PAV only for -B
 23102023: registered https://bio.tools/get_homologues 
 03112023: phyTools::same_sequence_order checks for internal STOP codons in translated sequences
+07112023: annotate_cluster.pl fails gracefully when no sequences are read
+07112023: annotate_cluster.pl -b -P prints total missense mutations instead of SNPS

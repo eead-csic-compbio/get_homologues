@@ -88,12 +88,13 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   print   "-P sequences are peptides            (optional, uses BLASTP instead of BLASTN)\n";
   print   "-r reference sequence FASTA          (optional, aligns cluster sequences to this external seq)\n";
   print   "-D match Pfam domains                (optional, annotates longest seq, nucleotides on 6 frames)\n";
-  print   "-u print unaligned sequences         (optional, flips seqs, handy for multiple alignments, skips option below\n";
-  print   "-b blunt alignment borders           (optional, also annotates SNPs and parsimony-informative sites)\n";
+  print   "-u print unaligned sequences         (optional, flips seqs, handy for multiple alignments, skips option below)\n";
+  print   "-b blunt alignment borders           (optional, also annotates SNPs/missense mutations and parsimony-informative sites)\n";
   print   "-A file with taxon names of group A  (optional, identifies private variants of group A vs 'rest')\n";
   print   "-B file with taxon names of group B  (optional, requires -A, group B is used as 'rest')\n";
   print   "-c collapse overlapping fragments    (optional, example -c 40 for overlaps >= 40 residues, requires -o,\n";
-  print   "                                      this is useful to merge fragmented de-novo transcripts)\n\n$warning";
+  print   "                                      this is useful to merge fragmented de-novo transcripts)\n\n";
+  print   $warning;
   exit(0);
 }
 
@@ -249,6 +250,12 @@ foreach $seq (0 .. $#{$cluster_ref})
     $maxlength = $length;
     $longest_seq = $seq;
   }
+}
+
+if(!defined($cluster_ref->[0]))
+{
+  printf(STDERR "# total   sequences: 0\n# exit\n");
+  exit(0);
 }
 
 printf(STDERR "\n# total   sequences: %d taxa: %d\n",
@@ -562,20 +569,45 @@ if($INP_unaligned) {
 ## extract SNPs, parsimony-informative sites, private variants and trim alignment if required
 my ($align_ref,$nSNPS,$npars,$npriv,$SNPs,$pars,$priv,$missA,$missB) = 
   check_variants_FASTA_alignment($filenamea,!$INP_nucleotides,$INP_blunt,\@listA,\@listB);
-  
-printf(STDERR "# aligned sequences: %d width:   %d\n\n",
-  $#{$align_ref}+1,length($align_ref->[0][SEQ])); 
+
+if(!defined($align_ref->[0]))
+{
+  printf(STDERR "# aligned sequences: 0\n# exit\n");
+  exit(0);
+} 
+else 
+{
+  printf(STDERR "# aligned sequences: %d width:   %d\n\n",
+    $#{$align_ref}+1,length($align_ref->[0][SEQ])); 
+}
 
 if($INP_includeA)
 {
-  printf(STDERR "# alignment sites: SNP=%d parsimony-informative=%d private=%d unaligned A=%d B=%d (%s)\n",
-    $nSNPS,$npars,$npriv,$missA,$missB,$INP_clusterfile);
-  printf(STDERR "# private sites=%s\n\n",$priv); 
+  if($INP_nucleotides) 
+  {
+    printf(STDERR "# alignment sites: SNP=%d parsimony-informative=%d private=%d unaligned A=%d B=%d (%s)\n",
+      $nSNPS,$npars,$npriv,$missA,$missB,$INP_clusterfile);
+    printf(STDERR "# private sites=%s\n\n",$priv); 
+  }
+  else
+  {
+    printf(STDERR "# alignment sites: missense=%d parsimony-informative=%d private=%d unaligned A=%d B=%d (%s)\n",
+      $nSNPS,$npars,$npriv,$missA,$missB,$INP_clusterfile);
+    printf(STDERR "# private sites=%s\n\n",$priv);
+  }
 }
 else
 {
-  printf(STDERR "# alignment sites: SNP=%d parsimony-informative=%d (%s)\n\n",
-    $nSNPS,$npars,$INP_clusterfile);
+  if($INP_nucleotides)
+  {
+    printf(STDERR "# alignment sites: SNP=%d parsimony-informative=%d (%s)\n\n",
+      $nSNPS,$npars,$INP_clusterfile);
+  }
+  else 
+  {
+    printf(STDERR "# alignment sites: missense=%d parsimony-informative=%d (%s)\n\n",
+      $nSNPS,$npars,$INP_clusterfile);
+  }
 }    
 
 
