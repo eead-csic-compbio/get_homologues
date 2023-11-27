@@ -56,7 +56,7 @@ We kindly ask you to report errors or bugs to the authors and to acknowledge the
 ![logo CSIC](pics/logoCSIC.png) ![logo ARAID](pics/logoARAID.gif) ![logo UNAM](pics/logoUNAM.png) 
 
 
-[https://bio.tools/get_homologues](GET_HOMOLOGUES) is part of the INB/ELIXIR-ES resources portfolio:
+[GET_HOMOLOGUES](https://bio.tools/get_homologues) is part of the INB/ELIXIR-ES resources portfolio:
 
 ![logo_ELIXIRES](pics/logoELIXIRES.png)
 
