@@ -22,7 +22,7 @@ Igartua E, Casas AM and Vinuesa P (2017) Analysis of Plant Pan-Genomes and
 Transcriptomes with GET_HOMOLOGUES-EST, a Clustering Solution for Sequences of 
 the Same Species. Front. Plant Sci. 10.3389/fpls.2017.00184
 
-This software is copyright 2013-22, Bruno Contreras-Moreira and Pablo Vinuesa.
+This software is copyright 2013-24, Bruno Contreras-Moreira and Pablo Vinuesa.
 
 GET_HOMOLOGUES is made freely available for academic research and shall not 
 be used for any tasks related to military purposes. Commercial users 
