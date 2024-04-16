@@ -36,7 +36,7 @@ Bruno Contreras-Moreira (1)*, Alvaro Rodriguez del Rio (1), Carlos P. Cantalapie
 
 The pangenome of a species is the sum of the genomes of its individuals. As coding sequences often represent only a small fraction of each genome, analyzing the pangene set can be a cost-effective strategy for plants with large genomes or highly heterozygous species. Here we describe a step-by-step protocol to analyze plant pangene sets with the software GET_HOMOLOGUES-EST. After a short introduction, where the main concepts are illustrated, the remaining sections cover the installation and typical operations required to analyze and annotate pantranscriptomes and gene sets of plants. The recipes include instructions on how to call core and accessory genes, how to compute a presence-absence pangenome matrix and how to identify and analyze private genes, present only in some genotypes. Downstream phylogenetic analyses are also discussed.
 
-An early version of this protocol was published in 2022 as a chapter of the book [Plant Comparative Genomics](https://link.springer.com/book/9781071624289). 
+<!--An early version of this protocol was published in 2022 as a chapter of the book [Plant Comparative Genomics](https://link.springer.com/book/9781071624289). -->
 
 ### ii. Key Words
 
@@ -46,6 +46,9 @@ An early version of this protocol was published in 2022 as a chapter of the book
 
 Defining pangene sets with GET_HOMOLOGUES-EST
 
+### v. Citation
+
+Contreras-Moreira, B., del Río, Á.R., Cantalapiedra, C.P., Sancho, R., Vinuesa, P. (2022). Pangenome Analysis of Plant Transcripts and Coding Sequences. In: Pereira-Santana, A., Gamboa-Tuz, S.D., Rodríguez-Zapata, L.C. (eds) Plant Comparative Genomics. Methods in Molecular Biology, vol 2512. Humana, New York, NY. <https://doi.org/10.1007/978-1-0716-2429-6_9>
 
 ## 1. Introduction
 
