@@ -1,0 +1,10 @@
+#List of genomes used in H.Tettelin paper: http://www.pnas.org/content/102/39/13950.long
+#Accessions updated 31032016
+NC_004116   S.agalactiae_2603VR
+NC_007432   S.agalactiae_A909
+NC_004368   S.agalactiae_NEM316
+GCA_000167715.1_ASM16771v1    S.agalactiae_18RS21
+GCA_000167735.1_ASM16773v1    S.agalactiae_515
+GCA_000167755.1_ASM16775v1    S.agalactiae_CJB111
+GCA_000167775.1_ASM16777v1    S.agalactiae_COH1
+GCA_000167795.1_ASM16779v1    S.agalactiae_H36B
