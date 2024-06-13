@@ -45,6 +45,9 @@ bundled with [GET_PHYLOMARKERS](https://github.com/vinuesa/get_phylomarkers), re
 The GET_PHYLOMARKERS [manual](https://vinuesa.github.io/get_phylomarkers) 
 explains how to use nucleotide & peptide clusters produced by GET_HOMOLOGUES to compute robust multi-gene and pangenome phylogenies.
 
+A related piece of software was released in 2023 called [GET_PANGENES](https://github.com/Ensembl/plant-scripts/tree/master/pangenes),
+which takes FASTA and GFF files as input and explicitely considers gene collinearity.
+
 The code is regularly patched (see [CHANGES.txt](./CHANGES.txt) in each release, and has been used in a variety of studies 
 (see citing papers [here](https://scholar.google.es/scholar?start=0&hl=en&as_sdt=2005&cites=5259912818944685430) and 
 [here](https://scholar.google.es/scholar?oi=bibs&hl=en&cites=14330917787074873427&as_sdt=5), respectively).
