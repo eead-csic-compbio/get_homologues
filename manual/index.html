@@ -524,13 +524,13 @@ if( ! defined($ENV{'EXE_HMMPFAM'}) )
 The Pfam HMM library is also required and the <SPAN  CLASS="textit">install.pl</SPAN> script should take care of it.
 However, you can manually download it from the appropriate
 <A ID="tex2html28"
-  HREF="ftp://ftp.sanger.ac.uk/pub/databases/Pfam/current_release/Pfam-A.hmm.gz">Pfam FTP site</A>.
+  HREF="https://ftp.ebi.ac.uk/pub/databases/Pfam/current_release/Pfam-A.hmm.gz">Pfam FTP site</A>.
 This file needs to be decompressed, either in the default <SPAN  CLASS="textit">db</SPAN> folder or in any other location, 
 and then it should be formatted with the program <SPAN  CLASS="textit">hmmpress</SPAN>, which is also part of the 
 <SPAN  CLASS="textit">HMMER3</SPAN> package. A valid command sequence could be:
 <PRE>
 $ cd db;
-$ wget ftp://ftp.sanger.ac.uk/pub/databases/Pfam/current_release/Pfam-A.hmm.gz .;
+$ wget https://ftp.ebi.ac.uk/pub/databases/Pfam/current_release/Pfam-A.hmm.gz .;
 $ gunzip Pfam-A.hmm.gz;
 $ /your/path/hmmer-3.1b2/src/hmmpress Pfam-A.hmm
 </PRE>
@@ -3218,9 +3218,9 @@ These are text files that can be inspected with help from any text editor.
 </H2>
 
 <P>
-File <code>HOWTOTettelin</code> is a shell script which performs typical uses of <SPAN  CLASS="textit">get_homologues.pl</SPAN>.
-This script can be made executable on the terminal with: <code>$ chmod +x HOWTOTettelin</code>
-and then executed with: <code>$ ./HOWTOTettelin</code>
+File <code>HOWTOTettelin</code> is a shell script which performs typical uses of <SPAN  CLASS="textit">get_homologues.pl</SPAN>,
+including jobs that require Pfam. This script can be 
+executed with: <code>$ ./HOWTOTettelin</code>
 The first task carried out by the script is to download the same GenBank files used in the landmark work of Tettelin
 and collaborators (PubMed=<A ID="tex2html104"
   HREF="http://www.ncbi.nlm.nih.gov/sites/ppmc/articles/PMC1216834/">16172379</A>); afterwards
@@ -4171,7 +4171,7 @@ This document was generated using the
 The command line arguments were: <BR>
  <kbd>latex2html manual -no_antialias_text -split 0 -dir manual -no_navigation -show_section_numbers</kbd>
 <P>
-The translation was initiated on 2023-05-15
+The translation was initiated on 2024-06-13
 <BR><HR>
 
 </BODY>
