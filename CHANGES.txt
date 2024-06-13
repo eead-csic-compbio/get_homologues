@@ -414,4 +414,7 @@
 23102023: registered https://bio.tools/get_homologues 
 03112023: phyTools::same_sequence_order checks for internal STOP codons in translated sequences
 07112023: annotate_cluster.pl fails gracefully when no sequences are read
-07112023: annotate_cluster.pl -b -P prints total missense mutations instead of SNPS
+07112023: annotate_cluster.pl -b -P prints total missense mutations instead of SNPs
+13062024: removed .gbk files from test_Streptococcus, should make releases smaller
+13062024: added test_Streptococcus and HOWTOTettelin.txt to repo, only in releases before
+13062024: updated manuals
