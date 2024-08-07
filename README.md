@@ -107,7 +107,7 @@ which takes FASTA and GFF files as input and explicitely considers gene collinea
 
 ## Bugs
 
-The code is regularly patched (see [CHANGES.txt](./CHANGES.txt) in each release. We kindly ask you to report errors or bugs as 
+The code is regularly patched (see [CHANGES.txt](./CHANGES.txt)) in each release. We kindly ask you to report errors or bugs as 
 [GitHub issues](https://github.com/eead-csic-compbio/get_homologues/issues)
 and to acknowledge the use of the software in scientific publications.
 
