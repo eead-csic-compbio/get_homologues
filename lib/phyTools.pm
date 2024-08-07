@@ -1,5 +1,5 @@
 # Bruno Contreras-Moreira, Pablo Vinuesa
-# 2005-23 CCG/UNAM, Mexico, EEAD/CSIC, Zaragoza, Spain
+# 2005-24 CCG/UNAM, Mexico, EEAD/CSIC, Zaragoza, Spain
 # This is a collection of subroutines used in our projects,
 # including primers4clades and get_homologues
 
@@ -87,7 +87,7 @@ sub set_phyTools_env
 
   # BLAST
   if( ! defined($ENV{'BLAST_PATH'}) ){ 
-    $ENV{'BLAST_PATH'} = $ENV{'MARFIL'}.'bin/ncbi-blast-2.14.0+/bin/'; 
+    $ENV{'BLAST_PATH'} = $ENV{'MARFIL'}.'bin/ncbi-blast-2.16.0+/bin/'; 
     if(!-e $ENV{'BLAST_PATH'}){ 
       $ENV{'BLAST_PATH'} = ''; # should work if in PATH
     } 
