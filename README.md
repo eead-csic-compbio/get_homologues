@@ -32,10 +32,7 @@ Installation instructions, including the [bioconda package](https://anaconda.org
 [manual](http://eead-csic-compbio.github.io/get_homologues/manual/manual.html#SECTION00030000000000000000)
 and the [README.txt](./README.txt) file.
 
-A **[Docker image](https://hub.docker.com/r/csicunam/get_homologues)** is also available with GET_HOMOLOGUES
-bundled with [GET_PHYLOMARKERS](https://github.com/vinuesa/get_phylomarkers), ready to use.
-The GET_PHYLOMARKERS [manual](https://vinuesa.github.io/get_phylomarkers)
-explains how to use nucleotide & peptide clusters produced by GET_HOMOLOGUES to compute robust multi-gene and pangenome phylogenies.
+Check also the [Docker image](https://hub.docker.com/r/csicunam/get_homologues).
 
 ## Documentation
 
@@ -100,6 +97,11 @@ It also includes code and binaries from other authors:
 ![**Legend.** Flowchart and features of GET_HOMOLOGUES-EST.](./pics/EST.jpg)
 
 ## Related software
+
+[GET_PHYLOMARKERS](https://github.com/vinuesa/get_phylomarkers) uses 
+twin nucleotide & peptide clusters produced by GET_HOMOLOGUES to compute robust multi-gene and pangenome phylogenies.
+Check the [manual](https://vinuesa.github.io/get_phylomarkers), the [tutorial](https://link.springer.com/protocol/10.1007/978-1-0716-2429-6_9),
+and the [Docker image](https://hub.docker.com/r/csicunam/get_homologues).
 
 A related piece of software was released in 2023 called [GET_PANGENES](https://github.com/Ensembl/plant-scripts/tree/master/pangenes),
 which takes FASTA and GFF files as input and explicitely considers gene collinearity.
