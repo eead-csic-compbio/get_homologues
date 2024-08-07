@@ -407,7 +407,7 @@
 28032023: added more dependencies required for compiling R packages in install_R_deps.R
 05052023: check that download_genomes_ncbi.pl still works with sample_genome.list
 15052023: updated BLAST to faster, smaller ncbi-blast-2.14.0+ binaries
-15052022: update install.pl and updated bin.tgz (v3.6)
+15052023: update install.pl and updated bin.tgz (v3.6)
 13062023: added new script MSA_Ka_Ks.pl to user_utils/dNdS
 29062023: added target 'test nonet' to Makefile to allow tests in servers with closed ports
 30062023: added parse_pangenome_matrix.pl -R, which modifies -P to control %PAV only for -B
@@ -418,3 +418,12 @@
 13062024: removed .gbk files from test_Streptococcus, should make releases smaller
 13062024: added test_Streptococcus and HOWTOTettelin.txt to repo, only in releases before
 13062024: updated manuals
+07082024: updated BLAST to ncbi-blast-2.16.0+ binaries
+07082024: updated bin.tgz, binosx.tgz and release.pl
+07082024: updated install.pl to support v3.7 binaries
+07082024: updated lib/phyTools.pm to support ncbi-blast-2.16.0+
+07082024: updated README.txt
+07082024: test_get_homologues.t now can actually download 8 genomes from NCBI 
+07082024: test_get_homologues.t now includes get_homologues.pl -X (diamond)
+07082024: updated targets clean and cleanR in Makefile
+07082024: improved repository README.md with TOC and links to sections
