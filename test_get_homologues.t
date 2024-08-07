@@ -41,11 +41,15 @@ ok( eval{ `perl ./_cluster_makeIsoform.pl` } =~ /\[options\]/ , '_cluster_makeIs
 
 ok( eval{ `perl ./_cluster_makeOrtholog.pl` } =~ /\[options\]/ , '_cluster_makeOrtholog.pl' );
 
-if(defined($ARGV[0]) && $ARGV[0] ne 'nonet') {
-  ok( eval{ `perl ./download_genomes_ncbi.pl test` } =~ /\$NCBIHOST ok/ , 'download_genomes_ncbi.pl test' );
+if(!defined($ARGV[0]) || (defined($ARGV[0]) && $ARGV[0] ne 'nonet')) {
+  #ok( eval{ `perl ./download_genomes_ncbi.pl test` } =~ /\$NCBIHOST ok/ , 'download_genomes_ncbi.pl test' );
+  ok( eval{ `cd test_Streptococcus && ../download_genomes_ncbi.pl test_Streptococcus_download_list.txt` } 
+    =~ /# number of handled genomes = 8/ , 'download_genomes_ncbi.pl test_Streptococcus_download_list.txt' );
+
 } else {
-  ok( eval{ `perl ./download_genomes_ncbi.pl 2>&1 ` } =~ /usage/ , 'download_genomes_ncbi.pl' );  
+  ok( eval{ `perl ./download_genomes_ncbi.pl 2>&1 ` } =~ /usage/ , 'download_genomes_ncbi.pl' );
 }
+
 
 ok( eval{ `perl ./install.pl test` } =~ /testing only/ , 'install.pl test' );
 
@@ -70,6 +74,8 @@ if($testSP){
 ok( eval{ `perl ./get_homologues-est.pl -v ` } =~ /Checking required binaries/ , 'get_homologues-est.pl -v' );
 
 ok( eval{ `perl ./get_homologues-est.pl -d sample_transcripts_fasta -m dryrun` } =~ /check the list of pending commands/ , 'get_homologues-est.pl -dryrun' );
+
+ok( eval{ `perl ./get_homologues.pl -d sample_plasmids_gbk -X` } =~ /number_of_clusters = 24/, 'get_homologues.pl -d sample_plasmids_gbk -X' );
 
 ok( eval{ `perl ./get_homologues.pl -d sample_plasmids_gbk -M -t 0` } =~ /number_of_clusters = 19\d+/, 'get_homologues.pl -d sample_plasmids_gbk -M' );
 
@@ -101,7 +107,7 @@ if($testR == 1){
 }
 
 if($testSP){
-	done_testing(30)
+	done_testing(31)
 } else {
-	done_testing(29)
+	done_testing(30)
 }
