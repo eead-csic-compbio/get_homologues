@@ -1,11 +1,12 @@
-# GET_HOMOLOGUES 
+## GET_HOMOLOGUES 
 
 A versatile software package for pan-genome analysis, including GET_HOMOLOGUES and GET_HOMOLOGUES-EST. It includes several algorithms designed for:
  * Clustering coding sequences in homologous (possibly orthologous) groups, on the grounds of sequence similarity. By default GET_HOMOLOGUES compares protein sequences, while GET_HOMOLOGUES-EST aligns nucleotide sequences which can be CDS or transcripts.
  * Definition of pan- and core-genomes by calculation of overlapping sets of proteins or CDSs.
 
 GET_HOMOLOGUES has been used mostly with bacterial data (see citing 
-[papers](https://scholar.google.es/scholar?start=0&hl=en&as_sdt=2005&cites=5259912818944685430). 
+[papers](https://scholar.google.es/scholar?start=0&hl=en&as_sdt=2005&cites=5259912818944685430)).
+ 
 Instead, GET_HOMOLOGUES-EST has been used mostly with plants (see citing
 [papers](https://scholar.google.es/scholar?oi=bibs&hl=en&cites=14330917787074873427&as_sdt=5) and 
 was originally benchmarked with genomes and transcriptomes of *Arabidopsis thaliana* and *Hordeum vulgare*, 
