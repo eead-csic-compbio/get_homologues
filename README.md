@@ -52,8 +52,6 @@ In addition, there are two **tutorials** are available:
 
 ## Citation
 
-This software is maintained by Bruno Contreras-Moreira (bcontreras _at_ eead.csic.es) and Pablo Vinuesa (vinuesa _at_ ccg.unam.mx).
-
 The original GET_HOMOLOGUES, **suitable for bacterial genomes**, was described in:
 
 [Contreras-Moreira B, Vinuesa P (2013) Appl. Environ. Microbiol. 79:7696-7701](http://aem.asm.org/content/79/24/7696.long)
