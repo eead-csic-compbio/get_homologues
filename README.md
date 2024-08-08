@@ -1,27 +1,27 @@
 ## GET_HOMOLOGUES 
 
-A versatile software package for pan-genome analysis, including GET_HOMOLOGUES and GET_HOMOLOGUES-EST. It includes several algorithms designed for:
- * Clustering coding sequences in homologous (possibly orthologous) groups, on the grounds of sequence similarity. By default GET_HOMOLOGUES compares protein sequences, while GET_HOMOLOGUES-EST aligns nucleotide sequences which can be CDS or transcripts.
- * Definition of pan- and core-genomes by calculation of overlapping sets of proteins or CDSs.
+A versatile software package for pan-genome analysis, including both GET_HOMOLOGUES and GET_HOMOLOGUES-EST. It includes algorithms designed for:
+ * Clustering coding sequences in homologous (possibly orthologous) groups, on the grounds of sequence similarity. By default GET_HOMOLOGUES compares protein sequences, while GET_HOMOLOGUES-EST aligns nucleotide sequences (CDS or transcripts).
+ * Definition of pan- and core-genomes by calculation of overlapping sets of protein or nucleotide sequences.
 
 GET_HOMOLOGUES has been used mostly with bacterial data (see citing 
 [papers](https://scholar.google.es/scholar?start=0&hl=en&as_sdt=2005&cites=5259912818944685430)).
  
 Instead, GET_HOMOLOGUES-EST has been used mostly with plants (see citing
-[papers](https://scholar.google.es/scholar?oi=bibs&hl=en&cites=14330917787074873427&as_sdt=5) and 
-was originally benchmarked with genomes and transcriptomes of *Arabidopsis thaliana* and *Hordeum vulgare*, 
-available at [http://floresta.eead.csic.es/plant-pan-genomes](http://floresta.eead.csic.es/plant-pan-genomes), 
-and used to analyze the pan-genomes of [*Brachypodium distachyon*](https://brachypan.jgi.doe.gov) and 
+[papers](https://scholar.google.es/scholar?oi=bibs&hl=en&cites=14330917787074873427&as_sdt=5)) and 
+was originally benchmarked with genomes and transcriptomes of 
+[*Arabidopsis thaliana* and *Hordeum vulgare*](http://floresta.eead.csic.es/plant-pan-genomes) and used to analyze the pan-genomes of [*Brachypodium distachyon*](https://brachypan.jgi.doe.gov) and 
 [*Brachypodium hybridum*](http://floresta.eead.csic.es/plant-pan-genomes/Bhybridum) ([press release](https://jgi.doe.gov/more-the-merrier-making-case-for-plant-pan-genomes)).
 
 - [Installation](#installation)
 - [Documentation](#documentation)
 - [Citation](#citation)
-- [Credits](#rredits)
+- [Credits](#credits)
 - [Graphical summary](#graphical-summary)
 - [Related software](#related-software)
 - [Bugs](#bugs)
 - [Funding](#funding)
+- [Badges](#badges)
 
 ## Installation
 
@@ -42,7 +42,7 @@ Manuals are available at:
 |version|HTML|
 |-------|----|
 |original, for the analysis of bacterial pan-genomes|[manual](http://eead-csic-compbio.github.io/get_homologues/manual/)|
-|EST, for the analysis of intra-species eukaryotic pan-genomes, tested on plants|[manual-est](http://eead-csic-compbio.github.io/get_homologues/manual-est/)|
+|EST, for the analysis of intra-species eukaryotic pan-genomes|[manual-est](http://eead-csic-compbio.github.io/get_homologues/manual-est/)|
 
 In addition, there are two **tutorials** are available:
 
@@ -66,28 +66,28 @@ GET_HOMOLOGUES-EST, adapted to the study of **intra-specific eukaryotic pan-geno
 
 ## Credits 
 
-GET_HOMOLOGUES is designed, created and maintained at the Computational and 
-Structural Biology group at Estacion Experimental de Aula Dei (EEAD-CSIC 
-https://www.eead.csic.es/compbio) in Zaragoza, Spain, and at the Center for 
-Genomic Sciences of Universidad Nacional Autonoma de Mexico (CCG/UNAM 
-http://www.ccg.unam.mx/~vinuesa).
+GET_HOMOLOGUES is designed, created and maintained at the [Computational and 
+Structural Biology](https://www.eead.csic.es/compbio) group at Estación Experimental de Aula Dei, 
+Consejo Superior de Investigaciones Científicas (EEAD-CSIC) and at the 
+[Center for Genomic Sciences](http://www.ccg.unam.mx/~vinuesa) 
+of Universidad Nacional Autónoma de México (CCG/UNAM).
 
 The program was written mostly by Bruno Contreras-Moreira and Pablo Vinuesa,
-with contributions from Carlos P Cantalapiedra, Alvaro Rodriguez del Rio, Ruben
+with contributions from Carlos P Cantalapiedra, Alvaro Rodríguez del Rio, Rubén
 Sancho, Roland Wilhelm, David A Wilkinson and many others (see [CHANGES.txt](./CHANGES.txt)). 
 It also includes code and binaries from other authors:
 
-    OrthoMCL v1.4 (www.orthomcl.org , PubMed:12952885)
-    mcl v14-137 (http://micans.org/mcl , PubMed=11917018)
-    COGtriangles v2.1 (sourceforge.net/projects/cogtriangles , PubMed=20439257)
-    NCBI Blast-2.16.1+ (blast.ncbi.nlm.nih.gov , PubMed=9254694,20003500)
-    BioPerl v1.5.2 (www.bioperl.org , PubMed=12368254)
-    HMMER 3.1b2 (http://hmmer.org)
-    Pfam (http://pfam.xfam.org , PubMed=19920124)
-    PHYLIP 3.695 (http://evolution.genetics.washington.edu/phylip) 
-    Transdecoder r20140704 (http://transdecoder.github.io , PubMed=23845962)
-    MVIEW 1.60.1 (https://github.com/desmid/mview, PubMed=9632837)
-    diamond 0.8.25 (https://github.com/bbuchfink/diamond, PubMed=25402007)
+* [OrthoMCL v1.4](www.orthomcl.org), PubMed:[12952885](https://pubmed.ncbi.nlm.nih.gov/12952885))
+* [mcl v14-137](http://micans.org/mcl), PubMed=[11917018](https://pubmed.ncbi.nlm.nih.gov/11917018))
+* [COGtriangles v2.1](https://sourceforge.net/projects/cogtriangles), PubMed=[20439257](https://pubmed.ncbi.nlm.nih.gov/20439257))
+* [NCBI Blast-2.16.0+](https://blast.ncbi.nlm.nih.gov), PubMed=[9254694](https://pubmed.ncbi.nlm.nih.gov/9254694),[20003500](https://pubmed.ncbi.nlm.nih.gov/20003500)
+* [BioPerl v1.5.2](https://bioperl.org), PubMed=[12368254](https://pubmed.ncbi.nlm.nih.gov/12368254))
+* [HMMER 3.1b2](http://hmmer.org)
+* [Pfam](http://pfam.xfam.org), PubMed=[19920124](https://pubmed.ncbi.nlm.nih.gov/19920124))
+* [PHYLIP 3.695](http://evolution.genetics.washington.edu/phylip) 
+* [Transdecoder r20140704](http://transdecoder.github.io), PubMed=[23845962](https://pubmed.ncbi.nlm.nih.gov/23845962))
+* [MVIEW 1.60.1](https://github.com/desmid/mview), PubMed=[9632837](https://pubmed.ncbi.nlm.nih.gov/9632837))
+* [diamond 0.8.25](https://github.com/bbuchfink/diamond), PubMed=[25402007](https://pubmed.ncbi.nlm.nih.gov/25402007))
 
 ## Graphical summary
 
@@ -99,25 +99,30 @@ It also includes code and binaries from other authors:
 
 [GET_PHYLOMARKERS](https://github.com/vinuesa/get_phylomarkers) uses 
 twin nucleotide & peptide clusters produced by GET_HOMOLOGUES to compute robust multi-gene and pangenome phylogenies.
-Check the [manual](https://vinuesa.github.io/get_phylomarkers), the [tutorial](https://link.springer.com/protocol/10.1007/978-1-0716-2429-6_9),
+Check the [manual](https://vinuesa.github.io/get_phylomarkers), 
+the [tutorial](https://link.springer.com/protocol/10.1007/978-1-0716-2429-6_9),
 and the [Docker image](https://hub.docker.com/r/csicunam/get_homologues).
 
 A related piece of software was released in 2023 called [GET_PANGENES](https://github.com/Ensembl/plant-scripts/tree/master/pangenes),
-which takes FASTA and GFF files as input and explicitely considers gene collinearity.
+which takes FASTA and GFF files as input and explicitely considers gene collinearity by computing whole genome alignments.
 
 ## Bugs
 
-The code is regularly patched (see [CHANGES.txt](./CHANGES.txt)) in each release. We kindly ask you to report errors or bugs as 
+The code is regularly patched (see [CHANGES.txt](./CHANGES.txt)) in each release. 
+We kindly ask you to report errors or bugs as 
 [GitHub issues](https://github.com/eead-csic-compbio/get_homologues/issues)
 and to acknowledge the use of the software in scientific publications.
 
 ## Funding
 
+*Funding:* Fundacion ARAID, Consejo Superior de Investigaciones Cientificas, DGAPA-PAPIIT UNAM, CONACyT, FEDER, MINECO, DGA-Obra Social La Caixa.
+
+![logo CSIC](pics/logoCSIC.png) ![logo ARAID](pics/logoARAID.gif) ![logo UNAM](pics/logoUNAM.png)
+
+## Badges
+
 [GET_HOMOLOGUES](https://bio.tools/get_homologues) is part of the [INB/ELIXIR-ES](https://inb-elixir.es) resources portfolio:
 
 ![logo_ELIXIRES](pics/logoELIXIRES.png)
 
-*Funding:* Fundacion ARAID, Consejo Superior de Investigaciones Cientificas, DGAPA-PAPIIT UNAM, CONACyT, FEDER, MINECO, DGA-Obra Social La Caixa.
-
-![logo CSIC](pics/logoCSIC.png) ![logo ARAID](pics/logoARAID.gif) ![logo UNAM](pics/logoUNAM.png)
 
