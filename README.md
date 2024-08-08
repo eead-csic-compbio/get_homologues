@@ -10,8 +10,10 @@ GET_HOMOLOGUES has been used mostly with bacterial data (see citing
 Instead, GET_HOMOLOGUES-EST has been used mostly with plants (see citing
 [papers](https://scholar.google.es/scholar?oi=bibs&hl=en&cites=14330917787074873427&as_sdt=5)) and 
 was originally benchmarked with genomes and transcriptomes of 
-[*Arabidopsis thaliana* and *Hordeum vulgare*](http://floresta.eead.csic.es/plant-pan-genomes) and used to analyze the pan-genomes of [*Brachypodium distachyon*](https://brachypan.jgi.doe.gov) and 
-[*Brachypodium hybridum*](http://floresta.eead.csic.es/plant-pan-genomes/Bhybridum) ([press release](https://jgi.doe.gov/more-the-merrier-making-case-for-plant-pan-genomes)).
+[*Arabidopsis thaliana* and *Hordeum vulgare*](http://floresta.eead.csic.es/plant-pan-genomes) and the pan-genomes of 
+[*Brachypodium distachyon*](https://brachypan.jgi.doe.gov) and 
+[*Brachypodium hybridum*](http://floresta.eead.csic.es/plant-pan-genomes/Bhybridum) 
+([press release](https://jgi.doe.gov/more-the-merrier-making-case-for-plant-pan-genomes)).
 
 - [Installation](#installation)
 - [Documentation](#documentation)
@@ -115,7 +117,7 @@ and to acknowledge the use of the software in scientific publications.
 
 ## Funding
 
-*Funding:* Fundacion ARAID, Consejo Superior de Investigaciones Cientificas, DGAPA-PAPIIT UNAM, CONACyT, FEDER, MINECO, DGA-Obra Social La Caixa.
+Fundación ARAID, Consejo Superior de Investigaciones Científicas, DGAPA-PAPIIT UNAM, CONACyT, FEDER, MINECO, DGA-Obra Social La Caixa.
 
 ![logo CSIC](pics/logoCSIC.png) ![logo ARAID](pics/logoARAID.gif) ![logo UNAM](pics/logoUNAM.png)
 
