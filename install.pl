@@ -2,7 +2,7 @@
 
 # Script that checks/compiles software required by get_homologues[-est] and 
 # checks dependencies for first-time users.
-# last checked Aug2024
+# last checked Nov2024
 
 use strict;
 use warnings;
@@ -250,7 +250,7 @@ if(!$COGSonly)
   $output = `$ENV{'EXE_BLASTP'} 2>&1`;
   if(!$output || $output !~ /BLAST/)
   {
-    die "<< Cannot run shipped blastp, please download it from $BLASTEXEPATH ,\n".
+    die "<< Cannot run shipped blastp ($output), please download it from $BLASTEXEPATH ,\n".
       "<< install it and edit variable BLAST_PATH as explained in the manual\n".
       "<< (inside set_phyTools_env in file lib/phyTools.pm) .\n".
       "<< Then re-run\n";
