@@ -1,0 +1,36 @@
+# See the LICENSE ans scripts distributed with this work and for additional information
+# regarding copyright ownership.
+
+name: "CI"
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+defaults:
+  run:
+    working-directory: ./
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: "5.28"
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get install -y r-base libdb-dev libgd-dev cpanminus
+          cpanm --sudo -v --installdeps --notest --cpanfile cpanfile .
+          make install_auto
+        shell: bash
+
+      - name: Run tests
+        run: |
+          make test
