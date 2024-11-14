@@ -27,7 +27,7 @@ was originally benchmarked with genomes and transcriptomes of
 
 ## Installation
 
-[![Build Status](https://app.travis-ci.com/eead-csic-compbio/get_homologues.svg?branch=master)](https://app.travis-ci.com/eead-csic-compbio/get_homologues)
+[![Build Status](https://github.com/eead-csic-compbio/get_homologues/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/eead-csic-compbio/get_homologues/actions/workflows/ci.yml)
 [![Anaconda-Server Badge](https://anaconda.org/bioconda/get_homologues/badges/version.svg)](https://anaconda.org/bioconda/get_homologues)
 [![DockerHub](https://badgen.net/badge/icon/docker?icon=docker&label)](https://hub.docker.com/r/csicunam/get_homologues)
 
