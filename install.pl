@@ -244,7 +244,7 @@ if(!$COGSonly)
   print "## Checking blast (lib/phyTools: \$ENV{'EXE_BLASTP'})\n";
 
   if($downloadOK){
-      $ENV{'EXE_BLASTP'} = $ENV{'MARFIL'}."/bin/ncbi-blast-2.14.0+/bin/blastp"
+      $ENV{'EXE_BLASTP'} = $ENV{'MARFIL'}."/bin/ncbi-blast-2.16.0+/bin/blastp"
   }
 
   $output = `$ENV{'EXE_BLASTP'} 2>&1`;
