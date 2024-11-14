@@ -427,3 +427,5 @@
 07082024: test_get_homologues.t now includes get_homologues.pl -X (diamond)
 07082024: updated targets clean and cleanR in Makefile
 07082024: improved repository README.md with TOC and links to sections
+15112024: fixed BLASTP check in install.pl
+15112024: moved Continuous Integration to Github action
