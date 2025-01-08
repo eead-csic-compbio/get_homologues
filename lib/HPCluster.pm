@@ -6,7 +6,7 @@ package HPCluster;
 # but it should not be too dificult to add support for other systems (help welcome)
 
 # Bruno Contreras-Moreira, Pablo Vinuesa
-# 2020 CCG/UNAM, Mexico, EEAD/CSIC, Zaragoza, Spain
+# 2020-2025 CCG/UNAM, Mexico, EEAD/CSIC, Zaragoza, Spain
 
 use strict;
 require Exporter;

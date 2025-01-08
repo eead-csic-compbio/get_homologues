@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# 2013-2020 Bruno Contreras, Pablo Vinuesa
+# 2013-2025 Bruno Contreras, Pablo Vinuesa
 # Script to take advantage of multicore machines when running hmmer3,
 # which seems to scale up to the number of physical cores in our tests.
 

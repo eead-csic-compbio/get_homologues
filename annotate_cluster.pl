@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
-# 2016-23 Bruno Contreras-Moreira (1), Ruben Sancho (1,2) and Pablo Vinuesa (3):
-# 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei-CSIC/Fundacion ARAID, Spain)
+# 2016-25 Bruno Contreras-Moreira (1), Ruben Sancho (1,2) and Pablo Vinuesa (3):
+# 1: httpa://www.eead.csic.es/compbio (Estacion Experimental Aula Dei-CSIC/Fundacion ARAID, Spain)
 # 2: Grupo Bioflora, EPS, Universidad de Zaragoza, Spain
 # 3: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 

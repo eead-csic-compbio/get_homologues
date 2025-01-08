@@ -1,7 +1,7 @@
 #!/usr/bin/env perl 
 
-# 2013-2024 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
-# 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei-CSIC/Fundacion ARAID, Spain)
+# 2013-2025 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 1: https://www.eead.csic.es/compbio (Estacion Experimental Aula Dei-CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
 # This program uses BLAST (and DIAMOND/HMMER/Pfam) to define clusters of 'orthologous' ORF/intergenic

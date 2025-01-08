@@ -1,5 +1,5 @@
 # Bruno Contreras-Moreira, Pablo Vinuesa
-# 2005-24 CCG/UNAM, Mexico, EEAD/CSIC, Zaragoza, Spain
+# 2005-25 CCG-UNAM, Mexico, EEAD-CSIC, Zaragoza, Spain
 # This is a collection of subroutines used in our projects,
 # including primers4clades and get_homologues
 

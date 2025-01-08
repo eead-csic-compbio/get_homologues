@@ -2,7 +2,7 @@ package marfil_homology;
 
 # version 2.1
 
-# Code library created by Bruno Contreras-Moreira and Pablo Vinuesa (2006-2020)
+# Code library created by Bruno Contreras-Moreira and Pablo Vinuesa (2006-2025)
 # mainly for get_homologues.pl and get_homologues-est.pl
 
 # Contains code originally part of the following software:

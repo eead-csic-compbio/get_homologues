@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
-# 2013-23 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
-# 1: http://www.eead.csic.es/compbio (Laboratory of Computational Biology, EEAD-CSIC/Fundacion ARAID, Spain)
+# 2013-25 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 1: https://www.eead.csic.es/compbio (Laboratory of Computational Biology, EEAD-CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 #
 # This script was originally written to compute the intersection between cluster lists produced

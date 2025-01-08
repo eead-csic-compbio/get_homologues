@@ -430,3 +430,4 @@
 14112024: fixed BLASTP check in install.pl
 14112024: updated release.pl
 14112024: moved Continuous Integration to Github action
+08012025: updated scripts to 2025, fixed ncbi-blast version in manuals
