@@ -39,56 +39,58 @@ Contents</A>
 <!--Table of Contents-->
 
 <UL CLASS="TofC">
-<LI><A ID="tex2html120"
-  HREF="manual-est.html#SECTION00020000000000000000">1 Description</A>
 <LI><A ID="tex2html121"
+  HREF="manual-est.html#SECTION00020000000000000000">1 Description</A>
+<LI><A ID="tex2html122"
   HREF="manual-est.html#SECTION00030000000000000000">2 Requirements and installation</A>
 <UL>
-<LI><A ID="tex2html122"
-  HREF="manual-est.html#SECTION00031000000000000000">2.1 Perl modules</A>
 <LI><A ID="tex2html123"
-  HREF="manual-est.html#SECTION00032000000000000000">2.2 Required binaries</A>
+  HREF="manual-est.html#SECTION00031000000000000000">2.1 Perl modules</A>
 <LI><A ID="tex2html124"
-  HREF="manual-est.html#SECTION00033000000000000000">2.3 Optional software dependencies</A>
+  HREF="manual-est.html#SECTION00032000000000000000">2.2 Required binaries</A>
+<LI><A ID="tex2html125"
+  HREF="manual-est.html#SECTION00033000000000000000">2.3 HPC configuration</A>
+<LI><A ID="tex2html126"
+  HREF="manual-est.html#SECTION00034000000000000000">2.4 Optional software dependencies</A>
 </UL>
 <BR>
-<LI><A ID="tex2html125"
+<LI><A ID="tex2html127"
   HREF="manual-est.html#SECTION00040000000000000000">3 User manual</A>
 <UL>
-<LI><A ID="tex2html126"
-  HREF="manual-est.html#SECTION00041000000000000000">3.1 Input data</A>
-<LI><A ID="tex2html127"
-  HREF="manual-est.html#SECTION00042000000000000000">3.2 Program options</A>
 <LI><A ID="tex2html128"
+  HREF="manual-est.html#SECTION00041000000000000000">3.1 Input data</A>
+<LI><A ID="tex2html129"
+  HREF="manual-est.html#SECTION00042000000000000000">3.2 Program options</A>
+<LI><A ID="tex2html130"
   HREF="manual-est.html#SECTION00043000000000000000">3.3 Accompanying scripts</A>
 </UL>
 <BR>
-<LI><A ID="tex2html129"
+<LI><A ID="tex2html131"
   HREF="manual-est.html#SECTION00050000000000000000">4 A few examples</A>
 <UL>
-<LI><A ID="tex2html130"
-  HREF="manual-est.html#SECTION00051000000000000000">4.1 Extracting coding sequences (CDS) from transcripts</A>
-<LI><A ID="tex2html131"
-  HREF="manual-est.html#SECTION00052000000000000000">4.2 Clustering orthologous sequences from FASTA files, one per cultivar/ecotype/strain</A>
 <LI><A ID="tex2html132"
-  HREF="manual-est.html#SECTION00053000000000000000">4.3 Clustering sequences on a multicore Linux box, not a cluster</A>
+  HREF="manual-est.html#SECTION00051000000000000000">4.1 Extracting coding sequences (CDS) from transcripts</A>
 <LI><A ID="tex2html133"
-  HREF="manual-est.html#SECTION00054000000000000000">4.4 Producing a nucleotide-based pangenome matrix</A>
+  HREF="manual-est.html#SECTION00052000000000000000">4.2 Clustering orthologous sequences from FASTA files, one per cultivar/ecotype/strain</A>
 <LI><A ID="tex2html134"
-  HREF="manual-est.html#SECTION00055000000000000000">4.5 Estimating protein domain enrichment of some sequence clusters</A>
+  HREF="manual-est.html#SECTION00053000000000000000">4.3 Clustering sequences on a multicore Linux box, not a cluster</A>
 <LI><A ID="tex2html135"
-  HREF="manual-est.html#SECTION00056000000000000000">4.6 Making and annotating a non-redundant pangenome matrix</A>
+  HREF="manual-est.html#SECTION00054000000000000000">4.4 Producing a nucleotide-based pangenome matrix</A>
 <LI><A ID="tex2html136"
-  HREF="manual-est.html#SECTION00057000000000000000">4.7 Annotating a sequence cluster</A>
+  HREF="manual-est.html#SECTION00055000000000000000">4.5 Estimating protein domain enrichment of some sequence clusters</A>
 <LI><A ID="tex2html137"
+  HREF="manual-est.html#SECTION00056000000000000000">4.6 Making and annotating a non-redundant pangenome matrix</A>
+<LI><A ID="tex2html138"
+  HREF="manual-est.html#SECTION00057000000000000000">4.7 Annotating a sequence cluster</A>
+<LI><A ID="tex2html139"
   HREF="manual-est.html#SECTION00058000000000000000">4.8 Output files explained</A>
 </UL>
 <BR>
-<LI><A ID="tex2html138"
-  HREF="manual-est.html#SECTION00060000000000000000">5 A step-by-step protocol with barley assembled transcripts</A>
-<LI><A ID="tex2html139"
-  HREF="manual-est.html#SECTION00070000000000000000">6 Frequently asked questions (FAQs)</A>
 <LI><A ID="tex2html140"
+  HREF="manual-est.html#SECTION00060000000000000000">5 A step-by-step protocol with barley assembled transcripts</A>
+<LI><A ID="tex2html141"
+  HREF="manual-est.html#SECTION00070000000000000000">6 Frequently asked questions (FAQs)</A>
+<LI><A ID="tex2html142"
   HREF="manual-est.html#SECTION00080000000000000000">7 Credits and references</A>
 </UL>
 <!--End of Table of Contents-->
@@ -134,7 +136,7 @@ although most have been backported.
 
 <P>
 <BR><P></P>
-<DIV class="CENTER"><A ID="626"></A>
+<DIV class="CENTER"><A ID="630"></A>
 <TABLE>
 <CAPTION><STRONG>Table 1:</STRONG>
 List of novel scripts/features in <SPAN  CLASS="textit">get_homologues-est</SPAN>.</CAPTION>
@@ -260,6 +262,9 @@ $ perl install.pl
 </PRE>
 
 <P>
+See section <A HREF="#HPC">2.3</A> to learn how to configure the software to run on a HPC environment.
+
+<P>
 The rest of this section might be safely skipped if installation went fine, 
 it was written to help solve installation problems.
 
@@ -361,32 +366,68 @@ BLAST binaries, which are respectively <SPAN  CLASS="textit">blastall</SPAN> and
 
 <P>
 
-<H2><A ID="SECTION00033000000000000000"></A> <A ID="dependencies"></A>
+<H2><A ID="SECTION00033000000000000000"></A> <A ID="HPC"></A>
 <BR>
-<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">3</SPAN> Optional software dependencies
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">3</SPAN> HPC configuration
 </H2>
 
 <P>
-It is possible to make use of <SPAN  CLASS="textit">get_homologues-est</SPAN> on a high-performance computing (HPC) cluster 
+It is possible and recommended to run <SPAN  CLASS="textit">get_homologues-est</SPAN> on a high-performance computing (HPC) cluster
 invoking the program with option <code>-m cluster</code>.
-Three job managers are currently supported: <A ID="tex2html20"
-  HREF="http://gridscheduler.sourceforge.net">gridengine</A>,  
-<A ID="tex2html21"
-  HREF="https://en.wikipedia.org/wiki/Platform_LSF">LSF</A>
-and 
-<A ID="tex2html22"
-  HREF="https://slurm.schedmd.com/documentation.html">Slurm</A>.
 
 <P>
-By default a <A ID="tex2html23"
+For <A ID="tex2html20"
   HREF="http://gridscheduler.sourceforge.net/">gridengine</A>
-cluster is expected. 
-In particular we have tested this feature with versions GE 6.0u8, 6.2u4, 2011.11p1.
-For this to work in your environment you might need to create a file named <code>HPC.conf</code> in the same location as <SPAN  CLASS="textit">get_homologues.pl</SPAN>
-tayloring your queue configuration and paths. The default values can be inspected at module <code>lib/HPCluster.pm</code>
-To find out the installation path of your SGE installation you might try the next terminal command: <code>$ which qsub</code>
-<BR>
-In case you have access to a multi-core computer you can follow the next steps to set up your own Grid Engine cluster and speed up your calculations:
+environments (6.0u8, 6.2u4, 2011.11p1)
+the script should work out of the box. For <A ID="tex2html21"
+  HREF="https://en.wikipedia.org/wiki/Platform_LSF">LSF</A>
+and
+<A ID="tex2html22"
+  HREF="https://slurm.schedmd.com/documentation.html">Slurm</A>
+settings a configuration step is required.
+In these cases you would need to create a file named <code>HPC.conf</code>
+in the same location as <SPAN  CLASS="textit">get_homologues-est.pl</SPAN> tayloring your queue configuration and paths.
+This should also <SPAN  CLASS="textbf">work for conda installs</SPAN>.
+Check the sample configuration file at
+<A ID="tex2html23"
+  HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/sample.HPC.conf">sample.HPC.conf</A>.
+
+<P>
+If your computer farm is managed by <A ID="tex2html24"
+  HREF="https://en.wikipedia.org/wiki/Platform_LSF">LSF</A>,
+you should create a file named <code>HPC.conf</code> modifiying the provided template <code>sample.HPC.conf</code>
+and adding a full path if necessary:
+
+<P>
+<PRE>
+# cluster/farm configuration file, edit as needed (use spaces or tabs)
+# comment lines start with #
+# PATH might be empty or set to a path/ ending with '/', example:
+#PATH	/lsf/10.1/linux3.10-glibc2.17-x86_64/bin/
+TYPE	lsf
+SUBEXE	bsub
+CHKEXE	bjobs
+DELEXE	bkill
+ERROR	EXIT
+</PRE>
+
+<P>
+If your farm is managed by <A ID="tex2html25"
+  HREF="https://slurm.schedmd.com/documentation.html">Slurm</A>
+instead,
+the contents of the configuration file <code>HPC.conf</code> should be similar to this:
+
+<P>
+<PRE>
+TYPE	slurm
+SUBEXE	sbatch
+CHKEXE	squeue
+DELEXE	scancel
+ERROR	F
+</PRE>
+
+<P>
+For backwards compatibility, we provide here instructions on how to set up your own Grid Engine cluster.
 <BR>
 <PRE  CLASS="verbatim">### Debian 11 install (updated 08112021)
 ### (explained in Spanish at 
@@ -475,41 +516,14 @@ qconf -mq all.q
 qconf -as yourhost
 </PRE>
 <P>
-If your computer farm is managed by <A ID="tex2html24"
-  HREF="https://en.wikipedia.org/wiki/Platform_LSF">LSF</A>,
-you should create a file named <code>HPC.conf</code> modifiying the provided template <code>sample.HPC.conf</code>
-and adding a full path if necessary:
+
+<H2><A ID="SECTION00034000000000000000"></A> <A ID="dependencies"></A>
+<BR>
+<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">4</SPAN> Optional software dependencies
+</H2>
 
 <P>
-<PRE>
-# cluster/farm configuration file, edit as needed (use spaces or tabs)
-# comment lines start with #
-# PATH might be empty or set to a path/ ending with '/', example:
-#PATH	/lsf/10.1/linux3.10-glibc2.17-x86_64/bin/
-TYPE	lsf
-SUBEXE	bsub
-CHKEXE	bjobs
-DELEXE	bkill
-ERROR	EXIT
-</PRE>
-If your computer farm is managed by <A ID="tex2html25"
-  HREF="https://slurm.schedmd.com/documentation.html">Slurm</A>
-instead,
-you should create a configuration file named <code>HPC.conf</code> similar to this:
-<PRE>
-TYPE	slurm
-SUBEXE	sbatch
-CHKEXE	squeue
-DELEXE	scancel
-ERROR	F
-</PRE>
-
-<P>
-For cluster-based operations three bundled Perl scripts are invoked:
-<BR><code>_cluster_makeHomolog.pl</code>, <code>_cluster_makeInparalog.pl</code> and <code>_cluster_makeOrtholog.pl</code> .
-
-<P>
-It is also possible to invoke Pfam domain scanning from <SPAN  CLASS="textit">get_homologues-est</SPAN>. This option 
+It is possible to invoke Pfam domain scanning from <SPAN  CLASS="textit">get_homologues-est</SPAN>. This option 
 requires the bundled binary <SPAN  CLASS="textit">hmmscan</SPAN>, which is part of the <A ID="tex2html26"
   HREF="http://hmmer.janelia.org">HMMER3</A>
 package,
@@ -718,7 +732,7 @@ Options that control clustering:
 
 <P>
 
-<DIV class="CENTER"><A ID="fig:flow"></A><A ID="215"></A>
+<DIV class="CENTER"><A ID="fig:flow"></A><A ID="219"></A>
 <TABLE>
 <CAPTION class="BOTTOM"><STRONG>Figure 1:</STRONG>
 Flowchart of get_homologues-est.</CAPTION>
@@ -754,7 +768,7 @@ relying on BLASTN searches.
 <P>
 Perhaps the most important optional parameter would be the choice of clustering algorithm (Table <A HREF="#tab:algs">2</A>):
 <BR><P></P>
-<DIV class="CENTER"><A ID="229"></A>
+<DIV class="CENTER"><A ID="233"></A>
 <TABLE>
 <CAPTION><STRONG>Table 2:</STRONG>
 List of available clustering algorithms. Note that the COG triangles algorithm is not supported.</CAPTION>
@@ -808,7 +822,7 @@ This EST-specific feature can be turned off by setting <code>-i 0</code>. Redund
 
 <P>
 
-<DIV class="CENTER"><A ID="238"></A>
+<DIV class="CENTER"><A ID="242"></A>
 <TABLE>
 <CAPTION class="BOTTOM"><STRONG>Figure 2:</STRONG>
 Redundant isoforms (dashed) are optionally removed from an input sequence set if they overlap a longer 
@@ -851,7 +865,7 @@ This feature can be used to filter out singletons or artifacts which might arise
 
 <P>
 
-<DIV class="CENTER"><A ID="248"></A>
+<DIV class="CENTER"><A ID="252"></A>
 <TABLE>
 <CAPTION class="BOTTOM"><STRONG>Figure 3:</STRONG>
 Histograms of % identity reported by BLASTN among Arabidopsis thaliana CDS sequences (left) and Hordeum vulgare (right) transcripts. 
@@ -887,7 +901,7 @@ this might be the only way to complete a job.
 <P>
 </LI>
 <LI><code>-m</code> allows the choice of runmode, which can be either <code>-m local</code> (the default),  
-<code>-m cluster</code>, for computing farms configured as explained in section <A HREF="#dependencies">2.3</A>) and 
+<code>-m cluster</code>, for computing farms configured as explained in section <A HREF="#dependencies">2.4</A>) and 
 <code>-m dryrun</code>, which will allow you to run all required parallel jobs in batches manually.
 When combined with command-line tool <A HREF="#https:__www.gnu.org_software_parallel"><IMG  ALT="[*]" SRC="crossref.png"></A>parallel, 
 the dryrun mode can be used to parallelize the clustering tasks (isoforms, orthologues, inparalogues, see <A HREF="#dryrun">4.3</A>).
@@ -914,7 +928,7 @@ unless both of them come from a full-length collection (see <A HREF="#input">3.1
 
 <P>
 
-<DIV class="CENTER"><A ID="265"></A>
+<DIV class="CENTER"><A ID="269"></A>
 <TABLE>
 <CAPTION class="BOTTOM"><STRONG>Figure 4:</STRONG>
 Coverage illustrated with the alignment of sequence 'query' to two aligned fragments of sequence 'subject'.
@@ -1171,7 +1185,7 @@ Our benchmarks suggest that 78 to 92% of deduced CDS sequences match the correct
 
 <P>
 <BR><P></P>
-<DIV class="CENTER"><A ID="325"></A>
+<DIV class="CENTER"><A ID="329"></A>
 <TABLE>
 <CAPTION><STRONG>Table 3:</STRONG>
 Fraction of correct peptide sequences in deduced CDS obtained by combining BLASTX and TransDecoder.</CAPTION>
@@ -1251,7 +1265,7 @@ The results obtained with DIAMOND instead of BLASTX are very similar:
 
 <P>
 <BR><P></P>
-<DIV class="CENTER"><A ID="336"></A>
+<DIV class="CENTER"><A ID="340"></A>
 <TABLE>
 <CAPTION><STRONG>Table 4:</STRONG>
 Fraction of correct peptide sequences in deduced CDS obtained by combining DIAMOND and TransDecoder.</CAPTION>
@@ -1346,7 +1360,7 @@ which are not explained in this document.
 <P>
 This example takes the provided sample file <code>sample_transcripts.fna</code> to demonstrate how to
 annotate coding sequences contained in those sequences by calling <code>transcripts2cds.pl</code>.
-Note that <code>transcripts2cdsCPP.pl</code> is significantly faster, but requires an optional Perl module (see <A HREF="#dependencies">2.3</A>).
+Note that <code>transcripts2cdsCPP.pl</code> is significantly faster, but requires an optional Perl module (see <A HREF="#dependencies">2.4</A>).
 
 <P>
 This is an optional pre-processing step which you might not want to do, as the software should be able to properly handle any
@@ -1546,7 +1560,7 @@ are installed, this matrix can be plotted with the following command:
 
 <P>
 
-<DIV class="CENTER"><A ID="fig:ANImat"></A><A ID="378"></A>
+<DIV class="CENTER"><A ID="fig:ANImat"></A><A ID="382"></A>
 <TABLE>
 <CAPTION class="BOTTOM"><STRONG>Figure 5:</STRONG>
 Heatmap of Average Nucleotide Identity.</CAPTION>
@@ -1597,7 +1611,7 @@ Both matrices can be plotted with script <SPAN  CLASS="textit">plot_pancore_matr
 <BR>
 <P>
 
-<DIV class="CENTER"><A ID="397"></A>
+<DIV class="CENTER"><A ID="401"></A>
 <TABLE>
 <CAPTION class="BOTTOM"><STRONG>Figure 6:</STRONG>
 Pan-transcriptome size estimates (-t 0, left) and (-t 2,  right) based on random samples of 4 transcriptome sets. 
@@ -1631,7 +1645,7 @@ in PubMed=<A ID="tex2html65"
 
 <P>
 
-<DIV class="CENTER"><A ID="fig:pangenomet"></A><A ID="630"></A>
+<DIV class="CENTER"><A ID="fig:pangenomet"></A><A ID="634"></A>
 <TABLE>
 <CAPTION class="BOTTOM"><STRONG>Figure 7:</STRONG>
 
@@ -1665,7 +1679,7 @@ The next Figure show some of this snapshots:
 
 <P>
 
-<DIV class="CENTER"><A ID="fig:snapshot"></A><A ID="417"></A>
+<DIV class="CENTER"><A ID="fig:snapshot"></A><A ID="421"></A>
 <TABLE>
 <CAPTION class="BOTTOM"><STRONG>Figure 8:</STRONG>
 
@@ -1773,7 +1787,7 @@ are installed, such a pangenome matrix can be used to hierarchically cluster str
 
 <P>
 
-<DIV class="CENTER"><A ID="fig:hclustpange"></A><A ID="440"></A>
+<DIV class="CENTER"><A ID="fig:hclustpange"></A><A ID="444"></A>
 <TABLE>
 <CAPTION class="BOTTOM"><STRONG>Figure 9:</STRONG>
 Hierarchical grouping of strains based on pangenome matrix.</CAPTION>
@@ -2091,7 +2105,7 @@ CCTGCTGGTGCATTTTTTTACAAACAGTTGGCACAGAGTATTTGTTGCTAATTGTGTTCGTTTTCTTGAA...
 
 <P>
 
-<DIV class="CENTER"><A ID="fig:annotcluster"></A><A ID="631"></A>
+<DIV class="CENTER"><A ID="fig:annotcluster"></A><A ID="635"></A>
 <TABLE>
 <CAPTION class="BOTTOM"><STRONG>Figure 10:</STRONG>
 Fragment of alignment produced by annotate_cluster.pl, 
@@ -2455,7 +2469,7 @@ in the figure, which combines data from the original benchmark and new data gene
 
 <P>
 
-<DIV class="CENTER"><A ID="fig:RAMtimev2"></A><A ID="540"></A>
+<DIV class="CENTER"><A ID="fig:RAMtimev2"></A><A ID="544"></A>
 <TABLE>
 <CAPTION class="BOTTOM"><STRONG>Figure 11:</STRONG>
 Computing time and RAM requirements of the original algorithm (OMCL, measured on 6 sequence sets) 
@@ -2482,7 +2496,7 @@ These three common situations are illustrated in the figure.
 
 <P>
 
-<DIV class="CENTER"><A ID="fig:ESTcaveats"></A><A ID="549"></A>
+<DIV class="CENTER"><A ID="fig:ESTcaveats"></A><A ID="553"></A>
 <TABLE>
 <CAPTION class="BOTTOM"><STRONG>Figure 12:</STRONG>
 Common problems faced when clustering transcripts/CDS sequences.</CAPTION>
@@ -2558,7 +2572,7 @@ to analyze conserved non-coding sequences among <SPAN  CLASS="textit">Brachypodi
 
 <P>
 
-<DIV class="CENTER"><A ID="fig:CNS"></A><A ID="564"></A>
+<DIV class="CENTER"><A ID="fig:CNS"></A><A ID="568"></A>
 <TABLE>
 <CAPTION class="BOTTOM"><STRONG>Figure 13:</STRONG>
 Core-genome composition analysis of conserved non-coding sequences (CNS) from 56 Brachypodium distachyon ecotypes and rice.</CAPTION>
@@ -2700,7 +2714,7 @@ However, our tests suggest this might cause unexpected consequences and for that
 <A ID="tex2html90"
   HREF="http://www.eead.csic.es/compbio">Laboratory of Computational Biology</A>
 at 
-Estación Experimental de Aula Dei/CSIC in Zaragoza (Spain) and at the 
+Estación Experimental de Aula Dei-CSIC in Zaragoza (Spain) and at the 
 <A ID="tex2html91"
   HREF="http://www.ccg.unam.mx/~vinuesa">Center for Genomic Sciences</A>
 of 
@@ -2821,7 +2835,7 @@ This document was generated using the
 The command line arguments were: <BR>
  <kbd>latex2html manual-est -no_antialias_text -split 0 -dir manual-est -no_navigation -show_section_numbers</kbd>
 <P>
-The translation was initiated on 2025-01-08
+The translation was initiated on 2025-03-03
 <BR><HR>
 
 </BODY>

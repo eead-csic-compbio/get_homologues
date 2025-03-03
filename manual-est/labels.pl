@@ -6,6 +6,10 @@ $key = q/FAQs/;
 $external_labels{$key} = "$URL/" . q|manual-est.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/HPC/;
+$external_labels{$key} = "$URL/" . q|manual-est.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/binaries/;
 $external_labels{$key} = "$URL/" . q|manual-est.html|; 
 $noresave{$key} = "$nosave";
@@ -133,6 +137,10 @@ $key = q/FAQs/;
 $external_latex_labels{$key} = q|6|; 
 $noresave{$key} = "$nosave";
 
+$key = q/HPC/;
+$external_latex_labels{$key} = q|2.3|; 
+$noresave{$key} = "$nosave";
+
 $key = q/_/;
 $external_latex_labels{$key} = q|<|; 
 $noresave{$key} = "$nosave";
@@ -150,7 +158,7 @@ $external_latex_labels{$key} = q|4|;
 $noresave{$key} = "$nosave";
 
 $key = q/dependencies/;
-$external_latex_labels{$key} = q|2.3|; 
+$external_latex_labels{$key} = q|2.4|; 
 $noresave{$key} = "$nosave";
 
 $key = q/dryrun/;

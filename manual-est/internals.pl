@@ -6,6 +6,10 @@ $key = q/FAQs/;
 $ref_files{$key} = "$dir".q|manual-est.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/HPC/;
+$ref_files{$key} = "$dir".q|manual-est.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/binaries/;
 $ref_files{$key} = "$dir".q|manual-est.html|; 
 $noresave{$key} = "$nosave";

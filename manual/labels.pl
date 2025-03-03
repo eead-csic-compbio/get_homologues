@@ -18,6 +18,10 @@ $key = q/HOWTOTettelin/;
 $external_labels{$key} = "$URL/" . q|manual.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/HPC/;
+$external_labels{$key} = "$URL/" . q|manual.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/PfamClusters/;
 $external_labels{$key} = "$URL/" . q|manual.html|; 
 $noresave{$key} = "$nosave";
@@ -233,6 +237,10 @@ $key = q/HOWTOTettelin/;
 $external_latex_labels{$key} = q|4.10|; 
 $noresave{$key} = "$nosave";
 
+$key = q/HPC/;
+$external_latex_labels{$key} = q|2.3|; 
+$noresave{$key} = "$nosave";
+
 $key = q/PfamClusters/;
 $external_latex_labels{$key} = q|4.5|; 
 $noresave{$key} = "$nosave";
@@ -262,7 +270,7 @@ $external_latex_labels{$key} = q|4|;
 $noresave{$key} = "$nosave";
 
 $key = q/dependencies/;
-$external_latex_labels{$key} = q|2.3|; 
+$external_latex_labels{$key} = q|2.4|; 
 $noresave{$key} = "$nosave";
 
 $key = q/downGenBank/;

@@ -18,6 +18,10 @@ $key = q/HOWTOTettelin/;
 $ref_files{$key} = "$dir".q|manual.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/HPC/;
+$ref_files{$key} = "$dir".q|manual.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/PfamClusters/;
 $ref_files{$key} = "$dir".q|manual.html|; 
 $noresave{$key} = "$nosave";
