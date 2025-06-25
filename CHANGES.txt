@@ -432,3 +432,4 @@
 14112024: moved Continuous Integration to Github action
 08012025: updated scripts to 2025, fixed ncbi-blast version in manuals
 03032025: added separate HCP config section to manuals pointing to sample.HPC.conf
+25062025: updated PHYLIP URL to https://phylipweb.github.io/phylip

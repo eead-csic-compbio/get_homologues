@@ -788,7 +788,7 @@ if($INP_pange && %pangemat)
   print "# pangenome_file = $pangenome_matrix_file transposed = $pangenome_matrix_tr\n";
   print "# pangenome_genes = $pangenome_gene_file transposed = $pangenome_gene_tr\n";
 
-  # version in phylip format http://evolution.genetics.washington.edu/phylip/doc/discrete.html
+  # version in phylip format https://phylipweb.github.io/phylip/doc/discrete.html
   open(PANGEMATRIX,">$pangenome_phylip_file") || 
     die "# EXIT: cannot create $pangenome_phylip_file\n";
 
@@ -872,7 +872,7 @@ if($INP_pange && %pangemat)
 
     if(-s $pangenome_tree_file && -s $pangenome_phylip_log)
     {
-      print "\n# parsimony results by PARS (PHYLIP suite, http://evolution.genetics.washington.edu/phylip/doc/pars.html):\n";
+      print "\n# parsimony results by PARS (PHYLIP suite, https://phylipweb.github.io/phylip/doc/pars.html):\n";
       print "# pangenome_phylip tree = $pangenome_tree_file\n";
       print "# pangenome_phylip log = $pangenome_phylip_log\n\n";
     }
