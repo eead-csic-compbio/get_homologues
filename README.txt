@@ -17,7 +17,7 @@ It also includes code and binaries from other authors:
  NCBI Blast-2.16.0+ (blast.ncbi.nlm.nih.gov , PubMed=9254694,20003500)
  BioPerl v1.5.2 (www.bioperl.org , PubMed=12368254)
  HMMER 3.1b2 (http://hmmer.org)
- Pfam (http://pfam.xfam.org , PubMed=19920124)
+ Pfam (http://pfam.xfam.org , PubMed=39540428)
  PHYLIP 3.695 (https://phylipweb.github.io/phylip) 
  Transdecoder r20140704 (http://transdecoder.github.io , PubMed=23845962)
  MVIEW 1.60.1 (https://github.com/desmid/mview, PubMed=9632837)
@@ -69,9 +69,8 @@ The Bioperl toolkit: Perl modules for the life sciences. Genome Res. 12(10):1611
 http://hmmer.org Copyright (C) 2010 Howard Hughes Medical Institute.
 Freely distributed under the GNU General Public License (GPLv3).
 
-10) Finn RD, Bateman A, Clements J, Coggill P, Eberhardt RY, Eddy SR, Heger A, 
-Hetherington K, Holm L, Mistry J, Sonnhammer EL, Tate J, Punta M. (2014)
-Pfam: the protein families database. Nucleic Acids Res. 42:D222-30. 
+10) Paysan-Lafosse, Typhaine et al. (2025) The Pfam protein families database: 
+embracing AI/ML. Nucleic Acids Res. 53(D1): D523-D534.
 
 11) Felsenstein, J. 2005. PHYLIP (Phylogeny Inference Package) version 3.6. Distributed 
 by the author. Department of Genome Sciences, University of Washington, Seattle.
