@@ -923,6 +923,10 @@ sub extract_features_from_genbank
       {
         $strain = join(',',sort $f->each_tag_value('strain'));
       }
+      elsif($f->has_tag('isolate') and !$f->has_tag('strain'))
+      {
+              $strain = join(',',sort $f->each_tag_value('isolate')); 
+      }
       elsif($features_to_parse =~ $f->primary_tag())
       {
         $gi = $genename = $featseq = $rev = ''; # compatible con subrutina extract_CDS_from_genbank
