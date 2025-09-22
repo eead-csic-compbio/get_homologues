@@ -596,9 +596,7 @@ sub same_sequence_order
     $parsed =~ s/\*$//gi;
    
     if($translated =~ m/\*/) {
-      print "# same_sequence_order : translation of $refCDSnt->[$seq][NAME] contains internal STOP codons (*): ".
-        "$translated\n";
-      return 0;
+      print "# WARNING(same_sequence_order): translation of $refCDSnt->[$seq][NAME] contains internal STOP codons (*)\n";
     }   
    
     if($parsed ne $translated && 

@@ -435,3 +435,4 @@
 25062025: updated PHYLIP URL to https://phylipweb.github.io/phylip
 25062025: updated Pfam citation
 25062025: added FAQ
+22092025: same_sequence_order only warns when internal stop codons are found, order might still be valid
