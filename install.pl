@@ -110,13 +110,13 @@ print "## checking whether source and binaries of dependencies are in place\n";
 if(! -e $ENV{'MARFIL'}.'/bin/COGsoft/' || !-e $ENV{'EXE_BLASTP'})
 {
   my $userword = '';
-  if($noDBs==0 && $force_unsupervised==0)
+  if($noDBs==0 && $force_unsupervised==0 && $docker==0)
   {
     print "# cannot locate source and binaries, would you like to download it now? [Y/n]\n";
     $userword = <STDIN>;
   }    
 
-  if($noDBs || $force_unsupervised || $userword =~ m/Y/i )
+  if($noDBs || $force_unsupervised || $docker || $userword =~ m/Y/i )
   {
     chdir($ENV{'MARFIL'}.'/bin/');
     my ($ff,$fpath);
