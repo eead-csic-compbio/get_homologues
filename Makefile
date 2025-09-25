@@ -37,3 +37,6 @@ install_swissprot:
 
 install_auto:
 	perl install.pl no_databases
+
+install_docker:
+	perl install.pl docker	

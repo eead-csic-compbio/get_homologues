@@ -22,6 +22,8 @@ my $BINTGZFILE = 'bin.tgz';
 my $BINOSXTGZFILE = 'binosx.tgz';
 my $BINURL = "https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.7/$BINTGZFILE";
 my $BINOSXURL = "https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.7/$BINOSXTGZFILE";
+my $DBTGZFILE = 'db.tgz';
+my $DBURL = "https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.7.3/$DBTGZFILE";
 
 my $PFAMSERVERURL   = 'ftp.ebi.ac.uk';
 my $PFAMFOLDER      = 'pub/databases/Pfam/current_release/';
@@ -43,7 +45,7 @@ my %packages =
 my $nonCOGS = 'diamond-0.8.25 hmmer-3.1b2 mcl-14-137 ncbi-blast-2.14.0+ phylip-3.695';
 
 my ($SOguess,$output,$command,$cwd) = ('','','',getcwd());
-my ($downloadOK,$force_unsupervised,$noDBs) = (0,0,0);
+my ($downloadOK,$force_unsupervised,$noDBs,$docker) = (0,0,0,0);
 my ($COGSonly) = (0);
 
 # unsupervised, forced install
@@ -63,6 +65,11 @@ if(defined($ARGV[0]))
   {
     $noDBs = 1;
     print "# \$no_databases=$noDBs (swissprot)\n\n";
+  }
+  elsif($ARGV[0] eq 'docker')
+  {
+    $docker = 1;
+    print "# (docker)\n\n";
   }
   elsif($ARGV[0] eq 'test')
   {
@@ -129,7 +136,7 @@ if(! -e $ENV{'MARFIL'}.'/bin/COGsoft/' || !-e $ENV{'EXE_BLASTP'})
        {
          die "# need wget, install it with 'brew install wget' and re-run\n";
        }
-    }
+    } 
 
     if(! -s $BINTGZFILE)
     {
@@ -158,7 +165,7 @@ if(! -e $ENV{'MARFIL'}.'/bin/COGsoft/' || !-e $ENV{'EXE_BLASTP'})
       unlink($BINTGZFILE);
       chdir($cwd);
       $downloadOK = 1;
-    }         
+    }
   }          
 }
 else{ print ">> OK\n"; }
@@ -281,6 +288,40 @@ if(!$COGSonly)
       "<<(inside set_phyTools_env in file lib/phyTools.pm) .\n".
       "<< Then re-run\n";
   }
+}
+
+# unpack linux 64 db files, useful for docker build phase
+if($docker == 1 && $supportedOS[$SOguess] ne 'macOSX') 
+{
+  print "## checking whether precompiled db files are in place (docker=$docker)\n";
+	
+  if(!-s $ENV{'PFAMDB'}.'.h3m' || !-s $ENV{'BLASTXDB'}.'.phr' || !-s $ENV{'BLASTXDB'}.'.dmnd')
+  {
+    chdir($ENV{'MARFIL'}.'/db/');
+
+    if(! -s $DBTGZFILE)
+    {
+      print "# retrieving $DBURL ...\n";
+      system("$DOWNLOADEXE $DBURL");
+      if(! -s $DBTGZFILE)
+      {
+        die "# cannot download file $DBTGZFILE \n\n".
+            "<< You might manually download it from $DBURL to $ENV{'MARFIL'}/db/\n".
+            "<< and re-run\n";
+      }
+    }
+
+    if(-s $DBTGZFILE)
+    {
+      print "# extracting $DBTGZFILE ...\n";
+      system("tar xfz $DBTGZFILE");
+
+      unlink($DBTGZFILE);
+    }
+
+    chdir($cwd);
+  }
+  else{ print ">> OK\n" }
 }
 
 if(!$noDBs || $noDBs==1)
