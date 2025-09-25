@@ -436,4 +436,4 @@
 25062025: updated Pfam citation
 25062025: added FAQ
 22092025: same_sequence_order only warns when internal stop codons are found, order might still be valid
-25092025: install.pl waits 5s before formatting FLATSWISSPROT, seems to help while docker build
+25092025: install.pl waits 1s before formatting FLATSWISSPROT, in case it helps while docker build

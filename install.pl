@@ -435,12 +435,11 @@ if(!$noDBs || $noDBs==1)
       {
         print "# gunzip $SWISSPROTFILE ...\n"; 
         system("gunzip $SWISSPROTFILE");
-        sleep(5);
+        sleep(1);
       }
       
       if(-s $FLATSWISSPROTFILE)
       {
-        print "# FLATSWISSPROTFILE=$FLATSWISSPROTFILE\n";	      
         executeFORMATDB_EST($FLATSWISSPROTFILE);
         executeMAKEDB($FLATSWISSPROTFILE);
                
