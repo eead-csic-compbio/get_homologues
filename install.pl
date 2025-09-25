@@ -435,7 +435,7 @@ if(!$noDBs || $noDBs==1)
       {
         print "# gunzip $SWISSPROTFILE ...\n"; 
         system("gunzip $SWISSPROTFILE");
-        sleep(1);	
+        sleep(3);
       }
       
       if(-s $FLATSWISSPROTFILE)
