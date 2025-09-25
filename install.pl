@@ -2,7 +2,7 @@
 
 # Script that checks/compiles software required by get_homologues[-est] and 
 # checks dependencies for first-time users.
-# last checked Nov2024
+# last checked Sept2025
 
 use strict;
 use warnings;
@@ -340,6 +340,7 @@ if(!$noDBs || $noDBs==1)
       {
         print "# gunzip $PFAMHMMFILE ...\n";
         system("gunzip $PFAMHMMFILE");
+        sleep(1);	
   
         my $hmmpress = (split(/hmmscan/,$ENV{'EXE_HMMPFAM'}))[0].'hmmpress';
         $PFAMHMMFILE =~ s/\.gz//;
@@ -433,7 +434,8 @@ if(!$noDBs || $noDBs==1)
       if(-s $SWISSPROTFILE)
       {
         print "# gunzip $SWISSPROTFILE ...\n"; 
-        system("gunzip $SWISSPROTFILE"); 
+        system("gunzip $SWISSPROTFILE");
+        sleep(1);	
       }
       
       if(-s $FLATSWISSPROTFILE)
