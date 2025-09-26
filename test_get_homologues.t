@@ -17,7 +17,7 @@ BEGIN { use_ok('phyTools') };
 
 BEGIN { use_ok('marfil_homology') };
 
-my ($testR,$testSP) = (0,0);
+my ($testR,$testSP,$testD) = (0,0,0);
 if(defined($ARGV[0])){
 	if($ARGV[0] eq 'testR') { 
 		$testR = 1 
@@ -108,6 +108,7 @@ if($testR == 1){
 
 if($testSP){
 	done_testing(31)
-} else {
+} 
+else {
 	done_testing(30)
 }
