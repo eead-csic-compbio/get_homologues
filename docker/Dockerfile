@@ -1,7 +1,7 @@
 FROM vinuesa/get_phylomarkers:latest
 
 LABEL authors="Pablo Vinuesa, Bruno Contreras Moreira"
-LABEL description="Container with GET_HOMOLOGUES⁠ and GET_PHYLOMARKERS⁠ ready  use."
+LABEL description="Container with GET_HOMOLOGUES and GET_PHYLOMARKERS ready to use."
 LABEL release.notes="GET_HOMOLOGUES ships with Pfam-A and swissprot installed."
 LABEL license="GPLv3"
 LABEL maintainers="bcontreras@eead.csic.es, vinuesa@ccg.unam.mx"
@@ -18,7 +18,7 @@ RUN cpanm Inline::C Inline::CPP
 
 # clone get_homologues & get executable binaries & db
 WORKDIR /
-RUN cachebuster=b953b36 git clone https://github.com/eead-csic-compbio/get_homologues.git
+RUN git clone https://github.com/eead-csic-compbio/get_homologues.git
 WORKDIR /get_homologues
 RUN git pull
 RUN chmod a+wr db

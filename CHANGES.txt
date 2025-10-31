@@ -438,3 +438,4 @@
 22092025: same_sequence_order only warns when internal stop codons are found, order might still be valid
 25092025: install.pl now accepts optional param 'docker', corresponds to install_docker in Makefile
 26092025: added docker/Dockerfile, tested with make testR
+31102025: docker/Dockerfile now based on vinuesa/get_phylomarkers:latest
