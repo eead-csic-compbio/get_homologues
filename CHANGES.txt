@@ -439,3 +439,4 @@
 25092025: install.pl now accepts optional param 'docker', corresponds to install_docker in Makefile
 26092025: added docker/Dockerfile, tested with make testR
 31102025: docker/Dockerfile now based on vinuesa/get_phylomarkers:latest
+30112025: get_homologues[-est].pl -m can now be used to pass path to custom HPC.conf, useful for conda

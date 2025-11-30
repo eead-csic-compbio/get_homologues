@@ -57,7 +57,7 @@ my ($newDIR,$output_mask,$pancore_mask,$include_file,$onlyblast,%included_input_
 my ($exclude_inparalogues,$doMCL,$doPARANOID,$doCOG,$do_PFAM,$reference_proteome_string) = (0,0,0,0,0,0);
 my ($inputDIR,$input_FASTA_file,$filter_by_length,$cluster_list_file,$do_intergenic,$do_features) = (0,0);
 my ($n_of_cpus,$COGmulticluster,$do_minimal_BDBHs,$do_soft) = ($BLAST_NOCPU,0,0,0);
-my ($do_ANIb_matrix,$do_POCP_matrix,$do_diamond) = (0,0,0);
+my ($do_ANIb_matrix,$do_POCP_matrix,$do_diamond,$custom_conf_file) = (0,0,0,'');
 
 my ($min_cluster_size,$runmode,$do_genome_composition,$saveRAM,$ANIb_matrix_file,$POCP_matrix_file);
 my ($evalue_cutoff,$pi_cutoff,$pmatch_cutoff) = ($BLAST_PVALUE_CUTOFF_DEFAULT, # see marfil_homology.pm
@@ -99,8 +99,8 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
     print   "-s save memory by using BerkeleyDB; default parsing stores\n".
       "   sequence hits in RAM\n";
   }
-  print   "-m runmode [local|cluster|dryrun]                              ".
-    "(default local)\n";
+  print   "-m runmode [local|cluster|dryrun|/path/custom/HPC.conf]        ".
+    "(def: local, path overrides ./HPC.conf)\n";
   print   "-n nb of threads for BLAST/HMMER/MCL in 'local' runmode        (default=$n_of_cpus)\n";
   print   "-I file with .faa/.gbk files in -d to be included              ".
     "(takes all by default, requires -d)\n";
@@ -249,7 +249,12 @@ if(defined($opts{'m'}))
 {
   $runmode = $opts{'m'};
   if($runmode eq 'pbs'){ $runmode = 'cluster'; } # legacy
-  elsif($runmode ne 'local' && $runmode ne 'cluster' && $runmode ne 'dryrun'){ $runmode = 'cluster'; }
+  elsif($runmode ne 'local' && $runmode ne 'cluster' && $runmode ne 'dryrun'){ 
+    if(-s $runmode){ 
+      $custom_conf_file = $runmode;   
+    }    
+    $runmode = 'cluster'; 
+  }
 }
 else{ $runmode = 'local'; }
 
@@ -262,7 +267,11 @@ if($runmode eq 'local' && defined($opts{'n'}) && $opts{'n'} > 0)
 if($runmode eq 'cluster')
 {
   # check whether file 'cluster.conf' exists & parse it
-  read_cluster_config( "$Bin/HPC.conf" );
+  if($custom_conf_file eq '') { 
+    read_cluster_config( "$Bin/HPC.conf" );
+  } else {
+    read_cluster_config( $custom_conf_file );
+  }	  
 
   if(!cluster_is_available())
   {	  

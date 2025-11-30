@@ -64,7 +64,7 @@ my ($newDIR,$output_mask,$pancore_mask,$include_file,%included_input_files,%opts
 my ($exclude_inparalogues,$doMCL,$do_PFAM,$reference_proteome_string) = (0,0,0,0);
 my ($isoform_overlap,$onlyblast,$inputDIR,$cluster_list_file) = ($MINREDOVERLAP,0);
 my ($isoform_best_hit,$n_of_cpus,$do_minimal_BDBHs,$add_rd_isoforms,$do_soft) = (0,$BLAST_NOCPU,0,0,0);
-my ($do_ANIb_matrix,$do_POCP_matrix) = (0,0);
+my ($do_ANIb_matrix,$do_POCP_matrix,$custom_conf_file) = (0,0,'');
 
 my ($min_cluster_size,$runmode,$do_genome_composition,$saveRAM,$ANIb_matrix_file,$POCP_matrix_file);
 my ($evalue_cutoff,$pi_cutoff,$pmatch_cutoff) = 
@@ -110,8 +110,8 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
     print   "-s save memory by using BerkeleyDB; default parsing stores\n".
       "   sequence hits in RAM\n";
   }
-  print   "-m runmode [local|cluster|dryrun]                              ".
-    "(default: -m local)\n";
+  print   "-m runmode [local|cluster|dryrun|dryrun|/path/custom/HPC.conf] ".
+    "(def: local, path overrides ./HPC.conf)\n";
   print   "-n nb of threads for BLASTN/HMMER/MCL in 'local' runmode       (default=$n_of_cpus)\n";
   print   "-I file with .fna files in -d to be included                   ".
     "(takes all by default, requires -d)\n";
@@ -218,7 +218,12 @@ if(defined($opts{'m'}))
 {
   $runmode = $opts{'m'};
   if($runmode eq 'pbs'){ $runmode = 'cluster'; } # legacy
-  elsif($runmode ne 'local' && $runmode ne 'cluster' && $runmode ne 'dryrun'){ $runmode = 'cluster'; }
+  elsif($runmode ne 'local' && $runmode ne 'cluster' && $runmode ne 'dryrun'){
+    if(-s $runmode){
+      $custom_conf_file = $runmode;
+    }
+    $runmode = 'cluster';
+  }
 }
 else{ $runmode = 'local'; }
 
