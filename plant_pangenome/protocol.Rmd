@@ -54,7 +54,7 @@ Contreras-Moreira, B., del Río, Á.R., Cantalapiedra, C.P., Sancho, R., Vinuesa
 
 ### 1.1 Background
 
-A pangenome can be defined as the sum of the core genome, shared by all individuals of a species, plus the dispensable genome, which includes partially shared and population-specific genes [@Tettelin2005].  Among plants, previous works have compared ecotypes of model species and cultivars of crops such as maize, barley, soybean, or rice, revealing that dispensable genes play important roles in evolution, and in the complex interplay between plants and the environment (reviewed at [@Golicz2020]). Moreover, accounting for accessory genomic features improves the association of genotypes to phenotypes beyond SNPs called on a single reference genome [@Yano2016; @Coletta2021]. For these reasons we prefer to rename dispensable genes as “accessory” or "shell" genes, terms borrowed from microbiology [@Laing2010]. In summary, pangenomes are the new reference sequences for plant genomic studies [@Bayer2020].
+A pangenome can be defined as the sum of the core genome, shared by all individuals of a species, plus the dispensable genome, which includes partially shared and population-specific genes [@Tettelin2005].  Among plants, previous works have compared ecotypes of model species and cultivars of crops such as maize, barley, soybean, or rice, revealing that dispensable genes play important roles in evolution, and in the complex interplay between plants and the environment (reviewed at [@Golicz2020]). Moreover, accounting for accessory genomic features improves the association of genotypes to phenotypes beyond SNPs called on a single reference genome [@Yano2016; @Coletta2021]. For these reasons we prefer to rename dispensable genes as "accessory" or "shell" genes, terms borrowed from microbiology [@Laing2010]. In summary, pangenomes are the new reference sequences for plant genomic studies [@Bayer2020].
 
 The data structures used to represent pangenomes are evolving in parallel with the sequencing technologies, and the state-of-the-art are the so called pangenome graphs, which significantly improve variant calling by read mapping [@Eizenga2020; @Coletta2021] and have multiple implementations (see for instance [@Sheikhizadeh2016]). However, there are currently no community accepted solutions for visualizing or setting coordinate systems in genome graphs. More importantly, the input genome sequences used to construct a graph need to be highly contiguous. This contrasts with most plant genome assemblies found in the public archives, which are often fragmented, particularly for species with large, highly repetitive, heterozygous and polyploid genomes. For these reasons, approaches that do not require a fully-assembled reference genome are of interest for plant breeding and ecology. Some of these strategies reduce the natural complexity of genomes by computing the frequency of nucleotide words and looking for enriched subsets of sequences [@Voichek2020; @Arora2019]. Other strategies, like the one presented in this protocol around GET_HOMOLOGUES-EST [@ContrerasMoreira2017], take transcripts or coding sequences (CDS) as the genomic unit of interest (see examples at [@Gordon2017; @Gordon2020]).
 Therefore, a more appropriate name for this approach would be pangene set analysis. 
@@ -79,7 +79,7 @@ __Figure 1__ summarizes the computational analysis of the pangene set of three t
 **Table 1.** Definition of occupancy-based classes used by the software GET_HOMOLOGUES-EST.
 
 
-In addition to occupancy differences, previous benchmarks have shown that occupancy-based classes differ in their functional annotations. The examples in __Figure 2__ highlight the different functions of core and accessory genes in two bacterial clades; note that similar observations have been made in plants [@ContrerasMoreira2017; @Gordon2017].
+In addition to occupancy differences, previous benchmarks have shown that occupancy-based classes differ in their functional annotations. The examples in __Figure 2__ highlight the different functions of core and accessory genes in two bacterial clades; note that similar observations have been made in plants [@ContrerasMoreira2017; @Gordon2017; @ContrerasMoreira2025].
 
 ![](Figures/Figure2.png) 
 **Figure 2.** Functional annotations (COGs) of protein-coding genes classified in occupancy classes in two bacterial sets.
@@ -245,7 +245,7 @@ As summarized in __Figure 3__, the main script _get_homologues-est.pl_ can produ
 
 
 
-As assembled transcripts are often incomplete, and gene models might contain errors, by default GET_HOMOLOGUES-EST computes alignment coverage with respect to the shortest sequence. This adds robustness against split genes, partial genes and genes or transcripts with retained introns [@ContrerasMoreira2017]. 
+As assembled transcripts are often incomplete, and gene models might contain errors, by default GET_HOMOLOGUES-EST computes alignment coverage with respect to the shortest sequence, being able to process consecutive local alignments. This adds **robustness against split genes, partial genes and genes or transcripts with retained introns** [@ContrerasMoreira2017]. 
 
 
 ### 3.2 Other scripts
@@ -273,7 +273,7 @@ Apart from these, scripts *transcripts2cds.pl* and *transcripts2cdsCPP.pl* are a
 ### 3.3 Protocol for plant transcripts and CDS sequences
 
 In this section we present a step-by-step protocol for the analysis of *Hordeum vulgare* WGS-based cDNA sequences (from reference cultivar *Morex*) and *de novo* assembled transcriptomes.
-These sequence sets were first used in [@ContrerasMoreira2017]. For convenience, these barley sequences can be obtained as explained below from files included in the *test_barley* folder, which should be bundled with your copy of GET_HOMOLOGUES (see __Note __^[Similar analyses can be performed with the  *Arabidopsis thaliana* and *Brachypodium hybridum* sequences at <http://floresta.eead.csic.es/plant-pan-genomes/>]). 
+These sequence sets were first used in [@ContrerasMoreira2017]. For convenience, these barley sequences can be obtained as explained below from files included in the *test_barley* folder, which should be bundled with your copy of GET_HOMOLOGUES (see __Note __^[Similar analyses can be performed with the  *Arabidopsis thaliana* and *Brachypodium hybridum* sequences at <https://floresta.eead.csic.es/plant-pan-genomes/>]). 
 
 #### 3.3.1 Preparing input sequences, outgroups and extracting CDS from transcripts
 
@@ -337,11 +337,17 @@ Alternatively, it is possible to get precomputed CDS sequences (170MB) ready to 
 ```{r, engine='bash', eval=FALSE}
 
 cd ${GETHOMS}/test_barley
-wget http://floresta.eead.csic.es/plant-pan-genomes/barley_transcripts/cds.tgz .
+wget https://floresta.eead.csic.es/plant-pan-genomes/barley_transcripts/cds.tgz .
 tar xvfz cds.tgz
 
 # Make sure files with lists of accessions are in place
 ls cds/*list
+
+# a larger (1.4GB) bundle is available with precomputed Pfam and BLAST results
+cd ${GETHOMS}/test_barley
+wget https://floresta.eead.csic.es/plant-pan-genomes/barley_transcripts/cds_est_homologues.tgz .
+tar xvfz cds_est_homologues.tgz
+
 ```
 
 Either way, make sure files with lists of accessions are in place; these will be used later on to compare input subsets:
@@ -378,7 +384,8 @@ Option -A, used in the last example below, requests an ANI matrix. In this case 
 
 # precompute (-o) sequence similarities and protein domain frequencies (-D);
 # clusters are not produced
-# Creates cds_est_homologues/tmp/all.pfam and cds_est_homologues/tmp/all.bpo
+# Creates cds_est_homologues/tmp/all.pfam and cds_est_homologues/tmp/all.bpo.
+# Skip if if you downloaded the large bundle in section 3.3.1
 $GETHOMS/get_homologues-est.pl -d cds -D -m cluster -o &> log.cds.pfam
 
 # alternatively, if not running in a SGE cluster, taking for instance 4 CPUs 
