@@ -387,7 +387,8 @@ and
 settings a configuration step is required.
 In these cases you would need to create a file named <code>HPC.conf</code>
 in the same location as <SPAN  CLASS="textit">get_homologues-est.pl</SPAN> tayloring your queue configuration and paths.
-This should also <SPAN  CLASS="textbf">work for conda installs</SPAN>.
+Alternatively it is possible to create a configuration file anywhere in your filesystem,
+with <code>-m /path/custom/HPC.conf</code>, which is useful for <SPAN  CLASS="textbf">work for conda installs</SPAN>.
 Check the sample configuration file at
 <A ID="tex2html23"
   HREF="https://github.com/eead-csic-compbio/get_homologues/blob/master/sample.HPC.conf">sample.HPC.conf</A>.
@@ -698,7 +699,7 @@ Optional parameters:
                                                                 with -t N skips clusters occup&lt;N [OMCL],
                                                                 ignores -r,-e)
 -R set random seed for genome composition analysis             (optional, requires -c, example -R 1234)
--m runmode [local|cluster|dryrun]                              (default: -m local)
+-m runmode [local|cluster|dryrun|/path/custom/HPC.conf]        (def: local, path overrides ./HPC.conf)
 -n nb of threads for BLASTN/HMMER/MCL in 'local' runmode       (default=2)
 -I file with .fna files in -d to be included                   (takes all by default, requires -d)
 
@@ -903,6 +904,8 @@ this might be the only way to complete a job.
 <LI><code>-m</code> allows the choice of runmode, which can be either <code>-m local</code> (the default),  
 <code>-m cluster</code>, for computing farms configured as explained in section <A HREF="#dependencies">2.4</A>) and 
 <code>-m dryrun</code>, which will allow you to run all required parallel jobs in batches manually.
+Additionally <code>-m /path/custom/HPC.conf</code> can be used for cluster jobs that require a
+custom HPC configuration file located elsewhere on the filesystem, useful for conda installs.
 When combined with command-line tool <A HREF="#https:__www.gnu.org_software_parallel"><IMG  ALT="[*]" SRC="crossref.png"></A>parallel, 
 the dryrun mode can be used to parallelize the clustering tasks (isoforms, orthologues, inparalogues, see <A HREF="#dryrun">4.3</A>).
 
@@ -2834,7 +2837,7 @@ This document was generated using the
 The command line arguments were: <BR>
  <kbd>latex2html manual-est -no_antialias_text -split 0 -dir manual-est -no_navigation -show_section_numbers</kbd>
 <P>
-The translation was initiated on 2025-06-25
+The translation was initiated on 2025-11-30
 <BR><HR>
 
 </BODY>
