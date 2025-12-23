@@ -52,6 +52,9 @@ In addition, there are two **tutorials** are available:
 
 * [From genomes to pangenomes: understanding variation among individuals and species](http://eead-csic-compbio.github.io/get_homologues/tutorial/pangenome_tutorial.html), which includes step by step instructions for both bacterial and plant data, first released in 2017.
 
+There's also a 30min [video](https://www.youtube.com/watch?v=JcxQ97TzzzQ) covering GET_HOMOLOGUES, GET_HOMOLOGUES-EST 
+and the related software [GET_PANGENES](https://github.com/Ensembl/plant-scripts/tree/master/pangenes).
+
 ## Citation
 
 The original GET_HOMOLOGUES, **suitable for bacterial genomes**, was described in:
