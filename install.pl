@@ -20,8 +20,8 @@ $|=1;
 my $DOWNLOADEXE = 'wget'; # add path if required, curl in MacOS
 my $BINTGZFILE = 'bin.tgz';
 my $BINOSXTGZFILE = 'binosx.tgz';
-my $BINURL = "https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.7/$BINTGZFILE";
-my $BINOSXURL = "https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.7/$BINOSXTGZFILE";
+my $BINURL = "https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.8/$BINTGZFILE";
+my $BINOSXURL = "https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.8/$BINOSXTGZFILE";
 my $DBTGZFILE = 'db.tgz';
 my $DBURL = "https://github.com/eead-csic-compbio/get_homologues/releases/download/v3.7.3/$DBTGZFILE";
 
