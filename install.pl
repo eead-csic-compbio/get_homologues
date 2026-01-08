@@ -2,7 +2,7 @@
 
 # Script that checks/compiles software required by get_homologues[-est] and 
 # checks dependencies for first-time users.
-# last checked Sept2025
+# last checked Jan2026
 
 use strict;
 use warnings;
@@ -42,7 +42,7 @@ my %packages =
   'GD'=>['libgd-gd2-perl','perl-GD','perl-GD','gd']
   );
 
-my $nonCOGS = 'diamond-0.8.25 hmmer-3.1b2 mcl-14-137 ncbi-blast-2.14.0+ phylip-3.695';
+my $nonCOGS = 'diamond-0.8.25 hmmer-3.1b2 mcl-14-137 ncbi-blast-2.17.0+ phylip-3.695';
 
 my ($SOguess,$output,$command,$cwd) = ('','','',getcwd());
 my ($downloadOK,$force_unsupervised,$noDBs,$docker) = (0,0,0,0);
