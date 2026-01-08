@@ -1,6 +1,6 @@
 #!/usr/bin/env perl 
 
-# 2015-2025 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2015-2026 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei-CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -2737,7 +2737,7 @@ if($do_POCP_matrix)
       else
       {
         #Adapted from https://www.ncbi.nlm.nih.gov/pubmed/24706738
-        #The percentage of conserved proteins (POCP) between two genomes was calculated as [(C1 + C2)/(T1 + T2)] · 100%, 
+        #The percentage of conserved proteins (POCP) between two genomes was calculated as [(C1 + C2)/(T1 + T2)] x 100, 
         #where C1 and C2 represent the conserved number of proteins in the two genomes being compared, respectively, 
         #and T1 and T2 represent the total number of proteins in the two genomes being compared, respectively. 
     

@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# 2013-25 Bruno Contreras
+# 2013-26 Bruno Contreras
 # Script to take advantage of multicore machines when running BLAST,
 # which seems to scale up to the number of physical cores in our tests.
 # Supports old BLAST (blastall) and new BLAST+ binaries.

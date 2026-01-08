@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# 2013-25 Bruno Contreras-Moreira, Pablo Vinuesa
+# 2013-26 Bruno Contreras-Moreira, Pablo Vinuesa
 # download_genomes_ncbi.pl
 
 # Attempts to download a list of genomes from the NCBI.

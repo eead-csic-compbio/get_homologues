@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# 2014-25 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2014-26 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: https://www.eead.csic.es/compbio (Estacion Experimental Aula Dei-CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 

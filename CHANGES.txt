@@ -440,3 +440,8 @@
 26092025: added docker/Dockerfile, tested with make testR
 31102025: docker/Dockerfile now based on vinuesa/get_phylomarkers:latest
 30112025: get_homologues[-est].pl -m can now be used to pass path to custom HPC.conf, useful for conda
+23122025: completed find_local_alignment_coords description
+23122025: fixed description of POCP calculation
+23122025: added description of Alignment Fraction (AF) calculation
+23122025: get_homologues.pl -P now computes also Alignment Fraction (AF)
+08012026: updated scripts to 2026

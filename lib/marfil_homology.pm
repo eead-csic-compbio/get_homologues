@@ -2,7 +2,7 @@ package marfil_homology;
 
 # version 2.1
 
-# Code library created by Bruno Contreras-Moreira and Pablo Vinuesa (2006-2025)
+# Code library created by Bruno Contreras-Moreira and Pablo Vinuesa (2006-2026)
 # mainly for get_homologues.pl and get_homologues-est.pl
 
 # Contains code originally part of the following software:
@@ -185,7 +185,7 @@ our $cogblasthits                        = 'hits.csv';
 
 # global variables storing data
 our @taxa=();
-our %gindex=();     	   # taxon -> [first line, last line, total lines]
+our %gindex=();     	  # taxon -> [first line, last line, total lines]
 our @gindex2=();        # gene_id -> taxon_id
 our %blastquery=();
 our %pfam_hash;
@@ -315,7 +315,7 @@ sub check_different_params
 # 1. String Variable: Fasta file names, each representing one species, separated by comma, e.g. "Bme.fa,Ccr.fa,Eco.fa"
 # 2. String Variable: Name of All_Fasta file
 # 3. Boolean: when set if will save sequence length in a returned hash ref
-# Nov2011, fills global @taxa, %gindex, @gindex2
+# Nov2011, fills globals @taxa, %gindex, @gindex2
 # Oct2015, only saves seq lengths if requested; %gindex is reduced to a hash of triplets [1st id, last id, total]
 # Nov2015: pre-allocate $n_of_seqs
 sub constructAllFasta
@@ -3549,8 +3549,7 @@ sub neighbor_correlation
   return $NC;
 } ## neighbor_correlation
 
-# returns a hash with first and last residues aligned in observed local alignments
-# Bruno Oct2015
+# returns a hash with length, first and last residues aligned in observed local alignments
 sub find_local_alignment_coords
 {
   my (@ids) = @_;
