@@ -1,6 +1,6 @@
 #!/usr/bin/env perl 
 
-# 2013-2025 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
+# 2013-2026 Bruno Contreras-Moreira (1) and Pablo Vinuesa (2):
 # 1: https://www.eead.csic.es/compbio (Estacion Experimental Aula Dei-CSIC/Fundacion ARAID, Spain)
 # 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)
 
@@ -59,7 +59,8 @@ my ($inputDIR,$input_FASTA_file,$filter_by_length,$cluster_list_file,$do_interge
 my ($n_of_cpus,$COGmulticluster,$do_minimal_BDBHs,$do_soft) = ($BLAST_NOCPU,0,0,0);
 my ($do_ANIb_matrix,$do_POCP_matrix,$do_diamond,$custom_conf_file) = (0,0,0,'');
 
-my ($min_cluster_size,$runmode,$do_genome_composition,$saveRAM,$ANIb_matrix_file,$POCP_matrix_file);
+my ($min_cluster_size,$runmode,$do_genome_composition,$saveRAM,$ANIb_matrix_file);
+my ($POCP_matrix_file, $POCP_matrix_file_AF);
 my ($evalue_cutoff,$pi_cutoff,$pmatch_cutoff) = ($BLAST_PVALUE_CUTOFF_DEFAULT, # see marfil_homology.pm
   $PERCENT_IDENTITY_CUTOFF_DEFAULT,$PERCENT_MATCH_CUTOFF_DEFAULT);
 my ($MCLinflation,$neighbor_corr_cutoff) = ($MCL_INFLATION_DEFAULT,$MIN_NEIGHBOR_CORR_DEFAULT);
@@ -544,7 +545,8 @@ my (%orth_registry,%LSE_registry,$LSE_reference,$LSE_t,$redo_inp,$redo_orth,%idc
 my ($reparse_all,$total_genbankOK,$n_of_similar_length_paralogues,$pfam_annot,$dnaOK,$n_of_taxa_cluster) = (0,0);
 my ($BDBHdone,$PARANOIDdone,$orthoMCLdone,$COGdone,$n_of_parsed_lines,$n_of_pfam_parsed_lines) = (0,0,0,0,0,0);
 my ($diff_BDBH_params,$diff_INP_params,$diff_HOM_params,$diff_OMCL_params,$lockcapableFS,$total_dry) = (0,0,0,0,0,0);
-my ($total_clustersOK,$clgene,$clorth,%ANIb_matrix,%POCP_matrix,%GIclusters,$clustersOK,%cluster_ids) = (0);
+my ($total_clustersOK,$clgene,$clorth,%ANIb_matrix,%GIclusters,$clustersOK,%cluster_ids) = (0);
+my (%POCP_matrix,%POCP_matrix_AF);
 my (@sorted_clusters,%taxa_clusters,%orth_taxa,@newfiles,%ressize,%intergenic_FNA_files);
 
 constructDirectory($newDIR) || die "# EXIT : cannot create directory $newDIR , check permissions\n";
@@ -1069,9 +1071,11 @@ if($n_of_sequences == 0)
 chop($comma_input_files);
 if($inputDIR)
 { 
-  %seq_length = %{ constructAllFasta($comma_input_files,$n_of_sequences,'',$filter_by_length) }; 
+  %seq_length = %{ constructAllFasta($comma_input_files,$n_of_sequences,'',
+                                    $filter_by_length || $do_POCP_matrix) }; 
 }
-else{ %seq_length = %{ constructAllFasta($comma_input_files,$n_of_sequences,$all_fa_file,$filter_by_length) } }
+else{ %seq_length = %{ constructAllFasta($comma_input_files,$n_of_sequences,$all_fa_file,
+                                        $filter_by_length || $do_POCP_matrix) } }
 
 # 1.4) correct list of included files, must be done after reading them all for correct numbering
 if($include_file)
@@ -1681,7 +1685,7 @@ else
     "# if you change the sequences in your .gbk/.faa files or want to re-run\n";
 }
 
-undef(%seq_length) unless($filter_by_length); # free hash if not needed anymore
+undef(%seq_length) unless($filter_by_length || $do_POCP_matrix); # free hash if not needed anymore
 
 if($onlyblast)
 {
@@ -2767,7 +2771,11 @@ $FASTAresultsDIR   = $newDIR ."/".$output_mask;
 $cluster_list_file = $FASTAresultsDIR .".cluster_list";
 
 if($do_ANIb_matrix){ $ANIb_matrix_file = $FASTAresultsDIR.'Avg_identity.tab'; }
-if($do_POCP_matrix){ $POCP_matrix_file = $FASTAresultsDIR.'POCP.tab'; }
+if($do_POCP_matrix)
+{ 
+  $POCP_matrix_file    = $FASTAresultsDIR.'POCP.tab';
+  $POCP_matrix_file_AF = $FASTAresultsDIR.'AF.tab';
+}
 
 open(CLUSTERLIST,">$cluster_list_file") || die "# EXIT: cannot create $cluster_list_file\n";
 
@@ -3000,9 +3008,10 @@ GENE: foreach $gene (sort {$a<=>$b} (keys(%orthologues)))
     }
   }
   
-  # 4.3.7) add data to POCP matrix if required
+  # 4.3.7) add data to POCP matrices if required
   if($do_POCP_matrix)
   {
+    # 1st POCP matrix
     my @cltaxa = keys(%{$orth_taxa{$gene}});
     foreach $taxon (0 .. $#cltaxa-1)
     {
@@ -3016,6 +3025,23 @@ GENE: foreach $gene (sort {$a<=>$b} (keys(%orthologues)))
         $POCP_matrix{$cltaxa[$taxon2]}{$cltaxa[$taxon]} += $orth_taxa{$gene}{$cltaxa[$taxon2]}; 
       }
     }  
+
+    # 2nd Alignment Fraction [AF] matrix, see https://doi.org/10.1093/nar/gkv657
+    # "The AF is computed by dividing the sum of the lengths of all BBH genes by the sum of the length 
+    # of all the genes in genome A. This computation is performed separately in both directions: 
+    # from Genome A to genome B and from Genome B to Genome A. 
+    my @genes = sort {$a<=>$b} ($gene,@{$orthologues{$gene}});
+    foreach $orth (0 .. $#genes-1)
+    {
+      foreach $orth2 ($orth+1 .. $#genes)
+      {
+        next if($taxon_names[$orth] eq $taxon_names[$orth2]);
+        # add the length of this aligned sequence from taxa 1 (A,B)
+        $POCP_matrix_AF{$gindex2[$genes[$orth]]}{$gindex2[$genes[$orth2]]} += $seq_length{$genes[$orth]};
+        # add the length of this aligned sequence from taxa 2 (B,A)
+        $POCP_matrix_AF{$gindex2[$genes[$orth2]]}{$gindex2[$genes[$orth]]} += $seq_length{$genes[$orth2]};
+      }
+    }
   }
 
   $n_of_clusters++;
@@ -3075,12 +3101,22 @@ if($do_ANIb_matrix)
 
 if($do_POCP_matrix)
 {
+  my %total_seq_length;
+
   open(POCPMATRIX,">$POCP_matrix_file") || die "# EXIT: cannot create $POCP_matrix_file\n";
 
   print POCPMATRIX "genomes";
   for($taxon=0;$taxon<scalar(@taxa);$taxon++)
   {
     print POCPMATRIX "\t$taxa[$taxon]";
+
+    # compute total length of all sequences from taxon for AF
+    $total_seq_length{$taxa[$taxon]} = 0;
+    foreach my $id ($gindex{$taxa[$taxon]}[0] .. $gindex{$taxa[$taxon]}[1]) 
+    { 
+      # TODO: next if sequence skipped during initial parsing
+      $total_seq_length{$taxa[$taxon]} += $seq_length{$id};
+    }
   } print POCPMATRIX "\n";
 
   for($taxon=0;$taxon<scalar(@taxa);$taxon++)
@@ -3092,7 +3128,7 @@ if($do_POCP_matrix)
       else
       {
         #Adapted from https://www.ncbi.nlm.nih.gov/pubmed/24706738
-        #The percentage of conserved proteins (POCP) between two genomes was calculated as [(C1 + C2)/(T1 + T2)] · 100%, 
+        #The percentage of conserved proteins (POCP) between two genomes was calculated as [(C1 + C2)/(T1 + T2)] x 100, 
         #where C1 and C2 represent the conserved number of proteins in the two genomes being compared, respectively, 
         #and T1 and T2 represent the total number of proteins in the two genomes being compared, respectively. 
     
