@@ -87,7 +87,7 @@ sub set_phyTools_env
 
   # BLAST
   if( ! defined($ENV{'BLAST_PATH'}) ){ 
-    $ENV{'BLAST_PATH'} = $ENV{'MARFIL'}.'bin/ncbi-blast-2.16.0+/bin/'; 
+    $ENV{'BLAST_PATH'} = $ENV{'MARFIL'}.'bin/ncbi-blast-2.17.0+/bin/'; 
     if(!-e $ENV{'BLAST_PATH'}){ 
       $ENV{'BLAST_PATH'} = ''; # should work if in PATH
     } 

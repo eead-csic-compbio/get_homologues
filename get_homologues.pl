@@ -166,12 +166,12 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
     "(default=$MIN_BITSCORE_DEFAULT [PRND])\n" if(!$DISSABLEPRND);
   print   "-A calculate average identity of clustered sequences,          ".
     "(optional, creates tab-separated matrix,\n";
-  print   " by default uses blastp results but can use blastn with -a     ".
-    " recommended with -t 0 [OMCL|COGS])\n";  
-  print   "-P calculate percentage of conserved proteins (POCP),          ". 
-    "(optional, creates tab-separated matrix,\n";
-  print   " by default uses blastp results but can use blastn with -a     ".
-    " recommended with -t 0 [OMCL|COGS])\n";
+  print   "   by default uses blastp results but can use blastn with -a    ".
+    "recommended with -t 0 [OMCL|COGS])\n";  
+  print   "-P compute % conserved proteins (POCP) & align fraction (AF),  ". 
+    "(optional, creates tab-separated matrices,\n";
+  print   "   by default uses blastp results but can use blastn with -a    ".
+    "recommended with -t 0 [OMCL|COGS])\n";
   print   "-z add soft-core to genome composition analysis                ".
     "(optional, requires -c [OMCL|COGS])\n";
     
@@ -185,7 +185,7 @@ if(($opts{'h'})||(scalar(keys(%opts))==0))
   exit;
 }
 
-# read version bumber from CHANGES.txt
+# read version number from CHANGES.txt
 open(CHANGES,"$Bin/CHANGES.txt");
 while(<CHANGES>)
 {
@@ -197,7 +197,7 @@ if(defined($opts{'v'}))
 {
   print "\n$0 version $VERSION\n";
   print "\nProgram written by Bruno Contreras-Moreira (1) and Pablo Vinuesa (2).\n";
-  print "\n 1: http://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)\n";
+  print "\n 1: https://www.eead.csic.es/compbio (Estacion Experimental Aula Dei/CSIC/Fundacion ARAID, Spain)\n";
   print " 2: http://www.ccg.unam.mx/~vinuesa (Center for Genomic Sciences, UNAM, Mexico)\n";
   print "\nPrimary citations:\n\n";
   print " Contreras-Moreira B, Vinuesa P (2013) GET_HOMOLOGUES, a versatile software package for scalable and\n".
@@ -209,7 +209,7 @@ if(defined($opts{'v'}))
   print " OrthoMCL v1.4 (www.orthomcl.org , PubMed:12952885)\n";
   print " INPARANOID v3.0 (inparanoid.sbc.su.se , PubMed:16873526)\n" if(!$DISSABLEPRND);
   print " COGtriangles v2.1 (sourceforge.net/projects/cogtriangles , PubMed=20439257)\n";
-  print " NCBI Blast-2.2 (blast.ncbi.nlm.nih.gov , PubMed=9254694,20003500)\n";
+  print " NCBI Blast-2.17.0+ (blast.ncbi.nlm.nih.gov , PubMed=9254694,20003500)\n";
   print " Bioperl v1.5.2 (www.bioperl.org , PubMed=12368254)\n";
   print " HMMER 3.1b2 (hmmer.org)\n";
   print " Pfam (http://pfam.xfam.org , PubMed=26673716)\n";
@@ -3029,7 +3029,8 @@ GENE: foreach $gene (sort {$a<=>$b} (keys(%orthologues)))
     # 2nd Alignment Fraction [AF] matrix, see https://doi.org/10.1093/nar/gkv657
     # "The AF is computed by dividing the sum of the lengths of all BBH genes by the sum of the length 
     # of all the genes in genome A. This computation is performed separately in both directions: 
-    # from Genome A to genome B and from Genome B to Genome A. 
+    # from Genome A to genome B and from Genome B to Genome A."
+    # In GET_HOMOLOGUES protein/CDS(-a) length is used instead 
     my @genes = sort {$a<=>$b} ($gene,@{$orthologues{$gene}});
     foreach $orth (0 .. $#genes-1)
     {
@@ -3104,29 +3105,39 @@ if($do_POCP_matrix)
   my %total_seq_length;
 
   open(POCPMATRIX,">$POCP_matrix_file") || die "# EXIT: cannot create $POCP_matrix_file\n";
+  open(POCPMATRIXAF,">$POCP_matrix_file_AF") || die "# EXIT: cannot create $POCP_matrix_file_AF\n";
 
   print POCPMATRIX "genomes";
+  print POCPMATRIXAF "genomes";
   for($taxon=0;$taxon<scalar(@taxa);$taxon++)
   {
     print POCPMATRIX "\t$taxa[$taxon]";
+    print POCPMATRIXAF "\t$taxa[$taxon]";
 
     # compute total length of all sequences from taxon for AF
     $total_seq_length{$taxa[$taxon]} = 0;
     foreach my $id ($gindex{$taxa[$taxon]}[0] .. $gindex{$taxa[$taxon]}[1]) 
     { 
-      # TODO: next if sequence skipped during initial parsing
       $total_seq_length{$taxa[$taxon]} += $seq_length{$id};
     }
-  } print POCPMATRIX "\n";
+  } 
+  print POCPMATRIX "\n";
+  print POCPMATRIXAF "\n";
 
   for($taxon=0;$taxon<scalar(@taxa);$taxon++)
   {
     print POCPMATRIX "$taxa[$taxon]";
+    print POCPMATRIXAF "$taxa[$taxon]";
     for($taxon2=0;$taxon2<scalar(@taxa);$taxon2++)
     {
-      if($taxon == $taxon2){ print POCPMATRIX "\t100" }
+      if($taxon == $taxon2)
+      { 
+        print POCPMATRIX "\t100";
+        print POCPMATRIXAF "\t100";
+      }
       else
       {
+        # 1st POCP
         #Adapted from https://www.ncbi.nlm.nih.gov/pubmed/24706738
         #The percentage of conserved proteins (POCP) between two genomes was calculated as [(C1 + C2)/(T1 + T2)] x 100, 
         #where C1 and C2 represent the conserved number of proteins in the two genomes being compared, respectively, 
@@ -3139,15 +3150,27 @@ if($do_POCP_matrix)
             ($gindex{$taxa[$taxon]}[2] + $gindex{$taxa[$taxon2]}[2]))
         }
         else{ print POCPMATRIX "\tNA" }
-      }
-    } print POCPMATRIX "\n";
-  }
 
+        #2nd AF
+        if($POCP_matrix_AF{$taxa[$taxon]}{$taxa[$taxon2]})
+        {
+          printf(POCPMATRIXAF "\t%1.2f",
+            (100*$POCP_matrix_AF{$taxa[$taxon]}{$taxa[$taxon2]}) /
+            $total_seq_length{$taxa[$taxon]} )
+        }
+        else{ print POCPMATRIXAF "\tNA" }
+      }
+    } 
+    print POCPMATRIX "\n";
+    print POCPMATRIXAF "\n";
+  }
   close(POCPMATRIX);
+  close(POCPMATRIXAF);
 
   print "\n# percent_conserved_proteins_file = ".short_path($POCP_matrix_file,$pwd)."\n";
-  if($do_features){ print "# NOTE: matrix computed on blastn results\n" }
-  else{ print "# NOTE: matrix computed on blastp results\n" }
+  print "# alignment_fraction_file = ".short_path($POCP_matrix_file_AF,$pwd)."\n";
+  if($do_features){ print "# NOTE: matrices computed on blastn results\n" }
+  else{ print "# NOTE: matrices computed on blastp results\n" }
 }
 
 

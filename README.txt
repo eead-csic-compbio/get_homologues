@@ -14,7 +14,7 @@ It also includes code and binaries from other authors:
  OrthoMCL v1.4 (www.orthomcl.org , PubMed:12952885)
  mcl v14-137 (http://micans.org/mcl , PubMed=11917018)
  COGtriangles v2.1 (sourceforge.net/projects/cogtriangles , PubMed=20439257)
- NCBI Blast-2.16.0+ (blast.ncbi.nlm.nih.gov , PubMed=9254694,20003500)
+ NCBI Blast-2.17.0+ (blast.ncbi.nlm.nih.gov , PubMed=9254694,20003500)
  BioPerl v1.5.2 (www.bioperl.org , PubMed=12368254)
  HMMER 3.1b2 (http://hmmer.org)
  Pfam (http://pfam.xfam.org , PubMed=39540428)

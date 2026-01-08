@@ -191,7 +191,7 @@ if(defined($opts{'v'}))
         " solution for sequences of the same species. Front. Plant Sci. 10.3389/fpls.2017.00184\n";
   print "\nThis software employs code, binaries and data from different authors, please cite them accordingly:\n";
   print " OrthoMCL v1.4 (www.orthomcl.org , PubMed:12952885)\n";
-  print " NCBI Blast-2.2 (blast.ncbi.nlm.nih.gov , PubMed=9254694,20003500)\n";
+  print " NCBI Blast-2.17.0+ (blast.ncbi.nlm.nih.gov , PubMed=9254694,20003500)\n";
   print " Bioperl v1.5.2 (www.bioperl.org , PubMed=12368254)\n";
   print " HMMER 3.1b2 (hmmer.org)\n";
   print " Pfam (http://pfam.xfam.org , PubMed=26673716)\n";

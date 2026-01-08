@@ -453,14 +453,14 @@ sub executeFORMATDB
 # 3. Scalar: database name
 # 4. Scalar: pvalue cutoff
 # 5. Scalar: max number of hits to report
-# Bruno, Feb2016
-# Do not mask sequences as we want the alignment
+# Does not mask sequences as we want alignments
 sub format_BLASTP_command_aligns
 {
   my ($infile,$outfile,$db,$Evalue,$maxhits) = @_;
 
   my $command = "$BLASTP -dbsize $BLAST_DB_SIZE " .
-      #"-seg yes -soft_masking true " . 
+      #"-seg yes -soft_masking true " .
+      "-task blastp-fast " . # added Jan2025
       "-query $infile -evalue $Evalue -db $db -max_target_seqs $maxhits -out $outfile ";
 
   return $command;
@@ -491,7 +491,6 @@ sub format_BLASTN_command_aligns
 # 4. String Variable: pvalue cutoff
 # 5. (Optional) String Variable: hits/query to show in BLAST output
 # 6. (Optional) String: run mode
-# Bruno, Oct2015
 sub format_BLASTP_command
 {
   my ($infile,$outfile,$db,$Evalue,$hits_to_show,$scapequotes) = @_;
@@ -505,6 +504,7 @@ sub format_BLASTP_command
   #  if($hits_to_show){ $command .= "-v $hits_to_show -b $hits_to_show"; } }
 
   my $command = "$BLASTP -dbsize $BLAST_DB_SIZE " .
+      "-task blastp-fast " . # added Jan2025
       "-seg yes -soft_masking true " . # filter as in PMID:18042555
       "-query $infile -evalue $Evalue -db $db -out $outfile ";
 

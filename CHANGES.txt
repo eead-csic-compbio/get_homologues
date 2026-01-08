@@ -443,5 +443,10 @@
 23122025: completed find_local_alignment_coords description
 23122025: fixed description of POCP calculation
 23122025: added description of Alignment Fraction (AF) calculation
-23122025: get_homologues.pl -P now computes also Alignment Fraction (AF)
 08012026: updated scripts to 2026
+08012026: get_homologues.pl -P now computes also Alignment Fraction (AF) tab-separated matrix in addition to POCP,
+08012026: following https://doi.org/10.1093/nar/gkv657 for AF calculation
+08012026: AF matrix calculation details added to manual
+08012026: updated NCBI Blast to version 2.17.0+
+08012026: format_BLASTP_command_aligns & format_BLASTP_command in lib/marfil_homology.pm now use -task blastp-fast;
+08012026: according to https://www.ncbi.nlm.nih.gov/books/NBK131777/ this is 2-3x faster, even 4x in our get_homologues.pl tests

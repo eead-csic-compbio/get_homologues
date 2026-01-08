@@ -64,7 +64,7 @@ if(defined($opts{'v'}))
   print "\nProgram written by Bruno Contreras-Moreira\n";
   print "\nhttp://www.eead.csic.es/compbio (Estacion Experimental Aula Dei-CSIC/Fundacion ARAID, Spain)\n";
   print "\nThis software employs binaries from different authors, please cite them accordingly:\n";
-  print " NCBI Blast-2.2 (blast.ncbi.nlm.nih.gov , PubMed=9254694,20003500)\n";
+  print " NCBI Blast-2.17.0+ (blast.ncbi.nlm.nih.gov , PubMed=9254694,20003500)\n";
   print " TransDecoder (http://transdecoder.sourceforge.net)\n";
   print " Bioperl v1.5.2 (www.bioperl.org , PubMed=12368254)\n";
   print " Diamond 0.8.25 (https://github.com/bbuchfink/diamond, PubMed=25402007)\n";
