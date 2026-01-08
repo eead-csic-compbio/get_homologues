@@ -85,7 +85,7 @@ It also includes code and binaries from other authors:
 * [OrthoMCL v1.4](www.orthomcl.org), PubMed:[12952885](https://pubmed.ncbi.nlm.nih.gov/12952885))
 * [mcl v14-137](http://micans.org/mcl), PubMed=[11917018](https://pubmed.ncbi.nlm.nih.gov/11917018))
 * [COGtriangles v2.1](https://sourceforge.net/projects/cogtriangles), PubMed=[20439257](https://pubmed.ncbi.nlm.nih.gov/20439257))
-* [NCBI Blast-2.16.0+](https://blast.ncbi.nlm.nih.gov), PubMed=[9254694](https://pubmed.ncbi.nlm.nih.gov/9254694),[20003500](https://pubmed.ncbi.nlm.nih.gov/20003500)
+* [NCBI Blast-2.17.0+](https://blast.ncbi.nlm.nih.gov), PubMed=[9254694](https://pubmed.ncbi.nlm.nih.gov/9254694),[20003500](https://pubmed.ncbi.nlm.nih.gov/20003500)
 * [BioPerl v1.5.2](https://bioperl.org), PubMed=[12368254](https://pubmed.ncbi.nlm.nih.gov/12368254))
 * [HMMER 3.1b2](http://hmmer.org)
 * [Pfam](http://pfam.xfam.org), PubMed=[19920124](https://pubmed.ncbi.nlm.nih.gov/19920124))
