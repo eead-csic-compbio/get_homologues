@@ -450,3 +450,4 @@
 08012026: updated NCBI Blast to version 2.17.0+
 08012026: format_BLASTP_command_aligns & format_BLASTP_command in lib/marfil_homology.pm now use -task blastp-fast;
 08012026: according to https://www.ncbi.nlm.nih.gov/books/NBK131777/ this is 2-3x faster, even 4x in our get_homologues.pl tests
+26012026: corrected AF matrix calculation, now it handles correctly inparalogues

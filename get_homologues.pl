@@ -2966,7 +2966,6 @@ GENE: foreach $gene (sort {$a<=>$b} (keys(%orthologues)))
   close(CLUSTER);
 
   # 4.3.4) check dna cluster and print it
-  # Error with CONTIG feature in GenBank files (Jul2014): !0 && 68 == 74 
   if(!$do_features && $dna_cluster_size == $cluster_size)
   {
     $dna_clusterfile = $FASTAresultsDIR ."/$cluster_name.fna";
@@ -3032,16 +3031,27 @@ GENE: foreach $gene (sort {$a<=>$b} (keys(%orthologues)))
     # from Genome A to genome B and from Genome B to Genome A."
     # In GET_HOMOLOGUES protein/CDS(-a) length is used instead 
     my @genes = sort {$a<=>$b} ($gene,@{$orthologues{$gene}});
+    my %seen;
     foreach $orth (0 .. $#genes-1)
     {
       foreach $orth2 ($orth+1 .. $#genes)
       {
-        next if($taxon_names[$orth] eq $taxon_names[$orth2]);
-        # add the length of this aligned sequence from taxa 1 (A,B)
-        $POCP_matrix_AF{$gindex2[$genes[$orth]]}{$gindex2[$genes[$orth2]]} += $seq_length{$genes[$orth]};
+        next if($taxon_names[$orth] eq $taxon_names[$orth2]); 
+
+        # add the length of this aligned sequence from taxa 1 (A,B), only once
+        if(!defined($seen{$orth}{$gindex2[$genes[$orth2]]})){
+          #print "DEBUG: $genes[$orth] $genes[$orth2] $gindex2[$genes[$orth]] $gindex2[$genes[$orth2]] adding $seq_length{$genes[$orth]}\n" if($gindex2[$genes[$orth]] =~ "sp1");
+          $POCP_matrix_AF{$gindex2[$genes[$orth]]}{$gindex2[$genes[$orth2]]} += $seq_length{$genes[$orth]};
+          $seen{$orth}{$gindex2[$genes[$orth2]]} = 1;
+        }
+
         # add the length of this aligned sequence from taxa 2 (B,A)
-        $POCP_matrix_AF{$gindex2[$genes[$orth2]]}{$gindex2[$genes[$orth]]} += $seq_length{$genes[$orth2]};
-      }
+        if(!defined($seen{$orth2}{$gindex2[$genes[$orth]]})){
+          #print "DEBUG: $genes[$orth2] $genes[$orth] $gindex2[$genes[$orth2]] $gindex2[$genes[$orth]] adding $seq_length{$genes[$orth2]}\n" if($gindex2[$genes[$orth2]] =~ "sp1");
+          $POCP_matrix_AF{$gindex2[$genes[$orth2]]}{$gindex2[$genes[$orth]]} += $seq_length{$genes[$orth2]};
+          $seen{$orth2}{$gindex2[$genes[$orth]]} = 1;
+        }
+      }  
     }
   }
 
@@ -3056,7 +3066,6 @@ else
 }
 
 close(CLUSTERLIST);
-
 
 
 
@@ -3075,7 +3084,7 @@ if($do_ANIb_matrix)
     print ANIBMATRIX "$taxa[$taxon]";
     for($taxon2=0;$taxon2<scalar(@taxa);$taxon2++)
     {
-      if($taxon == $taxon2){ print ANIBMATRIX "\t100" }
+      if($taxon == $taxon2){ print ANIBMATRIX "\t100.00" }
       else
       {
         if($ANIb_matrix{$taxa[$taxon]}{$taxa[$taxon2]})
@@ -3132,8 +3141,8 @@ if($do_POCP_matrix)
     {
       if($taxon == $taxon2)
       { 
-        print POCPMATRIX "\t100";
-        print POCPMATRIXAF "\t100";
+        print POCPMATRIX "\t100.00";
+        print POCPMATRIXAF "\t100.00";
       }
       else
       {
