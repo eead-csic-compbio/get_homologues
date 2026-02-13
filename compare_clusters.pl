@@ -81,7 +81,7 @@ if(defined($opts{'d'}))
   foreach $dir (split(/\,/,$INP_dirs))
   {
     $dir =~ s/\/+$//;
-    if(-s $dir)
+    if(-d $dir)
     {
       if($INP_ref && scalar(@cluster_dirs) == 2)
       {
